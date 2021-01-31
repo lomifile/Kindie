@@ -5,7 +5,6 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -23,7 +22,11 @@ export class KinderGarden extends BaseEntity {
   @Column()
   Name!: string;
 
-  @OneToOne(() => User, (user) => user.ownerOf, { nullable: true })
+  @Field()
+  @Column()
+  userId: number;
+
+  @OneToMany(() => User, (user) => user.ownerOf)
   owning: User;
 
   @OneToMany(() => Groups, (groups) => groups.inKindergarden, {

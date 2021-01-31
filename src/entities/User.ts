@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -29,10 +30,14 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   Email!: string;
 
-  @OneToOne(() => KinderGarden, (kindergarden) => kindergarden.owning, {
+  @Field(() => String)
+  @Column()
+  Role!: string;
+
+  @ManyToOne(() => KinderGarden, (kindergarden) => kindergarden.owning, {
     nullable: true,
   })
-  ownerOf: string;
+  ownerOf: KinderGarden[];
 
   @Column()
   Password!: string;
