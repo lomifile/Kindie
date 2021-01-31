@@ -1,0 +1,58 @@
+import { Field, ObjectType } from "type-graphql";
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { Father } from "./Father";
+import { Groups } from "./Groups";
+import { Mother } from "./Mother";
+
+@ObjectType()
+@Entity()
+export class Children extends BaseEntity {
+  @Field()
+  @PrimaryGeneratedColumn()
+  Id!: number;
+
+  @Field(() => String)
+  @Column()
+  Name!: string;
+
+  @Field(() => String)
+  @Column()
+  Surname!: string;
+
+  @Field(() => String)
+  @Column()
+  BirthDate!: Date;
+
+  @Field()
+  @Column()
+  OIB!: number;
+
+  @Field(() => String)
+  @Column()
+  Remarks: string;
+
+  @Field(() => String)
+  @CreateDateColumn()
+  createdAt = Date;
+
+  @Field(() => String)
+  @UpdateDateColumn()
+  updatedAt = Date;
+
+  @ManyToOne(() => Groups, (groups) => groups.children)
+  inGroup: Groups;
+
+  @ManyToOne(() => Mother, (mother) => mother.children)
+  mother: Mother;
+
+  @ManyToOne(() => Father, (father) => father.children)
+  father: Father;
+}
