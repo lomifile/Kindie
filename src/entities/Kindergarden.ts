@@ -26,6 +26,18 @@ export class KinderGarden extends BaseEntity {
   @Column()
   userId: number;
 
+  @Field(() => String)
+  @Column()
+  Address!: string;
+
+  @Field(() => String)
+  @Column()
+  City!: string;
+
+  @Field()
+  @Column()
+  Zipcode!: number;
+
   @OneToMany(() => User, (user) => user.ownerOf)
   owning: User;
 

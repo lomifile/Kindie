@@ -12,6 +12,7 @@ import { isAuth } from "../middleware/isAuth";
 import { AppContext } from "../Types";
 import { getConnection } from "typeorm";
 import { KinderGardenInput } from "../utils/inputs/KindergardenInput";
+import { validatekinderGarden } from "../utils/ValidateKindergarden";
 
 @ObjectType()
 class KindergardenFieldError {
@@ -41,6 +42,11 @@ export class KindergardenResolver {
   ): Promise<KindergardenResponse> {
     let kindergarden;
     try {
+      const errors = validatekinderGarden(options);
+      if (errors) {
+        return { errors };
+      }
+
       const result = await getConnection()
         .createQueryBuilder()
         .insert()
@@ -48,6 +54,9 @@ export class KindergardenResolver {
         .values({
           Name: options.name,
           userId: req.session.userId,
+          City: options.city,
+          Zipcode: options.Zipcode,
+          Address: options.address,
         })
         .returning("*")
         .execute();

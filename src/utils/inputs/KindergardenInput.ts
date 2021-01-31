@@ -4,4 +4,13 @@ import { Field, InputType } from "type-graphql";
 export class KinderGardenInput {
   @Field()
   name: string;
+
+  @Field()
+  city: string;
+
+  @Field()
+  address: string;
+
+  @Field()
+  Zipcode: number;
 }
