@@ -16,6 +16,7 @@ import { Mother } from "./entities/Mother";
 import { Father } from "./entities/Father";
 import { UserResolver } from "./resolvers/User";
 import { KindergardenResolver } from "./resolvers/Kindergarden";
+import { GroupsResolver } from "./resolvers/Groups";
 
 const main = async () => {
   const connection = await createConnection({
@@ -57,7 +58,12 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, UserResolver, KindergardenResolver],
+      resolvers: [
+        HelloResolver,
+        UserResolver,
+        KindergardenResolver,
+        GroupsResolver,
+      ],
       validate: false,
     }),
     context: ({ req, res }) => ({ req, res, redis }),

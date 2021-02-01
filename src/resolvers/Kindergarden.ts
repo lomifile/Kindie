@@ -3,7 +3,6 @@ import {
   Arg,
   Ctx,
   Field,
-  ID,
   Mutation,
   ObjectType,
   Query,
@@ -35,7 +34,7 @@ class KindergardenResponse {
 
 @Resolver(KinderGarden)
 export class KindergardenResolver {
-  @Query(() => KinderGarden)
+  @Query(() => KinderGarden, { nullable: true })
   @UseMiddleware(isAuth)
   selectedKindergarden(@Ctx() { req }: AppContext) {
     if (!req.session.selectedKindergarden) {

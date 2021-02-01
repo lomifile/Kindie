@@ -1,5 +1,7 @@
 import { Groups } from "../entities/Groups";
 import {
+  Arg,
+  Ctx,
   Field,
   Mutation,
   ObjectType,
@@ -7,6 +9,9 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { isAuth } from "../middleware/isAuth";
+import { AppContext } from "../Types";
+import { getConnection } from "typeorm";
+import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
 
 @ObjectType()
 class GroupsFieldError {
@@ -27,4 +32,34 @@ class GroupsResponse {
 }
 
 @Resolver(Groups)
-export class GroupsResolver {}
+export class GroupsResolver {
+  @Mutation(() => GroupsResponse)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async createGroup(@Arg("name") name: string, @Ctx() { req }: AppContext) {
+    let groups;
+    try {
+      const result = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(Groups)
+        .values({
+          Name: name,
+          kindergardenId: req.session.selectedKindergarden,
+        })
+        .returning("*")
+        .execute();
+      groups = result.raw[0];
+    } catch (err) {
+      return {
+        errors: [
+          {
+            field: "Groups",
+            message: "There was an error",
+          },
+        ],
+      };
+    }
+    return { groups };
+  }
+}

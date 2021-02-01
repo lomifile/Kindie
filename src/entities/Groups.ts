@@ -23,6 +23,10 @@ export class Groups extends BaseEntity {
   @Column()
   Name!: string;
 
+  @Field()
+  @Column()
+  kindergardenId: number;
+
   @Field(() => String)
   @CreateDateColumn()
   createdAt = Date;
