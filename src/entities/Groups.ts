@@ -23,10 +23,6 @@ export class Groups extends BaseEntity {
   @Column()
   Name!: string;
 
-  @Field()
-  @Column()
-  kindergardenId: number;
-
   @Field(() => String)
   @CreateDateColumn()
   createdAt = Date;
@@ -36,7 +32,7 @@ export class Groups extends BaseEntity {
   updatedAt = Date;
 
   @ManyToOne(() => KinderGarden, (kindergarden) => kindergarden.groups)
-  inKindergarden: KinderGarden;
+  inKindergarden: KinderGarden | number;
 
   @OneToMany(() => Children, (children) => children.inGroup)
   children: Children[];

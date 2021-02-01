@@ -51,7 +51,7 @@ export class KindergardenResolver {
     @Ctx() { req }: AppContext
   ): Promise<KindergardenResponse> {
     const kindergarden = await KinderGarden.findOne({
-      where: { Id: kindergardenId, userId: req.session.userId },
+      where: { Id: kindergardenId, owning: req.session.userId },
     });
     if (!kindergarden) {
       return {
@@ -74,7 +74,9 @@ export class KindergardenResolver {
   async showKindergarden(
     @Ctx() { req }: AppContext
   ): Promise<KinderGarden[] | null> {
-    return await KinderGarden.find({ where: `"userId"=${req.session.userId}` });
+    return await KinderGarden.find({
+      where: `"owningId"=${req.session.userId}`,
+    });
   }
 
   @Mutation(() => KindergardenResponse)
@@ -91,7 +93,7 @@ export class KindergardenResolver {
         .into(KinderGarden)
         .values({
           Name: options.name,
-          userId: req.session.userId,
+          owning: req.session.userId,
           City: options.city,
           Zipcode: options.Zipcode,
           Address: options.address,

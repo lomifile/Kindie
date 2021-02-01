@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -22,10 +23,6 @@ export class KinderGarden extends BaseEntity {
   @Column()
   Name!: string;
 
-  @Field()
-  @Column()
-  userId: number;
-
   @Field(() => String)
   @Column()
   Address!: string;
@@ -38,13 +35,13 @@ export class KinderGarden extends BaseEntity {
   @Column()
   Zipcode!: number;
 
-  @OneToMany(() => User, (user) => user.ownerOf)
-  owning: User;
+  @ManyToOne(() => User, (user) => user.ownerOf)
+  owning: User | number;
 
   @OneToMany(() => Groups, (groups) => groups.inKindergarden, {
     nullable: true,
   })
-  groups: Groups[];
+  groups: Groups[] | string[];
 
   @Field(() => String)
   @CreateDateColumn()

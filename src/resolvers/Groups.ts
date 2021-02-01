@@ -45,7 +45,7 @@ export class GroupsResolver {
         .into(Groups)
         .values({
           Name: name,
-          kindergardenId: req.session.selectedKindergarden,
+          inKindergarden: req.session.selectedKindergarden,
         })
         .returning("*")
         .execute();

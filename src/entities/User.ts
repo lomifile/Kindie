@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -33,10 +34,10 @@ export class User extends BaseEntity {
   @Column()
   Role!: string;
 
-  @ManyToOne(() => KinderGarden, (kindergarden) => kindergarden.owning, {
+  @OneToMany(() => KinderGarden, (kindergarden) => kindergarden.owning, {
     nullable: true,
   })
-  ownerOf: KinderGarden[];
+  ownerOf: KinderGarden[] | number[];
 
   @Column()
   Password!: string;
