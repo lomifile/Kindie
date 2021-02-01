@@ -3,8 +3,10 @@ import {
   Arg,
   Ctx,
   Field,
+  ID,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
   UseMiddleware,
 } from "type-graphql";
@@ -12,7 +14,6 @@ import { isAuth } from "../middleware/isAuth";
 import { AppContext } from "../Types";
 import { getConnection } from "typeorm";
 import { KinderGardenInput } from "../utils/inputs/KindergardenInput";
-import { validatekinderGarden } from "../utils/ValidateKindergarden";
 
 @ObjectType()
 class KindergardenFieldError {
@@ -34,6 +35,49 @@ class KindergardenResponse {
 
 @Resolver(KinderGarden)
 export class KindergardenResolver {
+  @Query(() => KinderGarden)
+  @UseMiddleware(isAuth)
+  selectedKindergarden(@Ctx() { req }: AppContext) {
+    if (!req.session.selectedKindergarden) {
+      return null;
+    }
+
+    return KinderGarden.findOne(req.session.selectedKindergarden);
+  }
+
+  @Mutation(() => KindergardenResponse)
+  @UseMiddleware(isAuth)
+  async useKindergarden(
+    @Arg("kindergadenID") kindergardenId: number,
+    @Ctx() { req }: AppContext
+  ): Promise<KindergardenResponse> {
+    const kindergarden = await KinderGarden.findOne({
+      where: { Id: kindergardenId, userId: req.session.userId },
+    });
+    if (!kindergarden) {
+      return {
+        errors: [
+          {
+            field: "id",
+            message: "Kindergarden with given id doesn't exist",
+          },
+        ],
+      };
+    }
+
+    req.session.selectedKindergarden = kindergarden.Id;
+
+    return { kindergarden };
+  }
+
+  @Query(() => [KinderGarden])
+  @UseMiddleware(isAuth)
+  async showKindergarden(
+    @Ctx() { req }: AppContext
+  ): Promise<KinderGarden[] | null> {
+    return await KinderGarden.find({ where: `"userId"=${req.session.userId}` });
+  }
+
   @Mutation(() => KindergardenResponse)
   @UseMiddleware(isAuth)
   async createKindergarden(
@@ -42,11 +86,6 @@ export class KindergardenResolver {
   ): Promise<KindergardenResponse> {
     let kindergarden;
     try {
-      const errors = validatekinderGarden(options);
-      if (errors) {
-        return { errors };
-      }
-
       const result = await getConnection()
         .createQueryBuilder()
         .insert()

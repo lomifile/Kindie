@@ -4,7 +4,8 @@ import { Redis } from "ioredis";
 
 export type AppContext = {
   req: Request & {
-    session: Session & Partial<SessionData> & { userId: number };
+    session: Session &
+      Partial<SessionData> & { userId: number; selectedKindergarden: number };
   };
   res: Response;
   redis: Redis;
