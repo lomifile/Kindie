@@ -13,7 +13,9 @@ import {
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import argon2 from "argon2";
-import { COOKIE_NAME } from "../Constants";
+import { ACCOUNT_VERIFICATION_PREFIX, COOKIE_NAME } from "../Constants";
+import { sendMail } from "../utils/SendEmail";
+import { v4 } from "uuid";
 
 @ObjectType()
 class UserFieldError {
@@ -59,6 +61,16 @@ export class UserResolver {
           },
         ],
       };
+    } else if (!user.confirmed || user.confirmed === null) {
+      return {
+        errors: [
+          {
+            field: "confirmation",
+            message:
+              "Your account need verification! Please check your email for verification!",
+          },
+        ],
+      };
     }
     const valid = await argon2.verify(user.Password, password);
     if (!valid) {
@@ -82,7 +94,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async register(
     @Arg("options") options: UsernamePasswordInput,
-    @Ctx() { req }: AppContext
+    @Ctx() { req, redis }: AppContext
   ): Promise<UserResponse> {
     const errors = ValidateRegister(options);
     if (errors) {
@@ -102,11 +114,26 @@ export class UserResolver {
           Email: options.email,
           Role: options.role,
           Password: hashPassword,
+          confirmed: false,
         })
         .returning("*")
         .execute();
       // console.log(result);
       user = result.raw[0];
+
+      const token = v4();
+      await redis.set(
+        ACCOUNT_VERIFICATION_PREFIX + token,
+        user.Id,
+        "ex",
+        1000 * 60 * 60 * 24 * 3
+      );
+
+      await sendMail(
+        options.email,
+        "Verify account",
+        `<a href="http://localhost:3000/change-password/${token}">Verify account</a>`
+      ).catch(console.error);
     } catch (err) {
       // console.log(err);
       if (err.code === "23505") {
@@ -124,6 +151,53 @@ export class UserResolver {
     req.session.userId = user.id;
 
     return { user };
+  }
+
+  @Mutation(() => UserResponse)
+  async verifyAccount(
+    @Arg("token") token: string,
+    @Ctx() { redis, req }: AppContext
+  ): Promise<UserResponse> {
+    const key = ACCOUNT_VERIFICATION_PREFIX + token;
+    const userID = await redis.get(key);
+
+    if (!userID) {
+      return {
+        errors: [
+          {
+            field: "token",
+            message: "Token expired",
+          },
+        ],
+      };
+    }
+
+    const userId = parseInt(userID);
+    const userData = await User.findOne(userId);
+
+    if (!userData) {
+      return {
+        errors: [
+          {
+            field: "token",
+            message: "User no longer exists",
+          },
+        ],
+      };
+    }
+
+    await User.update(
+      { Id: userId },
+      {
+        confirmed: true,
+      }
+    );
+
+    await redis.del(key);
+    req.session.userId = userData.Id;
+    return {
+      user: userData,
+    };
   }
 
   @Mutation(() => Boolean)
