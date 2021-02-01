@@ -13,3 +13,19 @@ export class UsernamePasswordInput {
   @Field()
   role: string;
 }
+
+@InputType()
+export class UpdateUserInput {
+  @Field()
+  name: string;
+  @Field()
+  surname: string;
+  @Field()
+  email: string;
+}
+
+@InputType()
+export class UpdatePassword {
+  @Field()
+  password: string;
+}

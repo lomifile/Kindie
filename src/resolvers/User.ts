@@ -1,6 +1,10 @@
 import { User } from "../entities/User";
 import { AppContext } from "src/Types";
-import { UsernamePasswordInput } from "../utils/inputs/UserInput";
+import {
+  UpdatePassword,
+  UpdateUserInput,
+  UsernamePasswordInput,
+} from "../utils/inputs/UserInput";
 import { ValidateRegister } from "../utils/ValidateRegister";
 import {
   Arg,
@@ -10,12 +14,18 @@ import {
   ObjectType,
   Query,
   Resolver,
+  UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import argon2 from "argon2";
-import { ACCOUNT_VERIFICATION_PREFIX, COOKIE_NAME } from "../Constants";
+import {
+  ACCOUNT_VERIFICATION_PREFIX,
+  COOKIE_NAME,
+  FORGET_PASSWORD_PREFIX,
+} from "../Constants";
 import { sendMail } from "../utils/SendEmail";
 import { v4 } from "uuid";
+import { isAuth } from "../middleware/isAuth";
 
 @ObjectType()
 class UserFieldError {
@@ -36,6 +46,156 @@ class UserResponse {
 
 @Resolver(User)
 export class UserResolver {
+  @Mutation(() => UserResponse)
+  @UseMiddleware(isAuth)
+  async updatePassword(
+    @Arg("options") options: UpdatePassword,
+    @Ctx() { req }: AppContext
+  ): Promise<UserResponse> {
+    const hashPassword = await argon2.hash(options.password);
+    let user;
+    try {
+      const result = await getConnection()
+        .createQueryBuilder()
+        .update(User)
+        .set({
+          Password: hashPassword,
+        })
+        .where("Id=:id", { id: req.session.userId })
+        .returning("*")
+        .execute();
+      user = result.raw[0];
+    } catch (err) {
+      if (err.code === "23505") {
+        return {
+          errors: [
+            {
+              field: "email",
+              message: "Email already taken",
+            },
+          ],
+        };
+      }
+    }
+
+    req.session.userId = user.id;
+
+    return { user };
+  }
+
+  @Mutation(() => UserResponse)
+  @UseMiddleware(isAuth)
+  async update(
+    @Arg("options") options: UpdateUserInput,
+    @Ctx() { req }: AppContext
+  ): Promise<UserResponse> {
+    let user;
+    try {
+      const result = await getConnection()
+        .createQueryBuilder()
+        .update(User)
+        .set({
+          Name: options.name,
+          Surname: options.surname,
+          Email: options.email,
+        })
+        .where("Id=:id", { id: req.session.userId })
+        .returning("*")
+        .execute();
+      user = result.raw[0];
+    } catch (err) {
+      if (err.code === "23505") {
+        return {
+          errors: [
+            {
+              field: "email",
+              message: "Email already taken",
+            },
+          ],
+        };
+      }
+    }
+
+    req.session.userId = user.id;
+
+    return { user };
+  }
+
+  @Mutation(() => UserResponse)
+  async changePassword(
+    @Arg("token") token: string,
+    @Arg("newPassword") newPassword: string,
+    @Ctx() { redis, req }: AppContext
+  ): Promise<UserResponse> {
+    const key = FORGET_PASSWORD_PREFIX + token;
+    const userID = await redis.get(key);
+
+    if (!userID) {
+      return {
+        errors: [
+          {
+            field: "token",
+            message: "Token expired",
+          },
+        ],
+      };
+    }
+
+    const userid = parseInt(userID);
+    const userData = await User.findOne(userid);
+
+    if (!userData) {
+      return {
+        errors: [
+          {
+            field: "token",
+            message: "User no longer exists",
+          },
+        ],
+      };
+    }
+
+    await User.update(
+      { Id: userid },
+      {
+        Password: await argon2.hash(newPassword),
+      }
+    );
+
+    await redis.del(key);
+
+    req.session.userId = userData.Id;
+    return {
+      user: userData,
+    };
+  }
+
+  @Mutation(() => Boolean)
+  async forgetPassword(
+    @Arg("email") email: string,
+    @Ctx() { redis }: AppContext
+  ) {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return true;
+    }
+
+    const token = v4();
+    await redis.set(
+      FORGET_PASSWORD_PREFIX + token,
+      user.Id,
+      "ex",
+      1000 * 60 * 60 * 24 * 3
+    );
+
+    await sendMail(
+      email,
+      "Change password",
+      `<a href="http://localhost:3000/change-password/${token}">Reset password</a>`
+    ).catch(console.error);
+    return true;
+  }
+
   @Query(() => User, { nullable: true })
   me(@Ctx() { req }: AppContext) {
     if (!req.session.userId) {
