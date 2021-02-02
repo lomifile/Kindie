@@ -17,6 +17,7 @@ import { Father } from "./entities/Father";
 import { UserResolver } from "./resolvers/User";
 import { KindergardenResolver } from "./resolvers/Kindergarden";
 import { GroupsResolver } from "./resolvers/Groups";
+import { ChildrenResolver } from "./resolvers/Children";
 
 const main = async () => {
   const connection = await createConnection({
@@ -63,6 +64,7 @@ const main = async () => {
         UserResolver,
         KindergardenResolver,
         GroupsResolver,
+        ChildrenResolver,
       ],
       validate: false,
     }),

@@ -29,6 +29,10 @@ export class Children extends BaseEntity {
 
   @Field(() => String)
   @Column()
+  Gender!: string;
+
+  @Field(() => String)
+  @Column()
   BirthDate!: Date;
 
   @Field()
@@ -47,12 +51,12 @@ export class Children extends BaseEntity {
   @UpdateDateColumn()
   updatedAt = Date;
 
-  @ManyToOne(() => Groups, (groups) => groups.children)
-  inGroup: Groups;
+  @ManyToOne(() => Groups, (groups) => groups.children, { nullable: true })
+  inGroup: Groups | number | null;
 
-  @ManyToOne(() => Mother, (mother) => mother.children)
-  mother: Mother;
+  @ManyToOne(() => Mother, (mother) => mother.children, { nullable: true })
+  mother: Mother | number | null;
 
-  @ManyToOne(() => Father, (father) => father.children)
-  father: Father;
+  @ManyToOne(() => Father, (father) => father.children, { nullable: true })
+  father: Father | number | null;
 }
