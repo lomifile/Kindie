@@ -20,7 +20,7 @@ export async function sendMail(to: string, subject: string, text: string) {
   });
 
   let info = await transporter.sendMail({
-    from: "Filip at P!<ivanusecfilip@zohomail.eu>",
+    from: "Filip at DV Organizator!<ivanusecfilip@zohomail.eu>",
     to: to,
     subject: subject,
     text,

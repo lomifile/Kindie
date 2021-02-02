@@ -5,6 +5,7 @@ import {
   Field,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
   UseMiddleware,
 } from "type-graphql";
@@ -33,6 +34,56 @@ class GroupsResponse {
 
 @Resolver(Groups)
 export class GroupsResolver {
+  @Query(() => Groups, { nullable: true })
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  showSelectedGroup(@Ctx() { req }: AppContext) {
+    if (!req.session.selectedGroup) {
+      return null;
+    }
+
+    return Groups.findOne({ where: { Id: req.session.selectedGroup } });
+  }
+
+  @Mutation(() => GroupsResponse)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async useGroup(
+    @Arg("groupId") groupId: number,
+    @Ctx() { req }: AppContext
+  ): Promise<GroupsResponse> {
+    const groups = await Groups.findOne({
+      where: {
+        Id: groupId,
+        inKindergarden: req.session.selectedKindergarden,
+      },
+    });
+
+    if (!groups) {
+      return {
+        errors: [
+          {
+            field: "Id",
+            message: "There is no group by this ID",
+          },
+        ],
+      };
+    }
+
+    req.session.selectedGroup = groups.Id;
+
+    return { groups };
+  }
+
+  @Query(() => [Groups])
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  showGroups(@Ctx() { req }: AppContext): Promise<Groups[] | null> {
+    return Groups.find({
+      where: { inKindergarden: req.session.selectedKindergarden },
+    });
+  }
+
   @Mutation(() => GroupsResponse)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
