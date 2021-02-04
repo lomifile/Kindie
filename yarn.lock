@@ -224,6 +224,13 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/graphql-bigint@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/graphql-bigint/-/graphql-bigint-1.0.0.tgz#46a69f74c8f3c78b61f605cb44ecec4c821c8fc3"
+  integrity sha512-jpbpr+QBmdsdBC1P0OMXcKEzDNwzZ6UQhOLS+dpmHkRZ+YdQjIlzy2gYHlvAOg/wlGgnVnD9iXlB1D9Etr8d8Q==
+  dependencies:
+    graphql "^14.5.3"
+
 "@types/graphql-upload@^8.0.0":
   version "8.0.4"
   resolved "https://registry.yarnpkg.com/@types/graphql-upload/-/graphql-upload-8.0.4.tgz#23a8ffb3d2fe6e0ee07e6f16ee9d9d5e995a2f4f"
@@ -662,6 +669,11 @@ base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
+
+bigint-typescript-definitions@^5.5.3-0:
+  version "5.5.3-0"
+  resolved "https://registry.yarnpkg.com/bigint-typescript-definitions/-/bigint-typescript-definitions-5.5.3-0.tgz#300089409aec063401c4c7f5e84062358008c70d"
+  integrity sha1-MACJQJrsBjQBxMf16EBiNYAIxw0=
 
 binary-extensions@^2.0.0:
   version "2.2.0"
@@ -1383,6 +1395,11 @@ graceful-fs@^4.1.2:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
+graphql-bigint@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-bigint/-/graphql-bigint-1.0.0.tgz#b2909be9c9970a9a7697273c27d0ea47a146a19c"
+  integrity sha512-eLDf9GinU0ioui1ipXCl7pMFa3Am8pxciS0D0LR68SXfY7EzLk5P58LKyk+7CgLD5f66kiFGa5OIqt6iRLE2cQ==
+
 graphql-extensions@^0.12.8:
   version "0.12.8"
   resolved "https://registry.yarnpkg.com/graphql-extensions/-/graphql-extensions-0.12.8.tgz#9cdc2c43d8fe5e0f6c3177a004ac011da2a8aa0f"
@@ -1431,6 +1448,13 @@ graphql-upload@^8.0.2:
     fs-capacitor "^2.0.4"
     http-errors "^1.7.3"
     object-path "^0.11.4"
+
+graphql@^14.5.3:
+  version "14.7.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.7.0.tgz#7fa79a80a69be4a31c27dda824dc04dac2035a72"
+  integrity sha512-l0xWZpoPKpppFzMfvVyFmp9vLN7w/ZZJPefUicMCepfJeQ8sMcztloGYY9DfjVPo6tIUDzU5Hw3MUbIjj9AVVA==
+  dependencies:
+    iterall "^1.2.2"
 
 graphql@^15.3.0, graphql@^15.5.0:
   version "15.5.0"
@@ -1717,7 +1741,7 @@ isarray@~1.0.0:
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
   integrity sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=
 
-iterall@^1.1.3, iterall@^1.2.1:
+iterall@^1.1.3, iterall@^1.2.1, iterall@^1.2.2:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.3.0.tgz#afcb08492e2915cbd8a0884eb93a8c94d0d72fea"
   integrity sha512-QZ9qOMdF+QLHxy1QIpUHUU1D5pS2CG2P69LF6L6CPjPYA/XMOmKV3PZpawHoAjHNyB0swdVTRxdYT4tbBbxqwg==

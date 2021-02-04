@@ -36,7 +36,7 @@ export class Children extends BaseEntity {
   BirthDate!: Date;
 
   @Field()
-  @Column()
+  @Column({ type: "bigint" })
   OIB!: number;
 
   @Field(() => String)

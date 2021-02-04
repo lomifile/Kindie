@@ -14,4 +14,8 @@ export class ChildrenInput {
   Remarks: string;
   @Field()
   Gender: string;
+  @Field({ nullable: true })
+  mother: number;
+  @Field({ nullable: true })
+  father: number;
 }

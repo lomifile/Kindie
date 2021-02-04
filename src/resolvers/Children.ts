@@ -36,6 +36,18 @@ class ChildrenResponse {
 
 @Resolver(Children)
 export class ChildrenResolver {
+  /**
+   * Possible paginate
+   */
+
+  @Query(() => [Children])
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  @UseMiddleware(isGroupSelected)
+  showChildrenFilterNoParents(): Promise<Children[]> {
+    return Children.find({ where: { mother: null, father: null } });
+  }
+
   @Query(() => [Children])
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
@@ -88,6 +100,80 @@ export class ChildrenResolver {
   @Mutation(() => ChildrenResponse)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
+  async updateKid(
+    @Arg("kidId") kidId: number,
+    @Arg("options") options: ChildrenInput
+  ) {
+    let children;
+    try {
+      const result = await getConnection()
+        .createQueryBuilder()
+        .update(Children)
+        .set({
+          Name: options.Name,
+          Surname: options.Surname,
+          BirthDate: options.BirthDate,
+          OIB: options.OIB,
+          Remarks: options.Remarks,
+          Gender: options.Gender,
+        })
+        .where("Id=:id", { id: kidId })
+        .returning("*")
+        .execute();
+      children = result.raw[0];
+    } catch (err) {
+      if (err.code === "23505") {
+        return {
+          errors: [
+            {
+              field: "Children",
+              message: "There was an error",
+            },
+          ],
+        };
+      }
+    }
+    return { children };
+  }
+
+  @Mutation(() => ChildrenResponse)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async updateChildernParents(
+    @Arg("kidId") kidId: number,
+    @Arg("options") options: ChildrenInput
+  ) {
+    let children;
+    try {
+      const result = await getConnection()
+        .createQueryBuilder()
+        .update(Children)
+        .set({
+          mother: options.mother,
+          father: options.father,
+        })
+        .where("Id=:id", { id: kidId })
+        .returning("*")
+        .execute();
+      children = result.raw[0];
+    } catch (err) {
+      if (err.code === "23505") {
+        return {
+          errors: [
+            {
+              field: "Children",
+              message: "There was an error",
+            },
+          ],
+        };
+      }
+    }
+    return { children };
+  }
+
+  @Mutation(() => ChildrenResponse)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
   async addKid(
     @Arg("options") options: ChildrenInput
   ): Promise<ChildrenResponse> {
@@ -105,8 +191,8 @@ export class ChildrenResolver {
           Remarks: options.Remarks,
           Gender: options.Gender,
           inGroup: null,
-          mother: null,
-          father: null,
+          mother: options.mother,
+          father: options.father,
         })
         .returning("*")
         .execute();
