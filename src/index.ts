@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import connectRedis from "connect-redis";
 import express from "express";
 import session from "express-session";
@@ -7,28 +8,14 @@ import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { COOKIE_NAME, __prod__ } from "./Constants";
 import { HelloResolver } from "./resolvers/Hello";
-import "reflect-metadata";
-import { User } from "./entities/User";
-import { KinderGarden } from "./entities/Kindergarden";
-import { Groups } from "./entities/Groups";
-import { Children } from "./entities/Children";
-import { Mother } from "./entities/Mother";
-import { Father } from "./entities/Father";
 import { UserResolver } from "./resolvers/User";
 import { KindergardenResolver } from "./resolvers/Kindergarden";
 import { GroupsResolver } from "./resolvers/Groups";
 import { ChildrenResolver } from "./resolvers/Children";
 
 const main = async () => {
-  const connection = await createConnection({
-    type: "postgres",
-    database: "dv_organizator",
-    username: "postgres",
-    password: "00259641",
-    logging: true,
-    synchronize: true,
-    entities: [User, KinderGarden, Groups, Children, Mother, Father],
-  });
+  const ormconfig = require("../ormconfig.json");
+  const connection = await createConnection(ormconfig);
 
   const app = express();
 

@@ -1,16 +1,15 @@
 import { Mother } from "../entities/Mother";
 import {
   Arg,
-  Ctx,
   Field,
   Mutation,
   ObjectType,
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { isAuth } from "src/middleware/isAuth";
-import { isKinderGardenSelected } from "src/middleware/isKindergardenSelected";
-import { ParentsInput } from "src/utils/inputs/ParentsInput";
+import { isAuth } from "../middleware/isAuth";
+import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
+import { ParentsInput } from "../utils/inputs/ParentsInput";
 import { getConnection } from "typeorm";
 
 @ObjectType()
