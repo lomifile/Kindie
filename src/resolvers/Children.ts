@@ -136,6 +136,14 @@ export class ChildrenResolver {
     return { children };
   }
 
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async deleteChildern(@Arg("kidId") kidId: number): Promise<Boolean> {
+    await Children.delete(kidId);
+    return true;
+  }
+
   @Mutation(() => ChildrenResponse)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
@@ -207,7 +215,6 @@ export class ChildrenResolver {
         ],
       };
     }
-
     return { children };
   }
 }
