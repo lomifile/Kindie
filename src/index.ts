@@ -18,7 +18,6 @@ const main = async () => {
   const connection = await createConnection(ormconfig);
 
   const app = express();
-
   const RedisStore = connectRedis(session);
   const redis = new Redis();
 
