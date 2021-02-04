@@ -30,7 +30,7 @@ export class Mother extends BaseEntity {
   Email!: string;
 
   @Field()
-  @Column()
+  @Column({ type: "bigint" })
   Phone: number;
 
   @Field(() => String)

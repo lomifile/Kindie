@@ -30,7 +30,7 @@ export class Father extends BaseEntity {
   Email!: string;
 
   @Field()
-  @Column()
+  @Column({ type: "bigint" })
   Phone: number;
 
   @Field(() => String)

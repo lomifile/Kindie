@@ -14,7 +14,7 @@ import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
 import { isGroupSelected } from "../middleware/isGroupSelected";
 import { getConnection } from "typeorm";
 import { ChildrenInput } from "../utils/inputs/ChildrenInput";
-import { AppContext } from "src/Types";
+import { AppContext } from "../Types";
 
 @ObjectType()
 class ChildrenFieldError {
