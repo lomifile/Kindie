@@ -41,6 +41,9 @@ export class Father extends BaseEntity {
   @UpdateDateColumn()
   updatedAt = Date;
 
-  @OneToMany(() => Children, (children) => children.father)
+  @OneToMany(() => Children, (children) => children.father, {
+    nullable: true,
+    lazy: true,
+  })
   children: Children[];
 }

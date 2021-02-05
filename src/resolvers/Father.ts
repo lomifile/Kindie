@@ -21,6 +21,7 @@ class FatherFieldError {
   message: string;
 }
 
+@ObjectType()
 class FatherResponse {
   @Field(() => [FatherFieldError], { nullable: true })
   errors?: FatherFieldError[];

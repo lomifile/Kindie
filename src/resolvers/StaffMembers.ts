@@ -11,12 +11,11 @@ export class StaffMembersResolver {
   @UseMiddleware(isKinderGardenSelected)
   async addStaff(@Arg("userId") userId: number, @Ctx() { req }: AppContext) {
     const kindergardenId = req.session.selectedKindergarden;
-    console.log(
-      await StaffMembers.insert({
-        userId: userId,
-        kindergardenId: kindergardenId,
-      })
-    );
+
+    await StaffMembers.insert({
+      userId: userId,
+      kindergardenId: kindergardenId,
+    });
     return true;
   }
 }

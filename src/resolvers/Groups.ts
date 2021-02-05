@@ -55,7 +55,7 @@ export class GroupsResolver {
     const groups = await Groups.findOne({
       where: {
         Id: groupId,
-        inKindergarden: req.session.selectedKindergarden,
+        inKindergardenId: req.session.selectedKindergarden,
       },
     });
 
@@ -80,7 +80,7 @@ export class GroupsResolver {
   @UseMiddleware(isKinderGardenSelected)
   showGroups(@Ctx() { req }: AppContext): Promise<Groups[] | null> {
     return Groups.find({
-      where: { inKindergarden: req.session.selectedKindergarden },
+      where: { inKindergardenId: req.session.selectedKindergarden },
     });
   }
 
@@ -96,7 +96,7 @@ export class GroupsResolver {
         .into(Groups)
         .values({
           Name: name,
-          inKindergarden: req.session.selectedKindergarden,
+          inKindergardenId: req.session.selectedKindergarden,
         })
         .returning("*")
         .execute();

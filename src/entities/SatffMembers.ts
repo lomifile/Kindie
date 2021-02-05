@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryColumn } from "typeorm";
+import { BaseEntity, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class StaffMembers extends BaseEntity {
@@ -7,4 +7,7 @@ export class StaffMembers extends BaseEntity {
 
   @PrimaryColumn("uuid")
   kindergardenId: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

@@ -51,12 +51,33 @@ export class Children extends BaseEntity {
   @UpdateDateColumn()
   updatedAt = Date;
 
-  @ManyToOne(() => Groups, (groups) => groups.children, { nullable: true })
-  inGroup: Groups | number | null;
+  @Column({ nullable: true })
+  motherId: number;
 
-  @ManyToOne(() => Mother, (mother) => mother.children, { nullable: true })
-  mother: Mother | number | null;
+  @Column({ nullable: true })
+  fatherId: number;
 
-  @ManyToOne(() => Father, (father) => father.children, { nullable: true })
-  father: Father | number | null;
+  @Column({ nullable: true })
+  inGroupId: number;
+
+  @Field(() => [Groups], { nullable: true })
+  @ManyToOne(() => Groups, (groups) => groups.children, {
+    nullable: true,
+    lazy: true,
+  })
+  inGroup: Groups;
+
+  @Field(() => Mother, { nullable: true })
+  @ManyToOne(() => Mother, (mother) => mother.children, {
+    nullable: true,
+    lazy: true,
+  })
+  mother: Mother;
+
+  @Field(() => Father, { nullable: true })
+  @ManyToOne(() => Father, (father) => father.children, {
+    nullable: true,
+    lazy: true,
+  })
+  father: Father;
 }

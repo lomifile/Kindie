@@ -31,9 +31,19 @@ export class Groups extends BaseEntity {
   @UpdateDateColumn()
   updatedAt = Date;
 
-  @ManyToOne(() => KinderGarden, (kindergarden) => kindergarden.groups)
-  inKindergarden: KinderGarden | number;
+  @Column({ nullable: true })
+  inKindergardenId: number;
 
-  @OneToMany(() => Children, (children) => children.inGroup)
+  @Field(() => KinderGarden, { nullable: true })
+  @ManyToOne(() => KinderGarden, (kindergarden) => kindergarden.groups, {
+    lazy: true,
+  })
+  inKindergarden: KinderGarden;
+
+  @Field(() => [Children], { nullable: true })
+  @OneToMany(() => Children, (children) => children.inGroup, {
+    nullable: true,
+    lazy: true,
+  })
   children: Children[];
 }

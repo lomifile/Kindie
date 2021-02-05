@@ -37,8 +37,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => KinderGarden, (kindergarden) => kindergarden.owning, {
     nullable: true,
+    lazy: true,
   })
-  ownerOf: KinderGarden[] | number[];
+  ownerOf: KinderGarden[];
 
   @ManyToMany(() => KinderGarden, (kindergarden) => kindergarden.staff, {
     lazy: true,
