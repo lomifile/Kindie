@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -42,6 +43,10 @@ export class KinderGarden extends BaseEntity {
     nullable: true,
   })
   groups: Groups[] | string[];
+
+  @Field(() => [User])
+  @ManyToMany(() => User, (user) => user.partof, { lazy: true })
+  staff: User[];
 
   @Field(() => String)
   @CreateDateColumn()
