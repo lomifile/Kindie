@@ -15,21 +15,30 @@ import { ChildrenResolver } from "./resolvers/Children";
 import { StaffMembersResolver } from "./resolvers/StaffMembers";
 import { FatherResolver } from "./resolvers/Father";
 import { MotherResolver } from "./resolvers/Mother";
+import cors from "cors";
+import "dotenv-safe/config";
 
 const main = async () => {
   const ormconfig = require("../ormconfig.json");
+  //@ts-ignore
   const connection = await createConnection(ormconfig);
 
   const app = express();
   const RedisStore = connectRedis(session);
-  const redis = new Redis();
+  const redis = new Redis(process.env.REDIS_URL);
 
+  app.use(
+    cors({
+      origin: process.env.CORS_ORIGIN,
+      credentials: true,
+    })
+  );
+
+  app.set("trust proxy", "1");
   app.use(
     session({
       name: COOKIE_NAME,
       store: new RedisStore({
-        host: "localhost",
-        port: 6379,
         client: redis,
         disableTouch: true,
       }),
@@ -41,7 +50,7 @@ const main = async () => {
         secure: !__prod__,
       },
       saveUninitialized: false,
-      secret: "uasdkadnkad",
+      secret: process.env.SESSION_SECRET,
       resave: false,
     })
   );
@@ -65,9 +74,10 @@ const main = async () => {
 
   apolloServer.applyMiddleware({
     app,
+    cors: false, //for now
   });
 
-  app.listen(4000, () => {
+  app.listen(parseInt(process.env.PORT), () => {
     console.log("Server started on localhost:4000");
   });
 };

@@ -13,20 +13,12 @@ import { isAuth } from "../middleware/isAuth";
 import { AppContext } from "../Types";
 import { getConnection } from "typeorm";
 import { KinderGardenInput } from "../utils/inputs/KindergardenInput";
-
-@ObjectType()
-class KindergardenFieldError {
-  @Field()
-  field: string;
-
-  @Field()
-  message: string;
-}
+import { FieldError } from "../utils/Errors";
 
 @ObjectType()
 class KindergardenResponse {
-  @Field(() => [KindergardenFieldError], { nullable: true })
-  errors?: KindergardenFieldError[];
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
 
   @Field(() => KinderGarden, { nullable: true })
   kindergarden?: KinderGarden;

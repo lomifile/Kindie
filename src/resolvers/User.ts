@@ -26,19 +26,12 @@ import {
 import { sendMail } from "../utils/SendEmail";
 import { v4 } from "uuid";
 import { isAuth } from "../middleware/isAuth";
-
-@ObjectType()
-class UserFieldError {
-  @Field()
-  field: string;
-  @Field()
-  message: string;
-}
+import { FieldError } from "../utils/Errors";
 
 @ObjectType()
 class UserResponse {
-  @Field(() => [UserFieldError], { nullable: true })
-  errors?: UserFieldError[];
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
 
   @Field(() => User, { nullable: true })
   user?: User;

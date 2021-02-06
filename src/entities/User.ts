@@ -43,6 +43,7 @@ export class User extends BaseEntity {
 
   @ManyToMany(() => KinderGarden, (kindergarden) => kindergarden.staff, {
     lazy: true,
+    nullable: true,
   })
   @JoinTable({
     name: "staff_members",

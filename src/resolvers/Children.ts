@@ -15,20 +15,12 @@ import { isGroupSelected } from "../middleware/isGroupSelected";
 import { getConnection } from "typeorm";
 import { ChildrenInput } from "../utils/inputs/ChildrenInput";
 import { AppContext } from "../Types";
-
-@ObjectType()
-class ChildrenFieldError {
-  @Field()
-  field: string;
-
-  @Field()
-  message: string;
-}
+import { FieldError } from "../utils/Errors";
 
 @ObjectType()
 class ChildrenResponse {
-  @Field(() => [ChildrenFieldError], { nullable: true })
-  errors?: ChildrenFieldError[];
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
 
   @Field(() => Children, { nullable: true })
   children?: Children;

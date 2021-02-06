@@ -11,20 +11,12 @@ import { isAuth } from "../middleware/isAuth";
 import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
 import { ParentsInput } from "../utils/inputs/ParentsInput";
 import { getConnection } from "typeorm";
-
-@ObjectType()
-class MotherFieldError {
-  @Field()
-  field: string;
-
-  @Field()
-  message: string;
-}
+import { FieldError } from "../utils/Errors";
 
 @ObjectType()
 class MotherResponse {
-  @Field(() => [MotherFieldError], { nullable: true })
-  errors?: MotherFieldError[];
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
 
   @Field(() => Mother, { nullable: true })
   mother?: Mother;
