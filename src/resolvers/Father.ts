@@ -11,20 +11,12 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
-
-@ObjectType()
-class FatherFieldError {
-  @Field()
-  field: string;
-
-  @Field()
-  message: string;
-}
+import { FieldError } from "../utils/Errors";
 
 @ObjectType()
 class FatherResponse {
-  @Field(() => [FatherFieldError], { nullable: true })
-  errors?: FatherFieldError[];
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
 
   @Field(() => Father, { nullable: true })
   father?: Father;

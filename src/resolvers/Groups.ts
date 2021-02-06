@@ -13,20 +13,12 @@ import { isAuth } from "../middleware/isAuth";
 import { AppContext } from "../Types";
 import { getConnection } from "typeorm";
 import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
-
-@ObjectType()
-class GroupsFieldError {
-  @Field()
-  field: string;
-
-  @Field()
-  message: string;
-}
+import { FieldError } from "../utils/Errors";
 
 @ObjectType()
 class GroupsResponse {
-  @Field(() => [GroupsFieldError], { nullable: true })
-  errors?: GroupsFieldError[];
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
 
   @Field(() => Groups, { nullable: true })
   groups?: Groups;
