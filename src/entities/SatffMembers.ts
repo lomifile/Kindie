@@ -2,10 +2,10 @@ import { BaseEntity, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class StaffMembers extends BaseEntity {
-  @PrimaryColumn("uuid")
+  @PrimaryColumn()
   userId: number;
 
-  @PrimaryColumn("uuid")
+  @PrimaryColumn()
   kindergardenId: number;
 
   @CreateDateColumn()
