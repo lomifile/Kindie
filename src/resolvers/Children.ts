@@ -78,7 +78,7 @@ export class ChildrenResolver {
         .createQueryBuilder()
         .update(Children)
         .set({
-          inGroup: req.session.selectedGroup,
+          inGroupId: req.session.selectedGroup,
         })
         .where("Id=:id", { id: kidId })
         .returning("*")
@@ -149,7 +149,8 @@ export class ChildrenResolver {
   @UseMiddleware(isKinderGardenSelected)
   async updateChildernParents(
     @Arg("kidId") kidId: number,
-    @Arg("options") options: ChildrenInput
+    @Arg("motherId") motherId: number,
+    @Arg("fatherId") fatherId: number
   ) {
     let children;
     try {
@@ -157,8 +158,8 @@ export class ChildrenResolver {
         .createQueryBuilder()
         .update(Children)
         .set({
-          mother: options.mother,
-          father: options.father,
+          motherId: motherId,
+          fatherId: fatherId,
         })
         .where("Id=:id", { id: kidId })
         .returning("*")
@@ -198,9 +199,8 @@ export class ChildrenResolver {
           OIB: options.OIB,
           Remarks: options.Remarks,
           Gender: options.Gender,
-          inGroup: null,
-          mother: options.mother,
-          father: options.father,
+          motherId: options.mother,
+          fatherId: options.father,
         })
         .returning("*")
         .execute();

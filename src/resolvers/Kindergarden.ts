@@ -51,7 +51,7 @@ export class KindergardenResolver {
     @Ctx() { req }: AppContext
   ): Promise<KindergardenResponse> {
     const kindergarden = await KinderGarden.findOne({
-      where: { Id: kindergardenId, owning: req.session.userId },
+      where: { Id: kindergardenId, owningId: req.session.userId },
     });
     if (!kindergarden) {
       return {
@@ -93,7 +93,7 @@ export class KindergardenResolver {
         .into(KinderGarden)
         .values({
           Name: options.name,
-          owning: req.session.userId,
+          owningId: req.session.userId,
           City: options.city,
           Zipcode: options.Zipcode,
           Address: options.address,

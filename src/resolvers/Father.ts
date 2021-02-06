@@ -1,4 +1,7 @@
-import { Mother } from "../entities/Mother";
+import { Father } from "../entities/Father";
+import { isAuth } from "../middleware/isAuth";
+import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
+import { ParentsInput } from "../utils/inputs/ParentsInput";
 import {
   Arg,
   Field,
@@ -7,13 +10,10 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { isAuth } from "../middleware/isAuth";
-import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
-import { ParentsInput } from "../utils/inputs/ParentsInput";
 import { getConnection } from "typeorm";
 
 @ObjectType()
-class MotherFieldError {
+class FatherFieldError {
   @Field()
   field: string;
 
@@ -22,46 +22,46 @@ class MotherFieldError {
 }
 
 @ObjectType()
-class MotherResponse {
-  @Field(() => [MotherFieldError], { nullable: true })
-  errors?: MotherFieldError[];
+class FatherResponse {
+  @Field(() => [FatherFieldError], { nullable: true })
+  errors?: FatherFieldError[];
 
-  @Field(() => Mother, { nullable: true })
-  mother?: Mother;
+  @Field(() => Father, { nullable: true })
+  father?: Father;
 }
 
-@Resolver(Mother)
-export class MotherResolver {
+@Resolver(Father)
+export class FatherResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  async deleteMother(@Arg("motherId") motherId: number) {
-    await Mother.delete(motherId);
+  async deleteFather(@Arg("fatherId") fatherId: number) {
+    await Father.delete(fatherId);
     return true;
   }
 
-  @Mutation(() => MotherResponse)
+  @Mutation(() => FatherResponse)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  async updateMother(
+  async updateFather(
     @Arg("options") options: ParentsInput,
-    @Arg("motherId") motherId: number
-  ): Promise<MotherResponse> {
-    let mother;
+    @Arg("fatherId") fatherId: number
+  ): Promise<FatherResponse> {
+    let father;
     try {
       const result = await getConnection()
         .createQueryBuilder()
-        .update(Mother)
+        .update(Father)
         .set({
           Name: options.name,
           Surname: options.surname,
           Email: options.email,
           Phone: options.phone,
         })
-        .where("Id=:id", { id: motherId })
+        .where("Id=:id", { id: fatherId })
         .returning("*")
         .execute();
-      mother = result.raw[0];
+      father = result.raw[0];
     } catch (err) {
       if (err.code === "23505") {
         return {
@@ -74,21 +74,21 @@ export class MotherResolver {
         };
       }
     }
-    return { mother };
+    return { father };
   }
 
-  @Mutation(() => MotherResponse)
+  @Mutation(() => FatherResponse)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  async addMother(
+  async addFather(
     @Arg("options") options: ParentsInput
-  ): Promise<MotherResponse> {
-    let mother;
+  ): Promise<FatherResponse> {
+    let father;
     try {
       const result = await getConnection()
         .createQueryBuilder()
         .insert()
-        .into(Mother)
+        .into(Father)
         .values({
           Name: options.name,
           Surname: options.surname,
@@ -97,7 +97,7 @@ export class MotherResolver {
         })
         .returning("*")
         .execute();
-      mother = result.raw[0];
+      father = result.raw[0];
     } catch (err) {
       return {
         errors: [
@@ -108,7 +108,6 @@ export class MotherResolver {
         ],
       };
     }
-
-    return { mother };
+    return { father };
   }
 }

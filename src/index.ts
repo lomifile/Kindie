@@ -12,6 +12,9 @@ import { UserResolver } from "./resolvers/User";
 import { KindergardenResolver } from "./resolvers/Kindergarden";
 import { GroupsResolver } from "./resolvers/Groups";
 import { ChildrenResolver } from "./resolvers/Children";
+import { StaffMembersResolver } from "./resolvers/StaffMembers";
+import { FatherResolver } from "./resolvers/Father";
+import { MotherResolver } from "./resolvers/Mother";
 
 const main = async () => {
   const ormconfig = require("../ormconfig.json");
@@ -51,6 +54,9 @@ const main = async () => {
         KindergardenResolver,
         GroupsResolver,
         ChildrenResolver,
+        StaffMembersResolver,
+        FatherResolver,
+        MotherResolver,
       ],
       validate: false,
     }),
