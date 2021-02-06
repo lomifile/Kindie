@@ -60,7 +60,7 @@ export class Children extends BaseEntity {
   @Column({ nullable: true })
   inGroupId: number;
 
-  @Field(() => [Groups], { nullable: true })
+  @Field(() => Groups, { nullable: true })
   @ManyToOne(() => Groups, (groups) => groups.children, {
     nullable: true,
     lazy: true,
