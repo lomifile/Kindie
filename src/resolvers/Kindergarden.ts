@@ -46,18 +46,10 @@ export class KindergardenResolver {
     const kindergarden = await KinderGarden.findOne({
       where: { Id: kindergardenId, owningId: req.session.userId },
     });
-    if (!kindergarden) {
-      return {
-        errors: [
-          {
-            field: "id",
-            message: "Kindergarden with given id doesn't exist",
-          },
-        ],
-      };
-    }
 
-    req.session.selectedKindergarden = kindergarden.Id;
+    if (kindergarden) {
+      req.session.selectedKindergarden = kindergarden.Id;
+    }
 
     return { kindergarden };
   }
@@ -67,19 +59,6 @@ export class KindergardenResolver {
   @UseMiddleware(isKinderGardenSelected)
   async showKinderGardenStaff(): Promise<KinderGarden[]> {
     return await KinderGarden.find({ relations: ["staff"] });
-
-    // let kindergarden;
-    // try {
-    //   const result = await getConnection()
-    //     .createQueryBuilder()
-    //     .select("*")
-    //     .from(KinderGarden, "kindergarden")
-    //     .leftJoinAndSelect("staff_members.kindergardenId", "kindergardenId")
-    //     .getMany();
-    //   console.log(result);
-    // } catch (err) {
-    //   console.log(err);
-    // }
   }
 
   @Query(() => [KinderGarden])
