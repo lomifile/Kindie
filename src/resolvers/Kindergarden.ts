@@ -14,6 +14,7 @@ import { AppContext } from "../Types";
 import { getConnection } from "typeorm";
 import { KinderGardenInput } from "../utils/inputs/KindergardenInput";
 import { FieldError } from "../utils/Errors";
+import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
 
 @ObjectType()
 class KindergardenResponse {
@@ -63,11 +64,31 @@ export class KindergardenResolver {
 
   @Query(() => [KinderGarden])
   @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async showKinderGardenStaff(): Promise<KinderGarden[]> {
+    return await KinderGarden.find({ relations: ["staff"] });
+
+    // let kindergarden;
+    // try {
+    //   const result = await getConnection()
+    //     .createQueryBuilder()
+    //     .select("*")
+    //     .from(KinderGarden, "kindergarden")
+    //     .leftJoinAndSelect("staff_members.kindergardenId", "kindergardenId")
+    //     .getMany();
+    //   console.log(result);
+    // } catch (err) {
+    //   console.log(err);
+    // }
+  }
+
+  @Query(() => [KinderGarden])
+  @UseMiddleware(isAuth)
   async showKindergarden(
     @Ctx() { req }: AppContext
   ): Promise<KinderGarden[] | null> {
     return await KinderGarden.find({
-      where: `"owningId"=${req.session.userId}`,
+      where: { owningId: req.session.userId },
     });
   }
 

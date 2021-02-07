@@ -39,6 +39,15 @@ class UserResponse {
 
 @Resolver(User)
 export class UserResolver {
+  @Query(() => [User])
+  @UseMiddleware(isAuth)
+  async staffOf(@Ctx() { req }: AppContext): Promise<User[]> {
+    return await User.find({
+      where: { Id: req.session.userId },
+      relations: ["partof"],
+    });
+  }
+
   @Mutation(() => UserResponse)
   @UseMiddleware(isAuth)
   async updatePassword(

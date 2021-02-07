@@ -27,5 +27,5 @@ export async function sendMail(to: string, subject: string, text: string) {
     html: text,
   });
 
-  console.log("Message sent: %s", info.messageId);
+  // console.log("Message sent: %s", info.messageId);
 }
