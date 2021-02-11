@@ -14,6 +14,7 @@ import { AppContext } from "../Types";
 import { getConnection } from "typeorm";
 import { KinderGardenInput } from "../utils/inputs/KindergardenInput";
 import { FieldError } from "../utils/Errors";
+import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
 
 @ObjectType()
 class KindergardenResponse {
@@ -45,20 +46,28 @@ export class KindergardenResolver {
     const kindergarden = await KinderGarden.findOne({
       where: { Id: kindergardenId, owningId: req.session.userId },
     });
-    if (!kindergarden) {
+
+    if (kindergarden) {
+      req.session.selectedKindergarden = kindergarden.Id;
+    } else if (!kindergarden) {
       return {
         errors: [
           {
-            field: "id",
-            message: "Kindergarden with given id doesn't exist",
+            field: "Id",
+            message: "There is no kindergarden with this Id!",
           },
         ],
       };
     }
 
-    req.session.selectedKindergarden = kindergarden.Id;
-
     return { kindergarden };
+  }
+
+  @Query(() => [KinderGarden])
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async showKinderGardenStaff(): Promise<KinderGarden[]> {
+    return await KinderGarden.find({ relations: ["staff"] });
   }
 
   @Query(() => [KinderGarden])
@@ -67,7 +76,7 @@ export class KindergardenResolver {
     @Ctx() { req }: AppContext
   ): Promise<KinderGarden[] | null> {
     return await KinderGarden.find({
-      where: `"owningId"=${req.session.userId}`,
+      where: { owningId: req.session.userId },
     });
   }
 
