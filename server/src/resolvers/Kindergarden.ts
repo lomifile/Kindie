@@ -49,6 +49,15 @@ export class KindergardenResolver {
 
     if (kindergarden) {
       req.session.selectedKindergarden = kindergarden.Id;
+    } else if (!kindergarden) {
+      return {
+        errors: [
+          {
+            field: "Id",
+            message: "There is no kindergarden with this Id!",
+          },
+        ],
+      };
     }
 
     return { kindergarden };
