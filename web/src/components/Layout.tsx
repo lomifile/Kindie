@@ -1,4 +1,5 @@
 import React, { Children } from "react";
+import { Footer } from "./Footer";
 import { Navbar } from "./Navbar";
 import { Wrapper, WrapperVariant } from "./Wrapper";
 
@@ -11,6 +12,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, variant }) => {
     <>
       <Navbar />
       <Wrapper variant={variant}>{children}</Wrapper>
+      <Footer />
     </>
   );
 };
