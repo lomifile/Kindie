@@ -19,6 +19,7 @@ export async function sendMail(to: string, subject: string, text: string) {
     }
   });
 
+  // @ts-ignore
   let info = await transporter.sendMail({
     from: "Filip at DV Organizator!<ivanusecfilip@zohomail.eu>",
     to: to,
