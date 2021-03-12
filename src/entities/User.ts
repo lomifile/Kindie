@@ -35,6 +35,7 @@ export class User extends BaseEntity {
   @Column()
   Role!: string;
 
+  @Field(() => [KinderGarden])
   @OneToMany(() => KinderGarden, (kindergarden) => kindergarden.owning, {
     nullable: true,
     lazy: true,

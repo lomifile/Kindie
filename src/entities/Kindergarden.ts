@@ -10,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Children } from "./Children";
 import { Groups } from "./Groups";
 import { User } from "./User";
 
@@ -52,6 +53,11 @@ export class KinderGarden extends BaseEntity {
     lazy: true,
   })
   groups: Groups[];
+
+  @OneToMany(() => Children, (children) => children.inKindergarden, {
+    lazy: true,
+  })
+  children: Children[];
 
   @Field(() => [User])
   @ManyToMany(() => User, (user) => user.partof, { lazy: true })

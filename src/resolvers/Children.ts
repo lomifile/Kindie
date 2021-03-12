@@ -43,9 +43,15 @@ export class ChildrenResolver {
   @Query(() => [Children])
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  @UseMiddleware(isGroupSelected)
-  showChildrenFilterNotInGroup(): Promise<Children[]> {
-    return Children.find({ where: { inGroup: null } });
+  showChildrenFilterNotInGroup(
+    @Ctx() { req }: AppContext
+  ): Promise<Children[]> {
+    return Children.find({
+      where: {
+        inGroupId: null,
+        inKindergardenId: req.session.selectedKindergarden,
+      },
+    });
   }
 
   @Query(() => [Children])
@@ -53,7 +59,7 @@ export class ChildrenResolver {
   @UseMiddleware(isKinderGardenSelected)
   @UseMiddleware(isGroupSelected)
   showChildren(): Promise<Children[]> {
-    return Children.find();
+    return Children.find({});
   }
 
   @Mutation(() => ChildrenResponse)
