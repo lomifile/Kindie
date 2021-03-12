@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { Father } from "./Father";
 import { Groups } from "./Groups";
+import { KinderGarden } from "./Kindergarden";
 import { Mother } from "./Mother";
 
 @ObjectType()
@@ -59,6 +60,14 @@ export class Children extends BaseEntity {
 
   @Column({ nullable: true })
   inGroupId: number;
+
+  @Column({ nullable: true })
+  inKindergardenId: number;
+
+  @ManyToOne(() => KinderGarden, (kindergarden) => kindergarden.children, {
+    lazy: true,
+  })
+  inKindergarden: KinderGarden;
 
   @Field(() => Groups, { nullable: true })
   @ManyToOne(() => Groups, (groups) => groups.children, {
