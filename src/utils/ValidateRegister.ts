@@ -61,5 +61,14 @@ export const ValidateRegister = (options: UsernamePasswordInput) => {
     ];
   }
 
+  if (options.password !== options.repeatPassword) {
+    return [
+      {
+        field: "repeatPassword",
+        message: "Passwords don't match",
+      },
+    ];
+  }
+
   return null;
 };
