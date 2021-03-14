@@ -102,6 +102,8 @@ export class UserResolver {
         ],
       };
     }
+    //@ts-ignore
+    let hashedPassword = argon2.hash(options.password);
     try {
       const result = await getConnection()
         .createQueryBuilder()
@@ -112,7 +114,9 @@ export class UserResolver {
           Email: options.email,
           Role: options.role,
         })
-        .where("Id=:id", { id: req.session.userId })
+        .where("Id=:id", {
+          id: req.session.userId,
+        })
         .returning("*")
         .execute();
       user = result.raw[0];
