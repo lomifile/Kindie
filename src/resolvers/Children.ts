@@ -74,7 +74,7 @@ export class ChildrenResolver {
       inner join public."kinder_garden" k on k."Id" = c."inKindergardenId" where k."Id" = ${
         req.session.selectedKindergarden
       }
-      ${cursor ? `where c."createdAt" < $2` : ""}
+      ${cursor ? `and c."createdAt" < $2` : ""}
       order by c."createdAt" DESC
       limit $1
       `,
