@@ -70,8 +70,8 @@ export class GroupsResolver {
   @Query(() => [Groups])
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  showGroups(@Ctx() { req }: AppContext): Promise<Groups[] | null> {
-    return Groups.find({
+  async showGroups(@Ctx() { req }: AppContext): Promise<Groups[] | null> {
+    return await Groups.find({
       where: { inKindergardenId: req.session.selectedKindergarden },
     });
   }
