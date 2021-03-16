@@ -30,7 +30,7 @@ class ChildrenResponse {
 @ObjectType()
 class PaginatedChildren {
   @Field(() => [Children])
-  children: Children[];
+  results: Children[];
 
   @Field()
   hasMore: boolean;
@@ -82,7 +82,7 @@ export class ChildrenResolver {
     );
 
     return {
-      children: child.slice(0, realLimit),
+      results: child.slice(0, realLimit),
       hasMore: child.length === realLimitPlusOne,
     };
   }
