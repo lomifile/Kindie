@@ -3,6 +3,7 @@ import {
   Arg,
   Ctx,
   Field,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -26,6 +27,15 @@ class ChildrenResponse {
   children?: Children;
 }
 
+@ObjectType()
+class PaginatedChildren {
+  @Field(() => [Children])
+  children: Children[];
+
+  @Field()
+  hasMore: boolean;
+}
+
 @Resolver(Children)
 export class ChildrenResolver {
   /**
@@ -40,18 +50,41 @@ export class ChildrenResolver {
     return Children.find({ where: { mother: null, father: null } });
   }
 
-  @Query(() => [Children])
+  @Query(() => PaginatedChildren)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  showChildrenFilterNotInGroup(
+  async showChildrenFilterNotInGroup(
+    @Arg("limit", () => Int) limit: number,
+    @Arg("cursor", () => String, { nullable: true }) cursor: string | null,
     @Ctx() { req }: AppContext
-  ): Promise<Children[]> {
-    return Children.find({
-      where: {
-        inGroupId: null,
-        inKindergardenId: req.session.selectedKindergarden,
-      },
-    });
+  ): Promise<PaginatedChildren> {
+    const realLimit = Math.min(20, limit);
+    const realLimitPlusOne = realLimit + 1;
+
+    const replacements: any[] = [realLimitPlusOne];
+
+    if (cursor) {
+      replacements.push(new Date(parseInt(cursor)));
+    }
+
+    const child = await getConnection().query(
+      `
+      select c.*
+      from children c
+      inner join public."kinder_garden" k on k."Id" = c."inKindergardenId" where k."Id" = ${
+        req.session.selectedKindergarden
+      }
+      ${cursor ? `where c."createdAt" < $2` : ""}
+      order by c."createdAt" DESC
+      limit $1
+      `,
+      replacements
+    );
+
+    return {
+      children: child.slice(0, realLimit),
+      hasMore: child.length === realLimitPlusOne,
+    };
   }
 
   @Query(() => [Children])
