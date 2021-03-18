@@ -105,4 +105,12 @@ export class GroupsResolver {
     }
     return { groups };
   }
+
+  @Mutation(() => Boolean)
+  clearGroup(@Ctx() { req }: AppContext) {
+    if (req.session.selectedGroup) {
+      req.session.selectedGroup = NaN;
+    }
+    return true;
+  }
 }

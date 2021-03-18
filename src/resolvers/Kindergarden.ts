@@ -116,7 +116,7 @@ export class KindergardenResolver {
   }
 
   @Mutation(() => Boolean)
-  clearKindergarden(@Ctx() { req, res }: AppContext) {
+  clearKindergarden(@Ctx() { req }: AppContext) {
     if (req.session.selectedKindergarden) {
       req.session.selectedKindergarden = NaN;
     }
