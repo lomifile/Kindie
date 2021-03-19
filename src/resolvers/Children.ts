@@ -50,41 +50,17 @@ export class ChildrenResolver {
     return Children.find({ where: { mother: null, father: null } });
   }
 
-  @Query(() => PaginatedChildren)
+  @Query(() => [Children])
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
   async showChildrenFilterNotInGroup(
-    @Arg("limit", () => Int) limit: number,
-    @Arg("cursor", () => String, { nullable: true }) cursor: string | null,
     @Ctx() { req }: AppContext
-  ): Promise<PaginatedChildren> {
-    const realLimit = Math.min(20, limit);
-    const realLimitPlusOne = realLimit + 1;
-
-    const replacements: any[] = [realLimitPlusOne];
-
-    if (cursor) {
-      replacements.push(new Date(parseInt(cursor)));
-    }
-
-    const child = await getConnection().query(
-      `
-      select c.*
-      from children c
-      inner join public."kinder_garden" k on k."Id" = c."inKindergardenId" where k."Id" = ${
-        req.session.selectedKindergarden
-      }
-      ${cursor ? `and c."createdAt" < $2` : ""}
-      order by c."createdAt" DESC
-      limit $1
-      `,
-      replacements
-    );
-
-    return {
-      results: child.slice(0, realLimit),
-      hasMore: child.length === realLimitPlusOne,
-    };
+  ): Promise<Children[]> {
+    return await Children.find({
+      where: {
+        inKindergardenId: req.session.selectedKindergarden,
+      },
+    });
   }
 
   @Query(() => [Children])
@@ -246,6 +222,19 @@ export class ChildrenResolver {
         ],
       };
     }
+    return { children };
+  }
+
+  @Mutation(() => ChildrenResponse)
+  async useChildren(@Ctx() { req }: AppContext): Promise<ChildrenResponse> {
+    //@ts-ignore
+    const children = await Children.findOne({
+      where: {
+        inKindergardenId: req.session.selectedKindergarden,
+      },
+    });
+
+    req.session.selectedChildren = req.session.selectedKindergarden;
     return { children };
   }
 }
