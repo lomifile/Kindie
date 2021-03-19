@@ -114,4 +114,12 @@ export class KindergardenResolver {
     }
     return { kindergarden };
   }
+
+  @Mutation(() => Boolean)
+  clearKindergarden(@Ctx() { req }: AppContext) {
+    if (req.session.selectedKindergarden) {
+      req.session.selectedKindergarden = NaN;
+    }
+    return true;
+  }
 }

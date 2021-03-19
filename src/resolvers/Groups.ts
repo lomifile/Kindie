@@ -70,8 +70,8 @@ export class GroupsResolver {
   @Query(() => [Groups])
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  showGroups(@Ctx() { req }: AppContext): Promise<Groups[] | null> {
-    return Groups.find({
+  async showGroups(@Ctx() { req }: AppContext): Promise<Groups[] | null> {
+    return await Groups.find({
       where: { inKindergardenId: req.session.selectedKindergarden },
     });
   }
@@ -104,5 +104,13 @@ export class GroupsResolver {
       };
     }
     return { groups };
+  }
+
+  @Mutation(() => Boolean)
+  clearGroup(@Ctx() { req }: AppContext) {
+    if (req.session.selectedGroup) {
+      req.session.selectedGroup = NaN;
+    }
+    return true;
   }
 }

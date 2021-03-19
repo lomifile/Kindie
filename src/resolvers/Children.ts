@@ -3,6 +3,7 @@ import {
   Arg,
   Ctx,
   Field,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -26,6 +27,15 @@ class ChildrenResponse {
   children?: Children;
 }
 
+@ObjectType()
+class PaginatedChildren {
+  @Field(() => [Children])
+  results: Children[];
+
+  @Field()
+  hasMore: boolean;
+}
+
 @Resolver(Children)
 export class ChildrenResolver {
   /**
@@ -43,12 +53,11 @@ export class ChildrenResolver {
   @Query(() => [Children])
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  showChildrenFilterNotInGroup(
+  async showChildrenFilterNotInGroup(
     @Ctx() { req }: AppContext
   ): Promise<Children[]> {
-    return Children.find({
+    return await Children.find({
       where: {
-        inGroupId: null,
         inKindergardenId: req.session.selectedKindergarden,
       },
     });
@@ -213,6 +222,19 @@ export class ChildrenResolver {
         ],
       };
     }
+    return { children };
+  }
+
+  @Mutation(() => ChildrenResponse)
+  async useChildren(@Ctx() { req }: AppContext): Promise<ChildrenResponse> {
+    //@ts-ignore
+    const children = await Children.findOne({
+      where: {
+        inKindergardenId: req.session.selectedKindergarden,
+      },
+    });
+
+    req.session.selectedChildren = req.session.selectedKindergarden;
     return { children };
   }
 }

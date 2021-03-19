@@ -9,6 +9,8 @@ export class UsernamePasswordInput {
   @Field()
   email: string;
   @Field()
+  repeatPassword: string;
+  @Field()
   password: string;
   @Field()
   role: string;
@@ -22,6 +24,10 @@ export class UpdateUserInput {
   surname: string;
   @Field()
   email: string;
+  @Field()
+  role: string;
+  @Field()
+  password: string;
 }
 
 @InputType()

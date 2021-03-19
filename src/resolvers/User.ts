@@ -87,11 +87,23 @@ export class UserResolver {
 
   @Mutation(() => UserResponse)
   @UseMiddleware(isAuth)
-  async update(
+  async updateUser(
     @Arg("options") options: UpdateUserInput,
     @Ctx() { req }: AppContext
   ): Promise<UserResponse> {
     let user;
+    if (!options.password) {
+      return {
+        errors: [
+          {
+            field: "password",
+            message: "Password was empty",
+          },
+        ],
+      };
+    }
+    //@ts-ignore
+    let hashedPassword = argon2.hash(options.password);
     try {
       const result = await getConnection()
         .createQueryBuilder()
@@ -100,8 +112,11 @@ export class UserResolver {
           Name: options.name,
           Surname: options.surname,
           Email: options.email,
+          Role: options.role,
         })
-        .where("Id=:id", { id: req.session.userId })
+        .where("Id=:id", {
+          id: req.session.userId,
+        })
         .returning("*")
         .execute();
       user = result.raw[0];
@@ -118,8 +133,6 @@ export class UserResolver {
       }
     }
 
-    req.session.userId = user.id;
-
     return { user };
   }
 
@@ -127,7 +140,8 @@ export class UserResolver {
   async changePassword(
     @Arg("token") token: string,
     @Arg("newPassword") newPassword: string,
-    @Ctx() { redis, req }: AppContext
+    @Arg("repeatNewPassword") repeatNewPassword: string,
+    @Ctx() { redis }: AppContext
   ): Promise<UserResponse> {
     const key = FORGET_PASSWORD_PREFIX + token;
     const userID = await redis.get(key);
@@ -157,6 +171,17 @@ export class UserResolver {
       };
     }
 
+    if (newPassword !== repeatNewPassword) {
+      return {
+        errors: [
+          {
+            field: "repeatNewPassword",
+            message: "Passwords don't match",
+          },
+        ],
+      };
+    }
+
     await User.update(
       { Id: userid },
       {
@@ -166,7 +191,6 @@ export class UserResolver {
 
     await redis.del(key);
 
-    req.session.userId = userData.Id;
     return {
       user: userData,
     };
@@ -177,7 +201,7 @@ export class UserResolver {
     @Arg("email") email: string,
     @Ctx() { redis }: AppContext
   ) {
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { Email: email } });
     if (!user) {
       return true;
     }
