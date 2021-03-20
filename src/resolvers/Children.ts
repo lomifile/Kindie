@@ -3,7 +3,6 @@ import {
   Arg,
   Ctx,
   Field,
-  Int,
   Mutation,
   ObjectType,
   Query,
@@ -27,14 +26,14 @@ class ChildrenResponse {
   children?: Children;
 }
 
-@ObjectType()
-class PaginatedChildren {
-  @Field(() => [Children])
-  results: Children[];
+// @ObjectType()
+// class PaginatedChildren {
+//   @Field(() => [Children])
+//   results: Children[];
 
-  @Field()
-  hasMore: boolean;
-}
+//   @Field()
+//   hasMore: boolean;
+// }
 
 @Resolver(Children)
 export class ChildrenResolver {
@@ -191,7 +190,8 @@ export class ChildrenResolver {
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
   async addKid(
-    @Arg("options") options: ChildrenInput
+    @Arg("options") options: ChildrenInput,
+    @Ctx() { req }: AppContext
   ): Promise<ChildrenResponse> {
     let children;
     try {
@@ -208,6 +208,7 @@ export class ChildrenResolver {
           Gender: options.Gender,
           motherId: options.mother,
           fatherId: options.father,
+          inKindergardenId: req.session.selectedChildren,
         })
         .returning("*")
         .execute();
