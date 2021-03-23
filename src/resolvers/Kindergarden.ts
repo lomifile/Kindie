@@ -3,6 +3,7 @@ import {
   Arg,
   Ctx,
   Field,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -43,31 +44,41 @@ export class KindergardenResolver {
     @Arg("kindergadenID") kindergardenId: number,
     @Ctx() { req }: AppContext
   ): Promise<KindergardenResponse> {
-    const kindergarden = await KinderGarden.findOne({
+    let kindergarden = await KinderGarden.findOne({
       where: { Id: kindergardenId, owningId: req.session.userId },
     });
 
     if (kindergarden) {
       req.session.selectedKindergarden = kindergarden.Id;
     } else if (!kindergarden) {
-      return {
-        errors: [
-          {
-            field: "Id",
-            message: "There is no kindergarden with this Id!",
-          },
-        ],
-      };
+      const replacements: any = [];
+      replacements.push(req.session.userId);
+      replacements.push(kindergardenId);
+      const result = await getConnection().query(
+        `select * from kinder_garden 
+        left join staff_members 
+        on kinder_garden."Id" = staff_members."kindergardenId" 
+        and staff_members."userId" = $1 where "kindergardenId"=$2`,
+        replacements
+      );
+      kindergarden = result[0];
+      req.session.selectedKindergarden = kindergarden.Id;
     }
 
     return { kindergarden };
   }
 
-  @Query(() => [KinderGarden])
+  @Query(() => KinderGarden)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  async showKinderGardenStaff(): Promise<KinderGarden[]> {
-    return await KinderGarden.find({ relations: ["staff"] });
+  async showKinderGardenStaff(
+    @Ctx() { req }: AppContext
+  ): Promise<KinderGarden | undefined> {
+    return await KinderGarden.findOne({
+      where: {
+        Id: req.session.selectedKindergarden,
+      },
+    });
   }
 
   @Query(() => [KinderGarden])
@@ -120,6 +131,13 @@ export class KindergardenResolver {
     if (req.session.selectedKindergarden) {
       req.session.selectedKindergarden = NaN;
     }
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async deleteKindergarden(@Arg("id", () => Int) id: number): Promise<Boolean> {
+    await KinderGarden.delete({ Id: id });
     return true;
   }
 }

@@ -7,7 +7,7 @@ export type AppContext = {
     session: Session &
       Partial<SessionData> & {
         userId: number;
-        selectedKindergarden: number;
+        selectedKindergarden: number | undefined;
         selectedChildren: number;
         selectedGroup: number;
       };
