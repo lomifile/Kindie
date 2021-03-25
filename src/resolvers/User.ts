@@ -318,7 +318,7 @@ export class UserResolver {
       await sendMail(
         options.email,
         "Verify account",
-        `<a href="http://localhost:3000/change-password/${token}">Verify account</a>`
+        `<a href="http://localhost:3000/verify-account/${token}">Verify account</a>`
       ).catch(console.error);
     } catch (err) {
       // console.log(err);
@@ -340,9 +340,50 @@ export class UserResolver {
   }
 
   @Mutation(() => UserResponse)
+  async resendEmail(
+    @Arg("email") email: string,
+    @Ctx() { redis }: AppContext
+  ): Promise<UserResponse> {
+    const user = await User.findOne({
+      where: {
+        Email: email,
+      },
+    });
+
+    if (!user) {
+      return {
+        errors: [
+          {
+            field: "email",
+            message: "This email doesn't exist in database",
+          },
+        ],
+      };
+    }
+
+    const token = v4();
+    await redis.set(
+      ACCOUNT_VERIFICATION_PREFIX + token,
+      user.Id,
+      "ex",
+      1000 * 60 * 60 * 24 * 3
+    );
+
+    await sendMail(
+      email,
+      "Verify account",
+      `<a href="http://localhost:3000/verify-account/${token}">Verify account</a>`
+    ).catch(console.error);
+
+    return {
+      user,
+    };
+  }
+
+  @Mutation(() => UserResponse)
   async verifyAccount(
     @Arg("token") token: string,
-    @Ctx() { redis, req }: AppContext
+    @Ctx() { redis }: AppContext
   ): Promise<UserResponse> {
     const key = ACCOUNT_VERIFICATION_PREFIX + token;
     const userID = await redis.get(key);
@@ -373,14 +414,14 @@ export class UserResolver {
     }
 
     await User.update(
-      { Id: userId },
+      { Id: userData.Id },
       {
         confirmed: true,
       }
     );
 
     await redis.del(key);
-    req.session.userId = userData.Id;
+
     return {
       user: userData,
     };
@@ -399,5 +440,14 @@ export class UserResolver {
         resolve(true);
       })
     );
+  }
+
+  @Query(() => [User])
+  async searchUser(@Arg("text") text: string): Promise<User[]> {
+    return User.find({
+      where: {
+        Name: text,
+      },
+    });
   }
 }

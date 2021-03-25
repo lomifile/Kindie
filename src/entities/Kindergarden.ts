@@ -11,7 +11,9 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Children } from "./Children";
+import { Father } from "./Father";
 import { Groups } from "./Groups";
+import { Mother } from "./Mother";
 import { User } from "./User";
 
 @ObjectType()
@@ -58,6 +60,16 @@ export class KinderGarden extends BaseEntity {
     lazy: true,
   })
   children: Children[];
+
+  @OneToMany(() => Mother, (mother) => mother.inKindergarden, {
+    lazy: true,
+  })
+  Mother: Mother[];
+
+  @OneToMany(() => Father, (father) => father.inKindergarden, {
+    lazy: true,
+  })
+  Father: Father[];
 
   @Field(() => [User])
   @ManyToMany(() => User, (user) => user.partof, { lazy: true })

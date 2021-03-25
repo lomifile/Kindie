@@ -3,6 +3,7 @@ import {
   Arg,
   Ctx,
   Field,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -111,6 +112,14 @@ export class GroupsResolver {
     if (req.session.selectedGroup) {
       req.session.selectedGroup = NaN;
     }
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async deleteGroup(@Arg("id", () => Int) id: number): Promise<Boolean> {
+    await Groups.delete({ Id: id });
     return true;
   }
 }
