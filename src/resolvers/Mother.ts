@@ -117,38 +117,19 @@ export class MotherResolver {
     return { mother };
   }
 
-  @Mutation(() => MotherResponse)
+  @Mutation(() => Mother)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
   async addMother(
-    @Arg("options") options: ParentsInput
-  ): Promise<MotherResponse> {
-    let mother;
-    try {
-      const result = await getConnection()
-        .createQueryBuilder()
-        .insert()
-        .into(Mother)
-        .values({
-          Name: options.name,
-          Surname: options.surname,
-          Email: options.email,
-          Phone: options.phone,
-        })
-        .returning("*")
-        .execute();
-      mother = result.raw[0];
-    } catch (err) {
-      return {
-        errors: [
-          {
-            field: "Children",
-            message: "There was an error",
-          },
-        ],
-      };
-    }
-
-    return { mother };
+    @Arg("options") options: ParentsInput,
+    @Ctx() { req }: AppContext
+  ): Promise<Mother> {
+    return Mother.create({
+      Name: options.name,
+      Surname: options.surname,
+      Email: options.email,
+      Phone: options.phone,
+      inKindergardenId: req.session.selectedKindergarden,
+    }).save();
   }
 }
