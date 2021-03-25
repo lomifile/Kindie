@@ -274,6 +274,7 @@ export class ChildrenResolver {
       },
     });
 
+    //@ts-ignore
     req.session.selectedChildren = req.session.selectedKindergarden;
     return { children };
   }
