@@ -72,7 +72,8 @@ export class ChildrenResolver {
       `
       select c.*
       from children c
-      inner join public."kinder_garden" k on k."Id" = c."inKindergardenId" where k."Id" = $2 and c."inGroupId" is null
+      inner join public."kinder_garden" k on k."Id" = c."inKindergardenId" 
+      where k."Id" = $2 and c."inGroupId" is null
       ${cursor ? `and c."createdAt" < $3` : ""}
       order by c."createdAt" DESC
       limit $1
@@ -128,8 +129,25 @@ export class ChildrenResolver {
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
   @UseMiddleware(isGroupSelected)
-  showChildren(): Promise<Children[]> {
-    return Children.find({});
+  showChildren(
+    @Arg("text") text: string,
+    @Ctx() { req }: AppContext
+  ): Promise<Children[]> {
+    if (text === ".") {
+      return Children.find({
+        where: {
+          inKindergardenId: req.session.selectedKindergarden,
+          inGroupId: null,
+        },
+      });
+    }
+    return Children.find({
+      where: {
+        Name: text,
+        inKindergardenId: req.session.selectedKindergarden,
+        inGroupId: null,
+      },
+    });
   }
 
   @Mutation(() => Children, { nullable: true })

@@ -4,11 +4,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { Children } from "./Children";
+import { KinderGarden } from "./Kindergarden";
 
 @ObjectType()
 @Entity()
@@ -46,4 +48,10 @@ export class Father extends BaseEntity {
     lazy: true,
   })
   children: Children[];
+
+  @ManyToOne(() => KinderGarden, (kindergarden) => kindergarden.Father, {
+    nullable: true,
+    lazy: true,
+  })
+  inKindergarden: KinderGarden;
 }
