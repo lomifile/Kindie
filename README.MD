@@ -1,6 +1,6 @@
 # <p align="center">
 
-    <img height=100 src="https://github.com/fivanusec/DV-Organizator/blob/7ed2e472fa1667623f08e332797baafaa6e99e2f/web/src/img/logo.png"/>
+    <img height=100 src="https://raw.githubusercontent.com/fivanusec/DV-Organizator/master/web/src/img/logo.png?token=AOOXF235MZNUULF637GLJPDAL4IKQ"/>
 
 </p>
 <p align="center">
