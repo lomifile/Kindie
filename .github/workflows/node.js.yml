@@ -27,6 +27,6 @@ jobs:
       - working-directory: ./backend
       - run: yarn install
       - run: yarn compile
-      - woeking-directory: ./web
+      - working-directory: ./web
       - run: yarn install
       - run: yarn build
