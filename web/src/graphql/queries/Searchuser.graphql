@@ -1,0 +1,5 @@
+query SearchUser($text: String!) {
+  searchUser(text: $text) {
+    ...UserFragment
+  }
+}

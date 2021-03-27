@@ -1,0 +1,9 @@
+fragment FatherFragment on Father {
+  Id
+  Name
+  Surname
+  Email
+  Phone
+  createdAt
+  updatedAt
+}

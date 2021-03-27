@@ -1,0 +1,10 @@
+query ShowKindergardenstaff {
+  showKinderGardenStaff {
+    owning {
+      ...UserFragment
+    }
+    staff {
+      ...UserFragment
+    }
+  }
+}

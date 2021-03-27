@@ -1,0 +1,8 @@
+query Showfather($limit: Int!, $cursor: String) {
+  showFather(limit: $limit, cursor: $cursor) {
+    father {
+      ...FatherFragment
+    }
+    hasMore
+  }
+}

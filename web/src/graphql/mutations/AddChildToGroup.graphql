@@ -1,0 +1,5 @@
+mutation AddChildToGroup($id: Int!) {
+  addChildToGroup(id: $id) {
+    ...ChildrenFragment
+  }
+}

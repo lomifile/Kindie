@@ -1,0 +1,10 @@
+mutation UseKindergarden($kindergardenID: Float!) {
+  useKindergarden(kindergadenID: $kindergardenID) {
+    kindergarden {
+      ...KindergardenFragment
+    }
+    errors {
+      ...ErrorFragment
+    }
+  }
+}

@@ -1,0 +1,5 @@
+query ShowChildren($text: String!) {
+  showChildren(text: $text) {
+    ...ChildrenFragment
+  }
+}

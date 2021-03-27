@@ -1,0 +1,5 @@
+mutation CreateChild($options: ChildrenInput!) {
+  createChild(options: $options) {
+    ...ChildrenFragment
+  }
+}

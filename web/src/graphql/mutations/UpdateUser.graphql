@@ -1,0 +1,10 @@
+mutation UpdateUser($options: UpdateUserInput!) {
+  updateUser(options: $options) {
+    user {
+      ...UserFragment
+    }
+    errors {
+      ...ErrorFragment
+    }
+  }
+}

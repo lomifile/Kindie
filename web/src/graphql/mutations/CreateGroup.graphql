@@ -1,0 +1,10 @@
+mutation CreateGroup($name: String!){
+  createGroup(name: $name){
+    groups{
+      ...GroupFragment
+    }
+    errors{
+      ...ErrorFragment
+    }
+  }
+}

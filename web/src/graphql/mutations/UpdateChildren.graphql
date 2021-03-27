@@ -1,0 +1,5 @@
+mutation UpdateChild($kidId: Int!, $options: ChildrenInput!) {
+  updateChild(kidId: $kidId, options: $options) {
+    ...ChildrenFragment
+  }
+}

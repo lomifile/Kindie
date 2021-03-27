@@ -1,0 +1,10 @@
+mutation UseGroup($groupId: Float!){
+  useGroup(groupId: $groupId){
+    groups{
+      ...GroupFragment
+    }
+    errors{
+      ...ErrorFragment
+    }
+  }
+}

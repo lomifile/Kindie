@@ -1,0 +1,5 @@
+query FindChild($id: Int!) {
+  findChild(id: $id) {
+    ...ChildrenFragment
+  }
+}

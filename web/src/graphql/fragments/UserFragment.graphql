@@ -1,0 +1,12 @@
+fragment UserFragment on User {
+  Id
+  Name
+  Surname
+  Email
+  Role
+  partof {
+    ...KindergardenFragment
+  }
+  createdAt
+  updatedAt
+}

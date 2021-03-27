@@ -1,0 +1,11 @@
+fragment ChildrenFragment on Children {
+  Id
+  Name
+  Surname
+  Gender
+  BirthDate
+  OIB
+  Remarks
+  createdAt
+  updatedAt
+}

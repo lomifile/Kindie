@@ -1,0 +1,8 @@
+query ShowChildrenFilterInGroup($limit: Int!, $cursor: String) {
+  showChildrenFilterInGroup(limit: $limit, cursor: $cursor) {
+    children {
+      ...ChildrenFragment
+    }
+    hasMore
+  }
+}

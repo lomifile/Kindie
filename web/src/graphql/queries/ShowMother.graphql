@@ -1,0 +1,8 @@
+query ShowMother($limit: Int!, $cursor: String) {
+  showMother(limit: $limit, cursor: $cursor) {
+    mother {
+      ...MotherFragment
+    }
+    hasMore
+  }
+}

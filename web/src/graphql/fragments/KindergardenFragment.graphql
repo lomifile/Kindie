@@ -1,0 +1,7 @@
+fragment KindergardenFragment on KinderGarden {
+  Id
+  Name
+  City
+  Address
+  Zipcode
+}

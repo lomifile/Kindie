@@ -1,0 +1,10 @@
+mutation VerifyAccount($token: String!) {
+  verifyAccount(token: $token) {
+    user {
+      ...UserFragment
+    }
+    errors {
+      ...ErrorFragment
+    }
+  }
+}

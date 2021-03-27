@@ -1,0 +1,8 @@
+query ShowChildrenNotIngroup($limit: Int!, $cursor: String) {
+  showChildrenFilterNotInGroup(limit: $limit, cursor: $cursor) {
+    children {
+      ...ChildrenFragment
+    }
+    hasMore
+  }
+}

@@ -1,0 +1,11 @@
+mutation UseChildren {
+  useChildren {
+    children {
+      Id
+      Name
+    }
+    errors {
+      ...ErrorFragment
+    }
+  }
+}

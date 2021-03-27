@@ -1,0 +1,5 @@
+mutation AddFather($options: ParentsInput!) {
+  addFather(options: $options) {
+    ...FatherFragment
+  }
+}

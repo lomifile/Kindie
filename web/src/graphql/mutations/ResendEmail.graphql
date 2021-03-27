@@ -1,0 +1,10 @@
+mutation ResendEmail($email: String!) {
+  resendEmail(email: $email) {
+    user {
+      Id
+    }
+    errors {
+      ...ErrorFragment
+    }
+  }
+}
