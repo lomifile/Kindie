@@ -28,18 +28,18 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install backend dependencies
-          run: |
+        run: |
           cd backend
           yarn
       - name: Build backend
-          run: |
+        run: |
           cd backend
           yarn compile
       - name: Install frontend dependencies
-          run: |
+        run: |
           cd web
           yarn
-      - name: Build frontend    
-          run: |
+      - name: Build frontend
+        run: |
           cd web
           yarn build
