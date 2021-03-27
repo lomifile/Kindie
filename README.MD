@@ -1,27 +1,40 @@
-# DV_Organizator backend
+# <p align="center">
+
+    <img height=100 src="https://github.com/fivanusec/DV-Organizator/blob/7ed2e472fa1667623f08e332797baafaa6e99e2f/web/src/img/logo.png"/>
+
+</p>
+<p align="center">
+  <strong>DV Organizator a simple web app that helps you orginze professional documentation for wroking with children.</strong>
+</p>
+
+<h3 align="center">
+</h3>
+
+[![Node.js CI](https://github.com/fivanusec/DV-Organizator/actions/workflows/node.js.yml/badge.svg)](https://github.com/fivanusec/DV-Organizator/actions/workflows/node.js.yml)
 
 ## Introduction
 
-This code is for backend of DV Organizator a simple web app that helps you orginze professional documentation for wroking with children.
+This code is for DV Organizator a simple web app that helps you orginze professional documentation for wroking with children.
 
-#
+## Structure
 
-## Tools
+| Codebase           |  Description   |
+| :----------------- | :------------: |
+| [web](web)         | React Frontend |
+| [backend](backend) | Backend/server |
 
-This project is written in Typescript and GraphQL. For more information on packages reffer to package.json and read designated documentation from all of them.
+# Tools
+
+## Backend
+
+For creating backend we used Typescript and GraphQL with express and apollo server.
+
+## Frontend
+
+For creting frontend we used ChakraUI, Next and React.
 
 #
 
 ## Commiting
 
-To commit to this project first make sure you use some of recommended extensions:
-
-- Bracket pair colorizer
-- Some kind of JS/TS formatter(Prettier is used, but any formmater that formats simmilar to Prettier)
-- GraphQL extension so you get syntax highlight
-- Good console(use Linux for good results, but if you use widows use powershell)
-
-Rules for commiting:
-
-- yarn over npm as the project is based on yarn but if you preffer npm make sure to commit without package-lock.json
-- Do not commit node_modules
+Guidelines for commiting to this project are set in the Contributing.md
