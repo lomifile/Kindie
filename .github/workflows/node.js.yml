@@ -28,14 +28,18 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install backend dependencies
-          - working-directory: backend
-          - run: yarn
+          run: |
+          cd backend
+          yarn
       - name: Build backend
-          - working-directory: backend
-          - run: yarn compile
+          run: |
+          cd backend
+          yarn compile
       - name: Install frontend dependencies
-          - working-directory: web
-          - run: yarn
+          run: |
+          cd web
+          yarn
       - name: Build frontend    
-          - working-directory: web          
-          - run: yarn build
+          run: |
+          cd web
+          yarn build
