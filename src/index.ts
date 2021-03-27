@@ -17,6 +17,7 @@ import { FatherResolver } from "./resolvers/Father";
 import { MotherResolver } from "./resolvers/Mother";
 import cors from "cors";
 import "dotenv-safe/config";
+import { ContactResolver } from "./resolvers/Contact";
 
 const main = async () => {
   const ormconfig = require("../ormconfig.json");
@@ -66,6 +67,7 @@ const main = async () => {
         StaffMembersResolver,
         FatherResolver,
         MotherResolver,
+        ContactResolver,
       ],
       validate: false,
     }),

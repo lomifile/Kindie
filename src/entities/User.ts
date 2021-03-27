@@ -57,7 +57,7 @@ export class User extends BaseEntity {
       referencedColumnName: "Id",
     },
   })
-  @Field(() => [KinderGarden])
+  @Field(() => [KinderGarden], { nullable: true })
   partof: KinderGarden[];
 
   @Column()
