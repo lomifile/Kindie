@@ -36,8 +36,12 @@ import {
 } from "@chakra-ui/react";
 import { fetchOwnerOf } from "../utils/fetchOwnerOf";
 import { fetchStaff } from "../utils/fetchStaff";
-import { AddIcon, SearchIcon, ViewIcon } from "@chakra-ui/icons";
-import { useAddStaffMutation, useSearchUserQuery } from "../generated/graphql";
+import { AddIcon, DeleteIcon, SearchIcon, ViewIcon } from "@chakra-ui/icons";
+import {
+  useAddStaffMutation,
+  useDeleteStaffMutation,
+  useSearchUserQuery,
+} from "../generated/graphql";
 import { ShowUser } from "../components/ShowUser";
 import { useIsAuth } from "../utils/useIsAuth";
 
@@ -55,6 +59,7 @@ const Staff: React.FC<StaffProps> = ({}) => {
   const owner = fetchOwnerOf();
   const staff = fetchStaff();
   const [, addStaff] = useAddStaffMutation();
+  const [, deleteStaff] = useDeleteStaffMutation();
   const [text, setText] = useState("");
   const [show, setShow] = useState(null);
   const [{ data: userSearch, fetching }] = useSearchUserQuery({
@@ -235,6 +240,18 @@ const Staff: React.FC<StaffProps> = ({}) => {
                 <Tr>
                   <Td>{s.Name}</Td>
                   <Td>{s.Surname}</Td>
+                  <Td>
+                    <IconButton
+                      aria-label="Delete from staff"
+                      colorScheme="red"
+                      icon={<DeleteIcon />}
+                      onClick={() => {
+                        deleteStaff({
+                          userId: s.Id,
+                        });
+                      }}
+                    />
+                  </Td>
                 </Tr>
               ))}
             </Tbody>

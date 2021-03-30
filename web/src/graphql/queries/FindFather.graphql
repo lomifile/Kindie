@@ -1,0 +1,5 @@
+query FindFather($id: Int!) {
+  findFather(id: $id) {
+    ...FatherFragment
+  }
+}

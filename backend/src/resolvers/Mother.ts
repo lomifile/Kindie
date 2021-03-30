@@ -80,41 +80,26 @@ export class MotherResolver {
     return true;
   }
 
-  @Mutation(() => MotherResponse)
+  @Mutation(() => Mother)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
   async updateMother(
     @Arg("options") options: ParentsInput,
-    @Arg("motherId") motherId: number
-  ): Promise<MotherResponse> {
-    let mother;
-    try {
-      const result = await getConnection()
-        .createQueryBuilder()
-        .update(Mother)
-        .set({
-          Name: options.name,
-          Surname: options.surname,
-          Email: options.email,
-          Phone: options.phone,
-        })
-        .where("Id=:id", { id: motherId })
-        .returning("*")
-        .execute();
-      mother = result.raw[0];
-    } catch (err) {
-      if (err.code === "23505") {
-        return {
-          errors: [
-            {
-              field: "Children",
-              message: "There was an error",
-            },
-          ],
-        };
-      }
-    }
-    return { mother };
+    @Arg("motherId", () => Int) motherId: number
+  ): Promise<Mother | undefined> {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .update(Mother)
+      .set({
+        Name: options.name,
+        Surname: options.surname,
+        Email: options.email,
+        Phone: options.phone,
+      })
+      .where("Id=:id", { id: motherId })
+      .returning("*")
+      .execute();
+    return result.raw[0];
   }
 
   @Mutation(() => Mother)
@@ -131,5 +116,20 @@ export class MotherResolver {
       Phone: options.phone,
       inKindergardenId: req.session.selectedKindergarden,
     }).save();
+  }
+
+  @Query(() => Mother)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  findMother(
+    @Arg("id", () => Int) id: number,
+    @Ctx() { req }: AppContext
+  ): Promise<Mother | undefined> {
+    return Mother.findOne({
+      where: {
+        Id: id,
+        inKindergardenId: req.session.selectedKindergarden,
+      },
+    });
   }
 }

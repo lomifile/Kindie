@@ -121,7 +121,10 @@ const Parents: React.FC<ParentsProps> = ({}) => {
                         <Td>{mom.Name}</Td>
                         <Td ml={"2rem"}>{mom.Surname}</Td>
                         <Td>
-                          <NextLink href={"/edit-child/[id]"}>
+                          <NextLink
+                            href={"/edit-parents/[id]"}
+                            as={`/edit-parents/${mom.Id}?parent=mother`}
+                          >
                             <Button
                               bg="blue.400"
                               colorScheme="navItem"
@@ -191,7 +194,10 @@ const Parents: React.FC<ParentsProps> = ({}) => {
                         <Td>{father.Name}</Td>
                         <Td ml={"2rem"}>{father.Surname}</Td>
                         <Td>
-                          <NextLink href={"/edit-child/[id]"}>
+                          <NextLink
+                            href={"/edit-parents/[id]"}
+                            as={`/edit-parents/${father.Id}?parent=father`}
+                          >
                             <Button
                               bg="blue.400"
                               colorScheme="navItem"

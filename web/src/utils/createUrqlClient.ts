@@ -29,6 +29,7 @@ import {
   ShowKindergardenstaffDocument,
   AddStaffMutationVariables,
   AddChildToGroupMutationVariables,
+  DeleteStaffMutationVariables,
 } from "../generated/graphql";
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
@@ -152,6 +153,12 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            deleteStaff: (_result, args, cache, info) => {
+              cache.invalidate({
+                __typename: "Query",
+                Id: (args as DeleteStaffMutationVariables).userId,
+              });
+            },
             addFather: (_result, args, cache, info) => {
               const allFields = cache.inspectFields("Query");
               const fieldInfos = allFields.filter(

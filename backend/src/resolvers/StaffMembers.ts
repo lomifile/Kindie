@@ -15,9 +15,21 @@ export class StaffMembersResolver {
   ) {
     const kindergardenId = req.session.selectedKindergarden;
 
-    await StaffMembers.insert({
+    await StaffMembers.create({
       userId: userId,
       kindergardenId: kindergardenId,
+    }).save();
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async deleteStaff(
+    @Arg("userId", () => Int) userId: number
+  ): Promise<Boolean> {
+    await StaffMembers.delete({
+      userId: userId,
     });
     return true;
   }

@@ -1,0 +1,5 @@
+mutation UpdateFather($fatherId: Int!, $options: ParentsInput!) {
+  updateFather(fatherId: $fatherId, options: $options) {
+    ...FatherFragment
+  }
+}

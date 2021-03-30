@@ -82,41 +82,26 @@ export class FatherResolver {
     return true;
   }
 
-  @Mutation(() => FatherResponse)
+  @Mutation(() => Father)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
   async updateFather(
     @Arg("options") options: ParentsInput,
-    @Arg("fatherId") fatherId: number
-  ): Promise<FatherResponse> {
-    let father;
-    try {
-      const result = await getConnection()
-        .createQueryBuilder()
-        .update(Father)
-        .set({
-          Name: options.name,
-          Surname: options.surname,
-          Email: options.email,
-          Phone: options.phone,
-        })
-        .where("Id=:id", { id: fatherId })
-        .returning("*")
-        .execute();
-      father = result.raw[0];
-    } catch (err) {
-      if (err.code === "23505") {
-        return {
-          errors: [
-            {
-              field: "Children",
-              message: "There was an error",
-            },
-          ],
-        };
-      }
-    }
-    return { father };
+    @Arg("fatherId", () => Int) fatherId: number
+  ): Promise<Father | undefined> {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .update(Father)
+      .set({
+        Name: options.name,
+        Surname: options.surname,
+        Email: options.email,
+        Phone: options.phone,
+      })
+      .where("Id=:id", { id: fatherId })
+      .returning("*")
+      .execute();
+    return result.raw[0];
   }
 
   @Mutation(() => Father)
@@ -133,5 +118,20 @@ export class FatherResolver {
       Phone: options.phone,
       inKindergardenId: req.session.selectedKindergarden,
     }).save();
+  }
+
+  @Query(() => Father)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  findFather(
+    @Arg("id", () => Int) id: number,
+    @Ctx() { req }: AppContext
+  ): Promise<Father | undefined> {
+    return Father.findOne({
+      where: {
+        Id: id,
+        inKindergardenId: req.session.selectedKindergarden,
+      },
+    });
   }
 }
