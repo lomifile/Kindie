@@ -14,17 +14,16 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
-import { FieldError } from "../utils/Errors";
 import { AppContext } from "src/Types";
 
-@ObjectType()
-class FatherResponse {
-  @Field(() => [FieldError], { nullable: true })
-  errors?: FieldError[];
+// @ObjectType()
+// class FatherResponse {
+//   @Field(() => [FieldError], { nullable: true })
+//   errors?: FieldError[];
 
-  @Field(() => Father, { nullable: true })
-  father?: Father;
-}
+//   @Field(() => Father, { nullable: true })
+//   father?: Father;
+// }
 
 @ObjectType()
 class PaginatedFather {

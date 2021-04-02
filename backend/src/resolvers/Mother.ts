@@ -14,17 +14,16 @@ import { isAuth } from "../middleware/isAuth";
 import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
 import { ParentsInput } from "../utils/inputs/ParentsInput";
 import { getConnection } from "typeorm";
-import { FieldError } from "../utils/Errors";
 import { AppContext } from "src/Types";
 
-@ObjectType()
-class MotherResponse {
-  @Field(() => [FieldError], { nullable: true })
-  errors?: FieldError[];
+// @ObjectType()
+// class MotherResponse {
+//   @Field(() => [FieldError], { nullable: true })
+//   errors?: FieldError[];
 
-  @Field(() => Mother, { nullable: true })
-  mother?: Mother;
-}
+//   @Field(() => Mother, { nullable: true })
+//   mother?: Mother;
+// }
 
 @ObjectType()
 class PaginatedMother {
