@@ -195,6 +195,9 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             </MenuGroup>
             <MenuDivider />
             <MenuGroup title="Help">
+              <NextLink href="/">
+                <MenuItem>Landing page</MenuItem>
+              </NextLink>
               <MenuItem>Docs</MenuItem>
               <MenuItem>FAQ</MenuItem>
             </MenuGroup>
