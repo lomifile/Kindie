@@ -26,7 +26,11 @@ const main = async () => {
 
   const app = express();
   const RedisStore = connectRedis(session);
-  const redis = new Redis(process.env.REDIS_URL);
+  const redis = new Redis({
+    port: parseInt(process.env.REDIS_PORT),
+    host: process.env.REDIS_URL,
+    password: process.env.REDIS_PASSWORD,
+  });
 
   app.use(
     cors({
@@ -45,7 +49,7 @@ const main = async () => {
       }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
-        httpOnly: true,
+        httpOnly: false,
         path: "/",
         sameSite: "lax",
         secure: !__prod__,
@@ -80,7 +84,7 @@ const main = async () => {
   });
 
   app.listen(parseInt(process.env.PORT), () => {
-    console.log("Server started on localhost:4000");
+    console.log(`Server started on localhost:${parseInt(process.env.PORT)}`);
   });
 };
 
