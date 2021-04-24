@@ -1,0 +1,9 @@
+mutation UpdateChildrenParents($childId: Int!, $motherId: Int, $fatherId: Int) {
+  updateChildernParents(
+    kidId: $childId
+    motherId: $motherId
+    fatherId: $fatherId
+  ) {
+    ...ChildrenFragment
+  }
+}

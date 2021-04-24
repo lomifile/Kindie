@@ -46,8 +46,14 @@ export class ChildrenResolver {
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
   @UseMiddleware(isGroupSelected)
-  showChildrenFilterNoParents(): Promise<Children[]> {
-    return Children.find({ where: { mother: null, father: null } });
+  showChildrenFilterNoParents(@Ctx() { req }: AppContext): Promise<Children[]> {
+    return Children.find({
+      where: {
+        motherId: null,
+        fatherId: null,
+        inKindergardenId: req.session.selectedKindergarden,
+      },
+    });
   }
 
   @Query(() => PaginatedChildren)
@@ -202,40 +208,25 @@ export class ChildrenResolver {
     return true;
   }
 
-  @Mutation(() => ChildrenResponse)
+  @Mutation(() => Children)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
   async updateChildernParents(
-    @Arg("kidId") kidId: number,
-    @Arg("motherId") motherId: number,
-    @Arg("fatherId") fatherId: number
-  ) {
-    let children;
-    try {
-      const result = await getConnection()
-        .createQueryBuilder()
-        .update(Children)
-        .set({
-          motherId: motherId,
-          fatherId: fatherId,
-        })
-        .where("Id=:id", { id: kidId })
-        .returning("*")
-        .execute();
-      children = result.raw[0];
-    } catch (err) {
-      if (err.code === "23505") {
-        return {
-          errors: [
-            {
-              field: "Children",
-              message: "There was an error",
-            },
-          ],
-        };
-      }
-    }
-    return { children };
+    @Arg("kidId", () => Int) kidId: number,
+    @Arg("motherId", () => Int, { nullable: true }) motherId: number,
+    @Arg("fatherId", () => Int, { nullable: true }) fatherId: number
+  ): Promise<Children | undefined> {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .update(Children)
+      .set({
+        motherId: motherId,
+        fatherId: fatherId,
+      })
+      .where("Id=:id", { id: kidId })
+      .returning("*")
+      .execute();
+    return result.raw[0];
   }
 
   @Query(() => Children, { nullable: true })

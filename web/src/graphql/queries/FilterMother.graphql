@@ -1,0 +1,5 @@
+query FilterMother($text: String!) {
+  filterMother(text: $text) {
+    ...MotherFragment
+  }
+}

@@ -6,6 +6,14 @@ fragment ChildrenFragment on Children {
   BirthDate
   OIB
   Remarks
+  mother {
+    ...MotherFragment
+  }
+  father {
+    ...FatherFragment
+  }
+  motherId
+  fatherId
   createdAt
   updatedAt
 }

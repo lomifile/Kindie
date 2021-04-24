@@ -11,6 +11,7 @@ import {
   Td,
   Button,
   HStack,
+  Tooltip,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React, { useState } from "react";
@@ -22,6 +23,7 @@ import {
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useIsAuth } from "../utils/useIsAuth";
 import NextLink from "next/link";
+import { WarningIcon, CheckCircleIcon } from "@chakra-ui/icons";
 
 interface ChildrenProps {}
 
@@ -124,6 +126,17 @@ const Children: React.FC<ChildrenProps> = ({}) => {
                       >
                         Delete
                       </Button>
+                    </Td>
+                    <Td>
+                      {!child.fatherId || !child.motherId ? (
+                        <Tooltip label="Some data is missing!">
+                          <WarningIcon color={"yellow.400"} />
+                        </Tooltip>
+                      ) : (
+                        <Tooltip label="All data is here!">
+                          <CheckCircleIcon color={"green.400"} />
+                        </Tooltip>
+                      )}
                     </Td>
                   </Tr>
                 )

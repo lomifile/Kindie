@@ -40,6 +40,7 @@ import { AddIcon, DeleteIcon, SearchIcon, ViewIcon } from "@chakra-ui/icons";
 import {
   useAddStaffMutation,
   useDeleteStaffMutation,
+  useMeQuery,
   useSearchUserQuery,
 } from "../generated/graphql";
 import { ShowUser } from "../components/ShowUser";
@@ -67,6 +68,7 @@ const Staff: React.FC<StaffProps> = ({}) => {
       text,
     },
   });
+  const [{ data: meData, fetching: meFetching }] = useMeQuery();
 
   return (
     <Layout variant={"column"} navbarVariant={"user"}>
@@ -185,8 +187,6 @@ const Staff: React.FC<StaffProps> = ({}) => {
               <Tr>
                 <Th>Name</Th>
                 <Th>Last name</Th>
-                <Th></Th>
-                <Th></Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -209,21 +209,24 @@ const Staff: React.FC<StaffProps> = ({}) => {
         </Box>
         <Flex mt={20} mb={2}>
           <Heading color="blue.400">Staff</Heading>
-          <Button
-            ml={5}
-            bg="blue.400"
-            colorScheme="navItem"
-            borderRadius="12px"
-            py="4"
-            px="4"
-            lineHeight="1"
-            size="md"
-            type="submit"
-            onClick={onOpen}
-          >
-            <AddIcon mr={2} />
-            <Text mt={0.5}>Add staff</Text>
-          </Button>
+          {meData.me.Name === owner.Name &&
+          meData.me.Surname === owner.Surname ? (
+            <Button
+              ml={5}
+              bg="blue.400"
+              colorScheme="navItem"
+              borderRadius="12px"
+              py="4"
+              px="4"
+              lineHeight="1"
+              size="md"
+              type="submit"
+              onClick={onOpen}
+            >
+              <AddIcon mr={2} />
+              <Text mt={0.5}>Add staff</Text>
+            </Button>
+          ) : null}
         </Flex>
         <Box>
           <Table>
@@ -231,8 +234,6 @@ const Staff: React.FC<StaffProps> = ({}) => {
               <Tr>
                 <Th>Name</Th>
                 <Th>Last name</Th>
-                <Th></Th>
-                <Th></Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -241,16 +242,19 @@ const Staff: React.FC<StaffProps> = ({}) => {
                   <Td>{s.Name}</Td>
                   <Td>{s.Surname}</Td>
                   <Td>
-                    <IconButton
-                      aria-label="Delete from staff"
-                      colorScheme="red"
-                      icon={<DeleteIcon />}
-                      onClick={() => {
-                        deleteStaff({
-                          userId: s.Id,
-                        });
-                      }}
-                    />
+                    {meData.me.Name === owner.Name &&
+                    meData.me.Surname === owner.Surname ? (
+                      <IconButton
+                        aria-label="Delete from staff"
+                        colorScheme="red"
+                        icon={<DeleteIcon />}
+                        onClick={() => {
+                          deleteStaff({
+                            userId: s.Id,
+                          });
+                        }}
+                      />
+                    ) : null}
                   </Td>
                 </Tr>
               ))}

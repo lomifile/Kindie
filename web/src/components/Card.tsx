@@ -2,7 +2,6 @@ import { StarIcon } from "@chakra-ui/icons";
 import { Box, Badge, Image, Flex } from "@chakra-ui/react";
 import React, { ReactNode } from "react";
 
-// @ts-ignore
 interface CardProps {
   imageSrc?: string;
   cardTitle?: string;

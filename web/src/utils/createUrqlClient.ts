@@ -30,6 +30,9 @@ import {
   AddStaffMutationVariables,
   AddChildToGroupMutationVariables,
   DeleteStaffMutationVariables,
+  UpdateChildrenParentsMutation,
+  FindChildQuery,
+  FindChildDocument,
 } from "../generated/graphql";
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
@@ -225,6 +228,26 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 (info) => info.fieldName === "showChildrenFilterNotInGroup"
               );
               fieldInfos.forEach((fi) => {
+                cache.invalidate(
+                  "Query",
+                  "showChildrenFilterNotInGroup",
+                  fi.arguments || {}
+                );
+              });
+            },
+
+            updateChildernParents: (_result, args, cache, info) => {
+              const allFields = cache.inspectFields("Query");
+              const fieldInfos = allFields.filter(
+                (info) => info.fieldName === "findChild"
+              );
+              const fieldData = allFields.filter(
+                (info) => info.fieldName === "showChildrenFilterNotInGroup"
+              );
+              fieldInfos.forEach((fi) => {
+                cache.invalidate("Query", "findChild", fi.arguments || {});
+              });
+              fieldData.forEach((fi) => {
                 cache.invalidate(
                   "Query",
                   "showChildrenFilterNotInGroup",

@@ -52,9 +52,11 @@ export class Children extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Field({ nullable: true })
   @Column({ nullable: true })
   motherId: number;
 
+  @Field({ nullable: true })
   @Column({ nullable: true })
   fatherId: number;
 

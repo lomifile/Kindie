@@ -29,6 +29,7 @@ import {
   InputLeftElement,
   Spinner,
   useDisclosure,
+  Tooltip,
 } from "@chakra-ui/react";
 import {
   useAddChildToGroupMutation,
@@ -39,7 +40,13 @@ import {
 import { fetchGroup } from "../../utils/fetchGroup";
 import { useIsAuth } from "../../utils/useIsAuth";
 import NextLink from "next/link";
-import { SearchIcon, AddIcon, ViewIcon } from "@chakra-ui/icons";
+import {
+  SearchIcon,
+  AddIcon,
+  ViewIcon,
+  WarningIcon,
+  CheckCircleIcon,
+} from "@chakra-ui/icons";
 
 interface GroupProps {}
 
@@ -251,6 +258,17 @@ const Group: React.FC<GroupProps> = ({}) => {
                       >
                         Delete
                       </Button>
+                    </Td>
+                    <Td>
+                      {!child.fatherId || !child.motherId ? (
+                        <Tooltip label="Some data is missing!">
+                          <WarningIcon color={"yellow.400"} />
+                        </Tooltip>
+                      ) : (
+                        <Tooltip label="All data is here!">
+                          <CheckCircleIcon color={"green.400"} />
+                        </Tooltip>
+                      )}
                     </Td>
                   </Tr>
                 )

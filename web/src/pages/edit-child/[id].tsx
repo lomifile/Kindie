@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { withUrqlClient } from "next-urql";
 import {
   Flex,
   Box,
   toast,
+  Text,
   Stack,
   Button,
   useToast,
@@ -15,6 +16,22 @@ import {
   AlertTitle,
   HStack,
   Heading,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Table,
+  Tbody,
+  Td,
+  Tr,
+  useDisclosure,
+  Divider,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
@@ -23,9 +40,15 @@ import { Layout } from "../../components/Layout";
 import { useIsAuth } from "../../utils/useIsAuth";
 import { useGetId } from "../../utils/getID";
 import {
+  useFilterFatherQuery,
+  useFilterMotherQuery,
   useFindChildQuery,
   useUpdateChildMutation,
+  useUpdateChildrenParentsMutation,
 } from "../../generated/graphql";
+import { AddIcon, SearchIcon } from "@chakra-ui/icons";
+import children from "../children";
+import { ParentCard } from "../../components/ParentCard";
 
 interface EditChildProps {}
 
@@ -34,7 +57,18 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
   const id = useGetId();
   const toast = useToast();
   const router = useRouter();
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [text, setText] = useState("");
+  const [{ data: mother, fetching: motherFetching }] = useFilterMotherQuery({
+    variables: {
+      text,
+    },
+  });
+  const [{ data: father, fetching: fatherFetching }] = useFilterFatherQuery({
+    variables: {
+      text,
+    },
+  });
   const [{ data, fetching }] = useFindChildQuery({
     pause: id === -1,
     variables: {
@@ -42,7 +76,10 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
     },
   });
 
+  console.log(data);
+
   const [, updateChild] = useUpdateChildMutation();
+  const [, updateParents] = useUpdateChildrenParentsMutation();
 
   if (fetching) {
     return (
@@ -98,7 +135,122 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
 
   return (
     <Layout variant="column" navbarVariant="user">
-      <HStack spacing={5}>
+      <title>{data.findChild.Name + " " + data.findChild.Surname}</title>
+      <Drawer isOpen={isOpen} placement="left" onClose={onClose} size={"md"}>
+        <DrawerOverlay>
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>Add parents to child</DrawerHeader>
+
+            <DrawerBody>
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<SearchIcon color="gray.300" />}
+                />
+                <Input
+                  style={{ borderRadius: "12px" }}
+                  placeholder={"Input name or surname..."}
+                  id="text"
+                  onChange={() => {
+                    // @ts-ignore
+                    setText(document.getElementById("text").value);
+                  }}
+                />
+              </InputGroup>
+              {data.findChild.motherId ? null : (
+                <>
+                  <Heading mt={5} color="blue.400">
+                    Mother
+                  </Heading>
+                  <Table mt={5}>
+                    <Tbody>
+                      {!mother && motherFetching ? (
+                        <Spinner
+                          thickness="4px"
+                          speed="0.65s"
+                          emptyColor="gray.200"
+                          color="blue.500"
+                          size="xl"
+                        />
+                      ) : null}
+                      {mother?.filterMother.map((m) => (
+                        <Tr>
+                          <Td>{m.Name}</Td>
+                          <Td>{m.Surname}</Td>
+                          <Td>
+                            <IconButton
+                              aria-label="Add to group"
+                              icon={<AddIcon />}
+                              color="white"
+                              bg="blue.400"
+                              _hover={{
+                                backgroundColor: "#719ABC",
+                              }}
+                              onClick={() => {
+                                updateParents({
+                                  childId: data.findChild.Id,
+                                  motherId: m.Id,
+                                  fatherId: data.findChild.fatherId,
+                                });
+                              }}
+                            />
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </>
+              )}
+              {data.findChild.fatherId ? null : (
+                <>
+                  <Heading mt={5} color="blue.400">
+                    Father
+                  </Heading>
+                  <Table mt={5}>
+                    <Tbody>
+                      {!father && fatherFetching ? (
+                        <Spinner
+                          thickness="4px"
+                          speed="0.65s"
+                          emptyColor="gray.200"
+                          color="blue.500"
+                          size="xl"
+                        />
+                      ) : null}
+                      {father?.filterFather.map((f) => (
+                        <Tr>
+                          <Td>{f.Name}</Td>
+                          <Td>{f.Surname}</Td>
+                          <Td>
+                            <IconButton
+                              aria-label="Add to group"
+                              icon={<AddIcon />}
+                              color="white"
+                              bg="blue.400"
+                              _hover={{
+                                backgroundColor: "#719ABC",
+                              }}
+                              onClick={() => {
+                                updateParents({
+                                  childId: data.findChild.Id,
+                                  motherId: data.findChild.motherId,
+                                  fatherId: f.Id,
+                                });
+                              }}
+                            />
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </>
+              )}
+            </DrawerBody>
+          </DrawerContent>
+        </DrawerOverlay>
+      </Drawer>
+      <HStack spacing={5} mb={10}>
         <Button
           bg="blue.400"
           colorScheme="navItem"
@@ -117,10 +269,14 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
         <Heading color="blue.400">Edit child</Heading>
       </HStack>
       <Flex
-        mt={10}
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
+        align="center"
+        justify={{ base: "center", md: "space-around", xl: "space-between" }}
+        direction={{ base: "column-reverse", md: "row" }}
+        // @ts-ignore
+        wrap="no-wrap"
+        minH="70vh"
+        px={8}
+        mb={5}
       >
         <Box width={{ base: "90%", md: "400px" }} rounded="lg">
           <Formik
@@ -218,6 +374,30 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
               </Form>
             )}
           </Formik>
+        </Box>
+        <Box width={{ base: "90%", md: "400px" }} rounded="lg">
+          {!data.findChild.motherId || !data.findChild.fatherId ? (
+            <>
+              <Button
+                leftIcon={<AddIcon />}
+                bg="blue.400"
+                colorScheme="navItem"
+                borderRadius="12px"
+                py="4"
+                px="4"
+                lineHeight="1"
+                size="md"
+                onClick={onOpen}
+              >
+                Add parents
+              </Button>
+            </>
+          ) : (
+            <>
+              <ParentCard data={data.findChild.mother} />
+              <ParentCard data={data.findChild.father} />
+            </>
+          )}
         </Box>
       </Flex>
     </Layout>

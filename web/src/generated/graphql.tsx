@@ -34,8 +34,10 @@ export type Query = {
   findChild?: Maybe<Children>;
   showFather: PaginatedFather;
   findFather: Father;
+  filterFather: Array<Father>;
   showMother: PaginatedMother;
   findMother: Mother;
+  filterMother: Array<Mother>;
 };
 
 
@@ -77,6 +79,11 @@ export type QueryFindFatherArgs = {
 };
 
 
+export type QueryFilterFatherArgs = {
+  text: Scalars['String'];
+};
+
+
 export type QueryShowMotherArgs = {
   cursor?: Maybe<Scalars['String']>;
   limit: Scalars['Int'];
@@ -85,6 +92,11 @@ export type QueryShowMotherArgs = {
 
 export type QueryFindMotherArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryFilterMotherArgs = {
+  text: Scalars['String'];
 };
 
 export type User = {
@@ -135,6 +147,8 @@ export type Children = {
   Remarks: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+  motherId?: Maybe<Scalars['Float']>;
+  fatherId?: Maybe<Scalars['Float']>;
   inGroup?: Maybe<Groups>;
   mother?: Maybe<Mother>;
   father?: Maybe<Father>;
@@ -202,7 +216,7 @@ export type Mutation = {
   addChildToGroup?: Maybe<Children>;
   updateChild?: Maybe<Children>;
   deleteChildren: Scalars['Boolean'];
-  updateChildernParents: ChildrenResponse;
+  updateChildernParents: Children;
   createChild: Children;
   useChildren: ChildrenResponse;
   addStaff: Scalars['Boolean'];
@@ -307,9 +321,9 @@ export type MutationDeleteChildrenArgs = {
 
 
 export type MutationUpdateChildernParentsArgs = {
-  fatherId: Scalars['Float'];
-  motherId: Scalars['Float'];
-  kidId: Scalars['Float'];
+  fatherId?: Maybe<Scalars['Int']>;
+  motherId?: Maybe<Scalars['Int']>;
+  kidId: Scalars['Int'];
 };
 
 
@@ -449,7 +463,14 @@ export type ContactInput = {
 
 export type ChildrenFragmentFragment = (
   { __typename?: 'Children' }
-  & Pick<Children, 'Id' | 'Name' | 'Surname' | 'Gender' | 'BirthDate' | 'OIB' | 'Remarks' | 'createdAt' | 'updatedAt'>
+  & Pick<Children, 'Id' | 'Name' | 'Surname' | 'Gender' | 'BirthDate' | 'OIB' | 'Remarks' | 'motherId' | 'fatherId' | 'createdAt' | 'updatedAt'>
+  & { mother?: Maybe<(
+    { __typename?: 'Mother' }
+    & MotherFragmentFragment
+  )>, father?: Maybe<(
+    { __typename?: 'Father' }
+    & FatherFragmentFragment
+  )> }
 );
 
 export type ErrorFragmentFragment = (
@@ -763,6 +784,21 @@ export type UpdateChildMutation = (
   )> }
 );
 
+export type UpdateChildrenParentsMutationVariables = Exact<{
+  childId: Scalars['Int'];
+  motherId?: Maybe<Scalars['Int']>;
+  fatherId?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type UpdateChildrenParentsMutation = (
+  { __typename?: 'Mutation' }
+  & { updateChildernParents: (
+    { __typename?: 'Children' }
+    & ChildrenFragmentFragment
+  ) }
+);
+
 export type UpdateFatherMutationVariables = Exact<{
   fatherId: Scalars['Int'];
   options: ParentsInput;
@@ -882,6 +918,32 @@ export type VerifyAccountMutation = (
       & ErrorFragmentFragment
     )>> }
   ) }
+);
+
+export type FilterFatherQueryVariables = Exact<{
+  text: Scalars['String'];
+}>;
+
+
+export type FilterFatherQuery = (
+  { __typename?: 'Query' }
+  & { filterFather: Array<(
+    { __typename?: 'Father' }
+    & FatherFragmentFragment
+  )> }
+);
+
+export type FilterMotherQueryVariables = Exact<{
+  text: Scalars['String'];
+}>;
+
+
+export type FilterMotherQuery = (
+  { __typename?: 'Query' }
+  & { filterMother: Array<(
+    { __typename?: 'Mother' }
+    & MotherFragmentFragment
+  )> }
 );
 
 export type FindChildQueryVariables = Exact<{
@@ -1100,23 +1162,15 @@ export type ShowSelectedKindergardenQuery = (
   )> }
 );
 
-export const ChildrenFragmentFragmentDoc = gql`
-    fragment ChildrenFragment on Children {
+export const MotherFragmentFragmentDoc = gql`
+    fragment MotherFragment on Mother {
   Id
   Name
   Surname
-  Gender
-  BirthDate
-  OIB
-  Remarks
+  Email
+  Phone
   createdAt
   updatedAt
-}
-    `;
-export const ErrorFragmentFragmentDoc = gql`
-    fragment ErrorFragment on FieldError {
-  field
-  message
 }
     `;
 export const FatherFragmentFragmentDoc = gql`
@@ -1130,21 +1184,38 @@ export const FatherFragmentFragmentDoc = gql`
   updatedAt
 }
     `;
+export const ChildrenFragmentFragmentDoc = gql`
+    fragment ChildrenFragment on Children {
+  Id
+  Name
+  Surname
+  Gender
+  BirthDate
+  OIB
+  Remarks
+  mother {
+    ...MotherFragment
+  }
+  father {
+    ...FatherFragment
+  }
+  motherId
+  fatherId
+  createdAt
+  updatedAt
+}
+    ${MotherFragmentFragmentDoc}
+${FatherFragmentFragmentDoc}`;
+export const ErrorFragmentFragmentDoc = gql`
+    fragment ErrorFragment on FieldError {
+  field
+  message
+}
+    `;
 export const GroupFragmentFragmentDoc = gql`
     fragment GroupFragment on Groups {
   Id
   Name
-  createdAt
-  updatedAt
-}
-    `;
-export const MotherFragmentFragmentDoc = gql`
-    fragment MotherFragment on Mother {
-  Id
-  Name
-  Surname
-  Email
-  Phone
   createdAt
   updatedAt
 }
@@ -1422,6 +1493,17 @@ export const UpdateChildDocument = gql`
 export function useUpdateChildMutation() {
   return Urql.useMutation<UpdateChildMutation, UpdateChildMutationVariables>(UpdateChildDocument);
 };
+export const UpdateChildrenParentsDocument = gql`
+    mutation UpdateChildrenParents($childId: Int!, $motherId: Int, $fatherId: Int) {
+  updateChildernParents(kidId: $childId, motherId: $motherId, fatherId: $fatherId) {
+    ...ChildrenFragment
+  }
+}
+    ${ChildrenFragmentFragmentDoc}`;
+
+export function useUpdateChildrenParentsMutation() {
+  return Urql.useMutation<UpdateChildrenParentsMutation, UpdateChildrenParentsMutationVariables>(UpdateChildrenParentsDocument);
+};
 export const UpdateFatherDocument = gql`
     mutation UpdateFather($fatherId: Int!, $options: ParentsInput!) {
   updateFather(fatherId: $fatherId, options: $options) {
@@ -1528,6 +1610,28 @@ ${ErrorFragmentFragmentDoc}`;
 
 export function useVerifyAccountMutation() {
   return Urql.useMutation<VerifyAccountMutation, VerifyAccountMutationVariables>(VerifyAccountDocument);
+};
+export const FilterFatherDocument = gql`
+    query FilterFather($text: String!) {
+  filterFather(text: $text) {
+    ...FatherFragment
+  }
+}
+    ${FatherFragmentFragmentDoc}`;
+
+export function useFilterFatherQuery(options: Omit<Urql.UseQueryArgs<FilterFatherQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<FilterFatherQuery>({ query: FilterFatherDocument, ...options });
+};
+export const FilterMotherDocument = gql`
+    query FilterMother($text: String!) {
+  filterMother(text: $text) {
+    ...MotherFragment
+  }
+}
+    ${MotherFragmentFragmentDoc}`;
+
+export function useFilterMotherQuery(options: Omit<Urql.UseQueryArgs<FilterMotherQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<FilterMotherQuery>({ query: FilterMotherDocument, ...options });
 };
 export const FindChildDocument = gql`
     query FindChild($id: Int!) {

@@ -13,7 +13,7 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { getConnection } from "typeorm";
+import { getConnection, getRepository } from "typeorm";
 import { AppContext } from "src/Types";
 
 // @ObjectType()
@@ -132,5 +132,32 @@ export class FatherResolver {
         inKindergardenId: req.session.selectedKindergarden,
       },
     });
+  }
+
+  @Query(() => [Father])
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async filterFather(
+    @Arg("text", () => String) text: string,
+    @Ctx() { req }: AppContext
+  ): Promise<Father[] | undefined> {
+    if (text === ".") {
+      return Father.find({
+        where: {
+          inKindergardenId: req.session.selectedKindergarden,
+        },
+      });
+    }
+    return await getRepository(Father)
+      .createQueryBuilder()
+      .where(
+        `"Name" = :name or "Surname" = :lastName and "inKindergardenId" = :id`,
+        {
+          name: text,
+          lastName: text,
+          id: req.session.selectedKindergarden,
+        }
+      )
+      .getMany();
   }
 }

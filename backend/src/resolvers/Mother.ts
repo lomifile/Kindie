@@ -13,7 +13,7 @@ import {
 import { isAuth } from "../middleware/isAuth";
 import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
 import { ParentsInput } from "../utils/inputs/ParentsInput";
-import { getConnection } from "typeorm";
+import { getConnection, getRepository } from "typeorm";
 import { AppContext } from "src/Types";
 
 // @ObjectType()
@@ -130,5 +130,32 @@ export class MotherResolver {
         inKindergardenId: req.session.selectedKindergarden,
       },
     });
+  }
+
+  @Query(() => [Mother])
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async filterMother(
+    @Arg("text", () => String) text: string,
+    @Ctx() { req }: AppContext
+  ): Promise<Mother[] | undefined> {
+    if (text === ".") {
+      return Mother.find({
+        where: {
+          inKindergardenId: req.session.selectedKindergarden,
+        },
+      });
+    }
+    return await getRepository(Mother)
+      .createQueryBuilder()
+      .where(
+        `"Name" = :name or "Surname" = :lastName and "inKindergardenId" = :id`,
+        {
+          name: text,
+          lastName: text,
+          id: req.session.selectedKindergarden,
+        }
+      )
+      .getMany();
   }
 }
