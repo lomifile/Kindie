@@ -15,10 +15,34 @@ export const ParentCard: React.FC<ParentCardProps> = ({ data }) => {
       borderColor="blue.400"
       p={5}
     >
-      <Text>Name: {data.Name}</Text>
-      <Text>Last name: {data.Surname}</Text>
-      <Text>Email: {data.Email}</Text>
-      <Text>Phone: {data.Phone}</Text>
+      <Text>
+        Name:{" "}
+        {
+          // @ts-ignore
+          data.Name
+        }
+      </Text>
+      <Text>
+        Last name:{" "}
+        {
+          // @ts-ignore
+          data.Surname
+        }
+      </Text>
+      <Text>
+        Email:{" "}
+        {
+          // @ts-ignore
+          data.Email
+        }
+      </Text>
+      <Text>
+        Phone:{" "}
+        {
+          // @ts-ignore
+          data.Phone
+        }
+      </Text>
     </Box>
   );
 };

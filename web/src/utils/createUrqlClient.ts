@@ -364,18 +364,31 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
 
             useKindergarden: (_result, args, cache, info) => {
               const allFields = cache.inspectFields("Query");
+
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "showMother"
               );
+              const filedsFilterMother = allFields.filter(
+                (info) => info.fieldName === "filterMother"
+              );
               fieldInfos.forEach((fi) => {
                 cache.invalidate("Query", "showMother", fi.arguments || {});
+              });
+              filedsFilterMother.forEach((fi) => {
+                cache.invalidate("Query", "filterMother", fi.arguments || {});
               });
 
               const fieldInfosFather = allFields.filter(
                 (info) => info.fieldName === "showFather"
               );
+              const fieldFilterFather = allFields.filter(
+                (info) => info.fieldName === "filterFather"
+              );
               fieldInfosFather.forEach((fi) => {
                 cache.invalidate("Query", "showFather", fi.arguments || {});
+              });
+              fieldFilterFather.forEach((fi) => {
+                cache.invalidate("Query", "filterFather", fi.arguments || {});
               });
               cache.updateQuery(
                 { query: ShowKindergardenstaffDocument },

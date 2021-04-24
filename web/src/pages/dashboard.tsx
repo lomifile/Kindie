@@ -348,7 +348,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
             </HStack>
           </Box>
         </Flex>
-
+        {/* 
         <Flex mt={5} mb={2}>
           <Heading color="blue.400">Activity log</Heading>
         </Flex>
@@ -377,7 +377,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
               <Text>Filip Ivanusec created Novo Dijete</Text>
             </Flex>
           </Stack>
-        </Box>
+        </Box> */}
       </Stack>
     </Layout>
   );
