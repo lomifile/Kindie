@@ -131,7 +131,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   }
 
   return {
-    url: "https://dv-organizator-backend.vercel.app/",
+    url: "https://immense-sierra-59923.herokuapp.com/graphql",
     fetchOptions: {
       credentials: "include" as const,
       headers: cookie
