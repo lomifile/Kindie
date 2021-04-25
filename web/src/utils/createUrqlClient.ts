@@ -25,14 +25,10 @@ import {
   DeleteChildrenMutationVariables,
   DeleteKindergardenMutationVariables,
   DeleteGroupMutationVariables,
-  ShowKindergardenstaffQuery,
   ShowKindergardenstaffDocument,
   AddStaffMutationVariables,
   AddChildToGroupMutationVariables,
   DeleteStaffMutationVariables,
-  UpdateChildrenParentsMutation,
-  FindChildQuery,
-  FindChildDocument,
 } from "../generated/graphql";
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
@@ -131,7 +127,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   }
 
   return {
-    url: "https://dv-organizator-backend.vercel.app/",
+    url: process.env.NEXT_PUBLIC_API_URL,
     fetchOptions: {
       credentials: "include" as const,
       headers: cookie

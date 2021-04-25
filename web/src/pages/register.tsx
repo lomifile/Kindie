@@ -66,7 +66,7 @@ const Register: React.FC<registerProps> = ({}) => {
             const response = await register({
               options: {
                 name: values.name,
-                surname: values.name,
+                surname: values.surname,
                 email: values.email,
                 role: values.role,
                 password: values.password,

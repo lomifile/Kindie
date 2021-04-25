@@ -273,4 +273,4 @@ const Parents: React.FC<ParentsProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Parents);
+export default withUrqlClient(createUrqlClient, { ssr: true })(Parents);

@@ -47,9 +47,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
   useIsAuth();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [{ data, fetching }] = useShowGroupsQuery({
-    pause: isServer(),
-  });
+  const [{ data, fetching }] = useShowGroupsQuery();
   const [, createGroup] = useCreateGroupMutation();
   const [, useGroup] = useUseGroupMutation();
   const [, useChildren] = useUseChildrenMutation();
@@ -242,88 +240,93 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
             </NextLink>
           </HStack>
         </Flex>
-        <Flex mt={5} mb={2}>
-          <Heading color="blue.400">My groups</Heading>
-        </Flex>
-        <Flex align="center" justify="left" mb={5} mt={5}>
-          <Box
-            mt={5}
-            borderRadius="12px"
-            border={"1px"}
-            borderColor="blue.400"
-            p={5}
-            style={{
-              display: "block",
-              width: "1200px",
-              overflowY: "hidden",
-              overflowX: "auto",
-            }}
-          >
-            <HStack spacing={8}>
-              {data?.showGroups?.map((owning) => (
-                <Box maxW="sm" borderWidth="1px" borderRadius="lg">
-                  <Flex justify="right">
-                    <IconButton
-                      aria-label="Delete group"
-                      icon={<CloseIcon />}
-                      variant="ghost"
-                      onClick={async () => {
-                        const { error } = await deleteGroup({
-                          id: owning.Id,
-                        });
-                        if (error) {
-                          toast({
-                            title: "You cannot delete this group",
-                            description: "This Group contains data!",
-                            status: "error",
-                            duration: 9000,
-                            isClosable: true,
-                          });
-                        } else {
-                          toast({
-                            title: "Group deleted successfully",
-                            description: "We've deleted your group for you.",
-                            status: "success",
-                            duration: 9000,
-                            isClosable: true,
-                          });
-                        }
-                      }}
-                    />
-                  </Flex>
-                  <Box p="6">
-                    <Box
-                      mt="1"
-                      fontWeight="semibold"
-                      as="h1"
-                      lineHeight="tight"
-                    >
-                      <Link
-                        color="blue.400"
-                        style={{
-                          fontSize: "26px",
-                          fontWeight: "bold",
-                        }}
-                        onClick={async () => {
-                          await useGroup({ groupId: owning.Id });
-                          router.push(
-                            `/group/${
-                              typeof router.query.id === "string"
-                                ? router.query.id
-                                : ""
-                            }?name=${owning.Name}`
-                          );
-                        }}
-                      >
-                        {owning.Name}
-                      </Link>
+        {data?.showGroups.length > 0 ? (
+          <>
+            <Flex mt={5}>
+              <Heading color="blue.400">My groups</Heading>
+            </Flex>
+            <Flex align="center" justify="left" mb={5} mt={5}>
+              <Box
+                mt={5}
+                borderRadius="12px"
+                border={"1px"}
+                borderColor="blue.400"
+                p={5}
+                style={{
+                  display: "block",
+                  width: "1200px",
+                  overflowY: "hidden",
+                  overflowX: "auto",
+                }}
+              >
+                <HStack spacing={8}>
+                  {data?.showGroups?.map((owning) => (
+                    <Box maxW="sm" borderWidth="1px" borderRadius="lg">
+                      <Flex justify="right">
+                        <IconButton
+                          aria-label="Delete group"
+                          icon={<CloseIcon />}
+                          variant="ghost"
+                          onClick={async () => {
+                            const { error } = await deleteGroup({
+                              id: owning.Id,
+                            });
+                            if (error) {
+                              toast({
+                                title: "You cannot delete this group",
+                                description: "This Group contains data!",
+                                status: "error",
+                                duration: 9000,
+                                isClosable: true,
+                              });
+                            } else {
+                              toast({
+                                title: "Group deleted successfully",
+                                description:
+                                  "We've deleted your group for you.",
+                                status: "success",
+                                duration: 9000,
+                                isClosable: true,
+                              });
+                            }
+                          }}
+                        />
+                      </Flex>
+                      <Box p="6">
+                        <Box
+                          mt="1"
+                          fontWeight="semibold"
+                          as="h1"
+                          lineHeight="tight"
+                        >
+                          <Link
+                            color="blue.400"
+                            style={{
+                              fontSize: "26px",
+                              fontWeight: "bold",
+                            }}
+                            onClick={async () => {
+                              await useGroup({ groupId: owning.Id });
+                              router.push(
+                                `/group/${
+                                  typeof router.query.id === "string"
+                                    ? router.query.id
+                                    : ""
+                                }?name=${owning.Name}`
+                              );
+                            }}
+                          >
+                            {owning.Name}
+                          </Link>
+                        </Box>
+                      </Box>
                     </Box>
-                  </Box>
-                </Box>
-              ))}
-            </HStack>
-          </Box>
-        </Flex>
+                  ))}
+                </HStack>
+              </Box>
+            </Flex>
+          </>
+        ) : null}
       </Stack>
     </Layout>
   );

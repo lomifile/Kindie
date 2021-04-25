@@ -7,13 +7,9 @@ import {
   Button,
   Flex,
   Heading,
-  HStack,
-  Link,
-  Select,
   SkeletonCircle,
   SkeletonText,
   Stack,
-  Text,
   useToast,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
@@ -24,9 +20,7 @@ import { useMeQuery, useUpdateUserMutation } from "../generated/graphql";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { toErrormap } from "../utils/toErrorMap";
-import { useRouter } from "next/router";
 import { useIsAuth } from "../utils/useIsAuth";
-import { isServer } from "../utils/isServer";
 
 interface ProfileProps {}
 
@@ -34,9 +28,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   let body = null;
   useIsAuth();
   const [redirect, setRedirect] = useState(false);
-  const [{ data, fetching }] = useMeQuery({
-    pause: isServer(),
-  });
+  const [{ data, fetching }] = useMeQuery();
   const [, updateUser] = useUpdateUserMutation();
   const toast = useToast();
 
@@ -179,32 +171,6 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                 )}
               </Formik>
             </Stack>
-          </Box>
-          <Flex>
-            <Heading color="blue.400">
-              Your kindergardens or kindergardens that you are part of
-            </Heading>
-          </Flex>
-          <Box
-            mb={"5rem"}
-            mt={5}
-            borderRadius="12px"
-            border={"1px"}
-            borderColor="blue.400"
-            p={5}
-          >
-            <HStack spacing={5}>
-              {data.me?.ownerOf.map((owning) => (
-                <Flex borderRadius={"12px"} p={5} shadow="md" borderWidth="1px">
-                  <Box>
-                    <Heading as={"h5"}>{owning.Name}</Heading>
-                    <Text>{owning.Address}</Text>
-                    <Text>{owning.City}</Text>
-                    <Text>{owning.Zipcode}</Text>
-                  </Box>
-                </Flex>
-              ))}
-            </HStack>
           </Box>
         </Stack>
       </Layout>
