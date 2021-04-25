@@ -25,14 +25,10 @@ import {
   DeleteChildrenMutationVariables,
   DeleteKindergardenMutationVariables,
   DeleteGroupMutationVariables,
-  ShowKindergardenstaffQuery,
   ShowKindergardenstaffDocument,
   AddStaffMutationVariables,
   AddChildToGroupMutationVariables,
   DeleteStaffMutationVariables,
-  UpdateChildrenParentsMutation,
-  FindChildQuery,
-  FindChildDocument,
 } from "../generated/graphql";
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
