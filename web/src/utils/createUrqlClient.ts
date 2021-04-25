@@ -133,7 +133,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   return {
     url: "https://immense-sierra-59923.herokuapp.com/graphql",
     fetchOptions: {
-      credentials: "include" as const,
+      credentials: "omit" as const,
       headers: cookie
         ? {
             cookie,
