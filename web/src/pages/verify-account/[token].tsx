@@ -14,6 +14,8 @@ import { Formik, Form } from "formik";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Footer } from "../../components/Footer";
 import { useVerifyAccountMutation } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { toErrormap } from "../../utils/toErrorMap";
@@ -21,6 +23,7 @@ import { toErrormap } from "../../utils/toErrorMap";
 interface VerifyAccountProps {}
 
 const VerifyAccount: React.FC<VerifyAccountProps> = ({}) => {
+  const { t } = useTranslation("data", { useSuspense: false });
   const [checked, setChecked] = useState(false);
   const [, verifyAccount] = useVerifyAccountMutation();
   const router = useRouter();
@@ -47,7 +50,7 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({}) => {
         borderRadius={"12px"}
       >
         <Heading color={"blue.400"} marginBottom="1.5rem">
-          Verify your account
+          {t("verify-account.main-header")}
         </Heading>
         <Formik
           initialValues={{
@@ -71,8 +74,7 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({}) => {
               });
             } else {
               toast({
-                title: "Your account is verified!",
-                description: "You can now login and start working!",
+                title: t("verify-account.toast.title"),
                 status: "success",
                 duration: 9000,
                 isClosable: true,
@@ -89,7 +91,7 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({}) => {
                     handleClick();
                   }}
                 >
-                  I consent to Terms and conditions!
+                  {t("verify-account.privacy")}
                 </Checkbox>
                 <Stack marginBottom="1rem">
                   <Button
@@ -104,7 +106,7 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({}) => {
                     isLoading={isSubmitting}
                     type="submit"
                   >
-                    Verify account
+                    {t("verify-account.btn")}
                   </Button>
                 </Stack>
               </Stack>
@@ -113,28 +115,7 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({}) => {
         </Formik>
         <Divider marginBottom="1rem" />
       </Box>
-      <Stack isInline marginTop="1.5rem" fontWeight="500" fontSize="sm">
-        <Link className="footer-nav-item" href="#" color="secondary.link">
-          Terms
-        </Link>
-        <Link className="footer-nav-item" href="#" color="secondary.link">
-          Privacy Policy
-        </Link>
-        <Link
-          className="footer-nav-item"
-          href="/contact"
-          color="secondary.link"
-        >
-          Contact Us
-        </Link>
-      </Stack>
-      <Stack isInline marginTop="1rem" fontWeight="500" fontSize="sm">
-        <Text color="secondary.link">&copy; {year}</Text>
-        <Link href="/" color="secondary.link" fontWeight="bold">
-          DV Organizator
-        </Link>
-        <Text color="secondary.link">&mdash; All rights reserved</Text>
-      </Stack>
+      <Footer variant="small" />
     </Flex>
   );
 };

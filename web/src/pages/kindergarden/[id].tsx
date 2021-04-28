@@ -37,14 +37,15 @@ import { useIsAuth } from "../../utils/useIsAuth";
 import { Form, Formik } from "formik";
 import { InputField } from "../../components/InputField";
 import { toErrormap } from "../../utils/toErrorMap";
-import { isServer } from "../../utils/isServer";
 import { CloseIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
+import { useTranslation } from "react-i18next";
 
 interface KindergardenProps {}
 
 const Kindergarden: React.FC<KindergardenProps> = ({}) => {
   useIsAuth();
+  const { t } = useTranslation("data", { useSuspense: false });
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [{ data, fetching }] = useShowGroupsQuery();
@@ -96,10 +97,10 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
         >
           <AlertIcon boxSize="40px" mr={0} />
           <AlertTitle mt={4} mb={1} fontSize="lg">
-            There was an error
+            {t("kindergarden.alert.title")}
           </AlertTitle>
           <AlertDescription maxWidth="sm">
-            An error occured while trying to fetch your data!
+            {t("kindergarden.alert.desc")}
           </AlertDescription>
         </Alert>
       </Flex>
@@ -107,11 +108,16 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
   }
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
-      <title>Kindergarden</title>
-      <Modal onClose={onClose} size={"md"} isOpen={isOpen}>
+      <title>{t("kindergarden.main-header")}</title>
+      <Modal
+        onClose={onClose}
+        size={"md"}
+        isOpen={isOpen}
+        closeOnOverlayClick={false}
+      >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create group</ModalHeader>
+          <ModalHeader>{t("kindergarden.modal.header")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Formik
@@ -124,8 +130,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                   setErrors(toErrormap(response.data.createGroup.errors));
                 } else {
                   toast({
-                    title: "Group created successfully",
-                    description: "We've created your group for you.",
+                    title: t("kindergarden.toast.create.title"),
                     status: "success",
                     duration: 9000,
                     isClosable: true,
@@ -138,8 +143,8 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                   <Stack spacing={4} marginBottom="1rem">
                     <InputField
                       name="name"
-                      placeholder="Name"
-                      label="Input name"
+                      placeholder={t("kindergarden.form.placeholders.name")}
+                      label={t("kindergarden.form.name")}
                       type="text"
                       required
                     />
@@ -157,7 +162,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                       type="submit"
                       onClick={onClose}
                     >
-                      Create group
+                      {t("kindergarden.form.btn")}
                     </Button>
                   </Flex>
                 </Form>
@@ -167,9 +172,6 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
         </ModalContent>
       </Modal>
       <Stack spacing={8}>
-        <Flex mt={5} mb={2}>
-          <Heading color="blue.400">Toolbox</Heading>
-        </Flex>
         <Flex
           align="center"
           justify="center"
@@ -192,7 +194,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
               size="md"
               onClick={onOpen}
             >
-              New group
+              {t("kindergarden.toolbox.btn-new-group")}
             </Button>
             <Button
               bg="blue.400"
@@ -208,7 +210,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                 router.push("/children");
               }}
             >
-              Children
+              {t("kindergarden.toolbox.btn-children")}
             </Button>
             <NextLink href="/parents">
               <Button
@@ -221,7 +223,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                 lineHeight="1"
                 size="md"
               >
-                Parents
+                {t("kindergarden.toolbox.btn-parents")}
               </Button>
             </NextLink>
             <NextLink href="/staff">
@@ -235,7 +237,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                 lineHeight="1"
                 size="md"
               >
-                Staff
+                {t("kindergarden.toolbox.btn-staff")}
               </Button>
             </NextLink>
           </HStack>
@@ -243,7 +245,9 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
         {data?.showGroups.length > 0 ? (
           <>
             <Flex mt={5}>
-              <Heading color="blue.400">My groups</Heading>
+              <Heading color="blue.400">
+                {t("kindergarden.groups-heading")}
+              </Heading>
             </Flex>
             <Flex align="center" justify="left" mb={5} mt={5}>
               <Box
@@ -273,17 +277,15 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                             });
                             if (error) {
                               toast({
-                                title: "You cannot delete this group",
-                                description: "This Group contains data!",
+                                title: t("kindergarden.toast.error.title"),
+                                description: t("kindergarden.toast.error.desc"),
                                 status: "error",
                                 duration: 9000,
                                 isClosable: true,
                               });
                             } else {
                               toast({
-                                title: "Group deleted successfully",
-                                description:
-                                  "We've deleted your group for you.",
+                                title: t("kindergarden.toast.delete"),
                                 status: "success",
                                 duration: 9000,
                                 isClosable: true,

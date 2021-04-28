@@ -12,6 +12,10 @@ import {
   Button,
   HStack,
   Tooltip,
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React, { useState } from "react";
@@ -24,11 +28,13 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { useIsAuth } from "../utils/useIsAuth";
 import NextLink from "next/link";
 import { WarningIcon, CheckCircleIcon } from "@chakra-ui/icons";
+import { useTranslation } from "react-i18next";
 
 interface ChildrenProps {}
 
 const Children: React.FC<ChildrenProps> = ({}) => {
   useIsAuth();
+  const { t } = useTranslation("data", { useSuspense: false });
   const [variables, setVariables] = useState({
     limit: 10,
     cursor: null as null | string,
@@ -42,20 +48,42 @@ const Children: React.FC<ChildrenProps> = ({}) => {
 
   if (!fetching && !data) {
     return (
-      <div>
-        <div>you got query failed for some reason</div>
-        <div>{error?.message}</div>
-      </div>
+      <Flex
+        p={200}
+        minHeight="100%"
+        width="100%"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+      >
+        <Alert
+          status="error"
+          variant="subtle"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          textAlign="center"
+          height="200px"
+        >
+          <AlertIcon boxSize="40px" mr={0} />
+          <AlertTitle mt={4} mb={1} fontSize="lg">
+            {t("children.alert.title")}
+          </AlertTitle>
+          <AlertDescription maxWidth="sm">
+            {t("children.alert.desc")}
+          </AlertDescription>
+        </Alert>
+      </Flex>
     );
   }
 
   return (
     <Layout navbarVariant="user" variant="column">
-      <title>Children</title>
+      <title>{t("children.main-header")}</title>
 
       <Flex>
         <HStack spacing={10}>
-          <Heading color="blue.400">Children</Heading>
+          <Heading color="blue.400">{t("children.main-header")}</Heading>
           <NextLink href="create-child">
             <Button
               bg="blue.400"
@@ -67,7 +95,7 @@ const Children: React.FC<ChildrenProps> = ({}) => {
               size="md"
               ml={"2rem"}
             >
-              Add child
+              {t("children.btn-add")}
             </Button>
           </NextLink>
         </HStack>
@@ -81,8 +109,8 @@ const Children: React.FC<ChildrenProps> = ({}) => {
           <Table m={10}>
             <Thead>
               <Tr>
-                <Th>Name</Th>
-                <Th>Last name</Th>
+                <Th>{t("children.tbl-name")}</Th>
+                <Th>{t("children.tbl-surname")}</Th>
                 <Th></Th>
                 <Th></Th>
               </Tr>
@@ -167,7 +195,7 @@ const Children: React.FC<ChildrenProps> = ({}) => {
               lineHeight="1"
               size="md"
             >
-              Load more
+              {t("children.btn-load-more")}
             </Button>
           </Flex>
         ) : null}

@@ -20,11 +20,15 @@ import {
 import { useIsAuth } from "../utils/useIsAuth";
 import { useShowfatherQuery, useShowMotherQuery } from "../generated/graphql";
 import NextLink from "next/link";
+import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
 
 interface ParentsProps {}
 
 const Parents: React.FC<ParentsProps> = ({}) => {
   useIsAuth();
+  const { t } = useTranslation("data", { useSuspense: false });
+  const router = useRouter();
   const [motherVariables, setMotherVariables] = useState({
     limit: 10,
     cursor: null as null | string,
@@ -42,11 +46,8 @@ const Parents: React.FC<ParentsProps> = ({}) => {
 
   return (
     <Layout navbarVariant="user" variant="column">
-      <title>Parents</title>
+      <title>{t("parents.main-header")}</title>
       <Stack spacing={8}>
-        <Flex mt={5} mb={2}>
-          <Heading color="blue.400">Toolbox</Heading>
-        </Flex>
         <Flex
           align="center"
           justify="center"
@@ -69,7 +70,7 @@ const Parents: React.FC<ParentsProps> = ({}) => {
                 lineHeight="1"
                 size="md"
               >
-                Add parents
+                {t("parents.btn-add")}
               </Button>
             </NextLink>
           </HStack>
@@ -97,7 +98,7 @@ const Parents: React.FC<ParentsProps> = ({}) => {
             color="blue.400"
             textAlign={["center", "center", "left", "left"]}
           >
-            Mother
+            {t("parents.heading-mother")}
           </Heading>
           <Box>
             {motherFetching && !mother ? (
@@ -108,8 +109,8 @@ const Parents: React.FC<ParentsProps> = ({}) => {
               <Table m={10}>
                 <Thead>
                   <Tr>
-                    <Th>Name</Th>
-                    <Th>Last name</Th>
+                    <Th>{t("parents.tbl-name")}</Th>
+                    <Th>{t("parents.tbl-surname")}</Th>
                     <Th></Th>
                     <Th></Th>
                   </Tr>
@@ -170,7 +171,7 @@ const Parents: React.FC<ParentsProps> = ({}) => {
             color="blue.400"
             textAlign={["center", "center", "left", "left"]}
           >
-            Father
+            {t("parents.heading-father")}
           </Heading>
           <Box>
             {fatherFetching && !father ? (
@@ -181,8 +182,8 @@ const Parents: React.FC<ParentsProps> = ({}) => {
               <Table m={10}>
                 <Thead>
                   <Tr>
-                    <Th>Name</Th>
-                    <Th>Last name</Th>
+                    <Th>{t("parents.tbl-name")}</Th>
+                    <Th>{t("parents.tbl-surname")}</Th>
                     <Th></Th>
                     <Th></Th>
                   </Tr>
@@ -194,23 +195,28 @@ const Parents: React.FC<ParentsProps> = ({}) => {
                         <Td>{father.Name}</Td>
                         <Td ml={"2rem"}>{father.Surname}</Td>
                         <Td>
-                          <NextLink
+                          {/* <NextLink
                             href={"/edit-parents/[id]"}
                             as={`/edit-parents/${father.Id}?parent=father`}
+                          > */}
+                          <Button
+                            bg="blue.400"
+                            colorScheme="navItem"
+                            borderRadius="12px"
+                            py="4"
+                            px="4"
+                            lineHeight="1"
+                            size="md"
+                            ml={"2rem"}
+                            onClick={async () => {
+                              await router.push(
+                                `/edit-parents/${father.Id}?parent=father`
+                              );
+                            }}
                           >
-                            <Button
-                              bg="blue.400"
-                              colorScheme="navItem"
-                              borderRadius="12px"
-                              py="4"
-                              px="4"
-                              lineHeight="1"
-                              size="md"
-                              ml={"2rem"}
-                            >
-                              Edit
-                            </Button>
-                          </NextLink>
+                            Edit
+                          </Button>
+                          {/* </NextLink> */}
                         </Td>
                         <Td>
                           <Button
@@ -264,7 +270,7 @@ const Parents: React.FC<ParentsProps> = ({}) => {
               lineHeight="1"
               size="md"
             >
-              Load more
+              {t("parents.btn-load-more")}
             </Button>
           </Flex>
         ) : null}

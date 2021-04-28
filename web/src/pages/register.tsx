@@ -22,10 +22,12 @@ import { toErrormap } from "../utils/toErrorMap";
 import { Footer } from "../components/Footer";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { useTranslation } from "react-i18next";
 
 interface registerProps {}
 
 const Register: React.FC<registerProps> = ({}) => {
+  const { t } = useTranslation("data", { useSuspense: false });
   const [privacy, setPrivacy] = useState(false);
 
   const router = useRouter();
@@ -41,7 +43,7 @@ const Register: React.FC<registerProps> = ({}) => {
       justifyContent="center"
       flexDirection="column"
     >
-      <title>Register</title>
+      <title>{t("register.main-header")}</title>
       <Box
         width={{ base: "90%", md: "400px" }}
         rounded="lg"
@@ -51,7 +53,7 @@ const Register: React.FC<registerProps> = ({}) => {
         borderRadius={"12px"}
       >
         <Heading color={"blue.400"} marginBottom="1.5rem">
-          Sign up
+          {t("register.main-header")}
         </Heading>
         <Formik
           initialValues={{
@@ -77,9 +79,7 @@ const Register: React.FC<registerProps> = ({}) => {
               setErrors(toErrormap(response.data.register.errors));
             } else if (response.data?.register.user) {
               toast({
-                title: "Your registration was a success",
-                description:
-                  "We've send you an email where you need to confim your account!",
+                title: t("register.toast.title"),
                 status: "success",
                 duration: 9000,
                 isClosable: true,
@@ -93,23 +93,23 @@ const Register: React.FC<registerProps> = ({}) => {
               <Stack spacing={4} marginBottom="1rem">
                 <InputField
                   name="name"
-                  placeholder="Name"
-                  label="Your name"
+                  placeholder={t("register.form.placeholders.name")}
+                  label={t("register.form.name")}
                   type="text"
                   required
                 />
                 <InputField
                   name="surname"
-                  placeholder="Last name"
-                  label="Your last name"
+                  placeholder={t("register.form.placeholders.surname")}
+                  label={t("register.form.surname")}
                   type="text"
                   required
                 />
-                <Text mb={"-10px"}>Role</Text>
+                <Text mb={"-10px"}>{t("register.form.role")}</Text>
                 <Select
                   name="role"
                   style={{ borderRadius: "12px" }}
-                  placeholder="Select your role"
+                  placeholder={t("register.form.placeholders.role")}
                   required
                 >
                   <option value="Teacher">Teacher</option>
@@ -118,23 +118,25 @@ const Register: React.FC<registerProps> = ({}) => {
                 </Select>
                 <InputField
                   name="email"
-                  placeholder="Email"
-                  label="Your email"
+                  placeholder={t("register.form.placeholders.email")}
+                  label={t("register.form.email")}
                   type="email"
                   required
                 />
                 <Stack spacing={5} justifyContent="space-between">
                   <InputField
                     name="password"
-                    placeholder="Password"
-                    label="Your password"
+                    placeholder={t("register.form.placeholders.password")}
+                    label={t("register.form.password")}
                     type="password"
                     required
                   />
                   <InputField
                     name="repeatPassword"
-                    placeholder="Repeat Password"
-                    label="Repeat password"
+                    placeholder={t(
+                      "register.form.placeholders.repeat-password"
+                    )}
+                    label={t("register.form.repeat-password")}
                     type="password"
                   />
                   <Checkbox
@@ -142,8 +144,7 @@ const Register: React.FC<registerProps> = ({}) => {
                       setPrivacy(true);
                     }}
                   >
-                    By checking this I acept Privacy policy and Terms and
-                    conditions
+                    {t("register.form.privacy")}
                   </Checkbox>
                 </Stack>
                 <Stack marginBottom="1rem">
@@ -159,7 +160,7 @@ const Register: React.FC<registerProps> = ({}) => {
                     isLoading={isSubmitting}
                     type="submit"
                   >
-                    Sign up
+                    {t("register.form.btn")}
                   </Button>
                 </Stack>
               </Stack>
@@ -169,7 +170,7 @@ const Register: React.FC<registerProps> = ({}) => {
         <Divider marginBottom="1rem" />
         <Stack>
           <Text textAlign="center" fontWeight="500">
-            Already have an account?
+            {t("register.text.acc")}
           </Text>
           <NextLink href="/login">
             <Button
@@ -178,7 +179,7 @@ const Register: React.FC<registerProps> = ({}) => {
               variant="outline"
               color="blue.400"
             >
-              Sign in
+              {t("register.text.btn")}
             </Button>
           </NextLink>
         </Stack>

@@ -18,10 +18,12 @@ import {
   useAddFatherMutation,
   useAddMotherMutation,
 } from "../generated/graphql";
+import { useTranslation } from "react-i18next";
 
 interface CreateParentsProps {}
 
 const CreateParents: React.FC<CreateParentsProps> = ({}) => {
+  const { t } = useTranslation("data", { useSuspense: false });
   const [, addMother] = useAddMotherMutation();
   const [, addFather] = useAddFatherMutation();
   const toast = useToast();
@@ -29,7 +31,7 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
   const router = useRouter();
   return (
     <Layout variant="column" navbarVariant="user">
-      <title>Create parents</title>
+      <title>{t("create-parents.main-header")}</title>
       <Stack spacing={8}>
         <Flex mt={5} mb={2}>
           <Button
@@ -47,9 +49,9 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
               router.back();
             }}
           >
-            Back
+            {t("create-parents.btn-back")}
           </Button>
-          <Heading color="blue.400">Create parents</Heading>
+          <Heading color="blue.400">{t("create-parents.main-header")}</Heading>
           <Select
             ml={5}
             id="parentSelector"
@@ -60,8 +62,12 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
             width={"sm"}
             borderRadius="12px"
           >
-            <option value="mother">Mother</option>
-            <option value="father">Father</option>
+            <option value="father">
+              {t("create-parents.select.mother.name")}
+            </option>
+            <option value="mother">
+              {t("create-parents.select.father.name")}
+            </option>
           </Select>
         </Flex>
       </Stack>
@@ -91,8 +97,7 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
                 });
                 if (!error) {
                   toast({
-                    title: "Mother added successfully",
-                    description: "We've added your mother for you.",
+                    title: t("create-parents.toast.mother.title"),
                     status: "success",
                     duration: 9000,
                     isClosable: true,
@@ -109,8 +114,7 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
                 });
                 if (!error) {
                   toast({
-                    title: "Father added successfully",
-                    description: "We've added your father for you.",
+                    title: t("create-parents.toast.father.title"),
                     status: "success",
                     duration: 9000,
                     isClosable: true,
@@ -132,29 +136,29 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
                 <Stack spacing={4} marginBottom="1rem">
                   <InputField
                     name="name"
-                    placeholder="Name"
-                    label="Input name"
+                    placeholder={t("create-parents.form.placeholders.name")}
+                    label={t("create-parents.form.name")}
                     type="text"
                     required
                   />
                   <InputField
                     name="surname"
-                    placeholder="Last name"
-                    label="Input last name"
+                    placeholder={t("create-parents.form.placeholders.surname")}
+                    label={t("create-parents.form.surname")}
                     type="text"
                     required
                   />
                   <InputField
                     name="email"
-                    placeholder="Email"
-                    label="Input Email"
+                    placeholder={t("create-parents.form.placeholders.email")}
+                    label={t("create-parents.form.email")}
                     type="email"
                     required
                   />
                   <InputField
                     name="phone"
-                    placeholder="Phone"
-                    label="Input Phone"
+                    placeholder={t("create-parents.form.placeholders.phone")}
+                    label={t("create-parents.form.phone")}
                     type="text"
                     required
                   />
@@ -170,7 +174,7 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
                     isLoading={isSubmitting}
                     type="submit"
                   >
-                    Add {!parent ? "" : parent}
+                    {t("create-parents.form.btn")}{" "}
                   </Button>
                 </Stack>
               </Form>

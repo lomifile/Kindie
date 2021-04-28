@@ -21,10 +21,12 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { toErrormap } from "../utils/toErrorMap";
 import { useIsAuth } from "../utils/useIsAuth";
+import { useTranslation } from "react-i18next";
 
 interface ProfileProps {}
 
 const Profile: React.FC<ProfileProps> = ({}) => {
+  const { t } = useTranslation("data", { useSuspense: false });
   let body = null;
   useIsAuth();
   const [redirect, setRedirect] = useState(false);
@@ -54,19 +56,19 @@ const Profile: React.FC<ProfileProps> = ({}) => {
       >
         <AlertIcon boxSize="40px" mr={0} />
         <AlertTitle mt={4} mb={1} fontSize="lg">
-          There was an error
+          {t("profile.alert.title")}
         </AlertTitle>
         <AlertDescription maxWidth="sm">
-          An error occured while trying to fetch your data!
+          {t("profile.alert.desc")}
         </AlertDescription>
       </Alert>
     );
   } else {
     body = (
       <Layout navbarVariant={"user"} variant="column">
-        <title>Profile</title>
+        <title>{t("profile.main-header")}</title>
         <Flex>
-          <Heading color="blue.400">My account</Heading>
+          <Heading color="blue.400">{t("profile.acc")}</Heading>
         </Flex>
         <Stack spacing={10}>
           <Box
@@ -100,8 +102,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                     setErrors(toErrormap(response.data.updateUser.errors));
                   } else {
                     toast({
-                      title: "Account updated!",
-                      description: "We've updated your account for you.",
+                      title: t("profile.toast.title"),
                       status: "success",
                       duration: 9000,
                       isClosable: true,
@@ -114,20 +115,20 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                     <Stack spacing={4} marginBottom="1rem">
                       <InputField
                         name="name"
-                        placeholder="Name"
-                        label="Your name"
+                        placeholder={t("profile.form.placeholders.name")}
+                        label={t("profile.form.name")}
                         type="text"
                       />
                       <InputField
                         name="surname"
-                        placeholder="Last name"
-                        label="Your last name"
+                        placeholder={t("profile.form.placeholders.surname")}
+                        label={t("profile.form.surname")}
                         type="text"
                       />
                       <InputField
                         name="role"
-                        placeholder="Role"
-                        label="Your role"
+                        placeholder={t("profile.form.placeholders.role")}
+                        label={t("profile.form.role")}
                         type="text"
                       />
                       {/* <Select
@@ -141,14 +142,14 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                       </Select> */}
                       <InputField
                         name="email"
-                        placeholder="Email"
-                        label="Your email"
+                        placeholder={t("profile.form.placeholders.email")}
+                        label={t("profile.form.email")}
                         type="email"
                       />
                       <InputField
                         name="password"
-                        placeholder="Password"
-                        label="Input your password"
+                        placeholder={t("profile.form.placeholders.password")}
+                        label={t("profile.form.password")}
                         type="password"
                       />
                       <Stack mt={"1rem"}>
@@ -163,7 +164,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                           isLoading={isSubmitting}
                           type="submit"
                         >
-                          Update your data
+                          {t("profile.form.btn")}
                         </Button>
                       </Stack>
                     </Stack>

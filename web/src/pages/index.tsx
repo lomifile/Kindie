@@ -17,8 +17,10 @@ import { Feature } from "../components/Feature";
 import NextLink from "next/link";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { useTranslation } from "next-i18next";
 
 const Index = () => {
+  const { t } = useTranslation("data", { useSuspense: false });
   return (
     <Layout navbarVariant={"normal"} variant={"column"} navbar={true}>
       <title>DV Organizator</title>
@@ -44,7 +46,7 @@ const Index = () => {
             color="blue.400"
             textAlign={["center", "center", "left", "left"]}
           >
-            Does your documentation need help?
+            {t("index.picture-data.main-header")}
           </Heading>
           <Heading
             as="h2"
@@ -55,8 +57,7 @@ const Index = () => {
             lineHeight={1.5}
             textAlign={["center", "center", "left", "left"]}
           >
-            We develpoed a way that will help you sort your documentation and
-            make it better!
+            {t("index.picture-data.second-header")}
           </Heading>
           <NextLink href="/register">
             <Button
@@ -69,7 +70,7 @@ const Index = () => {
               lineHeight="1"
               size="md"
             >
-              Create your account now
+              {t("index.picture-data.btn")}
             </Button>
           </NextLink>
           <Text
@@ -79,7 +80,7 @@ const Index = () => {
             color="primary.800"
             opacity="0.6"
           >
-            No credit card required.
+            {t("index.picture-data.small-text")}
           </Text>
         </Stack>
         <Box w={{ base: "80%", sm: "60%", md: "50%" }} mb={{ base: 12, md: 0 }}>
@@ -89,40 +90,32 @@ const Index = () => {
       <Flex pb={"2rem"}>
         <Stack>
           <Flex ml={"12rem"} pt={1} mb={1} pb={"1rem"}>
-            <Heading color="blue.400">What we do?</Heading>
+            <Heading color="blue.400">{t("index.headers.wwd")}</Heading>
           </Flex>
           <br />
           <br />
           <HStack spacing={8}>
             <Feature
-              title="We store all of your data!"
-              desc="All data that you provide and show us is stored in safe
-            way, sou you can access it whenever you want."
+              title={t("index.features.feature-1.title").toString()}
+              desc={t("index.features.feature-1.desc")}
             />
             <Feature
-              title="Keep you organized!"
-              desc="We made sure to create simple enough working teamplate so
-            you can store your data where you need it."
+              title={t("index.features.feature-2.title")}
+              desc={t("index.features.feature-2.desc")}
             />
             <Feature
-              title="Update our current features!"
-              desc="Any bug that is developed during use, make sure to report
-              it and we will make sure to fix it as soon as possible."
+              title={t("index.features.feature-3.title")}
+              desc={t("index.features.feature-3.desc")}
             />
           </HStack>
           <HStack pt={"5"} spacing={8}>
             <Feature
-              title="Improve infrastructure!"
-              desc="We know that fast and relialbe way is needed when we have
-              large user base, so we make sure that our infrastructure
-              is solid and working all the time!"
+              title={t("index.features.feature-4.title")}
+              desc={t("index.features.feature-4.desc")}
             />
             <Feature
-              title="We listen and improve upon!"
-              desc="If you have any problems or questions on certan things
-              please make sure that you contact us using contact forms
-              and we will make sure to respond to you in the just right
-              way."
+              title={t("index.features.feature-5.title")}
+              desc={t("index.features.feature-5.desc")}
             />
           </HStack>
         </Stack>

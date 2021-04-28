@@ -14,6 +14,8 @@ import {
 import { Formik, Form } from "formik";
 import { withUrqlClient } from "next-urql";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Footer } from "../components/Footer";
 import { InputField } from "../components/InputField";
 import { useForgotPasswordMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
@@ -21,6 +23,7 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 interface ForgotPasswordProps {}
 
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
+  const { t } = useTranslation("data", { useSuspense: false });
   const [complete, setComplete] = useState(false);
   const [, forgotPassword] = useForgotPasswordMutation();
   const year = new Date().getFullYear();
@@ -33,7 +36,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
       justifyContent="center"
       flexDirection="column"
     >
-      <title>Forgot password</title>
+      <title>{t("forgot-password.main-header")}</title>
       <Box
         width={{ base: "90%", md: "400px" }}
         rounded="lg"
@@ -43,7 +46,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
         borderRadius={"12px"}
       >
         <Heading color={"blue.400"} marginBottom="1.5rem">
-          Forgot password
+          {t("forgot-password.main-header")}
         </Heading>
         <Formik
           initialValues={{ email: "" }}
@@ -67,11 +70,10 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
               >
                 <AlertIcon boxSize="40px" mr={0} />
                 <AlertTitle mt={4} mb={1} fontSize="lg">
-                  We send you an email!
+                  {t("forgot-password.alert.success.title")}
                 </AlertTitle>
                 <AlertDescription maxWidth="sm">
-                  We send you an email which contains a link to guide you
-                  forward on you password change!
+                  {t("forgot-password.alert.success.desc")}
                 </AlertDescription>
               </Alert>
             ) : (
@@ -80,8 +82,8 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
                   <Stack justifyContent="space-between">
                     <InputField
                       name="email"
-                      placeholder="Email"
-                      label="Input your email"
+                      placeholder={t("forgot-password.placeholder")}
+                      label={t("forgot-password.email")}
                       type="email"
                     />
                   </Stack>
@@ -97,7 +99,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
                       isLoading={isSubmitting}
                       type="submit"
                     >
-                      Send reset link
+                      {t("forgot-password.btn")}
                     </Button>
                   </Stack>
                 </Stack>
@@ -106,28 +108,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
           }
         </Formik>
       </Box>
-      <Stack isInline marginTop="1.5rem" fontWeight="500" fontSize="sm">
-        <Link className="footer-nav-item" href="#" color="secondary.link">
-          Terms
-        </Link>
-        <Link className="footer-nav-item" href="#" color="secondary.link">
-          Privacy Policy
-        </Link>
-        <Link
-          className="footer-nav-item"
-          href="/contact"
-          color="secondary.link"
-        >
-          Contact Us
-        </Link>
-      </Stack>
-      <Stack isInline marginTop="1rem" fontWeight="500" fontSize="sm">
-        <Text color="secondary.link">&copy; {year}</Text>
-        <Link href="/" color="secondary.link" fontWeight="bold">
-          DV Organizator
-        </Link>
-        <Text color="secondary.link">&mdash; All rights reserved</Text>
-      </Stack>
+      <Footer variant="small" />
     </Flex>
   );
 };

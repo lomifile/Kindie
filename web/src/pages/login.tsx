@@ -23,10 +23,12 @@ import { toErrormap } from "../utils/toErrorMap";
 import { Footer } from "../components/Footer";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { useTranslation } from "react-i18next";
 
 interface loginProps {}
 
 const Login: React.FC<loginProps> = ({}) => {
+  const { t } = useTranslation("data", { useSuspense: false });
   const [, login] = useLoginMutation();
   const [, resendEmail] = useResendEmailMutation();
 
@@ -45,7 +47,7 @@ const Login: React.FC<loginProps> = ({}) => {
       justifyContent="center"
       flexDirection="column"
     >
-      <title>Sign in</title>
+      <title>{t("login.main-header")}</title>
       {verified ? (
         <Alert
           status="warning"
@@ -59,10 +61,10 @@ const Login: React.FC<loginProps> = ({}) => {
         >
           <AlertIcon boxSize="40px" mr={0} />
           <AlertTitle mt={4} mb={1} fontSize="lg">
-            Your account is not verified!
+            {t("login.alert.title")}
           </AlertTitle>
           <AlertDescription maxWidth="sm">
-            Your account is not verified! If you didn't recive any email{" "}
+            {t("login.alert.desc-1")}{" "}
             <Link
               onClick={async () => {
                 await resendEmail({
@@ -71,9 +73,9 @@ const Login: React.FC<loginProps> = ({}) => {
               }}
               color="blue.400"
             >
-              click here
+              {t("login.alert.desc-3")}
             </Link>{" "}
-            to send a new one!
+            {t("login.alert.desc-3")}
           </AlertDescription>
         </Alert>
       ) : null}
@@ -86,7 +88,7 @@ const Login: React.FC<loginProps> = ({}) => {
         borderRadius={"12px"}
       >
         <Heading color={"blue.400"} marginBottom="1.5rem">
-          Sign in
+          {t("login.main-header")}
         </Heading>
         <Formik
           initialValues={{ email: "", password: "" }}
@@ -115,22 +117,22 @@ const Login: React.FC<loginProps> = ({}) => {
               <Stack spacing={4} marginBottom="1rem">
                 <InputField
                   name="email"
-                  placeholder="Email"
-                  label="Your email"
+                  placeholder={t("login.form.placeholders.email")}
+                  label={t("login.form.email")}
                   type="email"
                 />
                 <Stack justifyContent="space-between">
                   <InputField
                     name="password"
-                    placeholder="Password"
-                    label="Your password"
+                    placeholder={t("login.form.placeholders.password")}
+                    label={t("login.form.password")}
                     type="password"
                   />
                 </Stack>
                 <Stack marginBottom="1rem">
                   <NextLink href="/forgot-password">
                     <Link color="secondary.link" fontSize="sm" fontWeight="500">
-                      Forgot Password?
+                      {t("login.form.forgot")}
                     </Link>
                   </NextLink>
                   <Button
@@ -144,7 +146,7 @@ const Login: React.FC<loginProps> = ({}) => {
                     isLoading={isSubmitting}
                     type="submit"
                   >
-                    Log in
+                    {t("login.form.btn")}
                   </Button>
                 </Stack>
               </Stack>
@@ -154,7 +156,7 @@ const Login: React.FC<loginProps> = ({}) => {
         <Divider marginBottom="1rem" />
         <Stack>
           <Text textAlign="center" fontWeight="500">
-            Don't have an account?
+            {t("login.text.acc")}
           </Text>
           <NextLink href="/register">
             <Button
@@ -163,7 +165,7 @@ const Login: React.FC<loginProps> = ({}) => {
               variant="outline"
               color="blue.400"
             >
-              Sign up
+              {t("login.text.btn")}
             </Button>
           </NextLink>
         </Stack>

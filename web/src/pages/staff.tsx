@@ -45,11 +45,13 @@ import {
 } from "../generated/graphql";
 import { ShowUser } from "../components/ShowUser";
 import { useIsAuth } from "../utils/useIsAuth";
+import { useTranslation } from "react-i18next";
 
 interface StaffProps {}
 
 const Staff: React.FC<StaffProps> = ({}) => {
   useIsAuth();
+  const { t } = useTranslation("data", { useSuspense: false });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: modalOpen,
@@ -72,11 +74,11 @@ const Staff: React.FC<StaffProps> = ({}) => {
 
   return (
     <Layout variant={"column"} navbarVariant={"user"}>
-      <title>Staff</title>
+      <title>{t("staff.main-header")}</title>
       <Modal isOpen={modalOpen} onClose={closeModal}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Show user</ModalHeader>
+          <ModalHeader>{t("staff.modal.header")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Box
@@ -88,9 +90,18 @@ const Staff: React.FC<StaffProps> = ({}) => {
               borderRadius={"12px"}
             >
               <Stack spacing={4}>
-                <ShowUser title="Name" data={show?.Name} />
-                <ShowUser title="Last name" data={show?.Surname} />
-                <ShowUser title="Email" data={show?.Email} />
+                <ShowUser
+                  title={t("staff.modal.data.name")}
+                  data={show?.Name}
+                />
+                <ShowUser
+                  title={t("staff.modal.data.surname")}
+                  data={show?.Surname}
+                />
+                <ShowUser
+                  title={t("staff.modal.data.email")}
+                  data={show?.Email}
+                />
               </Stack>
             </Box>
           </ModalBody>
@@ -106,7 +117,7 @@ const Staff: React.FC<StaffProps> = ({}) => {
         <DrawerOverlay>
           <DrawerContent>
             <DrawerCloseButton />
-            <DrawerHeader>Add staff</DrawerHeader>
+            <DrawerHeader>{t("staff.drawer.header")}</DrawerHeader>
 
             <DrawerBody>
               <InputGroup>
@@ -116,7 +127,7 @@ const Staff: React.FC<StaffProps> = ({}) => {
                 />
                 <Input
                   style={{ borderRadius: "12px" }}
-                  placeholder={"Input name..."}
+                  placeholder={t("staff.drawer.placeholder")}
                   id="text"
                   onChange={() => {
                     // @ts-ignore
@@ -179,14 +190,14 @@ const Staff: React.FC<StaffProps> = ({}) => {
       </Drawer>
       <Stack spacing={8}>
         <Flex mt={5} mb={2}>
-          <Heading color="blue.400">Owner</Heading>
+          <Heading color="blue.400">{t("staff.owner-heading")}</Heading>
         </Flex>
         <Box>
           <Table>
             <Thead>
               <Tr>
-                <Th>Name</Th>
-                <Th>Last name</Th>
+                <Th>{t("staff.tbl-name")}</Th>
+                <Th>{t("staff.tbl-surname")}</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -208,7 +219,7 @@ const Staff: React.FC<StaffProps> = ({}) => {
           </Table>
         </Box>
         <Flex mt={20} mb={2}>
-          <Heading color="blue.400">Staff</Heading>
+          <Heading color="blue.400">{t("staff.staff-heading")}</Heading>
           {
             // @ts-ignore
             meData.me.Name === owner.Name &&
@@ -227,7 +238,7 @@ const Staff: React.FC<StaffProps> = ({}) => {
                 onClick={onOpen}
               >
                 <AddIcon mr={2} />
-                <Text mt={0.5}>Add staff</Text>
+                <Text mt={0.5}>{t("staff.btn-add")}</Text>
               </Button>
             ) : null
           }
@@ -236,8 +247,9 @@ const Staff: React.FC<StaffProps> = ({}) => {
           <Table>
             <Thead>
               <Tr>
-                <Th>Name</Th>
-                <Th>Last name</Th>
+                <Th>{t("staff.tbl-name")}</Th>
+                <Th>{t("staff.tbl-surname")}</Th>
+                <Th></Th>
               </Tr>
             </Thead>
             <Tbody>

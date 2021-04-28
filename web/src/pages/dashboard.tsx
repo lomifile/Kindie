@@ -28,6 +28,7 @@ import { Formik, Form } from "formik";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { InputField } from "../components/InputField";
 import { Layout } from "../components/Layout";
 import {
@@ -38,13 +39,13 @@ import {
 } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { fetchPartOf } from "../utils/fetchPartof";
-import { isServer } from "../utils/isServer";
 import { toErrormap } from "../utils/toErrorMap";
 import { useIsAuth } from "../utils/useIsAuth";
 
 interface DashboardProps {}
 
 const Dashboard: React.FC<DashboardProps> = ({}) => {
+  const { t } = useTranslation("data", { useSuspense: false });
   useIsAuth();
   const router = useRouter();
   const toast = useToast();
@@ -97,10 +98,10 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
         >
           <AlertIcon boxSize="40px" mr={0} />
           <AlertTitle mt={4} mb={1} fontSize="lg">
-            There was an error
+            {t("dashboard.alert.title")}
           </AlertTitle>
           <AlertDescription maxWidth="sm">
-            An error occured while trying to fetch your data!
+            {t("dashboard.alert.desc")}
           </AlertDescription>
         </Alert>
       </Flex>
@@ -108,11 +109,11 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
   }
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
-      <title>Dashboard</title>
+      <title>{t("dashboard.main-header")}</title>
       <Modal onClose={onClose} size={"md"} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create kindergarden</ModalHeader>
+          <ModalHeader>{t("dashboard.modal-header")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Formik
@@ -132,8 +133,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                   );
                 } else {
                   toast({
-                    title: "Kindergarden created successfully",
-                    description: "We've created your kindergarden for you.",
+                    title: t("dashboard.toast.title"),
                     status: "success",
                     duration: 9000,
                     isClosable: true,
@@ -146,29 +146,29 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                   <Stack spacing={4} marginBottom="1rem">
                     <InputField
                       name="name"
-                      placeholder="Name"
-                      label="Input name"
+                      placeholder={t("dashboard.form.placeholder.name")}
+                      label={t("dashboard.form.name")}
                       type="text"
                       required
                     />
                     <InputField
                       name="address"
-                      placeholder="Address"
-                      label="Input address"
+                      placeholder={t("dashboard.form.placeholder.address")}
+                      label={t("dashboard.form.address")}
                       type="text"
                       required
                     />
                     <InputField
                       name="city"
-                      placeholder="City"
-                      label="Input City"
+                      placeholder={t("dashboard.form.placeholder.city")}
+                      label={t("dashboard.form.city")}
                       type="text"
                       required
                     />
                     <InputField
                       name="zipcode"
-                      placeholder="Zip code"
-                      label="Input Zip code"
+                      placeholder={t("dashboard.form.placeholder.zip-code")}
+                      label={t("dashboard.form.zip-code")}
                       type="text"
                       required
                     />
@@ -186,7 +186,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                       type="submit"
                       onClick={onClose}
                     >
-                      Create kindergarden
+                      {t("dashboard.form.btn")}
                     </Button>
                   </Flex>
                 </Form>
@@ -196,7 +196,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
         </ModalContent>
       </Modal>
       <Flex>
-        <Heading color="blue.400">Dashboard</Heading>
+        <Heading color="blue.400">{t("dashboard.main-header")}</Heading>
         <Button
           bg="blue.400"
           colorScheme="navItem"
@@ -210,14 +210,14 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
           ml={"2rem"}
         >
           <AddIcon mr={2} />
-          <Text mt={0.5}>Create kindergarden</Text>
+          <Text mt={0.5}>{t("dashboard.modal-btn")}</Text>
         </Button>
       </Flex>
       <Divider mt={5} />
       <Stack spacing={10} mt={10}>
         {data?.showKindergarden.length > 0 ? (
           <>
-            <Heading color="blue.400">Owned by you</Heading>
+            <Heading color="blue.400">{t("dashboard.owned-header")}</Heading>
             <Flex align="center" justify="left" mb={5}>
               <Box
                 borderRadius="12px"
@@ -245,17 +245,15 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                             });
                             if (error) {
                               toast({
-                                title: "You cannot delete this kindergarden",
-                                description: "This Kindergarden contains data!",
+                                title: t("dashboard.toast.error.title"),
+                                description: t("dashboard.toast.error.desc"),
                                 status: "error",
                                 duration: 9000,
                                 isClosable: true,
                               });
                             } else {
                               toast({
-                                title: "Kindergarden deleted successfully",
-                                description:
-                                  "We've deleted your kindergarden for you.",
+                                title: t("dashboard.toast.delete.title"),
                                 status: "success",
                                 duration: 9000,
                                 isClosable: true,
@@ -277,7 +275,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                               fontSize: "26px",
                               fontWeight: "bold",
                             }}
-                            onClick={async () => {
+                            onClick={() => {
                               useKindergarden({ kindergardenID: owning.Id });
                               router.push(`/kindergarden/${owning.Id}`);
                             }}
@@ -301,7 +299,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
         ) : null}
         {notMine.length > 0 ? (
           <>
-            <Heading color="blue.400">Part of</Heading>
+            <Heading color="blue.400">{t("dashboard.part-header")}</Heading>
             <Flex align="center" justify="left" mb={5}>
               <Box
                 borderRadius="12px"
@@ -331,7 +329,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                               fontSize: "26px",
                               fontWeight: "bold",
                             }}
-                            onClick={async () => {
+                            onClick={() => {
                               useKindergarden({ kindergardenID: owning.Id });
                               router.push(`/kindergarden/${owning.Id}`);
                             }}
