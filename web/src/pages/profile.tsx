@@ -7,14 +7,15 @@ import {
   Button,
   Flex,
   Heading,
-  HStack,
-  Link,
+  IconButton,
+  InputGroup,
+  InputRightElement,
   Select,
   SkeletonCircle,
   SkeletonText,
   Stack,
-  Text,
   useToast,
+  Text,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
@@ -24,21 +25,27 @@ import { useMeQuery, useUpdateUserMutation } from "../generated/graphql";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { toErrormap } from "../utils/toErrorMap";
-import { useRouter } from "next/router";
 import { useIsAuth } from "../utils/useIsAuth";
-import { isServer } from "../utils/isServer";
+import { useTranslation } from "react-i18next";
+import { ViewIcon } from "@chakra-ui/icons";
 
 interface ProfileProps {}
 
 const Profile: React.FC<ProfileProps> = ({}) => {
-  let body = null;
   useIsAuth();
+  const { t } = useTranslation("data", { useSuspense: false });
+  let body = null;
   const [redirect, setRedirect] = useState(false);
-  const [{ data, fetching }] = useMeQuery({
-    pause: isServer(),
-  });
+  const [{ data, fetching }] = useMeQuery();
   const [, updateUser] = useUpdateUserMutation();
   const toast = useToast();
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
+
+  const [role, setRole] = useState("");
+  const handleChange = (e) => {
+    setRole(e.target.value);
+  };
 
   if (fetching) {
     body = (
@@ -62,19 +69,19 @@ const Profile: React.FC<ProfileProps> = ({}) => {
       >
         <AlertIcon boxSize="40px" mr={0} />
         <AlertTitle mt={4} mb={1} fontSize="lg">
-          There was an error
+          {t("profile.alert.title")}
         </AlertTitle>
         <AlertDescription maxWidth="sm">
-          An error occured while trying to fetch your data!
+          {t("profile.alert.desc")}
         </AlertDescription>
       </Alert>
     );
   } else {
     body = (
       <Layout navbarVariant={"user"} variant="column">
-        <title>Profile</title>
+        <title>{t("profile.main-header")}</title>
         <Flex>
-          <Heading color="blue.400">My account</Heading>
+          <Heading color="blue.400">{t("profile.acc")}</Heading>
         </Flex>
         <Stack spacing={10}>
           <Box
@@ -108,8 +115,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                     setErrors(toErrormap(response.data.updateUser.errors));
                   } else {
                     toast({
-                      title: "Account updated!",
-                      description: "We've updated your account for you.",
+                      title: t("profile.toast.title"),
                       status: "success",
                       duration: 9000,
                       isClosable: true,
@@ -122,43 +128,56 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                     <Stack spacing={4} marginBottom="1rem">
                       <InputField
                         name="name"
-                        placeholder="Name"
-                        label="Your name"
+                        placeholder={t("profile.form.placeholders.name")}
+                        label={t("profile.form.name")}
                         type="text"
                       />
                       <InputField
                         name="surname"
-                        placeholder="Last name"
-                        label="Your last name"
+                        placeholder={t("profile.form.placeholders.surname")}
+                        label={t("profile.form.surname")}
                         type="text"
                       />
-                      <InputField
-                        name="role"
-                        placeholder="Role"
-                        label="Your role"
-                        type="text"
-                      />
-                      {/* <Select
+                      <Text mb={"-10px"}>{t("profile.form.role")}</Text>
+                      <Select
                         name="role"
                         style={{ borderRadius: "12px" }}
+                        onChange={handleChange}
                         defaultValue={data?.me.Role}
                       >
-                        <option value="Teacher">Teacher</option>
-                        <option value="Headmaster">Headmaster</option>
-                        <option value="Pedagogue">Pedagogue</option>
-                      </Select> */}
+                        <option value="Teacher">
+                          {t("profile.selector.teacher")}
+                        </option>
+                        <option value="Headmaster">
+                          {t("profile.selector.headmaster")}
+                        </option>
+                        <option value="Pedagogue">
+                          {t("profile.selector.pedagouge")}
+                        </option>
+                      </Select>
                       <InputField
                         name="email"
-                        placeholder="Email"
-                        label="Your email"
+                        placeholder={t("profile.form.placeholders.email")}
+                        label={t("profile.form.email")}
                         type="email"
                       />
-                      <InputField
-                        name="password"
-                        placeholder="Password"
-                        label="Input your password"
-                        type="password"
-                      />
+                      <InputGroup size="md">
+                        <InputField
+                          name="password"
+                          placeholder={t("profile.form.placeholders.password")}
+                          label={t("profile.form.password")}
+                          type={show ? "text" : "password"}
+                        />
+                        <InputRightElement mt={8} width="4.5rem">
+                          <IconButton
+                            aria-label="View password"
+                            icon={<ViewIcon />}
+                            h="1.75rem"
+                            size="sm"
+                            onClick={handleClick}
+                          />
+                        </InputRightElement>
+                      </InputGroup>
                       <Stack mt={"1rem"}>
                         <Button
                           bg="blue.400"
@@ -171,7 +190,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                           isLoading={isSubmitting}
                           type="submit"
                         >
-                          Update your data
+                          {t("profile.form.btn")}
                         </Button>
                       </Stack>
                     </Stack>
@@ -179,32 +198,6 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                 )}
               </Formik>
             </Stack>
-          </Box>
-          <Flex>
-            <Heading color="blue.400">
-              Your kindergardens or kindergardens that you are part of
-            </Heading>
-          </Flex>
-          <Box
-            mb={"5rem"}
-            mt={5}
-            borderRadius="12px"
-            border={"1px"}
-            borderColor="blue.400"
-            p={5}
-          >
-            <HStack spacing={5}>
-              {data.me?.ownerOf.map((owning) => (
-                <Flex borderRadius={"12px"} p={5} shadow="md" borderWidth="1px">
-                  <Box>
-                    <Heading as={"h5"}>{owning.Name}</Heading>
-                    <Text>{owning.Address}</Text>
-                    <Text>{owning.City}</Text>
-                    <Text>{owning.Zipcode}</Text>
-                  </Box>
-                </Flex>
-              ))}
-            </HStack>
           </Box>
         </Stack>
       </Layout>

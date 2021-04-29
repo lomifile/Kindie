@@ -11,6 +11,7 @@ import {
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { InputField } from "../components/InputField";
 import { Layout } from "../components/Layout";
 import { useSendEmailMutation } from "../generated/graphql";
@@ -19,11 +20,12 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 interface contactProps {}
 
 const Contact: React.FC<contactProps> = ({}) => {
+  const { t } = useTranslation("data", { useSuspense: false });
   const [, sendEmail] = useSendEmailMutation();
   const toast = useToast();
   return (
     <Layout navbarVariant={"normal"} variant="column" navbar={true}>
-      <title>Contact us</title>
+      <title>{t("contact-us.main-heading")}</title>
       <Flex
         align="center"
         justify={{ base: "center", md: "space-around", xl: "space-between" }}
@@ -46,7 +48,7 @@ const Contact: React.FC<contactProps> = ({}) => {
             color="blue.400"
             textAlign={["center", "center", "left", "left"]}
           >
-            Contact us!
+            {t("contact-us.main-heading")}
           </Heading>
           <Heading
             as="h2"
@@ -57,9 +59,7 @@ const Contact: React.FC<contactProps> = ({}) => {
             lineHeight={1.5}
             textAlign={["center", "center", "left", "left"]}
           >
-            Here you can input your email address and send us email if you want
-            to talk to us about features, bugs, upgrades, in other terms
-            anything you like!
+            {t("contact-us.description")}
           </Heading>
           <Text
             fontSize="xs"
@@ -68,7 +68,7 @@ const Contact: React.FC<contactProps> = ({}) => {
             color="primary.800"
             opacity="0.6"
           >
-            We love to hear from you!
+            {t("contact-us.small")}
           </Text>
         </Stack>
         <Flex
@@ -92,9 +92,8 @@ const Contact: React.FC<contactProps> = ({}) => {
 
                 if (response) {
                   toast({
-                    title: "We got your email!",
-                    description:
-                      "We got your email and we will respond as soon as we can!",
+                    title: t("contact-us.toast.title"),
+                    description: t("contact-us.toast.desc"),
                     status: "success",
                     duration: 9000,
                     isClosable: true,
@@ -104,14 +103,21 @@ const Contact: React.FC<contactProps> = ({}) => {
             >
               {({ isSubmitting }) => (
                 <Form>
-                  <InputField name="email" label="Your email" type="email" />
+                  <InputField
+                    name="email"
+                    label={t("contact-us.form.email")}
+                    type="email"
+                  />
                   <Box mt={4}>
-                    <InputField name="subject" label="Input your subject" />
+                    <InputField
+                      name="subject"
+                      label={t("contact-us.form.subject")}
+                    />
                   </Box>
                   <Box mt={4}>
                     <InputField
                       name="message"
-                      label="Input your message"
+                      label={t("contact-us.form.message")}
                       textArea={true}
                     />
                   </Box>
@@ -130,7 +136,7 @@ const Contact: React.FC<contactProps> = ({}) => {
                       isLoading={isSubmitting}
                       type="submit"
                     >
-                      Send message
+                      {t("contact-us.form.btn")}
                     </Button>
                   </Flex>
                 </Form>

@@ -217,7 +217,7 @@ export class UserResolver {
     await sendMail(
       email,
       "Change password",
-      `<a href="http://localhost:3000/change-password/${token}">Reset password</a>`
+      `<a href="${process.env.CORS_ORIGIN}/change-password/${token}">Reset password</a>`
     ).catch(console.error);
     return true;
   }
@@ -318,7 +318,7 @@ export class UserResolver {
       await sendMail(
         options.email,
         "Verify account",
-        `<a href="http://localhost:3000/verify-account/${token}">Verify account</a>`
+        `<a href="${process.env.CORS_ORIGIN}/verify-account/${token}">Verify account</a>`
       ).catch(console.error);
     } catch (err) {
       // console.log(err);
@@ -372,7 +372,7 @@ export class UserResolver {
     await sendMail(
       email,
       "Verify account",
-      `<a href="http://localhost:3000/verify-account/${token}">Verify account</a>`
+      `<a href="${process.env.CORS_ORIGIN}/verify-account/${token}">Verify account</a>`
     ).catch(console.error);
 
     return {

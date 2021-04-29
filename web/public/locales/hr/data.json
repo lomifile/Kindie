@@ -1,0 +1,476 @@
+{
+  "nav": {
+    "home": "Pocetna",
+    "About-us": "O nama",
+    "Contact-us": "Kontakt",
+    "Sign-in": "Prijavi se",
+    "Sign-up": "Registriraj se",
+    "Dashboard": "Vase odaje",
+    "menu": {
+      "titles": {
+        "navigation": "Navigacija",
+        "profile": "Profil",
+        "help": "Pomoc"
+      },
+      "dashboard": "Vase odaje",
+      "acc": "Vas racun",
+      "settings": "Postavke",
+      "log-out": "Odjavite se",
+      "landing-page": "Pocetna",
+      "docs": "Dokumentacija",
+      "faq": "Cesto postavljena pitanja"
+    }
+  },
+  "footer": {
+    "contact": "Kontaktirjate nas",
+    "rights": "Sva prava pridrzana"
+  },
+  "index": {
+    "picture-data": {
+      "main-header": "Da li je vasoj dokumentaciji potrebna pomoc?",
+      "second-header": "Mi smo razvili nacin koji ce vam pomoci posloziti vasu dokumentaciju i napraviti ju boljom",
+      "btn": "Kreirajte korisnicki racun sada!",
+      "small-text": "Potpuno besplatno"
+    },
+    "headers": {
+      "wwd": "Cime se me bavimo?"
+    },
+    "features": {
+      "feature-1": {
+        "title": "Mi pohranjujemo vase podatke",
+        "desc": "Osigurali smo dovoljno resursa i znanja da osiguramo jednostavan i siguran nacin pohrane vasih podataka"
+      },
+      "feature-2": {
+        "title": "Odrzavamo vas ograniziranim",
+        "desc": "Potrudili smo se kreirati dovoljno jednostavan nacin kako bi podaci koje trebate bili na pravom mjestu"
+      },
+      "feature-3": {
+        "title": "Azuriramo trenutne usluge",
+        "desc": "Ukoliko se dogodi bilokakav problem tokom rada, budite ljubazni i prijavite ga kako bi ga sto prije otklonili"
+      },
+      "feature-4": {
+        "title": "Azuriramo  infrastrukturu",
+        "desc": "Upoznati smo sa cinjenicom da brz i ucinkovit nacin je potreban kada imamo veliku korisnicku bazu, zato se trudimo unaprijediti nasu infrastrukturu!"
+      },
+      "feature-5": {
+        "title": "Slusamo i unaprijedujemo",
+        "desc": "Ukoliko imate problema, upita i sl. Molimo vas da ispunite nasu kontakt formu i mi cemo se potruditi da vam damo sto otvoreniji i tocniji odgovor"
+      }
+    }
+  },
+  "about-us": {
+    "main-heading": "O nama",
+    "meet": "Upoznajte tim",
+    "text": {
+      "column-one": "Jednostavno receno ovo je jos jedna aplikacija koja vam pomaze da organizirate. Kroz zivot smo vidjeli da sva papirologija i briga oko djece u vrticu je sve veca i fizicki nemoguca. Od tuda ideje i od tuda i projekt",
+      "column-two": "Sto ova aplikacija moze napraviti za vas posao? Jednostavno receno daje vam mogucnost  da kreirate i spremate sve vase objekte i grupe u jednom kompaktnom mjestu. Svi podaci koje cete unesti biti ce vam prikazani na najjednostavniji nacin kako se ne bi morali brinuti o icemu. Samo ispunite registracijsku formu i uzivajte u poslagivanju podataka kao sto smo i mi uzivali razvijajuci aplikaciju.",
+      "devs": {
+        "filip": {
+          "name": "Filip Ivanusec",
+          "about": "Pozdrav! Zovem se Filip Ivanusec. Radim kao developer od 18-te godine. Kada sam vidio kako se stvari oko vrtica odvijaju i koliko papirologije ima zelio sam naci jednostavniji nacin. Nadam se da rjesenje koje vidite ce biti dovoljno dobro i da ce vam pomoci u poslu. Lijepi pozdrav, Filip!"
+        }
+      }
+    }
+  },
+  "contact-us": {
+    "main-heading": "Kontaktirajte nas",
+    "description": "Ovdje mozete unjeti prijedloge, primjedbe, prijaviti probleme/greske jednostavno receno sve sto zelite!",
+    "small": "Volimo kad komuniciramo s vama!",
+    "form": {
+      "email": "Vas email",
+      "subject": "Tema",
+      "message": "Vasa poruka",
+      "btn": "Posalji"
+    },
+    "toast": {
+      "title": "Dobili smo vas email!",
+      "desc": "Dobili smo vas email i odgovoriti cemo sto prije!"
+    }
+  },
+  "login": {
+    "main-header": "Prijavite se",
+    "alert": {
+      "title": "Vas racun nije potvrden!",
+      "desc-1": "Vas racun nije potvrden! Ukoliko niste dobili email",
+      "desc-2": "pritisnite ovdje",
+      "desc-3": "da vam posaljemo novi!"
+    },
+    "form": {
+      "email": "Vas email",
+      "password": "Vasa lozinka",
+      "btn": "Prijavi se",
+      "forgot": "Zaboravili ste lozinku?",
+      "placeholders": {
+        "email": "Email",
+        "password": "Lozinka"
+      }
+    },
+    "text": {
+      "acc": "Nemate racun?",
+      "btn": "Registrirajte se"
+    }
+  },
+  "register": {
+    "main-header": "Registriraj se",
+    "form": {
+      "name": "Ime",
+      "surname": "Prezime",
+      "role": "Vasa uloga",
+      "email": "Vas email",
+      "password": "Vasa lozinka",
+      "repeat-password": "Ponovite lozinku",
+      "privacy": "Oznakom ovdje potvrdujete nasa Pravila privatnosti i Uvjete i odredbe",
+      "btn": "Registriraj se",
+      "placeholders": {
+        "name": "Ime",
+        "surname": "Prezime",
+        "email": "Email",
+        "role": "Odaberite vasu ulogu",
+        "password": "Lozinka",
+        "repeat-password": "Ponovite lozinku"
+      }
+    },
+    "selector": {
+      "headmaster": "Ravnatelj",
+      "pedagouge": "Pedagog",
+      "teacher": "Odgajatelj"
+    },
+    "toast": {
+      "title": "Registracija uspjesna!"
+    },
+    "text": {
+      "acc": "Vec imate racun?",
+      "btn": "Prijavite se"
+    }
+  },
+  "profile": {
+    "main-header": "Profil",
+    "acc": "Moj racun",
+    "alert": {
+      "title": "Dogodila se greska!",
+      "desc": "Dogodila se greska u procesu dohvacanja vasih podataka!"
+    },
+    "form": {
+      "name": "Ime",
+      "surname": "Prezime",
+      "role": "Uloga",
+      "email": "Email",
+      "password": "Lozinka",
+      "btn": "Azuriraj profil",
+      "placeholders": {
+        "name": "Ime",
+        "surname": "Prezime",
+        "email": "Email",
+        "password": "Lozinka",
+        "role": "Uloga"
+      }
+    },
+    "selector": {
+      "headmaster": "Ravnatelj",
+      "pedagouge": "Pedagog",
+      "teacher": "Odgajatelj"
+    },
+    "toast": {
+      "title": "Racun azuriran!"
+    }
+  },
+  "dashboard": {
+    "main-header": "Vase odaje",
+    "alert": {
+      "title": "Dogodila se greska!",
+      "desc": "Dogodila se greska u procesu dohvacanja vasih podataka!"
+    },
+    "form": {
+      "name": "Ime",
+      "city": "Grad",
+      "address": "Adresa",
+      "zip-code": "Postanski broj",
+      "btn": "Kreiraj vrtic",
+      "placeholder": {
+        "name": "Ime",
+        "city": "Grad",
+        "address": "Adresa",
+        "zip-code": "Postanski broj"
+      }
+    },
+    "toast": {
+      "create": {
+        "title": "Vrtic uspjesno kreiran"
+      },
+      "delete": {
+        "title": "Vrtic uspjesno izbrisan"
+      },
+      "error": {
+        "title": "Vrtic ne moze biti izbrisan",
+        "desc": "Vrtic sadrzi podatke"
+      }
+    },
+    "modal-btn": "Kreiraj vrtic",
+    "modal-header": "Kreiraj vrtic",
+    "owned-header": "U vasem vlasnistvu",
+    "part-header": "Dio ste"
+  },
+  "kindergarden": {
+    "main-header": "Vrtic",
+    "alert": {
+      "title": "Dogodila se greska!",
+      "desc": "Dogodila se greska u procesu dohvacanja vasih podataka!"
+    },
+    "modal": {
+      "header": "Kreiraj grupu"
+    },
+    "form": {
+      "name": "Ime",
+      "btn": "Kreiraj grupu",
+      "placeholders": {
+        "name": "Ime"
+      }
+    },
+    "toast": {
+      "create": {
+        "title": "Grupa uspjesno kreirana"
+      },
+      "delete": {
+        "title": "Grupa uspjesno obrisana"
+      },
+      "error": {
+        "title": "Ne mozete obrisati grupu!",
+        "desc": "Grupa ima podatke!"
+      }
+    },
+    "toolbox": {
+      "btn-new-group": "Nova grupa",
+      "btn-children": "Djeca",
+      "btn-parents": "Roditelji",
+      "btn-staff": "Djelatnici"
+    },
+    "groups-heading": "Vase grupe"
+  },
+  "children": {
+    "main-header": "Djeca",
+    "alert": {
+      "title": "Dogodila se greska!",
+      "desc": "Dogodila se greska u procesu dohvacanja vasih podataka!"
+    },
+    "btn-add": "Dodaj dijete",
+    "tbl-name": "Ime",
+    "tbl-surname": "Prezime",
+    "btn-load-more": "Ucitaj vise"
+  },
+  "parents": {
+    "main-header": "Roditelji",
+    "heading-mother": "Majke",
+    "heading-father": "Ocevi",
+    "btn-add": "Dodaj roditelje",
+    "tbl-name": "Ime",
+    "btn-load-more": "Ucitaj vise",
+    "tbl-surname": "Prezime"
+  },
+  "staff": {
+    "main-header": "Osoblje",
+    "owner-heading": "Vlasnik",
+    "staff-heading": "Osobolje",
+    "drawer": {
+      "header": "Dodaj osoblje",
+      "placeholder": "Unesi ime..."
+    },
+    "modal": {
+      "header": "Prikazi korisnika",
+      "data": {
+        "name": "Ime",
+        "surname": "Prezime",
+        "email": "Email"
+      }
+    },
+    "tbl-name": "Ime",
+    "tbl-surname": "Prezime",
+    "btn-add": "Dodaj osobolje"
+  },
+  "group": {
+    "drawer": {
+      "header": "Dodaj djecu",
+      "placeholder": "Unesi ime..."
+    },
+    "btn-add": "Dodaj u grupu",
+    "btn-return": "Vrati se na pocetnu vrtica",
+    "tbl-name": "Ime",
+    "tbl-surname": "Prezime"
+  },
+  "create-child": {
+    "main-header": "Dodaj dijete",
+    "form": {
+      "name": "Unesi ime",
+      "surname": "Unesi prezime",
+      "gender": "Unesi spol",
+      "birth-date": "Unesi datum rodenja",
+      "pin": "Unesi OIB",
+      "remarks": "Unesi napomene",
+      "btn": "Dodaj dijete",
+      "placeholders": {
+        "name": "Ime",
+        "surname": "Prezime",
+        "gender": "Spol",
+        "birth-date": "Datum rodenja",
+        "pin": "OIB",
+        "remarks": "Napomene"
+      }
+    },
+    "toast": {
+      "title": "Dijete uspjesno dodano",
+      "description": "Dodali smo vase dijete!"
+    },
+    "btn-back": "Povratak"
+  },
+  "create-parents": {
+    "main-header": "Dodaj roditelje",
+    "select": {
+      "mother": {
+        "name": "Majka",
+        "value": "majku"
+      },
+      "father": {
+        "name": "Otac",
+        "value": "oca"
+      }
+    },
+    "form": {
+      "name": "Unesi ime",
+      "surname": "Unesi prezime",
+      "phone": "Unesi telefon",
+      "email": "Unesi email",
+      "btn": "Dodaj",
+      "placeholders": {
+        "name": "Ime",
+        "surname": "Prezime",
+        "phone": "Mobitel",
+        "email": "Email"
+      }
+    },
+    "btn-back": "Povratak"
+  },
+  "edit-child": {
+    "main-header": "Uredi dijete",
+    "alert": {
+      "title": "Dogodila se greska!",
+      "desc": "Dogodila se greska u procesu dohvacanja vasih podataka!"
+    },
+    "drawer": {
+      "header": "Pridruzi roditelje djeci",
+      "placeholder": "Unesi ime ili prezime...",
+      "tbl-mother": "Majka",
+      "tbl-father": "Otac"
+    },
+    "form": {
+      "name": "Ime",
+      "surname": "Prezime",
+      "gender": "Spol",
+      "birth-date": "Datum rodenja",
+      "pin": "OIB",
+      "remarks": "Napomene",
+      "btn": "Azuriraj dijete",
+      "placeholders": {
+        "name": "Ime",
+        "surname": "Prezime",
+        "gender": "Spol",
+        "birth-date": "Datum rodenja",
+        "pin": "OIB",
+        "remarks": "Napomene"
+      }
+    },
+    "toast": {
+      "title": "Dijete uspjesno azurirano"
+    },
+    "btn-add-parents": "Pridruzi roditelje djeci",
+    "btn-back": "Povratak"
+  },
+  "forgot-password": {
+    "main-header": "Zaboravljena lozinka",
+    "email": "Unesite email",
+    "placeholder": "Email",
+    "btn": "Posaljite reset link",
+    "alert": {
+      "success": {
+        "title": "Poslali smo vam email",
+        "desc": "Poslali smo vam email koji sadrzi naknadne korake za promjenu lozinke"
+      }
+    }
+  },
+  "change-password": {
+    "main-header": "Promjena lozinke",
+    "password": "Unesite novu lozinku",
+    "repeat-password": "Ponovite lozinku",
+    "btn": "Azuriraj",
+    "placeholders": {
+      "password": "Lozinka",
+      "repeat-password": "Ponovite lozinku"
+    },
+    "alert": {
+      "success": {
+        "title": "Uspjesno ste promijenili lozinku!",
+        "desc": "Bravo! Uspjesno ste promijenili lozinku."
+      }
+    }
+  },
+  "verify-account": {
+    "main-header": "Potvridte vas racun",
+    "privacy": "Oznakom ovdje potvrdujete nasa Pravila privatnosti i Uvjete i odredbe",
+    "btn": "Potvrdi racun",
+    "toast": {
+      "title": "Vas racun je potvrden"
+    }
+  },
+  "edit-mother": {
+    "main-header": "Azuriraj majku",
+    "form": {
+      "name": "Ime",
+      "surname": "Prezime",
+      "phone": "Telefon",
+      "email": "Email",
+      "btn": "Azuriraj majku",
+      "placeholders": {
+        "name": "Ime",
+        "surname": "Prezime",
+        "phone": "Mobitel",
+        "email": "Email"
+      }
+    },
+    "toast": {
+      "title": "Majka uspjesno azurirana!"
+    },
+    "alert": {
+      "title": "Dogodila se greska!",
+      "desc": "Dogodila se greska u procesu dohvacanja vasih podataka!"
+    },
+    "btn-back": "Povratak"
+  },
+  "edit-father": {
+    "main-header": "Azuriraj oca",
+    "form": {
+      "name": "Ime",
+      "surname": "Prezime",
+      "phone": "Telefon",
+      "email": "Email",
+      "btn": "Azuriraj oca",
+      "placeholders": {
+        "name": "Ime",
+        "surname": "Prezime",
+        "phone": "Mobitel",
+        "email": "Email"
+      }
+    },
+    "toast": {
+      "title": "Otac uspjesno azuriran"
+    },
+    "alert": {
+      "title": "Dogodila se greska!",
+      "desc": "Dogodila se greska u procesu dohvacanja vasih podataka!"
+    },
+    "btn-back": "Povratak"
+  },
+  "parent-card": {
+    "name": "Ime",
+    "surname": "Prezime",
+    "phone": "Mobitel",
+    "email": "Email"
+  }
+}

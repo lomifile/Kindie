@@ -11,6 +11,9 @@ import {
   FormLabel,
   Checkbox,
   useToast,
+  InputGroup,
+  InputRightElement,
+  IconButton,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
@@ -22,11 +25,22 @@ import { toErrormap } from "../utils/toErrorMap";
 import { Footer } from "../components/Footer";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { useTranslation } from "react-i18next";
+import { ViewIcon } from "@chakra-ui/icons";
 
 interface registerProps {}
 
 const Register: React.FC<registerProps> = ({}) => {
-  const [privacy, setPrivacy] = useState(false);
+  const { t } = useTranslation("data", { useSuspense: false });
+  const [privacy, setPrivacy] = useState(true);
+
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
+
+  const [role, setRole] = useState("");
+  const handleChange = (e) => {
+    setRole(e.target.value);
+  };
 
   const router = useRouter();
   const toast = useToast();
@@ -41,7 +55,7 @@ const Register: React.FC<registerProps> = ({}) => {
       justifyContent="center"
       flexDirection="column"
     >
-      <title>Register</title>
+      <title>{t("register.main-header")}</title>
       <Box
         width={{ base: "90%", md: "400px" }}
         rounded="lg"
@@ -51,7 +65,7 @@ const Register: React.FC<registerProps> = ({}) => {
         borderRadius={"12px"}
       >
         <Heading color={"blue.400"} marginBottom="1.5rem">
-          Sign up
+          {t("register.main-header")}
         </Heading>
         <Formik
           initialValues={{
@@ -66,9 +80,9 @@ const Register: React.FC<registerProps> = ({}) => {
             const response = await register({
               options: {
                 name: values.name,
-                surname: values.name,
+                surname: values.surname,
                 email: values.email,
-                role: values.role,
+                role: role,
                 password: values.password,
                 repeatPassword: values.repeatPassword,
               },
@@ -77,9 +91,7 @@ const Register: React.FC<registerProps> = ({}) => {
               setErrors(toErrormap(response.data.register.errors));
             } else if (response.data?.register.user) {
               toast({
-                title: "Your registration was a success",
-                description:
-                  "We've send you an email where you need to confim your account!",
+                title: t("register.toast.title"),
                 status: "success",
                 duration: 9000,
                 isClosable: true,
@@ -93,62 +105,80 @@ const Register: React.FC<registerProps> = ({}) => {
               <Stack spacing={4} marginBottom="1rem">
                 <InputField
                   name="name"
-                  placeholder="Name"
-                  label="Your name"
+                  placeholder={t("register.form.placeholders.name")}
+                  label={t("register.form.name")}
                   type="text"
                   required
                 />
                 <InputField
                   name="surname"
-                  placeholder="Last name"
-                  label="Your last name"
+                  placeholder={t("register.form.placeholders.surname")}
+                  label={t("register.form.surname")}
                   type="text"
                   required
                 />
-                <Text mb={"-10px"}>Role</Text>
+                <Text mb={"-10px"}>{t("register.form.role")}</Text>
                 <Select
                   name="role"
                   style={{ borderRadius: "12px" }}
-                  placeholder="Select your role"
+                  placeholder={t("register.form.placeholders.role")}
+                  onChange={handleChange}
                   required
                 >
-                  <option value="Teacher">Teacher</option>
-                  <option value="Headmaster">Headmaster</option>
-                  <option value="Pedagogue">Pedagogue</option>
+                  <option value="Teacher">
+                    {t("register.selector.teacher")}
+                  </option>
+                  <option value="Headmaster">
+                    {t("register.selector.headmaster")}
+                  </option>
+                  <option value="Pedagogue">
+                    {t("register.selector.pedagouge")}
+                  </option>
                 </Select>
                 <InputField
                   name="email"
-                  placeholder="Email"
-                  label="Your email"
+                  placeholder={t("register.form.placeholders.email")}
+                  label={t("register.form.email")}
                   type="email"
                   required
                 />
                 <Stack spacing={5} justifyContent="space-between">
-                  <InputField
-                    name="password"
-                    placeholder="Password"
-                    label="Your password"
-                    type="password"
-                    required
-                  />
+                  <InputGroup size="md">
+                    <InputField
+                      name="password"
+                      placeholder={t("register.form.placeholders.password")}
+                      label={t("register.form.password")}
+                      type={show ? "text" : "password"}
+                    />
+                    <InputRightElement mt={8} width="4.5rem">
+                      <IconButton
+                        aria-label="View password"
+                        icon={<ViewIcon />}
+                        h="1.75rem"
+                        size="sm"
+                        onClick={handleClick}
+                      />
+                    </InputRightElement>
+                  </InputGroup>
                   <InputField
                     name="repeatPassword"
-                    placeholder="Repeat Password"
-                    label="Repeat password"
+                    placeholder={t(
+                      "register.form.placeholders.repeat-password"
+                    )}
+                    label={t("register.form.repeat-password")}
                     type="password"
                   />
                   <Checkbox
-                    onClick={() => {
-                      setPrivacy(true);
+                    onChange={() => {
+                      setPrivacy(!privacy);
                     }}
                   >
-                    By checking this I acept Privacy policy and Terms and
-                    conditions
+                    {t("register.form.privacy")}
                   </Checkbox>
                 </Stack>
                 <Stack marginBottom="1rem">
                   <Button
-                    isDisabled={!privacy}
+                    isDisabled={privacy}
                     bg="blue.400"
                     colorScheme="navItem"
                     borderRadius="12px"
@@ -159,7 +189,7 @@ const Register: React.FC<registerProps> = ({}) => {
                     isLoading={isSubmitting}
                     type="submit"
                   >
-                    Sign up
+                    {t("register.form.btn")}
                   </Button>
                 </Stack>
               </Stack>
@@ -169,7 +199,7 @@ const Register: React.FC<registerProps> = ({}) => {
         <Divider marginBottom="1rem" />
         <Stack>
           <Text textAlign="center" fontWeight="500">
-            Already have an account?
+            {t("register.text.acc")}
           </Text>
           <NextLink href="/login">
             <Button
@@ -178,7 +208,7 @@ const Register: React.FC<registerProps> = ({}) => {
               variant="outline"
               color="blue.400"
             >
-              Sign in
+              {t("register.text.btn")}
             </Button>
           </NextLink>
         </Stack>

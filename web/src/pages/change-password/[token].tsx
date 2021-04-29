@@ -20,10 +20,13 @@ import forgotPassword from "../forgot-password";
 import { useChangePasswordMutation } from "../../generated/graphql";
 import { useRouter } from "next/router";
 import { toErrormap } from "../../utils/toErrorMap";
+import { Footer } from "../../components/Footer";
+import { useTranslation } from "react-i18next";
 
 interface ChangePasswordProps {}
 
 const ChangePassword: React.FC<ChangePasswordProps> = ({}) => {
+  const { t } = useTranslation("data", { useSuspense: false });
   const router = useRouter();
   const [, changePassword] = useChangePasswordMutation();
   const [tokenError, setTokenError] = useState("");
@@ -38,7 +41,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({}) => {
       justifyContent="center"
       flexDirection="column"
     >
-      <title>Change password</title>
+      <title>{t("change-password.main-header")}</title>
       <Box
         width={{ base: "90%", md: "400px" }}
         rounded="lg"
@@ -48,7 +51,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({}) => {
         borderRadius={"12px"}
       >
         <Heading color={"blue.400"} marginBottom="1.5rem">
-          Change password
+          {t("change-password.main-header")}
         </Heading>
         <Formik
           initialValues={{ newPassword: "", repeatNewPassword: "" }}
@@ -87,11 +90,10 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({}) => {
               >
                 <AlertIcon boxSize="40px" mr={0} />
                 <AlertTitle mt={4} mb={1} fontSize="lg">
-                  You changed your password successfully!
+                  {t("change-password.alert.success.title")}
                 </AlertTitle>
                 <AlertDescription maxWidth="sm">
-                  Good job! you changed your password successfully. Now log back
-                  in and get those hours!
+                  {t("change-password.alert.success.desc")}
                 </AlertDescription>
               </Alert>
             ) : (
@@ -100,14 +102,16 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({}) => {
                   <Stack justifyContent="space-between">
                     <InputField
                       name="newPassword"
-                      placeholder="New password"
-                      label="Input your new password"
+                      placeholder={t("change-password.placeholders.password")}
+                      label={t("change-password.password")}
                       type="password"
                     />
                     <InputField
                       name="repeatNewPassword"
-                      placeholder="Repeat password"
-                      label="Repeat your new password"
+                      placeholder={t(
+                        "change-password.placeholders.repeat-password"
+                      )}
+                      label={t("change-password.repeat-password")}
                       type="password"
                     />
                   </Stack>
@@ -123,7 +127,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({}) => {
                       isLoading={isSubmitting}
                       type="submit"
                     >
-                      Change password
+                      {t("change-password.btn")}
                     </Button>
                   </Stack>
                 </Stack>
@@ -132,28 +136,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({}) => {
           }
         </Formik>
       </Box>
-      <Stack isInline marginTop="1.5rem" fontWeight="500" fontSize="sm">
-        <Link className="footer-nav-item" href="#" color="secondary.link">
-          Terms
-        </Link>
-        <Link className="footer-nav-item" href="#" color="secondary.link">
-          Privacy Policy
-        </Link>
-        <Link
-          className="footer-nav-item"
-          href="/contact"
-          color="secondary.link"
-        >
-          Contact Us
-        </Link>
-      </Stack>
-      <Stack isInline marginTop="1rem" fontWeight="500" fontSize="sm">
-        <Text color="secondary.link">&copy; {year}</Text>
-        <Link href="/" color="secondary.link" fontWeight="bold">
-          DV Organizator
-        </Link>
-        <Text color="secondary.link">&mdash; All rights reserved</Text>
-      </Stack>
+      <Footer variant={"small"} />
     </Flex>
   );
 };

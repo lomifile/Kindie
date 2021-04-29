@@ -4,8 +4,6 @@ import { withUrqlClient } from "next-urql";
 import {
   Flex,
   Box,
-  toast,
-  Text,
   Stack,
   Button,
   useToast,
@@ -31,7 +29,6 @@ import {
   Td,
   Tr,
   useDisclosure,
-  Divider,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
@@ -47,18 +44,20 @@ import {
   useUpdateChildrenParentsMutation,
 } from "../../generated/graphql";
 import { AddIcon, SearchIcon } from "@chakra-ui/icons";
-import children from "../children";
 import { ParentCard } from "../../components/ParentCard";
+import { useTranslation } from "react-i18next";
 
 interface EditChildProps {}
 
 const EditChild: React.FC<EditChildProps> = ({}) => {
   useIsAuth();
+  const { t } = useTranslation("data", { useSuspense: false });
   const id = useGetId();
   const toast = useToast();
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [text, setText] = useState("");
+
   const [{ data: mother, fetching: motherFetching }] = useFilterMotherQuery({
     variables: {
       text,
@@ -75,8 +74,6 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
       id,
     },
   });
-
-  console.log(data);
 
   const [, updateChild] = useUpdateChildMutation();
   const [, updateParents] = useUpdateChildrenParentsMutation();
@@ -123,10 +120,10 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
         >
           <AlertIcon boxSize="40px" mr={0} />
           <AlertTitle mt={4} mb={1} fontSize="lg">
-            There was an error
+            {t("edit-child.alert.title")}
           </AlertTitle>
           <AlertDescription maxWidth="sm">
-            An error occured while trying to fetch your data!
+            {t("edit-child.alert.desc")}
           </AlertDescription>
         </Alert>
       </Flex>
@@ -140,7 +137,7 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
         <DrawerOverlay>
           <DrawerContent>
             <DrawerCloseButton />
-            <DrawerHeader>Add parents to child</DrawerHeader>
+            <DrawerHeader>{t("edit-child.drawer.header")}</DrawerHeader>
 
             <DrawerBody>
               <InputGroup>
@@ -150,7 +147,7 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
                 />
                 <Input
                   style={{ borderRadius: "12px" }}
-                  placeholder={"Input name or surname..."}
+                  placeholder={t("edit-child.drawer.placeholder")}
                   id="text"
                   onChange={() => {
                     // @ts-ignore
@@ -161,7 +158,7 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
               {data.findChild.motherId ? null : (
                 <>
                   <Heading mt={5} color="blue.400">
-                    Mother
+                    {t("edit-child.drawer.tbl-mother")}
                   </Heading>
                   <Table mt={5}>
                     <Tbody>
@@ -205,7 +202,7 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
               {data.findChild.fatherId ? null : (
                 <>
                   <Heading mt={5} color="blue.400">
-                    Father
+                    {t("edit-child.drawer.tbl-father")}
                   </Heading>
                   <Table mt={5}>
                     <Tbody>
@@ -264,9 +261,9 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
             router.back();
           }}
         >
-          Back
+          {t("edit-child.btn-back")}
         </Button>
-        <Heading color="blue.400">Edit child</Heading>
+        <Heading color="blue.400">{t("edit-child.main-header")}</Heading>
       </HStack>
       <Flex
         align="center"
@@ -285,7 +282,7 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
               surname: data.findChild.Surname,
               gender: data.findChild.Gender,
               birthdate: data.findChild.BirthDate,
-              oib: data.findChild.OIB,
+              oib: data.findChild.OIB.toString(),
               remarks: data.findChild.Remarks,
             }}
             onSubmit={async (values) => {
@@ -296,14 +293,13 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
                   Surname: values.surname,
                   Gender: values.gender,
                   BirthDate: values.birthdate,
-                  OIB: values.oib,
+                  OIB: parseInt(values.oib),
                   Remarks: values.remarks,
                 },
               });
               if (!error) {
                 toast({
-                  title: "Child added successfully",
-                  description: "We've added your child for you.",
+                  title: t("edit-child.toast.title"),
                   status: "success",
                   duration: 9000,
                   isClosable: true,
@@ -317,43 +313,43 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
                 <Stack spacing={4} marginBottom="1rem">
                   <InputField
                     name="name"
-                    placeholder="Name"
-                    label="Input name"
+                    placeholder={t("edit-child.form.placeholders.name")}
+                    label={t("edit-child.form.name")}
                     type="text"
                     required
                   />
                   <InputField
                     name="surname"
-                    placeholder="Last name"
-                    label="Input last name"
+                    placeholder={t("edit-child.form.placeholders.surname")}
+                    label={t("edit-child.form.surname")}
                     type="text"
                     required
                   />
                   <InputField
                     name="gender"
-                    placeholder="Gender"
-                    label="Input gender"
+                    placeholder={t("edit-child.form.placeholders.gender")}
+                    label={t("edit-child.form.gender")}
                     type="text"
                     required
                   />
                   <InputField
                     name="birthdate"
-                    placeholder="Birth date"
-                    label="Input birth date"
+                    placeholder={t("edit-child.form.placeholders.birth-date")}
+                    label={t("edit-child.form.birth-date")}
                     type="date"
                     required
                   />
                   <InputField
                     name="oib"
-                    placeholder="PIN"
-                    label="Input PIN"
+                    placeholder={t("edit-child.form.placeholders.pin")}
+                    label={t("edit-child.form.pin")}
                     type="text"
                     required
                   />
                   <InputField
                     name="remarks"
-                    placeholder="Remarks"
-                    label="Input Remarks"
+                    placeholder={t("edit-child.form.placeholders.remarks")}
+                    label={t("edit-child.form.remarks")}
                     textArea
                     required
                   />
@@ -368,7 +364,7 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
                     isLoading={isSubmitting}
                     type="submit"
                   >
-                    Update child
+                    {t("edit-child.form.btn")}
                   </Button>
                 </Stack>
               </Form>
@@ -389,7 +385,7 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
                 size="md"
                 onClick={onOpen}
               >
-                Add parents
+                {t("edit-child.btn-add-parents")}
               </Button>
             </>
           ) : (

@@ -1,11 +1,13 @@
 import { Box, Text } from "@chakra-ui/layout";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface ParentCardProps {
   data: object;
 }
 
 export const ParentCard: React.FC<ParentCardProps> = ({ data }) => {
+  const { t } = useTranslation("data", { useSuspense: false });
   return (
     <Box
       mb={"5rem"}
@@ -16,28 +18,28 @@ export const ParentCard: React.FC<ParentCardProps> = ({ data }) => {
       p={5}
     >
       <Text>
-        Name:{" "}
+        {t("parent-card.name")}:{" "}
         {
           // @ts-ignore
           data.Name
         }
       </Text>
       <Text>
-        Last name:{" "}
+        {t("parent-card.surname")}:{" "}
         {
           // @ts-ignore
           data.Surname
         }
       </Text>
       <Text>
-        Email:{" "}
+        {t("parent-card.email")}:{" "}
         {
           // @ts-ignore
           data.Email
         }
       </Text>
       <Text>
-        Phone:{" "}
+        {t("parent-card.phone")}:{" "}
         {
           // @ts-ignore
           data.Phone

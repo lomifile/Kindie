@@ -17,7 +17,7 @@ import {
 import { Image } from "@chakra-ui/image";
 // @ts-ignore
 import logo from "../img/logo.png";
-import React from "react";
+import React, { useState } from "react";
 import NextLink from "next/link";
 import {
   useClearKindergardenMutation,
@@ -26,7 +26,7 @@ import {
 } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
 import { useRouter } from "next/router";
-
+import { useTranslation } from "react-i18next";
 export type NavbarVariant = "normal" | "user";
 
 interface NavProps {
@@ -34,6 +34,7 @@ interface NavProps {
 }
 
 export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
+  const { t, i18n } = useTranslation("data", { useSuspense: false });
   const router = useRouter();
   const btnRef = React.useRef();
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
@@ -65,7 +66,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             colorScheme="navItem"
             variant="ghost"
           >
-            Home
+            {t("nav.home")}
           </Button>
         </NextLink>
         <NextLink href="/Aboutus">
@@ -76,7 +77,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             colorScheme="navItem"
             variant="ghost"
           >
-            About us
+            {t("nav.About-us")}
           </Button>
         </NextLink>
         <NextLink href="/contact">
@@ -87,7 +88,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             colorScheme="navItem"
             variant="ghost"
           >
-            Contact us
+            {t("nav.Contact-us")}
           </Button>
         </NextLink>
         <NextLink href="/login">
@@ -99,7 +100,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             variant="ghost"
             ml={"4"}
           >
-            Sign in
+            {t("nav.Sign-in")}
           </Button>
         </NextLink>
         <NextLink href="/register">
@@ -109,7 +110,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             color="white"
             bg="blue.400"
           >
-            Sign up
+            {t("nav.Sign-up")}
           </Button>
         </NextLink>
       </>
@@ -125,7 +126,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             colorScheme="navItem"
             variant="ghost"
           >
-            Home
+            {t("nav.home")}
           </Button>
         </NextLink>
         <NextLink href="/Aboutus">
@@ -136,7 +137,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             colorScheme="navItem"
             variant="ghost"
           >
-            About us
+            {t("nav.About-us")}
           </Button>
         </NextLink>
         <NextLink href="/contact">
@@ -147,7 +148,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             colorScheme="navItem"
             variant="ghost"
           >
-            Contact us
+            {t("nav.Contact-us")}
           </Button>
         </NextLink>
         <NextLink href="/dashboard">
@@ -157,7 +158,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             color="white"
             bg="blue.400"
           >
-            Go to dashboard
+            {t("nav.Dashboard")}
           </Button>
         </NextLink>
       </>
@@ -170,36 +171,36 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             <Avatar name={data.me.Name + " " + data.me.Surname} />
           </MenuButton>
           <MenuList>
-            <MenuGroup title="Navigation">
+            <MenuGroup title={t("nav.menu.titles.navigation")}>
               <MenuItem
                 onClick={() => {
                   clearKindergarden();
                   router.push("/dashboard");
                 }}
               >
-                Dashboard
+                {t("nav.menu.dashboard")}
               </MenuItem>
             </MenuGroup>
-            <MenuGroup title="Profile">
+            <MenuGroup title={t("nav.menu.titles.profile")}>
               <NextLink href="/profile">
-                <MenuItem>My Account</MenuItem>
+                <MenuItem>{t("nav.menu.acc")}</MenuItem>
               </NextLink>
-              <MenuItem>Settings </MenuItem>
+              <MenuItem>{t("nav.menu.settings")}</MenuItem>
               <MenuItem
                 onClick={async () => {
                   await logout();
                 }}
               >
-                Log out
+                {t("nav.menu.log-out")}
               </MenuItem>
             </MenuGroup>
             <MenuDivider />
-            <MenuGroup title="Help">
+            <MenuGroup title={t("nav.menu.titles.help")}>
               <NextLink href="/">
-                <MenuItem>Landing page</MenuItem>
+                <MenuItem>{t("nav.menu.landing-page")}</MenuItem>
               </NextLink>
-              <MenuItem>Docs</MenuItem>
-              <MenuItem>FAQ</MenuItem>
+              <MenuItem>{t("nav.menu.docs")}</MenuItem>
+              <MenuItem>{t("nav.menu.faq")}</MenuItem>
             </MenuGroup>
           </MenuList>
         </Menu>
@@ -232,6 +233,22 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
         >
           DV Organizator
         </Heading>
+        <Button
+          bg="transparent"
+          onClick={() => {
+            i18n.changeLanguage("hr");
+          }}
+        >
+          🇭🇷
+        </Button>
+        <Button
+          bg="transparent"
+          onClick={(e) => {
+            i18n.changeLanguage("en");
+          }}
+        >
+          🇬🇧
+        </Button>
       </Stack>
       <Box mr={"5rem"} ml={"auto"} mt={"auto"} mb={"auto"}>
         {body}

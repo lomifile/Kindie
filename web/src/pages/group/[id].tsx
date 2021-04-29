@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import {
   Stack,
   Flex,
-  Heading,
   HStack,
   Button,
   Box,
@@ -43,15 +42,16 @@ import NextLink from "next/link";
 import {
   SearchIcon,
   AddIcon,
-  ViewIcon,
   WarningIcon,
   CheckCircleIcon,
 } from "@chakra-ui/icons";
+import { useTranslation } from "react-i18next";
 
 interface GroupProps {}
 
 const Group: React.FC<GroupProps> = ({}) => {
   useIsAuth();
+  const { t } = useTranslation("data", { useSuspense: false });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [variables, setVariables] = useState({
     limit: 10,
@@ -78,8 +78,7 @@ const Group: React.FC<GroupProps> = ({}) => {
         <DrawerOverlay>
           <DrawerContent>
             <DrawerCloseButton />
-            <DrawerHeader>Add children</DrawerHeader>
-
+            <DrawerHeader>{t("group.drawer.header")}</DrawerHeader>
             <DrawerBody>
               <InputGroup>
                 <InputLeftElement
@@ -88,7 +87,7 @@ const Group: React.FC<GroupProps> = ({}) => {
                 />
                 <Input
                   style={{ borderRadius: "12px" }}
-                  placeholder={"Input name..."}
+                  placeholder={t("group.drawer.placeholder")}
                   id="text"
                   onChange={() => {
                     // @ts-ignore
@@ -136,9 +135,6 @@ const Group: React.FC<GroupProps> = ({}) => {
         </DrawerOverlay>
       </Drawer>
       <Stack spacing={8}>
-        <Flex mt={5} mb={2}>
-          <Heading color="blue.400">Toolbox</Heading>
-        </Flex>
         <Flex
           align="center"
           justify="center"
@@ -161,7 +157,7 @@ const Group: React.FC<GroupProps> = ({}) => {
               size="md"
               onClick={onOpen}
             >
-              Add to group
+              {t("group.btn-add")}
             </Button>
             <Button
               bg="blue.400"
@@ -181,33 +177,8 @@ const Group: React.FC<GroupProps> = ({}) => {
                 );
               }}
             >
-              Return to kindergarden
+              {t("group.btn-return")}
             </Button>
-            {/* 
-            <Button
-              bg="blue.400"
-              className="nav-item"
-              colorScheme="navItem"
-              borderRadius="12px"
-              py="4"
-              px="4"
-              lineHeight="1"
-              size="md"
-            >
-              Parents
-            </Button>
-            <Button
-              bg="blue.400"
-              className="nav-item"
-              colorScheme="navItem"
-              borderRadius="12px"
-              py="4"
-              px="4"
-              lineHeight="1"
-              size="md"
-            >
-              Staff
-            </Button> */}
           </HStack>
         </Flex>
         {fetching && !data ? (
@@ -218,8 +189,8 @@ const Group: React.FC<GroupProps> = ({}) => {
           <Table m={10}>
             <Thead>
               <Tr>
-                <Th>Name</Th>
-                <Th>Last name</Th>
+                <Th>{t("group.tbl-name")}</Th>
+                <Th>{t("group.tbl-surname")}</Th>
                 <Th></Th>
                 <Th></Th>
               </Tr>

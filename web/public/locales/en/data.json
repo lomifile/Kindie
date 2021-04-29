@@ -1,0 +1,478 @@
+{
+  "nav": {
+    "home": "Home",
+    "About-us": "About us",
+    "Contact-us": "Contact us",
+    "Sign-in": "Sign in",
+    "Sign-up": "Sign up",
+    "Dashboard": "Go to dashboard",
+    "menu": {
+      "titles": {
+        "navigation": "Navigation",
+        "profile": "Profile",
+        "help": "Help"
+      },
+      "dashboard": "Dasboard",
+      "acc": "My account",
+      "settings": "Settings",
+      "log-out": "Log out",
+      "landing-page": "Landing page",
+      "docs": "Documentation",
+      "faq": "FAQ"
+    }
+  },
+  "footer": {
+    "contact": "Contact us",
+    "rights": "All rights reserved"
+  },
+  "index": {
+    "picture-data": {
+      "main-header": "Does your documentation need help?",
+      "second-header": "We develpoed a way that will help you sort your documentation and make it better!",
+      "btn": "Create your account now",
+      "small-text": "No credit card required."
+    },
+    "headers": {
+      "wwd": "What we do?"
+    },
+    "features": {
+      "feature-1": {
+        "title": "We store all of your data!",
+        "desc": "All data that you provide and show us is stored in safe way, sou you can access it whenever you want."
+      },
+      "feature-2": {
+        "title": "Keep you organized!",
+        "desc": "We made sure to create simple enough working teamplate so you can store your data where you need it."
+      },
+      "feature-3": {
+        "title": "Update our current features!",
+        "desc": "Any bug that is developed during use, make sure to report it and we will make sure to fix it as soon as possible."
+      },
+      "feature-4": {
+        "title": "Improve infrastructure!",
+        "desc": "We know that fast and relialbe way is needed when we have large user base, so we make sure that our infrastructure is solid and working all the time!"
+      },
+      "feature-5": {
+        "title": "We listen and improve upon!",
+        "desc": "If you have any problems or questions on certan things please make sure that you contact us using contact forms and we will make sure to respond to you in the just right way."
+      }
+    }
+  },
+  "about-us": {
+    "main-heading": "About us",
+    "meet": "Meet the team",
+    "text": {
+      "column-one": "In simple terms we are just another app that helps you get organised. Trhough out the life I saw how porgress and paperwork for children in kindergarden gets bigger and bigger and the fact that storing that much of data phisically is impossible and that is where I got and idea to just try to improve that kind of problem this is where I got some of the ideas and what I turned into a project.",
+      "column-two": "What this app can do for your bussienes? Well in simple terms gives you ability to create and store multiple kindergarden in one compact place all of the data is presented to you using simple systems so you don't have to worry about anything. Just sit back and fill our registration form and start sorting your data the way you like. We hope you will enjoy using it as much as we enjoyed working and developing it.",
+      "devs": {
+        "filip": {
+          "name": "Filip Ivanusec",
+          "about": "Hi! My name is Filip. I've been developing apps since I was 18 years old when I saw how things around kindergarden and how much paperwork is about childern I wanted to find a way to make it simpler I hope the solution you see here is something that is going to help you in your bussines. Kind regards, Filip!"
+        }
+      }
+    }
+  },
+  "contact-us": {
+    "main-heading": "Contact us",
+    "description": "Here you can input your email address and send us email if you want to talk to us about features, bugs, upgrades, in other terms anything you like!",
+    "small": "We love to hear from you!",
+    "toast": {
+      "title": "We got your email!",
+      "desc": "We got your email and we will respond as soon as we can!"
+    },
+    "form": {
+      "email": "Your email",
+      "subject": "Input your subject",
+      "message": "Input your message",
+      "btn": "Send message"
+    }
+  },
+  "login": {
+    "main-header": "Sign in",
+    "alert": {
+      "title": "Your account is not verified!",
+      "desc-1": " Your account is not verified! If you didn't recive any email",
+      "desc-2": "click here",
+      "desc-3": "to send a new one!"
+    },
+    "form": {
+      "email": "Your email",
+      "password": "Your password",
+      "btn": "Sign in",
+      "forgot": "Forgot password?",
+      "placeholders": {
+        "email": "Email",
+        "password": "Password"
+      }
+    },
+    "text": {
+      "acc": "Don't have an account?",
+      "btn": "Sign up"
+    }
+  },
+  "register": {
+    "main-header": "Sign up",
+    "form": {
+      "name": "Name",
+      "surname": "Last name",
+      "role": "Your role",
+      "email": "Your email",
+      "password": "Your password",
+      "repeat-password": "Repeat password",
+      "privacy": "By checking this I acept Privacy policy and Terms and conditions",
+      "btn": "Sign up",
+      "placeholders": {
+        "name": "Name",
+        "surname": "Last name",
+        "email": "Email",
+        "password": "Password",
+        "repeat-password": "Repeat password"
+      }
+    },
+    "selector": {
+      "headmaster": "Headmaster",
+      "pedagouge": "Pedagouge",
+      "teacher": "Teacher"
+    },
+    "toast": {
+      "title": "Registration success!"
+    },
+    "text": {
+      "acc": "Already have an account?",
+      "btn": "Sign in"
+    }
+  },
+  "profile": {
+    "main-header": "Profile",
+    "acc": "My account",
+    "alert": {
+      "title": "There was an error",
+      "desc": "An error occured while trying to fetch your data!"
+    },
+    "form": {
+      "name": "Name",
+      "surname": "Last name",
+      "role": "Your role",
+      "email": "Your email",
+      "password": "Your password",
+      "btn": "Update profile",
+      "placeholders": {
+        "name": "Name",
+        "surname": "Last name",
+        "email": "Email",
+        "password": "Password",
+        "role": "Role"
+      }
+    },
+    "selector": {
+      "headmaster": "Headmaster",
+      "pedagouge": "Pedagouge",
+      "teacher": "Teacher"
+    },
+    "toast": {
+      "title": "Account updated successfully!"
+    }
+  },
+  "dashboard": {
+    "main-header": "Dashboard",
+    "alert": {
+      "title": "There was an error",
+      "desc": "An error occured while trying to fetch your data!"
+    },
+    "form": {
+      "name": "Name",
+      "city": "City",
+      "address": "Address",
+      "zip-code": "Zip code",
+      "btn": "Create kindergarden",
+      "placeholder": {
+        "name": "Name",
+        "city": "City",
+        "address": "Address",
+        "zip-code": "Zip code"
+      }
+    },
+    "toast": {
+      "create": {
+        "title": "Kindergarden created successfully"
+      },
+      "delete": {
+        "title": "Kindergarden deleted successfully"
+      },
+      "error": {
+        "title": "You cannot delete this kindergarden",
+        "desc": "This Kindergarden contains data!"
+      }
+    },
+    "modal-btn": "Create kindergarden",
+    "modal-header": "Create kindergarden",
+    "owned-header": "Owned by you",
+    "part-header": "Part of"
+  },
+  "kindergarden": {
+    "main-header": "Kindergarden",
+    "alert": {
+      "title": "There was an error",
+      "desc": "An error occured while trying to fetch your data!"
+    },
+    "modal": {
+      "header": "Create group"
+    },
+    "form": {
+      "name": "Name",
+      "btn": "Create group",
+      "placeholders": {
+        "name": "Name"
+      }
+    },
+    "toast": {
+      "create": {
+        "title": "Group created successfully"
+      },
+      "delete": {
+        "title": "Group deleted successfully"
+      },
+      "error": {
+        "title": "You cannot delete this group!",
+        "desc": "This Group contains data!"
+      }
+    },
+    "toolbox": {
+      "btn-new-group": "New group",
+      "btn-children": "Children",
+      "btn-parents": "Parents",
+      "btn-staff": "Staff"
+    },
+    "groups-heading": "Your groups"
+  },
+  "children": {
+    "main-header": "Children",
+    "alert": {
+      "title": "There was an error",
+      "desc": "An error occured while trying to fetch your data!"
+    },
+    "btn-add": "Add child",
+    "tbl-name": "Name",
+    "tbl-surname": "Last name",
+    "btn-load-more": "Load more"
+  },
+  "parents": {
+    "main-header": "Parents",
+    "heading-mother": "Mother",
+    "heading-father": "Father",
+    "btn-add": "Add parents",
+    "tbl-name": "Name",
+    "btn-load-more": "Load more",
+    "tbl-surname": "Surname"
+  },
+  "staff": {
+    "main-header": "Staff",
+    "owner-heading": "Owner",
+    "staff-heading": "Staff",
+    "drawer": {
+      "header": "Add staff",
+      "placeholder": "Input name..."
+    },
+    "modal": {
+      "header": "Show user",
+      "data": {
+        "name": "Name",
+        "surname": "Last name",
+        "email": "Email"
+      }
+    },
+    "tbl-name": "Name",
+    "tbl-surname": "Lastname",
+    "btn-add": "Add staff"
+  },
+  "group": {
+    "drawer": {
+      "header": "Add children",
+      "placeholder": "Input name..."
+    },
+    "btn-add": "Add to group",
+    "btn-return": "Return to kindergarden",
+    "tbl-name": "Name",
+    "tbl-surname": "Lastname"
+  },
+  "create-child": {
+    "main-header": "Add child",
+    "form": {
+      "name": "Input name",
+      "surname": "Input last name",
+      "gender": "Input gender",
+      "birth-date": "Input birth date",
+      "pin": "Input PIN",
+      "remarks": "Input remarks",
+      "btn": "Add child",
+      "placeholders": {
+        "name": "Name",
+        "surname": "Last name",
+        "gender": "Gender",
+        "birth-date": "Birth date",
+        "pin": "PIN",
+        "remarks": "Remarks"
+      }
+    },
+    "toast": {
+      "title": "Child added successfully",
+      "description": "We've added your child for you."
+    },
+    "btn-back": "Back"
+  },
+  "create-parents": {
+    "main-header": "Add parents",
+    "select": {
+      "mother": {
+        "name": "Mother",
+        "value": "mother"
+      },
+      "father": {
+        "name": "Father",
+        "value": "father"
+      }
+    },
+    "form": {
+      "name": "Input name",
+      "surname": "Input last name",
+      "phone": "Input phone",
+      "email": "Input email",
+      "btn": "Add",
+      "placeholders": {
+        "name": "Name",
+        "surname": "Last name",
+        "phone": "Phone",
+        "email": "Email"
+      }
+    },
+    "toast": {
+      "mother": {
+        "title": "Mother added successfully"
+      },
+      "father": {
+        "title": "Father added successfully"
+      }
+    },
+    "btn-back": "Back"
+  },
+  "edit-child": {
+    "main-header": "Edit child",
+    "alert": {
+      "title": "There was an error",
+      "desc": "An error occured while trying to fetch your data!"
+    },
+    "drawer": {
+      "header": "Add parents to children",
+      "placeholder": "Input name or surname...",
+      "tbl-mother": "Mother",
+      "tbl-father": "Father"
+    },
+    "form": {
+      "name": "Name",
+      "surname": "Last name",
+      "gender": "Gender",
+      "birth-date": "Birth date",
+      "pin": "PIN",
+      "remarks": "Remarks",
+      "btn": "Update child",
+      "placeholders": {
+        "name": "Name",
+        "surname": "Last name",
+        "gender": "Gender",
+        "birth-date": "Birth date",
+        "pin": "PIN",
+        "remarks": "Remarks"
+      }
+    },
+    "toast": {
+      "title": "Child updated successfully!"
+    },
+    "btn-add-parents": "Add parents",
+    "btn-back": "Back"
+  },
+  "forgot-password": {
+    "main-header": "Forgot password",
+    "email": "Input email",
+    "placeholder": "Email",
+    "btn": "Send reset link",
+    "alert": {
+      "success": {
+        "title": "We send you an email",
+        "desc": "We send you an email which contains a link to guide you forward on you password change!"
+      }
+    }
+  },
+  "change-password": {
+    "main-header": "Change password",
+    "password": "Your password",
+    "repeat-password": "Repeat password",
+    "alert": {
+      "success": {
+        "title": "You changed your password successfully!",
+        "desc": "Good job! you changed your password successfully. Now log back in and get those hours!"
+      }
+    }
+  },
+  "verify-account": {
+    "main-header": "Verify your account",
+    "privacy": "By checking this I acept Privacy policy and Terms and conditions",
+    "btn": "Verify account",
+    "toast": {
+      "title": "Your account is verified!"
+    }
+  },
+  "edit-mother": {
+    "main-header": "Edit mother",
+    "form": {
+      "name": "Name",
+      "surname": "Last name",
+      "phone": "Phone",
+      "email": "Email",
+      "btn": "Update",
+      "placeholders": {
+        "name": "Name",
+        "surname": "Last name",
+        "phone": "Phone",
+        "email": "Email"
+      }
+    },
+    "toast": {
+      "title": "Mother successfully updated!"
+    },
+    "alert": {
+      "title": "There was an error",
+      "desc": "An error occured while trying to fetch your data!"
+    },
+    "btn-back": "Back"
+  },
+  "edit-father": {
+    "main-header": "Edit father",
+    "form": {
+      "name": "Name",
+      "surname": "Last name",
+      "phone": "Phone",
+      "email": "Email",
+      "btn": "Update",
+      "placeholders": {
+        "name": "Name",
+        "surname": "Last name",
+        "phone": "Phone",
+        "email": "Email"
+      }
+    },
+    "toast": {
+      "title": "Father successfully updated!"
+    },
+    "alert": {
+      "title": "There was an error",
+      "desc": "An error occured while trying to fetch your data!"
+    },
+    "btn-back": "Back"
+  },
+  "parent-card": {
+    "name": "Name",
+    "surname": "Last name",
+    "phone": "Phone",
+    "email": "Email"
+  }
+}

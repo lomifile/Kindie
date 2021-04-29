@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import NextLink from "next/link";
+import { useTranslation } from "react-i18next";
 
 type Variant = "small" | "regular";
 
@@ -17,6 +18,7 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ variant = "regular" }) => {
+  const { t } = useTranslation("data", { useSuspense: false });
   const year = new Date().getFullYear();
   let body;
   if (variant == "small") {
@@ -42,7 +44,7 @@ export const Footer: React.FC<FooterProps> = ({ variant = "regular" }) => {
             href="/contact"
             color="secondary.link"
           >
-            Contact Us
+            {t("footer.contact")}
           </Link>
         </Stack>
         <Stack isInline marginTop="1rem" fontWeight="500" fontSize="sm">
@@ -50,7 +52,7 @@ export const Footer: React.FC<FooterProps> = ({ variant = "regular" }) => {
           <Link href="/" color="secondary.link" fontWeight="bold">
             DV Organizator
           </Link>
-          <Text color="secondary.link">&mdash; All rights reserved</Text>
+          <Text color="secondary.link">&mdash; {t("footer.rights")}</Text>
         </Stack>
       </>
     );
@@ -83,7 +85,7 @@ export const Footer: React.FC<FooterProps> = ({ variant = "regular" }) => {
               Privacy Policy
             </Link>
             <Link className="footer-nav-item" href="/contact" color="white">
-              Contact Us
+              {t("footer.contact")}
             </Link>
           </Stack>
           <Stack isInline marginTop="1.5rem" fontWeight="500" fontSize="m">
@@ -91,7 +93,7 @@ export const Footer: React.FC<FooterProps> = ({ variant = "regular" }) => {
             <Link href="/" color="white" fontWeight="bold">
               DV Organizator
             </Link>
-            <Text color="white">&mdash; All rights reserved</Text>
+            <Text color="white">&mdash; {t("footer.rights")}</Text>
           </Stack>
         </Box>
       </Flex>

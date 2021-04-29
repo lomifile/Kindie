@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Card } from "../components/Card";
 import { Feature } from "../components/Feature";
 import { Layout } from "../components/Layout";
@@ -21,33 +22,19 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 interface AboutusProps {}
 
 const Aboutus: React.FC<AboutusProps> = ({}) => {
+  const { t } = useTranslation("data", { useSuspense: false });
   const text = {
-    columnOne:
-      "In simple terms we are just another app that helps you get organised. \
-        Trhough out the life I saw how porgress and paperwork for children in kindergarden gets bigger and bigger and the fact \
-        that storing that much of data phisically is impossible and that is where I got and idea to just try to improve that kind of problem \
-        this is where I got some of the ideas and what I turned into a project.",
-    columnTwo:
-      "What this app can do for your bussienes? \
-        Well in simple terms gives you ability to create and store multiple kindergarden in one compact place \
-        all of the data is presented to you using simple systems so you don't have to worry about anything. \
-        Just sit back and fill our registration form and start sorting your data the way you like. We hope you will enjoy using it as much as we enjoyed working \
-        and developing it.",
     devs: [
       {
-        name: "Filip Ivanusec",
-        about:
-          "Hi! My name is Filip. I've been developing apps since I was 18 years old \
-              When I saw how things around kindergarden and how much paperwork is about childern I wanted to find a way to make it simpler \
-              I hope the solution you see here is something that is going to help you in your bussines. \
-              Kind regards, Filip!",
+        name: t("about-us.text.devs.filip.name"),
+        about: t("about-us.text.devs.filip.about"),
         devImg: filipImg,
       },
     ],
   };
   return (
     <Layout navbarVariant={"normal"} variant={"column"} navbar={true}>
-      <title>About us</title>
+      <title>{t("about-us.main-heading")}</title>
       <Flex
         align="center"
         justify={{ base: "center", md: "space-around", xl: "space-between" }}
@@ -62,7 +49,7 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
           align={["center", "center", "flex-start", "flex-start"]}
         >
           <Flex ml={"12rem"} pb={"1rem"}>
-            <Heading color="blue.400">About us</Heading>
+            <Heading color="blue.400">{t("about-us.main-heading")}</Heading>
           </Flex>
           <Heading
             as="h2"
@@ -73,7 +60,7 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
             lineHeight={1.5}
             textAlign={["center", "center", "left", "left"]}
           >
-            {text.columnOne}
+            {t("about-us.text.column-one")}
           </Heading>
         </Stack>
         <Box w={{ base: "80%", sm: "60%", md: "50%" }} mb={{ base: 12, md: 0 }}>
@@ -88,7 +75,7 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
             lineHeight={1.5}
             textAlign={["center", "center", "left", "left"]}
           >
-            {text.columnTwo}
+            {t("about-us.text.column-two")}
           </Heading>
         </Box>
       </Flex>
@@ -96,7 +83,7 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
       <Flex pt={"3rem"} pb={5}>
         <Stack>
           <Flex ml={"12rem"} pb={"2rem"} pt={"1rem"}>
-            <Heading color="blue.400">Meet the team</Heading>
+            <Heading color="blue.400">{t("about-us.meet")}</Heading>
           </Flex>
           {text.devs.map((dev) => (
             <Card
