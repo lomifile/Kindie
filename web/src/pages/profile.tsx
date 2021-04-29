@@ -7,10 +7,15 @@ import {
   Button,
   Flex,
   Heading,
+  IconButton,
+  InputGroup,
+  InputRightElement,
+  Select,
   SkeletonCircle,
   SkeletonText,
   Stack,
   useToast,
+  Text,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
@@ -22,17 +27,25 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { toErrormap } from "../utils/toErrorMap";
 import { useIsAuth } from "../utils/useIsAuth";
 import { useTranslation } from "react-i18next";
+import { ViewIcon } from "@chakra-ui/icons";
 
 interface ProfileProps {}
 
 const Profile: React.FC<ProfileProps> = ({}) => {
+  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   let body = null;
-  useIsAuth();
   const [redirect, setRedirect] = useState(false);
   const [{ data, fetching }] = useMeQuery();
   const [, updateUser] = useUpdateUserMutation();
   const toast = useToast();
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
+
+  const [role, setRole] = useState("");
+  const handleChange = (e) => {
+    setRole(e.target.value);
+  };
 
   if (fetching) {
     body = (
@@ -125,33 +138,46 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                         label={t("profile.form.surname")}
                         type="text"
                       />
-                      <InputField
-                        name="role"
-                        placeholder={t("profile.form.placeholders.role")}
-                        label={t("profile.form.role")}
-                        type="text"
-                      />
-                      {/* <Select
+                      <Text mb={"-10px"}>{t("profile.form.role")}</Text>
+                      <Select
                         name="role"
                         style={{ borderRadius: "12px" }}
+                        onChange={handleChange}
                         defaultValue={data?.me.Role}
                       >
-                        <option value="Teacher">Teacher</option>
-                        <option value="Headmaster">Headmaster</option>
-                        <option value="Pedagogue">Pedagogue</option>
-                      </Select> */}
+                        <option value="Teacher">
+                          {t("profile.selector.teacher")}
+                        </option>
+                        <option value="Headmaster">
+                          {t("profile.selector.headmaster")}
+                        </option>
+                        <option value="Pedagogue">
+                          {t("profile.selector.pedagouge")}
+                        </option>
+                      </Select>
                       <InputField
                         name="email"
                         placeholder={t("profile.form.placeholders.email")}
                         label={t("profile.form.email")}
                         type="email"
                       />
-                      <InputField
-                        name="password"
-                        placeholder={t("profile.form.placeholders.password")}
-                        label={t("profile.form.password")}
-                        type="password"
-                      />
+                      <InputGroup size="md">
+                        <InputField
+                          name="password"
+                          placeholder={t("profile.form.placeholders.password")}
+                          label={t("profile.form.password")}
+                          type={show ? "text" : "password"}
+                        />
+                        <InputRightElement mt={8} width="4.5rem">
+                          <IconButton
+                            aria-label="View password"
+                            icon={<ViewIcon />}
+                            h="1.75rem"
+                            size="sm"
+                            onClick={handleClick}
+                          />
+                        </InputRightElement>
+                      </InputGroup>
                       <Stack mt={"1rem"}>
                         <Button
                           bg="blue.400"

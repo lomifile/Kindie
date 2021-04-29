@@ -129,6 +129,11 @@
         "repeat-password": "Repeat password"
       }
     },
+    "selector": {
+      "headmaster": "Headmaster",
+      "pedagouge": "Pedagouge",
+      "teacher": "Teacher"
+    },
     "toast": {
       "title": "Registration success!"
     },
@@ -158,6 +163,11 @@
         "password": "Password",
         "role": "Role"
       }
+    },
+    "selector": {
+      "headmaster": "Headmaster",
+      "pedagouge": "Pedagouge",
+      "teacher": "Teacher"
     },
     "toast": {
       "title": "Account updated successfully!"
@@ -410,5 +420,59 @@
     "toast": {
       "title": "Your account is verified!"
     }
+  },
+  "edit-mother": {
+    "main-header": "Edit mother",
+    "form": {
+      "name": "Name",
+      "surname": "Last name",
+      "phone": "Phone",
+      "email": "Email",
+      "btn": "Update",
+      "placeholders": {
+        "name": "Name",
+        "surname": "Last name",
+        "phone": "Phone",
+        "email": "Email"
+      }
+    },
+    "toast": {
+      "title": "Mother successfully updated!"
+    },
+    "alert": {
+      "title": "There was an error",
+      "desc": "An error occured while trying to fetch your data!"
+    },
+    "btn-back": "Back"
+  },
+  "edit-father": {
+    "main-header": "Edit father",
+    "form": {
+      "name": "Name",
+      "surname": "Last name",
+      "phone": "Phone",
+      "email": "Email",
+      "btn": "Update",
+      "placeholders": {
+        "name": "Name",
+        "surname": "Last name",
+        "phone": "Phone",
+        "email": "Email"
+      }
+    },
+    "toast": {
+      "title": "Father successfully updated!"
+    },
+    "alert": {
+      "title": "There was an error",
+      "desc": "An error occured while trying to fetch your data!"
+    },
+    "btn-back": "Back"
+  },
+  "parent-card": {
+    "name": "Name",
+    "surname": "Last name",
+    "phone": "Phone",
+    "email": "Email"
   }
 }

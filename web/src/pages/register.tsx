@@ -11,6 +11,9 @@ import {
   FormLabel,
   Checkbox,
   useToast,
+  InputGroup,
+  InputRightElement,
+  IconButton,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
@@ -23,12 +26,21 @@ import { Footer } from "../components/Footer";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useTranslation } from "react-i18next";
+import { ViewIcon } from "@chakra-ui/icons";
 
 interface registerProps {}
 
 const Register: React.FC<registerProps> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
-  const [privacy, setPrivacy] = useState(false);
+  const [privacy, setPrivacy] = useState(true);
+
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
+
+  const [role, setRole] = useState("");
+  const handleChange = (e) => {
+    setRole(e.target.value);
+  };
 
   const router = useRouter();
   const toast = useToast();
@@ -70,7 +82,7 @@ const Register: React.FC<registerProps> = ({}) => {
                 name: values.name,
                 surname: values.surname,
                 email: values.email,
-                role: values.role,
+                role: role,
                 password: values.password,
                 repeatPassword: values.repeatPassword,
               },
@@ -110,11 +122,18 @@ const Register: React.FC<registerProps> = ({}) => {
                   name="role"
                   style={{ borderRadius: "12px" }}
                   placeholder={t("register.form.placeholders.role")}
+                  onChange={handleChange}
                   required
                 >
-                  <option value="Teacher">Teacher</option>
-                  <option value="Headmaster">Headmaster</option>
-                  <option value="Pedagogue">Pedagogue</option>
+                  <option value="Teacher">
+                    {t("register.selector.teacher")}
+                  </option>
+                  <option value="Headmaster">
+                    {t("register.selector.headmaster")}
+                  </option>
+                  <option value="Pedagogue">
+                    {t("register.selector.pedagouge")}
+                  </option>
                 </Select>
                 <InputField
                   name="email"
@@ -124,13 +143,23 @@ const Register: React.FC<registerProps> = ({}) => {
                   required
                 />
                 <Stack spacing={5} justifyContent="space-between">
-                  <InputField
-                    name="password"
-                    placeholder={t("register.form.placeholders.password")}
-                    label={t("register.form.password")}
-                    type="password"
-                    required
-                  />
+                  <InputGroup size="md">
+                    <InputField
+                      name="password"
+                      placeholder={t("register.form.placeholders.password")}
+                      label={t("register.form.password")}
+                      type={show ? "text" : "password"}
+                    />
+                    <InputRightElement mt={8} width="4.5rem">
+                      <IconButton
+                        aria-label="View password"
+                        icon={<ViewIcon />}
+                        h="1.75rem"
+                        size="sm"
+                        onClick={handleClick}
+                      />
+                    </InputRightElement>
+                  </InputGroup>
                   <InputField
                     name="repeatPassword"
                     placeholder={t(
@@ -140,8 +169,8 @@ const Register: React.FC<registerProps> = ({}) => {
                     type="password"
                   />
                   <Checkbox
-                    onClick={() => {
-                      setPrivacy(true);
+                    onChange={() => {
+                      setPrivacy(!privacy);
                     }}
                   >
                     {t("register.form.privacy")}
@@ -149,7 +178,7 @@ const Register: React.FC<registerProps> = ({}) => {
                 </Stack>
                 <Stack marginBottom="1rem">
                   <Button
-                    isDisabled={!privacy}
+                    isDisabled={privacy}
                     bg="blue.400"
                     colorScheme="navItem"
                     borderRadius="12px"

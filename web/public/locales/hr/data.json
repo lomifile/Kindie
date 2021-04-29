@@ -130,6 +130,11 @@
         "repeat-password": "Ponovite lozinku"
       }
     },
+    "selector": {
+      "headmaster": "Ravnatelj",
+      "pedagouge": "Pedagog",
+      "teacher": "Odgajatelj"
+    },
     "toast": {
       "title": "Registracija uspjesna!"
     },
@@ -159,6 +164,11 @@
         "password": "Lozinka",
         "role": "Uloga"
       }
+    },
+    "selector": {
+      "headmaster": "Ravnatelj",
+      "pedagouge": "Pedagog",
+      "teacher": "Odgajatelj"
     },
     "toast": {
       "title": "Racun azuriran!"
@@ -408,5 +418,59 @@
     "toast": {
       "title": "Vas racun je potvrden"
     }
+  },
+  "edit-mother": {
+    "main-header": "Azuriraj majku",
+    "form": {
+      "name": "Ime",
+      "surname": "Prezime",
+      "phone": "Telefon",
+      "email": "Email",
+      "btn": "Azuriraj majku",
+      "placeholders": {
+        "name": "Ime",
+        "surname": "Prezime",
+        "phone": "Mobitel",
+        "email": "Email"
+      }
+    },
+    "toast": {
+      "title": "Majka uspjesno azurirana!"
+    },
+    "alert": {
+      "title": "Dogodila se greska!",
+      "desc": "Dogodila se greska u procesu dohvacanja vasih podataka!"
+    },
+    "btn-back": "Povratak"
+  },
+  "edit-father": {
+    "main-header": "Azuriraj oca",
+    "form": {
+      "name": "Ime",
+      "surname": "Prezime",
+      "phone": "Telefon",
+      "email": "Email",
+      "btn": "Azuriraj oca",
+      "placeholders": {
+        "name": "Ime",
+        "surname": "Prezime",
+        "phone": "Mobitel",
+        "email": "Email"
+      }
+    },
+    "toast": {
+      "title": "Otac uspjesno azuriran"
+    },
+    "alert": {
+      "title": "Dogodila se greska!",
+      "desc": "Dogodila se greska u procesu dohvacanja vasih podataka!"
+    },
+    "btn-back": "Povratak"
+  },
+  "parent-card": {
+    "name": "Ime",
+    "surname": "Prezime",
+    "phone": "Mobitel",
+    "email": "Email"
   }
 }

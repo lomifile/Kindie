@@ -57,6 +57,7 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [text, setText] = useState("");
+
   const [{ data: mother, fetching: motherFetching }] = useFilterMotherQuery({
     variables: {
       text,

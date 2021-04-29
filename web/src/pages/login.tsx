@@ -8,6 +8,9 @@ import {
   Divider,
   Flex,
   Heading,
+  IconButton,
+  InputGroup,
+  InputRightElement,
   Link,
   Stack,
   Text,
@@ -24,6 +27,7 @@ import { Footer } from "../components/Footer";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useTranslation } from "react-i18next";
+import { ViewIcon } from "@chakra-ui/icons";
 
 interface loginProps {}
 
@@ -35,8 +39,10 @@ const Login: React.FC<loginProps> = ({}) => {
   const [verified, setVerified] = useState(false);
   const [remail, setResendEmail] = useState("");
 
-  const toast = useToast();
   const router = useRouter();
+
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
 
   return (
     <Flex
@@ -122,12 +128,23 @@ const Login: React.FC<loginProps> = ({}) => {
                   type="email"
                 />
                 <Stack justifyContent="space-between">
-                  <InputField
-                    name="password"
-                    placeholder={t("login.form.placeholders.password")}
-                    label={t("login.form.password")}
-                    type="password"
-                  />
+                  <InputGroup size="md">
+                    <InputField
+                      name="password"
+                      placeholder={t("login.form.placeholders.password")}
+                      label={t("login.form.password")}
+                      type={show ? "text" : "password"}
+                    />
+                    <InputRightElement mt={8} width="4.5rem">
+                      <IconButton
+                        aria-label="View password"
+                        icon={<ViewIcon />}
+                        h="1.75rem"
+                        size="sm"
+                        onClick={handleClick}
+                      />
+                    </InputRightElement>
+                  </InputGroup>
                 </Stack>
                 <Stack marginBottom="1rem">
                   <NextLink href="/forgot-password">

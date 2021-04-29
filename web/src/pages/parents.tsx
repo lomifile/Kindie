@@ -123,8 +123,8 @@ const Parents: React.FC<ParentsProps> = ({}) => {
                         <Td ml={"2rem"}>{mom.Surname}</Td>
                         <Td>
                           <NextLink
-                            href={"/edit-parents/[id]"}
-                            as={`/edit-parents/${mom.Id}?parent=mother`}
+                            href={"/edit-parents/mother/[id]"}
+                            as={`/edit-parents/mother/${mom.Id}`}
                           >
                             <Button
                               bg="blue.400"
@@ -195,28 +195,23 @@ const Parents: React.FC<ParentsProps> = ({}) => {
                         <Td>{father.Name}</Td>
                         <Td ml={"2rem"}>{father.Surname}</Td>
                         <Td>
-                          {/* <NextLink
-                            href={"/edit-parents/[id]"}
-                            as={`/edit-parents/${father.Id}?parent=father`}
-                          > */}
-                          <Button
-                            bg="blue.400"
-                            colorScheme="navItem"
-                            borderRadius="12px"
-                            py="4"
-                            px="4"
-                            lineHeight="1"
-                            size="md"
-                            ml={"2rem"}
-                            onClick={async () => {
-                              await router.push(
-                                `/edit-parents/${father.Id}?parent=father`
-                              );
-                            }}
+                          <NextLink
+                            href={"/edit-parents/father/[id]"}
+                            as={`/edit-parents/father/${father.Id}`}
                           >
-                            Edit
-                          </Button>
-                          {/* </NextLink> */}
+                            <Button
+                              bg="blue.400"
+                              colorScheme="navItem"
+                              borderRadius="12px"
+                              py="4"
+                              px="4"
+                              lineHeight="1"
+                              size="md"
+                              ml={"2rem"}
+                            >
+                              Edit
+                            </Button>
+                          </NextLink>
                         </Td>
                         <Td>
                           <Button
