@@ -23,7 +23,7 @@ const Index = () => {
   const { t } = useTranslation("data", { useSuspense: false });
   return (
     <Layout navbarVariant={"normal"} variant={"column"} navbar={true}>
-      <title>DV Organizator</title>
+      <title>DV Organizator [ALPHA]</title>
       <Flex
         align="center"
         justify={{ base: "center", md: "space-around", xl: "space-between" }}
