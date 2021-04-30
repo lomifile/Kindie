@@ -29,7 +29,7 @@ const Contact: React.FC<contactProps> = ({}) => {
       <Flex
         align="center"
         justify={{ base: "center", md: "space-around", xl: "space-between" }}
-        direction={{ base: "column-reverse", md: "row" }}
+        direction={{ base: "column", md: "row" }}
         // @ts-ignore
         wrap="no-wrap"
         minH="70vh"
@@ -73,14 +73,14 @@ const Contact: React.FC<contactProps> = ({}) => {
         </Stack>
         <Flex
           px={10}
-          minW="10rem"
+          minW="20rem"
           alignItems="normal"
           justifyItems="left"
           justifyContent="left"
-          w={{ base: "80%", sm: "60%", md: "50%" }}
-          mb={{ base: 12, md: 0 }}
+          w={{ base: "100%", sm: "100%", md: "50%" }}
+          mb={{ base: 12, sm: 12, md: 12 }}
         >
-          <Box minW="xl">
+          <Box w={["100%", "100%", "100%", "400px", "400px"]} p={5}>
             <Formik
               initialValues={{ email: "", subject: "", message: "" }}
               onSubmit={async (values) => {

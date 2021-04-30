@@ -16,6 +16,12 @@ import {
   AlertTitle,
   Box,
   Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
   Flex,
   Heading,
   HStack,
@@ -37,7 +43,7 @@ import { useIsAuth } from "../../utils/useIsAuth";
 import { Form, Formik } from "formik";
 import { InputField } from "../../components/InputField";
 import { toErrormap } from "../../utils/toErrorMap";
-import { CloseIcon } from "@chakra-ui/icons";
+import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
 
@@ -48,6 +54,11 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: drawerIsOpen,
+    onOpen: drawerOnOpen,
+    onClose: drawerOnClose,
+  } = useDisclosure();
   const [{ data, fetching }] = useShowGroupsQuery();
   const [, createGroup] = useCreateGroupMutation();
   const [, useGroup] = useUseGroupMutation();
@@ -109,6 +120,93 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{t("kindergarden.main-header")}</title>
+      <Drawer placement="left" onClose={drawerOnClose} isOpen={drawerIsOpen}>
+        <DrawerOverlay>
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>
+              <Heading
+                fontSize="xl"
+                fontWeight="500"
+                color="blue.400"
+                style={{ fontWeight: "bold", textTransform: "uppercase" }}
+              >
+                DV Organizator
+              </Heading>
+            </DrawerHeader>
+            <DrawerBody>
+              <Stack
+                spacing={8}
+                align="center"
+                justify={["center", "space-between"]}
+                direction={["column", "column", "column"]}
+                pt={[4, 4, 0, 0]}
+              >
+                <Button
+                  as={Link}
+                  color="blue.400"
+                  colorScheme="navItem"
+                  borderRadius="12px"
+                  py="4"
+                  px="4"
+                  lineHeight="1"
+                  size="md"
+                  onClick={() => {
+                    drawerOnClose();
+                    onOpen();
+                  }}
+                >
+                  {t("kindergarden.toolbox.btn-new-group")}
+                </Button>
+                <Button
+                  as={Link}
+                  color="blue.400"
+                  colorScheme="navItem"
+                  borderRadius="12px"
+                  py="4"
+                  px="4"
+                  lineHeight="1"
+                  size="md"
+                  onClick={async () => {
+                    await useChildren();
+                    router.push("/children");
+                  }}
+                >
+                  {t("kindergarden.toolbox.btn-children")}
+                </Button>
+                <NextLink href="/parents">
+                  <Button
+                    as={Link}
+                    color="blue.400"
+                    colorScheme="navItem"
+                    borderRadius="12px"
+                    py="4"
+                    px="4"
+                    lineHeight="1"
+                    size="md"
+                  >
+                    {t("kindergarden.toolbox.btn-parents")}
+                  </Button>
+                </NextLink>
+                <NextLink href="/staff">
+                  <Button
+                    as={Link}
+                    color="blue.400"
+                    colorScheme="navItem"
+                    borderRadius="12px"
+                    py="4"
+                    px="4"
+                    lineHeight="1"
+                    size="md"
+                  >
+                    {t("kindergarden.toolbox.btn-staff")}
+                  </Button>
+                </NextLink>
+              </Stack>
+            </DrawerBody>
+          </DrawerContent>
+        </DrawerOverlay>
+      </Drawer>
       <Modal
         onClose={onClose}
         size={"md"}
@@ -178,9 +276,15 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
           mb={"2rem"}
           mt={5}
           borderRadius="12px"
-          border={"1px"}
-          borderColor="blue.400"
-          p={3}
+          border={["0", "0", "0", "1px", "1px"]}
+          borderColor={[
+            "transparent",
+            "transparent",
+            "transparent",
+            "blue.400",
+            "blue.400",
+          ]}
+          p={5}
         >
           <HStack p={2} spacing={4}>
             <Button
@@ -193,6 +297,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
               lineHeight="1"
               size="md"
               onClick={onOpen}
+              display={["none", "none", "none", "flex"]}
             >
               {t("kindergarden.toolbox.btn-new-group")}
             </Button>
@@ -205,6 +310,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
               px="4"
               lineHeight="1"
               size="md"
+              display={["none", "none", "none", "flex"]}
               onClick={async () => {
                 await useChildren();
                 router.push("/children");
@@ -222,6 +328,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                 px="4"
                 lineHeight="1"
                 size="md"
+                display={["none", "none", "none", "flex"]}
               >
                 {t("kindergarden.toolbox.btn-parents")}
               </Button>
@@ -236,26 +343,45 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                 px="4"
                 lineHeight="1"
                 size="md"
+                display={["none", "none", "none", "flex"]}
               >
                 {t("kindergarden.toolbox.btn-staff")}
               </Button>
             </NextLink>
+            <IconButton
+              display={["flex", "flex", "flex", "none"]}
+              colorScheme="navItem"
+              color="white"
+              bg="blue.400"
+              borderRadius={"12px"}
+              className="menu-btn"
+              aria-label="Open menu"
+              onClick={drawerOnOpen}
+              icon={<HamburgerIcon />}
+            />
           </HStack>
         </Flex>
         {data?.showGroups.length > 0 ? (
           <>
             <Flex mt={5}>
-              <Heading color="blue.400">
+              <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
                 {t("kindergarden.groups-heading")}
               </Heading>
             </Flex>
             <Flex align="center" justify="left" mb={5} mt={5}>
               <Box
-                mt={5}
-                borderRadius="12px"
-                border={"1px"}
-                borderColor="blue.400"
+                w={["100%", "100%", "100%", "400px", "400px"]}
+                rounded={["xs", "sm", "md", "lg", "xl"]}
                 p={5}
+                border={["0", "0", "0", "1px", "1px"]}
+                borderColor={[
+                  "transparent",
+                  "transparent",
+                  "transparent",
+                  "blue.400",
+                  "blue.400",
+                ]}
+                borderRadius={"12px"}
                 style={{
                   display: "block",
                   width: "1200px",

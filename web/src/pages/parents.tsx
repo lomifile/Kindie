@@ -8,6 +8,7 @@ import {
   Flex,
   Heading,
   HStack,
+  IconButton,
   SkeletonText,
   Stack,
   Table,
@@ -22,6 +23,7 @@ import { useShowfatherQuery, useShowMotherQuery } from "../generated/graphql";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
+import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 
 interface ParentsProps {}
 
@@ -53,9 +55,15 @@ const Parents: React.FC<ParentsProps> = ({}) => {
           justify="center"
           mb={"2rem"}
           mt={5}
-          borderRadius="12px"
-          border={"1px"}
-          borderColor="blue.400"
+          border={["0", "0", "0", "1px", "1px"]}
+          borderColor={[
+            "transparent",
+            "transparent",
+            "transparent",
+            "blue.400",
+            "blue.400",
+          ]}
+          borderRadius={"12px"}
           p={3}
         >
           <HStack p={2} spacing={4}>
@@ -78,17 +86,16 @@ const Parents: React.FC<ParentsProps> = ({}) => {
       </Stack>
       <Flex
         align="center"
-        justify={{ base: "center", md: "space-around", xl: "space-between" }}
-        direction={{ base: "column-reverse", md: "row" }}
+        justify={{ base: "center", md: "center", xl: "space-between" }}
+        direction={{ base: "column", md: "column" }}
         // @ts-ignore
         wrap="no-wrap"
         minH="20vh"
-        px={8}
         mb={5}
       >
         <Stack
           spacing={4}
-          w={{ base: "80%", md: "40%" }}
+          w={{ base: "100%", md: "100%" }}
           align={["center", "center", "flex-start", "flex-start"]}
         >
           <Heading
@@ -100,13 +107,17 @@ const Parents: React.FC<ParentsProps> = ({}) => {
           >
             {t("parents.heading-mother")}
           </Heading>
-          <Box>
+          <Box
+            w={["100%", "100%", "100%", "100%", "100%"]}
+            display={["block", "block", "block", "block"]}
+            overflowX={["auto", "auto", "hidden", "hidden"]}
+          >
             {motherFetching && !mother ? (
               <Box mt={10} mb={10} padding="10" boxShadow="lg" bg="white">
                 <SkeletonText mt="4" noOfLines={4} spacing="4" />
               </Box>
             ) : (
-              <Table m={10}>
+              <Table mt={"2rem"}>
                 <Thead>
                   <Tr>
                     <Th>{t("parents.tbl-name")}</Th>
@@ -126,7 +137,9 @@ const Parents: React.FC<ParentsProps> = ({}) => {
                             href={"/edit-parents/mother/[id]"}
                             as={`/edit-parents/mother/${mom.Id}`}
                           >
-                            <Button
+                            <IconButton
+                              aria-label="Edit"
+                              icon={<EditIcon />}
                               bg="blue.400"
                               colorScheme="navItem"
                               borderRadius="12px"
@@ -135,21 +148,19 @@ const Parents: React.FC<ParentsProps> = ({}) => {
                               lineHeight="1"
                               size="md"
                               ml={"2rem"}
-                            >
-                              Edit
-                            </Button>
+                            />
                           </NextLink>
                         </Td>
                         <Td>
-                          <Button
+                          <IconButton
+                            aria-label="Delete"
+                            icon={<DeleteIcon />}
                             colorScheme="red"
                             borderRadius="12px"
                             lineHeight="1"
                             size="md"
                             onClick={() => {}}
-                          >
-                            Delete
-                          </Button>
+                          />
                         </Td>
                       </Tr>
                     )
@@ -160,8 +171,9 @@ const Parents: React.FC<ParentsProps> = ({}) => {
           </Box>
         </Stack>
         <Stack
+          mt={"2rem"}
           spacing={4}
-          w={{ base: "80%", md: "40%" }}
+          w={{ base: "100%", md: "100%" }}
           align={["center", "center", "flex-start", "flex-start"]}
         >
           <Heading
@@ -173,13 +185,17 @@ const Parents: React.FC<ParentsProps> = ({}) => {
           >
             {t("parents.heading-father")}
           </Heading>
-          <Box>
+          <Box
+            w={["100%", "100%", "100%", "100%", "100%"]}
+            display={["block", "block", "block", "block"]}
+            overflowX={["auto", "auto", "hidden", "hidden"]}
+          >
             {fatherFetching && !father ? (
               <Box mt={10} mb={10} padding="10" boxShadow="lg" bg="white">
                 <SkeletonText mt="4" noOfLines={4} spacing="4" />
               </Box>
             ) : (
-              <Table m={10}>
+              <Table mt={"2rem"}>
                 <Thead>
                   <Tr>
                     <Th>{t("parents.tbl-name")}</Th>
@@ -199,7 +215,9 @@ const Parents: React.FC<ParentsProps> = ({}) => {
                             href={"/edit-parents/father/[id]"}
                             as={`/edit-parents/father/${father.Id}`}
                           >
-                            <Button
+                            <IconButton
+                              aria-label="Edit"
+                              icon={<EditIcon />}
                               bg="blue.400"
                               colorScheme="navItem"
                               borderRadius="12px"
@@ -208,21 +226,19 @@ const Parents: React.FC<ParentsProps> = ({}) => {
                               lineHeight="1"
                               size="md"
                               ml={"2rem"}
-                            >
-                              Edit
-                            </Button>
+                            />
                           </NextLink>
                         </Td>
                         <Td>
-                          <Button
+                          <IconButton
+                            aria-label="Delete"
+                            icon={<DeleteIcon />}
                             colorScheme="red"
                             borderRadius="12px"
                             lineHeight="1"
                             size="md"
                             onClick={() => {}}
-                          >
-                            Delete
-                          </Button>
+                          />
                         </Td>
                       </Tr>
                     )

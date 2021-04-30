@@ -196,8 +196,12 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
         </ModalContent>
       </Modal>
       <Flex>
-        <Heading color="blue.400">{t("dashboard.main-header")}</Heading>
-        <Button
+        <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
+          {t("dashboard.main-header")}
+        </Heading>
+        <IconButton
+          aria-label="Add"
+          icon={<AddIcon />}
           bg="blue.400"
           colorScheme="navItem"
           borderRadius="12px"
@@ -208,22 +212,29 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
           type="submit"
           onClick={onOpen}
           ml={"2rem"}
-        >
-          <AddIcon mr={2} />
-          <Text mt={0.5}>{t("dashboard.modal-btn")}</Text>
-        </Button>
+        />
       </Flex>
       <Divider mt={5} />
       <Stack spacing={10} mt={10}>
         {data?.showKindergarden.length > 0 ? (
           <>
-            <Heading color="blue.400">{t("dashboard.owned-header")}</Heading>
+            <Heading ml="10px" color="blue.400">
+              {t("dashboard.owned-header")}
+            </Heading>
             <Flex align="center" justify="left" mb={5}>
               <Box
-                borderRadius="12px"
-                border={"1px"}
-                borderColor="blue.400"
+                w={["100%", "100%", "100%", "400px", "400px"]}
+                rounded={["xs", "sm", "md", "lg", "xl"]}
                 p={5}
+                border={["0", "0", "0", "1px", "1px"]}
+                borderColor={[
+                  "transparent",
+                  "transparent",
+                  "transparent",
+                  "blue.400",
+                  "blue.400",
+                ]}
+                borderRadius={"12px"}
                 style={{
                   display: "block",
                   width: "1200px",
@@ -299,13 +310,23 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
         ) : null}
         {notMine.length > 0 ? (
           <>
-            <Heading color="blue.400">{t("dashboard.part-header")}</Heading>
+            <Heading ml="10px" color="blue.400">
+              {t("dashboard.part-header")}
+            </Heading>
             <Flex align="center" justify="left" mb={5}>
               <Box
-                borderRadius="12px"
-                border={"1px"}
-                borderColor="blue.400"
+                w={["100%", "100%", "100%", "400px", "400px"]}
+                rounded={["xs", "sm", "md", "lg", "xl"]}
                 p={5}
+                border={["0", "0", "0", "1px", "1px"]}
+                borderColor={[
+                  "transparent",
+                  "transparent",
+                  "transparent",
+                  "blue.400",
+                  "blue.400",
+                ]}
+                borderRadius={"12px"}
                 style={{
                   display: "block",
                   width: "1200px",

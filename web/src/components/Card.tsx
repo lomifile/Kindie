@@ -14,7 +14,11 @@ export const Card: React.FC<CardProps> = ({
   cardText,
 }) => {
   return (
-    <Box maxW="sm" borderWidth="1px" borderRadius="lg">
+    <Box
+      maxW="sm"
+      borderWidth={["0", "0", "0", "1px", "1px"]}
+      borderRadius="lg"
+    >
       <Image src={imageSrc} />
       <Box p="6">
         <Box mt="1" fontWeight="semibold" as="h1" lineHeight="tight">

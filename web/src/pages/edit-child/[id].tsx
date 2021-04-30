@@ -138,7 +138,6 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerHeader>{t("edit-child.drawer.header")}</DrawerHeader>
-
             <DrawerBody>
               <InputGroup>
                 <InputLeftElement
