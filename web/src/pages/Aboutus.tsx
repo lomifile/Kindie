@@ -38,7 +38,7 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
       <Flex
         align="center"
         justify={{ base: "center", md: "space-around", xl: "space-between" }}
-        direction={{ base: "column-reverse", md: "row" }}
+        direction={{ base: "column", md: "row" }}
         // @ts-ignore
         wrap="no-wrap"
         minH="50vh"
@@ -48,7 +48,18 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
           w={{ base: "80%", md: "40%" }}
           align={["center", "center", "flex-start", "flex-start"]}
         >
-          <Flex ml={"12rem"} pb={"1rem"}>
+          <Flex
+            ml={{
+              xs: "1rem",
+              sm: "3rem",
+              md: "8rem",
+              lg: "12rem",
+              xl: "15rem",
+            }}
+            pt={1}
+            mb={1}
+            pb={"1rem"}
+          >
             <Heading color="blue.400">{t("about-us.main-heading")}</Heading>
           </Flex>
           <Heading
@@ -80,9 +91,19 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
         </Box>
       </Flex>
       <Divider />
-      <Flex pt={"3rem"} pb={5}>
+      <Flex pt={"3rem"} pb={3}>
         <Stack>
-          <Flex ml={"12rem"} pb={"2rem"} pt={"1rem"}>
+          <Flex
+            ml={{
+              xs: "1rem",
+              sm: "3rem",
+              md: "8rem",
+              lg: "12rem",
+              xl: "15rem",
+            }}
+            mb={5}
+            pb={"1rem"}
+          >
             <Heading color="blue.400">{t("about-us.meet")}</Heading>
           </Flex>
           {text.devs.map((dev) => (

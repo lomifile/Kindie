@@ -89,12 +89,31 @@ const Index = () => {
       </Flex>
       <Flex pb={"2rem"}>
         <Stack>
-          <Flex ml={"12rem"} pt={1} mb={1} pb={"1rem"}>
+          <Flex
+            ml={{
+              xs: "2rem",
+              sm: "5rem",
+              md: "8rem",
+              lg: "12rem",
+              xl: "15rem",
+            }}
+            pt={1}
+            mb={1}
+            pb={"1rem"}
+          >
             <Heading color="blue.400">{t("index.headers.wwd")}</Heading>
           </Flex>
           <br />
           <br />
-          <HStack spacing={8}>
+          <Stack
+            spacing={8}
+            justify={{
+              base: "center",
+              md: "space-around",
+              xl: "space-between",
+            }}
+            direction={{ base: "column-reverse", md: "row" }}
+          >
             <Feature
               title={t("index.features.feature-1.title").toString()}
               desc={t("index.features.feature-1.desc")}
@@ -107,8 +126,17 @@ const Index = () => {
               title={t("index.features.feature-3.title")}
               desc={t("index.features.feature-3.desc")}
             />
-          </HStack>
-          <HStack pt={"5"} spacing={8}>
+          </Stack>
+          <Stack
+            pt={"5"}
+            spacing={8}
+            justify={{
+              base: "center",
+              md: "space-around",
+              xl: "space-between",
+            }}
+            direction={{ base: "column-reverse", md: "row" }}
+          >
             <Feature
               title={t("index.features.feature-4.title")}
               desc={t("index.features.feature-4.desc")}
@@ -117,7 +145,7 @@ const Index = () => {
               title={t("index.features.feature-5.title")}
               desc={t("index.features.feature-5.desc")}
             />
-          </HStack>
+          </Stack>
         </Stack>
       </Flex>
       {/* Reviews */}

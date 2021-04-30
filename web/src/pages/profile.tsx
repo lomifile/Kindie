@@ -81,16 +81,26 @@ const Profile: React.FC<ProfileProps> = ({}) => {
       <Layout navbarVariant={"user"} variant="column">
         <title>{t("profile.main-header")}</title>
         <Flex>
-          <Heading color="blue.400">{t("profile.acc")}</Heading>
+          <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
+            {t("profile.acc")}
+          </Heading>
         </Flex>
         <Stack spacing={10}>
           <Box
             mb={"5rem"}
             mt={5}
-            borderRadius="12px"
-            border={"1px"}
-            borderColor="blue.400"
+            w={["100%", "100%", "100%", "100%", "100%"]}
+            rounded={["xs", "sm", "md", "lg", "xl"]}
             p={5}
+            border={["0", "0", "0", "1px", "1px"]}
+            borderColor={[
+              "transparent",
+              "transparent",
+              "transparent",
+              "blue.400",
+              "blue.400",
+            ]}
+            borderRadius={"12px"}
           >
             <Stack p={2} spacing={4}>
               <Formik

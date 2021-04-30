@@ -16,6 +16,7 @@ import {
   AlertDescription,
   AlertIcon,
   AlertTitle,
+  IconButton,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React, { useState } from "react";
@@ -27,7 +28,12 @@ import {
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useIsAuth } from "../utils/useIsAuth";
 import NextLink from "next/link";
-import { WarningIcon, CheckCircleIcon } from "@chakra-ui/icons";
+import {
+  WarningIcon,
+  CheckCircleIcon,
+  DeleteIcon,
+  EditIcon,
+} from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 
 interface ChildrenProps {}
@@ -83,7 +89,9 @@ const Children: React.FC<ChildrenProps> = ({}) => {
 
       <Flex>
         <HStack spacing={10}>
-          <Heading color="blue.400">{t("children.main-header")}</Heading>
+          <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
+            {t("children.main-header")}
+          </Heading>
           <NextLink href="create-child">
             <Button
               bg="blue.400"
@@ -100,13 +108,17 @@ const Children: React.FC<ChildrenProps> = ({}) => {
           </NextLink>
         </HStack>
       </Flex>
-      <Box>
+      <Box
+        w={["100%", "100%", "100%", "100%", "100%"]}
+        display={["block", "block", "block", "block"]}
+        overflowX={["auto", "auto", "hidden", "hidden"]}
+      >
         {fetching && !data ? (
           <Box mt={10} mb={10} padding="10" boxShadow="lg" bg="white">
             <SkeletonText mt="4" noOfLines={4} spacing="4" />
           </Box>
         ) : (
-          <Table m={10}>
+          <Table mt={"2rem"}>
             <Thead>
               <Tr>
                 <Th>{t("children.tbl-name")}</Th>
@@ -126,7 +138,9 @@ const Children: React.FC<ChildrenProps> = ({}) => {
                         href={"/edit-child/[id]"}
                         as={`/edit-child/${child.Id}`}
                       >
-                        <Button
+                        <IconButton
+                          aria-label="Edit"
+                          icon={<EditIcon />}
                           bg="blue.400"
                           colorScheme="navItem"
                           borderRadius="12px"
@@ -135,13 +149,13 @@ const Children: React.FC<ChildrenProps> = ({}) => {
                           lineHeight="1"
                           size="md"
                           ml={"2rem"}
-                        >
-                          Edit
-                        </Button>
+                        />
                       </NextLink>
                     </Td>
                     <Td>
-                      <Button
+                      <IconButton
+                        aria-label="Delete"
+                        icon={<DeleteIcon />}
                         colorScheme="red"
                         borderRadius="12px"
                         lineHeight="1"
@@ -151,9 +165,7 @@ const Children: React.FC<ChildrenProps> = ({}) => {
                             id: child.Id,
                           });
                         }}
-                      >
-                        Delete
-                      </Button>
+                      />
                     </Td>
                     <Td>
                       {!child.fatherId || !child.motherId ? (

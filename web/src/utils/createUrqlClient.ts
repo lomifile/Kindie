@@ -34,7 +34,6 @@ import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
 import { updateQuery } from "./updateQuery";
 import Router from "next/router";
-import { devtoolsExchange } from "@urql/devtools";
 import { isServer } from "./isServer";
 
 export const errorExchange: Exchange = ({ forward }) => (ops$) => {
@@ -174,7 +173,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
     },
     exchanges: [
       dedupExchange,
-      devtoolsExchange,
       cacheExchange({
         keys: {
           PaginatedChildren: () => null,

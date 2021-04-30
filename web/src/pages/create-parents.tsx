@@ -39,6 +39,7 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
             className="nav-item"
             colorScheme="navItem"
             borderRadius="12px"
+            display={["none", "none", "none", "flex"]}
             py="4"
             px="4"
             lineHeight="1"

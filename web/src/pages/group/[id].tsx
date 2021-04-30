@@ -29,10 +29,12 @@ import {
   Spinner,
   useDisclosure,
   Tooltip,
+  Link,
 } from "@chakra-ui/react";
 import {
   useAddChildToGroupMutation,
   useClearGroupMutation,
+  useDeleteChildrenMutation,
   useShowChildrenFilterInGroupQuery,
   useShowChildrenQuery,
 } from "../../generated/graphql";
@@ -44,6 +46,9 @@ import {
   AddIcon,
   WarningIcon,
   CheckCircleIcon,
+  EditIcon,
+  DeleteIcon,
+  HamburgerIcon,
 } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 
@@ -53,6 +58,11 @@ const Group: React.FC<GroupProps> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenMenu,
+    onOpen: onOpenMenu,
+    onClose: onCloseMenu,
+  } = useDisclosure();
   const [variables, setVariables] = useState({
     limit: 10,
     cursor: null as null | string,
@@ -65,7 +75,7 @@ const Group: React.FC<GroupProps> = ({}) => {
   const [{ data, fetching }] = useShowChildrenFilterInGroupQuery({
     variables,
   });
-
+  const [, deleteChildren] = useDeleteChildrenMutation();
   const [{ data: children, fetching: fetchingChildren }] = useShowChildrenQuery(
     {
       variables: { text },
@@ -134,15 +144,75 @@ const Group: React.FC<GroupProps> = ({}) => {
           </DrawerContent>
         </DrawerOverlay>
       </Drawer>
-      <Stack spacing={8}>
+      <Drawer isOpen={isOpenMenu} placement="left" onClose={onCloseMenu}>
+        <DrawerOverlay>
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerBody>
+              <Stack
+                spacing={8}
+                align="center"
+                justify={["center", "space-between"]}
+                direction={["column", "column", "column"]}
+                pt={[4, 4, 0, 0]}
+              >
+                <Button
+                  as={Link}
+                  color="blue.400"
+                  colorScheme="navItem"
+                  borderRadius="12px"
+                  py="4"
+                  px="4"
+                  lineHeight="1"
+                  size="md"
+                  onClick={() => {
+                    onCloseMenu();
+                    onOpen();
+                  }}
+                >
+                  {t("group.btn-add")}
+                </Button>
+                <Button
+                  as={Link}
+                  color="blue.400"
+                  colorScheme="navItem"
+                  borderRadius="12px"
+                  py="4"
+                  px="4"
+                  lineHeight="1"
+                  size="md"
+                  onClick={async () => {
+                    await clearGroup();
+                    router.push(
+                      `/kindergarden/${
+                        typeof router.query.id === "string"
+                          ? router.query.id
+                          : ""
+                      }`
+                    );
+                  }}
+                >
+                  {t("group.btn-return")}
+                </Button>
+              </Stack>
+            </DrawerBody>
+          </DrawerContent>
+        </DrawerOverlay>
+      </Drawer>
+      <Stack spacing={5}>
         <Flex
           align="center"
           justify="center"
-          mb={"2rem"}
           mt={5}
-          borderRadius="12px"
-          border={"1px"}
-          borderColor="blue.400"
+          border={["0", "0", "0", "1px", "1px"]}
+          borderColor={[
+            "transparent",
+            "transparent",
+            "transparent",
+            "blue.400",
+            "blue.400",
+          ]}
+          borderRadius={"12px"}
           p={3}
         >
           <HStack p={2} spacing={4}>
@@ -156,6 +226,7 @@ const Group: React.FC<GroupProps> = ({}) => {
               lineHeight="1"
               size="md"
               onClick={onOpen}
+              display={["none", "none", "none", "flex"]}
             >
               {t("group.btn-add")}
             </Button>
@@ -168,6 +239,7 @@ const Group: React.FC<GroupProps> = ({}) => {
               px="4"
               lineHeight="1"
               size="md"
+              display={["none", "none", "none", "flex"]}
               onClick={async () => {
                 await clearGroup();
                 router.push(
@@ -179,14 +251,31 @@ const Group: React.FC<GroupProps> = ({}) => {
             >
               {t("group.btn-return")}
             </Button>
+            <IconButton
+              display={["flex", "flex", "flex", "none"]}
+              colorScheme="navItem"
+              color="white"
+              bg="blue.400"
+              borderRadius={"12px"}
+              className="menu-btn"
+              aria-label="Open menu"
+              onClick={onOpenMenu}
+              icon={<HamburgerIcon />}
+            />
           </HStack>
         </Flex>
+      </Stack>
+      <Box
+        w={["100%", "100%", "100%", "100%", "100%"]}
+        display={["block", "block", "block", "block"]}
+        overflowX={["auto", "auto", "hidden", "hidden"]}
+      >
         {fetching && !data ? (
           <Box mt={10} mb={10} padding="10" boxShadow="lg" bg="white">
             <SkeletonText mt="4" noOfLines={4} spacing="4" />
           </Box>
         ) : (
-          <Table m={10}>
+          <Table mt={"2rem"}>
             <Thead>
               <Tr>
                 <Th>{t("group.tbl-name")}</Th>
@@ -206,7 +295,9 @@ const Group: React.FC<GroupProps> = ({}) => {
                         href={"/edit-child/[id]"}
                         as={`/edit-child/${child.Id}`}
                       >
-                        <Button
+                        <IconButton
+                          aria-label="Edit"
+                          icon={<EditIcon />}
                           bg="blue.400"
                           colorScheme="navItem"
                           borderRadius="12px"
@@ -215,20 +306,23 @@ const Group: React.FC<GroupProps> = ({}) => {
                           lineHeight="1"
                           size="md"
                           ml={"2rem"}
-                        >
-                          Edit
-                        </Button>
+                        />
                       </NextLink>
                     </Td>
                     <Td>
-                      <Button
+                      <IconButton
+                        aria-label="Delete"
+                        icon={<DeleteIcon />}
                         colorScheme="red"
                         borderRadius="12px"
                         lineHeight="1"
                         size="md"
-                      >
-                        Delete
-                      </Button>
+                        onClick={() => {
+                          deleteChildren({
+                            id: child.Id,
+                          });
+                        }}
+                      />
                     </Td>
                     <Td>
                       {!child.fatherId || !child.motherId ? (
@@ -247,7 +341,7 @@ const Group: React.FC<GroupProps> = ({}) => {
             </Tbody>
           </Table>
         )}
-      </Stack>
+      </Box>
     </Layout>
   );
 };
