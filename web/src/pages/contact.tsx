@@ -6,6 +6,8 @@ import {
   Link,
   Stack,
   Text,
+  useColorMode,
+  useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
@@ -15,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { InputField } from "../components/InputField";
 import { Layout } from "../components/Layout";
 import { useSendEmailMutation } from "../generated/graphql";
+import { bgColor } from "../utils/colorModeColors";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { AdBanner } from "../components/AdBanner";
 
@@ -22,13 +25,28 @@ interface contactProps {}
 
 const Contact: React.FC<contactProps> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
+  const { colorMode } = useColorMode();
+  const bg = useColorModeValue(bgColor.light, bgColor.dark);
+  const headerColor = useColorModeValue("blue.400", "brand.100");
+  const textColor = useColorModeValue("primary.800", "brand.200");
+  const btnColor = useColorModeValue("blue.400", "transparent");
+  const btnBorderColor = useColorModeValue("none", "brand.200");
+  const btnTextColor = useColorModeValue("white", "brand.200");
+  const featureBorderColor = useColorModeValue("black", "brand.200");
   const [, sendEmail] = useSendEmailMutation();
   const toast = useToast();
   return (
-    <Layout navbarVariant={"normal"} variant="column" navbar={true}>
+    <Layout
+      // @ts-ignore
+      bg={bg}
+      navbarVariant={"normal"}
+      variant="column"
+      navbar={true}
+    >
       <title>{t("contact-us.main-heading")}</title>
       <Flex
         align="center"
+        maxW={["100%", "100%", "100%", "80%", "80%"]}
         justify={{ base: "center", md: "space-around", xl: "space-between" }}
         direction={{ base: "column", md: "row" }}
         // @ts-ignore
@@ -46,15 +64,15 @@ const Contact: React.FC<contactProps> = ({}) => {
             as="h1"
             size="xl"
             fontWeight="bold"
-            color="blue.400"
             textAlign={["center", "center", "left", "left"]}
+            color={headerColor}
           >
             {t("contact-us.main-heading")}
           </Heading>
           <Heading
             as="h2"
             size="md"
-            color="primary.800"
+            color={textColor}
             opacity="0.8"
             fontWeight="normal"
             lineHeight={1.5}
@@ -66,7 +84,7 @@ const Contact: React.FC<contactProps> = ({}) => {
             fontSize="xs"
             mt={2}
             textAlign="center"
-            color="primary.800"
+            color={textColor}
             opacity="0.6"
           >
             {t("contact-us.small")}
@@ -127,7 +145,10 @@ const Contact: React.FC<contactProps> = ({}) => {
                       justifySelf="left"
                       alignSelf="start"
                       mt={5}
-                      bg="blue.400"
+                      variant={colorMode === "dark" ? "outline" : "solid"}
+                      borderColor={btnBorderColor}
+                      bg={btnColor}
+                      color={btnTextColor}
                       colorScheme="navItem"
                       borderRadius="12px"
                       py="4"

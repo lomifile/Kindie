@@ -8,6 +8,8 @@ import {
   HStack,
   Text,
   Divider,
+  useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React from "react";
@@ -17,6 +19,7 @@ import { Feature } from "../components/Feature";
 import { Layout } from "../components/Layout";
 // @ts-ignore
 import filipImg from "../img/filipivanusec.jpg";
+import { bgColor } from "../utils/colorModeColors";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { AdBanner } from "../components/AdBanner";
 
@@ -24,6 +27,14 @@ interface AboutusProps {}
 
 const Aboutus: React.FC<AboutusProps> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
+  const { colorMode } = useColorMode();
+  const bg = useColorModeValue(bgColor.light, bgColor.dark);
+  const headerColor = useColorModeValue("blue.400", "brand.100");
+  const textColor = useColorModeValue("primary.800", "brand.200");
+  const btnColor = useColorModeValue("blue.400", "transparent");
+  const btnBorderColor = useColorModeValue("none", "brand.200");
+  const btnTextColor = useColorModeValue("white", "brand.200");
+  const featureBorderColor = useColorModeValue("black", "brand.200");
   const text = {
     devs: [
       {
@@ -34,7 +45,13 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
     ],
   };
   return (
-    <Layout navbarVariant={"normal"} variant={"column"} navbar={true}>
+    <Layout
+      // @ts-ignore
+      bg={bg}
+      navbarVariant={"normal"}
+      variant={"column"}
+      navbar={true}
+    >
       <title>{t("about-us.main-heading")}</title>
       <Flex
         align="center"
@@ -43,11 +60,14 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
         // @ts-ignore
         wrap="no-wrap"
         minH="50vh"
+        maxW={["100%", "100%", "100%", "80%", "80%"]}
+        bg={bg}
       >
         <Stack
           spacing={4}
           w={{ base: "80%", md: "40%" }}
           align={["center", "center", "flex-start", "flex-start"]}
+          bg={bg}
         >
           <Flex
             ml={{
@@ -61,12 +81,12 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
             mb={1}
             pb={"1rem"}
           >
-            <Heading color="blue.400">{t("about-us.main-heading")}</Heading>
+            <Heading color={headerColor}>{t("about-us.main-heading")}</Heading>
           </Flex>
           <Heading
             as="h2"
             size="md"
-            color="primary.800"
+            color={textColor}
             opacity="0.8"
             fontWeight="normal"
             lineHeight={1.5}
@@ -81,7 +101,7 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
           <Heading
             as="h2"
             size="md"
-            color="primary.800"
+            color={textColor}
             opacity="0.8"
             fontWeight="normal"
             lineHeight={1.5}
@@ -91,7 +111,10 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
           </Heading>
         </Box>
       </Flex>
-      <Divider />
+      <Divider
+        maxW={["100%", "100%", "100%", "80%", "80%"]}
+        borderColor={btnBorderColor}
+      />
       <Flex pt={"3rem"} pb={3}>
         <Stack>
           <Flex
@@ -106,10 +129,13 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
             mb={5}
             pb={"1rem"}
           >
-            <Heading color="blue.400">{t("about-us.meet")}</Heading>
+            <Heading color={headerColor}>{t("about-us.meet")}</Heading>
           </Flex>
           {text.devs.map((dev) => (
             <Card
+              // @ts-ignore
+              borderColor={btnBorderColor}
+              color={headerColor}
               imageSrc={dev.devImg}
               cardTitle={dev.name}
               cardText={dev.about}

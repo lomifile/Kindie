@@ -12,12 +12,14 @@ export const Card: React.FC<CardProps> = ({
   cardTitle,
   imageSrc,
   cardText,
+  ...props
 }) => {
   return (
     <Box
       maxW="sm"
       borderWidth={["0", "0", "0", "1px", "1px"]}
       borderRadius="lg"
+      {...props}
     >
       <Image src={imageSrc} />
       <Box p="6">

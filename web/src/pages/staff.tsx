@@ -192,7 +192,7 @@ const Staff: React.FC<{}> = ({}) => {
         >
           <Heading color="blue.400">{t("staff.owner-heading")}</Heading>
         </Flex>
-        <Box>
+        <Box w={["100%", "100%", "100%", "1200px", "1200px"]}>
           <Table>
             <Thead>
               <Tr>
@@ -246,7 +246,7 @@ const Staff: React.FC<{}> = ({}) => {
             ) : null
           }
         </Flex>
-        <Box>
+        <Box w={["100%", "100%", "100%", "1200px", "1200px"]}>
           <Table>
             <Thead>
               <Tr>
