@@ -3,8 +3,7 @@ import {
   ColorModeProvider,
   cookieStorageManager,
   localStorageManager,
-  useColorMode,
-  useColorModeValue,
+  ThemeProvider,
 } from "@chakra-ui/react";
 import { Fonts } from "../components/Fonts";
 
@@ -14,37 +13,24 @@ import "../css/Footer.css";
 import "../css/Login.css";
 import { init_i18n } from "../lib/i18n";
 import { isServer } from "../utils/isServer";
-import { bgColor } from "../utils/colorModeColors";
 
 if (!isServer()) {
   init_i18n();
 }
 
-function MyApp({ cookies, Component, pageProps }) {
+function MyApp({ Component, pageProps }) {
   return (
-    <ChakraProvider
-      colorModeManager={
-        typeof cookies === "string"
-          ? cookieStorageManager(cookies)
-          : localStorageManager
-      }
-      resetCSS
-      theme={theme}
-    >
+    <ChakraProvider resetCSS theme={theme}>
       <Fonts />
-      <ColorModeProvider options={{}}>
+      <ColorModeProvider
+        options={{
+          useSystemColorMode: true,
+        }}
+      >
         <Component {...pageProps} />
       </ColorModeProvider>
     </ChakraProvider>
   );
 }
-
-MyApp.getInitialProps = ({ req }) => {
-  return {
-    // first time users will not have any cookies and you may not return
-    // undefined here, hence ?? is necessary
-    cookies: req.headers.cookie ?? "",
-  };
-};
 
 export default MyApp;

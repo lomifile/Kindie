@@ -40,7 +40,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import Router from "next/router";
 import { useIsAuth } from "../../utils/useIsAuth";
 import { Form, Formik } from "formik";
 import { InputField } from "../../components/InputField";
@@ -67,7 +67,6 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
   const [, useGroup] = useUseGroupMutation();
   const [, useChildren] = useUseChildrenMutation();
   const [, deleteGroup] = useDeleteGroupMutation();
-  const router = useRouter();
 
   const { colorMode } = useColorMode();
   const bg = useColorModeValue(bgColor.light, bgColor.dark);
@@ -135,6 +134,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
     <Layout
       // @ts-ignore
       bg={bg}
+      maxHeight="100vh"
       navbarVariant={"user"}
       variant={"column"}
     >
@@ -188,7 +188,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                   size="md"
                   onClick={async () => {
                     await useChildren();
-                    router.push("/children");
+                    Router.push("/children");
                   }}
                 >
                   {t("kindergarden.toolbox.btn-children")}
@@ -332,7 +332,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
               display={["none", "none", "none", "flex"]}
               onClick={async () => {
                 await useChildren();
-                router.push("/children");
+                Router.push("/children");
               }}
             >
               {t("kindergarden.toolbox.btn-children")}
@@ -454,10 +454,10 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                             }}
                             onClick={async () => {
                               await useGroup({ groupId: owning.Id });
-                              router.push(
+                              Router.push(
                                 `/group/${
-                                  typeof router.query.id === "string"
-                                    ? router.query.id
+                                  typeof Router.query.id === "string"
+                                    ? Router.query.id
                                     : ""
                                 }?name=${owning.Name}`
                               );

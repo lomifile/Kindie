@@ -1,20 +1,9 @@
-import { background, extendTheme, useColorMode } from "@chakra-ui/react";
+import { color, extendTheme } from "@chakra-ui/react";
+import { mode } from "@chakra-ui/theme-tools";
 import { createBreakpoints } from "@chakra-ui/theme-tools";
 import { bgColor } from "./utils/colorModeColors";
 
-const config = {
-  useSystemColorMode: true,
-  initialColorMode: "light",
-};
-
 const fonts = { mono: `'Menlo', monospace`, heading: `'Cairo', sans-serif` };
-const colors = {
-  brand: {
-    100: "#33BFD9",
-    200: "#72D3E5",
-    300: "#A9DDE7",
-  },
-};
 
 const breakpoints = createBreakpoints({
   xs: "320px",
@@ -25,20 +14,16 @@ const breakpoints = createBreakpoints({
 });
 
 const theme = extendTheme({
-  colors,
-  fonts,
-  styles: {
-    global: (props) => (
-      console.log(props.colorMode),
-      {
-        "html, body": {
-          backgroundColor:
-            props.colorMode === "light" ? bgColor.light : bgColor.dark,
-        },
-      }
-    ),
-    ...config,
+  colors: {
+    dark: bgColor.dark,
+    light: bgColor.light,
+    brand: {
+      100: "#33BFD9",
+      200: "#72D3E5",
+      300: "#A9DDE7",
+    },
   },
+  fonts,
   // @ts-ignore
   breakpoints,
   icons: {

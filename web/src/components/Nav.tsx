@@ -1,4 +1,5 @@
 import {
+  Text,
   Button,
   Flex,
   Stack,
@@ -39,6 +40,7 @@ import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { bgColor } from "../utils/colorModeColors";
+import { DarkModeSwitch } from "./DarkModeSwitch";
 export type NavbarVariant = "normal" | "user";
 
 interface NavProps {
@@ -46,8 +48,8 @@ interface NavProps {
 }
 
 export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  console.log(colorMode);
+  const { colorMode } = useColorMode();
+
   const bg = useColorModeValue(bgColor.light, bgColor.dark);
   const textColor = useColorModeValue("primary.800", "brand.200");
   const headerColor = useColorModeValue("blue.400", "brand.100");
@@ -136,6 +138,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             {t("nav.Sign-up")}
           </Button>
         </NextLink>
+        <DarkModeSwitch />
       </>
     );
   } else if (variant == "normal" && data?.me) {
@@ -186,6 +189,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             {t("nav.Dashboard")}
           </Button>
         </NextLink>
+        <DarkModeSwitch />
       </>
     );
   } else if (variant == "user" && data?.me) {
@@ -251,6 +255,9 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
                   🇬🇧
                 </Button>
               </Flex>
+              <MenuItem>
+                <DarkModeSwitch />
+              </MenuItem>
             </MenuGroup>
           </MenuList>
         </Menu>
@@ -401,9 +408,6 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
           </Box>
         </>
       )}
-      <Button colorScheme="pink" onClick={toggleColorMode}>
-        Toggle {colorMode === "light" ? "Dark" : "Light"}
-      </Button>
     </Flex>
   );
 };
