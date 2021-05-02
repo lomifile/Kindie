@@ -392,6 +392,7 @@ export type FieldError = {
 
 export type UpdatePassword = {
   password: Scalars['String'];
+  repeatPassword: Scalars['String'];
 };
 
 export type UpdateUserInput = {
@@ -824,6 +825,25 @@ export type UpdateMotherMutation = (
   & { updateMother: (
     { __typename?: 'Mother' }
     & MotherFragmentFragment
+  ) }
+);
+
+export type UpdatePasswordMutationVariables = Exact<{
+  options: UpdatePassword;
+}>;
+
+
+export type UpdatePasswordMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePassword: (
+    { __typename?: 'UserResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragmentFragment
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & ErrorFragmentFragment
+    )>> }
   ) }
 );
 
@@ -1525,6 +1545,23 @@ export const UpdateMotherDocument = gql`
 
 export function useUpdateMotherMutation() {
   return Urql.useMutation<UpdateMotherMutation, UpdateMotherMutationVariables>(UpdateMotherDocument);
+};
+export const UpdatePasswordDocument = gql`
+    mutation UpdatePassword($options: UpdatePassword!) {
+  updatePassword(options: $options) {
+    user {
+      ...UserFragment
+    }
+    errors {
+      ...ErrorFragment
+    }
+  }
+}
+    ${UserFragmentFragmentDoc}
+${ErrorFragmentFragmentDoc}`;
+
+export function useUpdatePasswordMutation() {
+  return Urql.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(UpdatePasswordDocument);
 };
 export const UpdateUserDocument = gql`
     mutation UpdateUser($options: UpdateUserInput!) {

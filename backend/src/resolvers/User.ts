@@ -54,35 +54,31 @@ export class UserResolver {
     @Arg("options") options: UpdatePassword,
     @Ctx() { req }: AppContext
   ): Promise<UserResponse> {
-    const hashPassword = await argon2.hash(options.password);
-    let user;
-    try {
-      const result = await getConnection()
-        .createQueryBuilder()
-        .update(User)
-        .set({
-          Password: hashPassword,
-        })
-        .where("Id=:id", { id: req.session.userId })
-        .returning("*")
-        .execute();
-      user = result.raw[0];
-    } catch (err) {
-      if (err.code === "23505") {
-        return {
-          errors: [
-            {
-              field: "email",
-              message: "Email already taken",
-            },
-          ],
-        };
-      }
+    if (options.password !== options.repeatPassword) {
+      return {
+        errors: [
+          {
+            field: "repeatPassword",
+            message: "Passwords not matching",
+          },
+        ],
+      };
     }
+    const hashPassword = await argon2.hash(options.password);
+    const result = await getConnection()
+      .createQueryBuilder()
+      .update(User)
+      .set({
+        Password: hashPassword,
+      })
+      .where("Id=:id", { id: req.session.userId })
+      .returning("*")
+      .execute();
 
-    req.session.userId = user.id;
-
-    return { user };
+    req.session.userId = result.raw[0].id;
+    return {
+      user: result.raw[0],
+    };
   }
 
   @Mutation(() => UserResponse)

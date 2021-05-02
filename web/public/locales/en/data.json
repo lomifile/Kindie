@@ -156,13 +156,20 @@
       "email": "Your email",
       "password": "Your password",
       "btn": "Update profile",
+      "btn-pass": "Update password",
+      "repeat-password": "Repeat password",
       "placeholders": {
         "name": "Name",
         "surname": "Last name",
         "email": "Email",
         "password": "Password",
+        "repeat-password": "Repeat password",
         "role": "Role"
       }
+    },
+    "menu-selector": {
+      "#profile": "Profile",
+      "#password": "Password"
     },
     "selector": {
       "headmaster": "Headmaster",

@@ -157,13 +157,20 @@
       "email": "Email",
       "password": "Lozinka",
       "btn": "Azuriraj profil",
+      "btn-pass": "Azuriraj lozinku",
+      "repeat-password": "Ponovi lozinku",
       "placeholders": {
         "name": "Ime",
         "surname": "Prezime",
         "email": "Email",
         "password": "Lozinka",
-        "role": "Uloga"
+        "role": "Uloga",
+        "repeat-password": "Ponovi lozinku"
       }
+    },
+    "menu-selector": {
+      "#profile": "Profil",
+      "#password": "Lozinka"
     },
     "selector": {
       "headmaster": "Ravnatelj",

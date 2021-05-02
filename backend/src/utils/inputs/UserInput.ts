@@ -34,4 +34,6 @@ export class UpdateUserInput {
 export class UpdatePassword {
   @Field()
   password: string;
+  @Field()
+  repeatPassword: string;
 }
