@@ -78,7 +78,6 @@ const CreateChild: React.FC<CreateChildProps> = ({}) => {
               if (!error) {
                 toast({
                   title: t("create-child.toast.title"),
-                  description: t("create-child.roast.description"),
                   status: "success",
                   duration: 9000,
                   isClosable: true,

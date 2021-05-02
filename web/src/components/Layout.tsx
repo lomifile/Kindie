@@ -14,19 +14,24 @@ export const Layout: React.FC<LayoutProps> = ({
   variant,
   navbar,
   navbarVariant,
+  ...props
 }) => {
   let body = null;
   if (!navbar) {
     body = (
       <>
-        <Wrapper variant={variant}>{children}</Wrapper>
+        <Wrapper {...props} variant={variant}>
+          {children}
+        </Wrapper>
       </>
     );
   } else {
     body = (
       <>
         <Nav variant={navbarVariant} />
-        <Wrapper variant={variant}>{children}</Wrapper>
+        <Wrapper {...props} variant={variant}>
+          {children}
+        </Wrapper>
         <Footer />
       </>
     );
@@ -35,7 +40,9 @@ export const Layout: React.FC<LayoutProps> = ({
     body = (
       <>
         <Nav variant={navbarVariant} />
-        <Wrapper variant={variant}>{children}</Wrapper>
+        <Wrapper {...props} variant={variant}>
+          {children}
+        </Wrapper>
       </>
     );
   }

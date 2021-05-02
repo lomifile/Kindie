@@ -14,6 +14,9 @@ import {
   InputGroup,
   InputRightElement,
   IconButton,
+  useColorMode,
+  useColorModeValue,
+  border,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
@@ -27,6 +30,7 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useTranslation } from "react-i18next";
 import { ViewIcon } from "@chakra-ui/icons";
+import { bgColor } from "../utils/colorModeColors";
 
 interface registerProps {}
 
@@ -46,6 +50,21 @@ const Register: React.FC<registerProps> = ({}) => {
   const toast = useToast();
 
   const [, register] = useRegisterMutation();
+
+  const { colorMode } = useColorMode();
+  const bg = useColorModeValue(bgColor.light, bgColor.dark);
+  const headerColor = useColorModeValue("blue.400", "brand.100");
+  const textColor = useColorModeValue("primary.800", "brand.200");
+  const btnColor = useColorModeValue("blue.400", "transparent");
+  const btnBorderColor = useColorModeValue("blue.400", "brand.200");
+  const btnTextColor = useColorModeValue("white", "brand.200");
+  const btnRegTextColor = useColorModeValue("blue.400", bgColor.dark);
+  const btnRegisterColor = useColorModeValue("transparent", "brand.200");
+  const boxBorderColor = useColorModeValue("blue.400", "brand.200");
+  const showPasswordBtnColor = useColorModeValue("transparent", "brand.200");
+  const borderColor = useColorModeValue("gray.200", "brand.200");
+  const txtBorderColor = useColorModeValue("gray.400", "brand.200");
+  const termsColor = useColorModeValue("black", "brand.200");
   return (
     <Flex
       p={[0, 0, 0, 200, 200]}
@@ -62,6 +81,7 @@ const Register: React.FC<registerProps> = ({}) => {
       flexDirection="column"
       mt={["-0", "-0", "-0", "auto", "auto"]}
       mb={["-0", "-0", "-0", "auto", "auto"]}
+      bg={bg}
     >
       <title>{t("register.main-header")}</title>
       <Box
@@ -73,12 +93,12 @@ const Register: React.FC<registerProps> = ({}) => {
           "transparent",
           "transparent",
           "transparent",
-          "blue.400",
-          "blue.400",
+          boxBorderColor,
+          boxBorderColor,
         ]}
         borderRadius={"12px"}
       >
-        <Heading color={"blue.400"} marginBottom="1.5rem">
+        <Heading color={headerColor} marginBottom="1.5rem">
           {t("register.main-header")}
         </Heading>
         <Formik
@@ -131,12 +151,17 @@ const Register: React.FC<registerProps> = ({}) => {
                   type="text"
                   required
                 />
-                <Text mb={"-10px"}>{t("register.form.role")}</Text>
+                <Text mb={"-10px"} color={textColor}>
+                  {t("register.form.role")}
+                </Text>
                 <Select
                   name="role"
                   style={{ borderRadius: "12px" }}
                   placeholder={t("register.form.placeholders.role")}
                   onChange={handleChange}
+                  color={txtBorderColor}
+                  backgroundColor={bg}
+                  borderColor={borderColor}
                   required
                 >
                   <option value="Teacher">
@@ -160,8 +185,8 @@ const Register: React.FC<registerProps> = ({}) => {
                   <InputGroup size="md">
                     <InputField
                       name="password"
-                      placeholder={t("register.form.placeholders.password")}
-                      label={t("register.form.password")}
+                      placeholder={t("login.form.placeholders.password")}
+                      label={t("login.form.password")}
                       type={show ? "text" : "password"}
                     />
                     <InputRightElement mt={8} width="4.5rem">
@@ -170,6 +195,7 @@ const Register: React.FC<registerProps> = ({}) => {
                         icon={<ViewIcon />}
                         h="1.75rem"
                         size="sm"
+                        backgroundColor={showPasswordBtnColor}
                         onClick={handleClick}
                       />
                     </InputRightElement>
@@ -183,6 +209,7 @@ const Register: React.FC<registerProps> = ({}) => {
                     type="password"
                   />
                   <Checkbox
+                    color={termsColor}
                     onChange={() => {
                       setPrivacy(!privacy);
                     }}
@@ -193,7 +220,9 @@ const Register: React.FC<registerProps> = ({}) => {
                 <Stack marginBottom="1rem">
                   <Button
                     isDisabled={privacy}
-                    bg="blue.400"
+                    variant={colorMode === "dark" ? "outline" : "solid"}
+                    bg={btnColor}
+                    color={btnTextColor}
                     colorScheme="navItem"
                     borderRadius="12px"
                     py="4"
@@ -212,15 +241,16 @@ const Register: React.FC<registerProps> = ({}) => {
         </Formik>
         <Divider marginBottom="1rem" />
         <Stack>
-          <Text textAlign="center" fontWeight="500">
+          <Text textAlign="center" color={textColor} fontWeight="500">
             {t("register.text.acc")}
           </Text>
           <NextLink href="/login">
             <Button
+              variant={colorMode === "dark" ? "soild" : "outline"}
+              borderColor={btnBorderColor}
+              color={btnRegTextColor}
+              bg={btnRegisterColor}
               borderRadius="12px"
-              borderColor="blue.400"
-              variant="outline"
-              color="blue.400"
             >
               {t("register.text.btn")}
             </Button>

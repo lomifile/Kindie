@@ -35,6 +35,8 @@ import {
   ModalOverlay,
   Spinner,
   Stack,
+  useColorMode,
+  useColorModeValue,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -46,6 +48,7 @@ import { toErrormap } from "../../utils/toErrorMap";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
+import { bgColor } from "../../utils/colorModeColors";
 
 interface KindergardenProps {}
 
@@ -65,6 +68,17 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
   const [, useChildren] = useUseChildrenMutation();
   const [, deleteGroup] = useDeleteGroupMutation();
   const router = useRouter();
+
+  const { colorMode } = useColorMode();
+  const bg = useColorModeValue(bgColor.light, bgColor.dark);
+  const headerColor = useColorModeValue("blue.400", "brand.100");
+  const textColor = useColorModeValue("primary.800", "brand.200");
+  const btnColor = useColorModeValue("blue.400", "transparent");
+  const btnBorderColor = useColorModeValue("none", "brand.200");
+  const btnTextColor = useColorModeValue("white", "brand.200");
+  const featureBorderColor = useColorModeValue("black", "brand.200");
+  const borderColor = useColorModeValue("gray.200", "brand.200");
+  const boxBorderColor = useColorModeValue("blue.400", "brand.200");
 
   if (fetching) {
     return (
@@ -118,7 +132,12 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
     );
   }
   return (
-    <Layout navbarVariant={"user"} variant={"column"}>
+    <Layout
+      // @ts-ignore
+      bg={bg}
+      navbarVariant={"user"}
+      variant={"column"}
+    >
       <title>{t("kindergarden.main-header")}</title>
       <Drawer placement="left" onClose={drawerOnClose} isOpen={drawerIsOpen}>
         <DrawerOverlay>

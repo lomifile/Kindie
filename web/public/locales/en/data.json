@@ -126,6 +126,7 @@
         "surname": "Last name",
         "email": "Email",
         "password": "Password",
+        "role": "Select your role",
         "repeat-password": "Repeat password"
       }
     },

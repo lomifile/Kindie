@@ -89,7 +89,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
           <Box
             mb={"5rem"}
             mt={5}
-            w={["100%", "100%", "100%", "100%", "100%"]}
+            w={["100%", "100%", "100%", "700px", "700px"]}
             rounded={["xs", "sm", "md", "lg", "xl"]}
             p={5}
             border={["0", "0", "0", "1px", "1px"]}

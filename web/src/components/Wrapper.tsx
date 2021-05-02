@@ -19,20 +19,24 @@ export const Wrapper: React.FC<WrapperProps> = ({
   variant = "regular",
   border,
   borderColor,
+  ...props
 }) => {
   let body;
 
   if (variant == "column") {
     body = (
-      <Box
+      <Flex
         direction="column"
-        maxW={{ xl: "1200px" }}
         m="0 auto"
         mx="auto"
         w="100%"
+        p={5}
+        align={["none", "none", "none", "center", "center"]}
+        maxW={["1200px", "1200px", "1200px", "none", "none"]}
+        {...props}
       >
         {children}
-      </Box>
+      </Flex>
     );
   } else if (variant == "regular") {
     body = (
@@ -43,13 +47,14 @@ export const Wrapper: React.FC<WrapperProps> = ({
         mx="auto"
         maxW={"800px"}
         w="100%"
+        {...props}
       >
         {children}
       </Box>
     );
   } else if (variant == "small") {
     body = (
-      <Box m={8} mx="auto" maxW={"400px"} w="100%">
+      <Box {...props} m={8} mx="auto" maxW={"400px"} w="100%">
         {children}
       </Box>
     );
@@ -60,6 +65,7 @@ export const Wrapper: React.FC<WrapperProps> = ({
         justify={{ base: "center", md: "space-around", xl: "space-between" }}
         borderTop={border}
         borderColor={borderColor}
+        {...props}
       >
         {children}
       </Flex>
@@ -70,6 +76,7 @@ export const Wrapper: React.FC<WrapperProps> = ({
         justify={{ base: "center", md: "space-around", xl: "space-between" }}
         borderTop={border}
         borderColor={borderColor}
+        {...props}
       >
         {children}
       </Flex>

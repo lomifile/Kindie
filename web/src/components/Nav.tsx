@@ -21,6 +21,8 @@ import {
   DrawerOverlay,
   useDisclosure,
   DrawerCloseButton,
+  useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 // @ts-ignore
@@ -36,6 +38,7 @@ import { isServer } from "../utils/isServer";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { HamburgerIcon } from "@chakra-ui/icons";
+import { bgColor } from "../utils/colorModeColors";
 export type NavbarVariant = "normal" | "user";
 
 interface NavProps {
@@ -43,6 +46,14 @@ interface NavProps {
 }
 
 export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
+  const { colorMode, toggleColorMode } = useColorMode();
+  console.log(colorMode);
+  const bg = useColorModeValue(bgColor.light, bgColor.dark);
+  const textColor = useColorModeValue("primary.800", "brand.200");
+  const headerColor = useColorModeValue("blue.400", "brand.100");
+  const btnColor = useColorModeValue("blue.400", "transparent");
+  const btnBorderColor = useColorModeValue("none", "brand.200");
+  const btnTextColor = useColorModeValue("white", "brand.200");
   const { t, i18n } = useTranslation("data", { useSuspense: false });
   const router = useRouter();
   const btnRef = React.useRef();
@@ -71,7 +82,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
           <Button
             as={Link}
             className="nav-item"
-            color="blue.400"
+            color={headerColor}
             colorScheme="navItem"
             variant="ghost"
           >
@@ -82,7 +93,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
           <Button
             as={Link}
             className="nav-item"
-            color="blue.400"
+            color={headerColor}
             colorScheme="navItem"
             variant="ghost"
           >
@@ -93,7 +104,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
           <Button
             as={Link}
             className="nav-item"
-            color="blue.400"
+            color={headerColor}
             colorScheme="navItem"
             variant="ghost"
           >
@@ -104,7 +115,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
           <Button
             as={Link}
             className="nav-item"
-            color="blue.400"
+            color={headerColor}
             colorScheme="navItem"
             variant="ghost"
             ml={"4"}
@@ -117,8 +128,10 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             className="nav-item"
             colorScheme="navItem"
             borderRadius={"12px"}
-            color="white"
-            bg="blue.400"
+            variant={colorMode === "dark" ? "outline" : "solid"}
+            borderColor={btnBorderColor}
+            bg={btnColor}
+            color={btnTextColor}
           >
             {t("nav.Sign-up")}
           </Button>
@@ -132,7 +145,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
           <Button
             as={Link}
             className="nav-item"
-            color="blue.400"
+            color={headerColor}
             colorScheme="navItem"
             variant="ghost"
           >
@@ -143,7 +156,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
           <Button
             as={Link}
             className="nav-item"
-            color="blue.400"
+            color={headerColor}
             colorScheme="navItem"
             variant="ghost"
           >
@@ -154,7 +167,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
           <Button
             as={Link}
             className="nav-item"
-            color="blue.400"
+            color={headerColor}
             colorScheme="navItem"
             variant="ghost"
           >
@@ -165,8 +178,10 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
           <Button
             colorScheme="navItem"
             borderRadius={"12px"}
-            color="white"
-            bg="blue.400"
+            variant={colorMode === "dark" ? "outline" : "solid"}
+            borderColor={btnBorderColor}
+            bg={btnColor}
+            color={btnTextColor}
           >
             {t("nav.Dashboard")}
           </Button>
@@ -180,7 +195,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
           <MenuButton ml={["15px", "15px", "0", "0", "0"]} mb={"10px"}>
             <Avatar name={data.me.Name + " " + data.me.Surname} />
           </MenuButton>
-          <MenuList>
+          <MenuList bg={bg} color={textColor}>
             <MenuGroup title={t("nav.menu.titles.navigation")}>
               <MenuItem
                 onClick={() => {
@@ -246,7 +261,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
     <Flex
       as="nav"
       position={{ md: "sticky" }}
-      bg="white"
+      bg={bg}
       minH="5rem"
       w="100%"
       zIndex="99"
@@ -254,26 +269,29 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
       borderColor="blue.400"
     >
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay>
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerHeader>
+        <DrawerOverlay bg={bg} color={textColor}>
+          <DrawerContent bg={bg} color={textColor}>
+            <DrawerCloseButton color={textColor} />
+            <DrawerHeader bg={bg} color={textColor}>
               <Heading
+                bg={bg}
+                color={textColor}
                 fontSize="xl"
                 fontWeight="500"
-                color="blue.400"
                 style={{ fontWeight: "bold", textTransform: "uppercase" }}
               >
                 DV Organizator
               </Heading>
             </DrawerHeader>
-            <DrawerBody>
+            <DrawerBody bg={bg} color={textColor}>
               <Stack
                 spacing={8}
                 align="center"
                 justify={["center", "space-between"]}
                 direction={["column", "column", "column"]}
                 pt={[4, 4, 0, 0]}
+                bg={bg}
+                color={textColor}
               >
                 {body}
                 <Flex
@@ -315,7 +333,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
           display={["none", "none", "block", "block"]}
           fontSize="xl"
           fontWeight="500"
-          color="blue.400"
+          color={headerColor}
           style={{ fontWeight: "bold", textTransform: "uppercase" }}
         >
           DV Organizator
@@ -383,6 +401,9 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
           </Box>
         </>
       )}
+      <Button colorScheme="pink" onClick={toggleColorMode}>
+        Toggle {colorMode === "light" ? "Dark" : "Light"}
+      </Button>
     </Flex>
   );
 };
