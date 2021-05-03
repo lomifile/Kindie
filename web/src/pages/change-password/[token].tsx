@@ -16,9 +16,8 @@ import {
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { InputField } from "../../components/InputField";
-import forgotPassword from "../forgot-password";
 import { useChangePasswordMutation } from "../../generated/graphql";
-import { useRouter } from "next/router";
+import Router from "next/router";
 import { toErrormap } from "../../utils/toErrorMap";
 import { Footer } from "../../components/Footer";
 import { useTranslation } from "react-i18next";
@@ -27,11 +26,10 @@ interface ChangePasswordProps {}
 
 const ChangePassword: React.FC<ChangePasswordProps> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
-  const router = useRouter();
   const [, changePassword] = useChangePasswordMutation();
   const [tokenError, setTokenError] = useState("");
   const [complete, setComplete] = useState(false);
-  const year = new Date().getFullYear();
+
   return (
     <Flex
       p={200}
@@ -60,8 +58,8 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({}) => {
               newPassword: values.newPassword,
               repeatNewPassword: values.repeatNewPassword,
               token:
-                typeof router.query.token === "string"
-                  ? router.query.token
+                typeof Router.query.token === "string"
+                  ? Router.query.token
                   : "",
             });
 

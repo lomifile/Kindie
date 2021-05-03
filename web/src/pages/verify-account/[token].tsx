@@ -12,13 +12,12 @@ import {
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { withUrqlClient } from "next-urql";
-import { useRouter } from "next/router";
+import Router from "next/router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Footer } from "../../components/Footer";
 import { useVerifyAccountMutation } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { toErrormap } from "../../utils/toErrorMap";
 
 interface VerifyAccountProps {}
 
@@ -26,7 +25,6 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const [checked, setChecked] = useState(false);
   const [, verifyAccount] = useVerifyAccountMutation();
-  const router = useRouter();
   const toast = useToast();
   const handleClick = () => {
     setChecked(true);
@@ -55,13 +53,13 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({}) => {
         <Formik
           initialValues={{
             token:
-              typeof router.query.token === "string" ? router.query.token : "",
+              typeof Router.query.token === "string" ? Router.query.token : "",
           }}
           onSubmit={async (values, { setErrors }) => {
             const response = await verifyAccount({
               token:
-                typeof router.query.token === "string"
-                  ? router.query.token
+                typeof Router.query.token === "string"
+                  ? Router.query.token
                   : "",
             });
             if (response.data?.verifyAccount.errors) {
@@ -79,7 +77,7 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({}) => {
                 duration: 9000,
                 isClosable: true,
               });
-              router.push("/");
+              Router.push("/");
             }
           }}
         >

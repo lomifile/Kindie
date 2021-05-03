@@ -31,7 +31,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
-import { useRouter } from "next/router";
+import Router from "next/router";
 import { InputField } from "../../components/InputField";
 import { Layout } from "../../components/Layout";
 import { useIsAuth } from "../../utils/useIsAuth";
@@ -54,7 +54,6 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const id = useGetId();
   const toast = useToast();
-  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [text, setText] = useState("");
 
@@ -257,7 +256,7 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
           size="md"
           type="submit"
           onClick={() => {
-            router.back();
+            Router.back();
           }}
         >
           {t("edit-child.btn-back")}
@@ -303,7 +302,7 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
                   duration: 9000,
                   isClosable: true,
                 });
-                router.back();
+                Router.back();
               }
             }}
           >

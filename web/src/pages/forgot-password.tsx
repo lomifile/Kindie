@@ -26,7 +26,6 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const [complete, setComplete] = useState(false);
   const [, forgotPassword] = useForgotPasswordMutation();
-  const year = new Date().getFullYear();
   return (
     <Flex
       p={200}
