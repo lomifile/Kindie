@@ -38,7 +38,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import { useIsAuth } from "../../utils/useIsAuth";
 import { Form, Formik } from "formik";
 import { InputField } from "../../components/InputField";
@@ -64,6 +64,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
   const [, useGroup] = useUseGroupMutation();
   const [, useChildren] = useUseChildrenMutation();
   const [, deleteGroup] = useDeleteGroupMutation();
+  const router = useRouter();
 
   if (fetching) {
     return (
@@ -168,7 +169,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                   size="md"
                   onClick={async () => {
                     await useChildren();
-                    Router.push("/children");
+                    router.push("/children");
                   }}
                 >
                   {t("kindergarden.toolbox.btn-children")}
@@ -312,7 +313,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
               display={["none", "none", "none", "flex"]}
               onClick={async () => {
                 await useChildren();
-                Router.push("/children");
+                router.push("/children");
               }}
             >
               {t("kindergarden.toolbox.btn-children")}
@@ -434,10 +435,10 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                             }}
                             onClick={async () => {
                               await useGroup({ groupId: owning.Id });
-                              Router.push(
+                              router.push(
                                 `/group/${
-                                  typeof Router.query.id === "string"
-                                    ? Router.query.id
+                                  typeof router.query.id === "string"
+                                    ? router.query.id
                                     : ""
                                 }?name=${owning.Name}`
                               );

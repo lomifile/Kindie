@@ -22,6 +22,7 @@ import { useIsAuth } from "../utils/useIsAuth";
 import { useShowfatherQuery, useShowMotherQuery } from "../generated/graphql";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 
 interface ParentsProps {}
@@ -29,6 +30,7 @@ interface ParentsProps {}
 const Parents: React.FC<ParentsProps> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
+  const router = useRouter();
   const [motherVariables, setMotherVariables] = useState({
     limit: 10,
     cursor: null as null | string,

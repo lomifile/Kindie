@@ -18,7 +18,7 @@ import {
   Stack,
   useToast,
 } from "@chakra-ui/react";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import { useGetId } from "../../../utils/getID";
 import { Layout } from "../../../components/Layout";
 import { Formik, Form } from "formik";
@@ -31,6 +31,7 @@ interface EditMotherProps {}
 const EditMother: React.FC<EditMotherProps> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
+  const router = useRouter();
   const id = useGetId();
   const toast = useToast();
   const [{ data, fetching }] = useFindMotherQuery({
@@ -91,7 +92,6 @@ const EditMother: React.FC<EditMotherProps> = ({}) => {
       </Flex>
     );
   }
-
   return (
     <Layout variant={"column"} navbarVariant="user">
       <title>{t("edit-mother.main-header")}</title>
@@ -109,7 +109,7 @@ const EditMother: React.FC<EditMotherProps> = ({}) => {
             mr={5}
             mt={1}
             onClick={() => {
-              Router.back();
+              router.back();
             }}
           >
             {t("edit-mother.btn-back")}
@@ -145,7 +145,7 @@ const EditMother: React.FC<EditMotherProps> = ({}) => {
                   duration: 9000,
                   isClosable: true,
                 });
-                Router.back();
+                router.back();
               }
             }}
           >

@@ -26,7 +26,7 @@ import {
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { withUrqlClient } from "next-urql";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { InputField } from "../components/InputField";
@@ -47,6 +47,7 @@ interface DashboardProps {}
 const Dashboard: React.FC<DashboardProps> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   useIsAuth();
+  const router = useRouter();
   const toast = useToast();
   const [, useKindergarden] = useUseKindergardenMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -287,7 +288,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                             }}
                             onClick={() => {
                               useKindergarden({ kindergardenID: owning.Id });
-                              Router.push(`/kindergarden/${owning.Id}`);
+                              router.push(`/kindergarden/${owning.Id}`);
                             }}
                           >
                             {owning.Name}
@@ -351,7 +352,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                             }}
                             onClick={() => {
                               useKindergarden({ kindergardenID: owning.Id });
-                              Router.push(`/kindergarden/${owning.Id}`);
+                              router.push(`/kindergarden/${owning.Id}`);
                             }}
                           >
                             {owning.Name}

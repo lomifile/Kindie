@@ -20,7 +20,7 @@ import React, { useState } from "react";
 import { InputField } from "../components/InputField";
 import NextLink from "next/link";
 import { useRegisterMutation } from "../generated/graphql";
-import Router from "next/router";
+import router, { useRouter } from "next/router";
 import { toErrormap } from "../utils/toErrorMap";
 import { Footer } from "../components/Footer";
 import { withUrqlClient } from "next-urql";
@@ -42,6 +42,7 @@ const Register: React.FC<registerProps> = ({}) => {
     setRole(e.target.value);
   };
 
+  const router = useRouter();
   const toast = useToast();
 
   const [, register] = useRegisterMutation();
@@ -109,7 +110,7 @@ const Register: React.FC<registerProps> = ({}) => {
                 duration: 9000,
                 isClosable: true,
               });
-              Router.push("/");
+              router.push("/");
             }
           }}
         >

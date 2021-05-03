@@ -15,7 +15,7 @@ import {
 import { Formik, Form } from "formik";
 import { InputField } from "../components/InputField";
 import { useCreateChildMutation } from "../generated/graphql";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import { useIsAuth } from "../utils/useIsAuth";
 import { useTranslation } from "react-i18next";
 
@@ -25,8 +25,8 @@ const CreateChild: React.FC<CreateChildProps> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const toast = useToast();
+  const router = useRouter();
   const [, createChild] = useCreateChildMutation();
-
   return (
     <Layout variant="column" navbarVariant="user">
       <title>{t("create-child.main-header")}</title>
@@ -41,7 +41,7 @@ const CreateChild: React.FC<CreateChildProps> = ({}) => {
           size="md"
           type="submit"
           onClick={() => {
-            Router.back();
+            router.back();
           }}
         >
           {t("create-child.btn-back")}
@@ -83,7 +83,7 @@ const CreateChild: React.FC<CreateChildProps> = ({}) => {
                   duration: 9000,
                   isClosable: true,
                 });
-                Router.back();
+                router.back();
               }
             }}
           >

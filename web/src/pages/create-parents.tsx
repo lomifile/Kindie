@@ -12,7 +12,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import { InputField } from "../components/InputField";
 import {
   useAddFatherMutation,
@@ -28,7 +28,7 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
   const [, addFather] = useAddFatherMutation();
   const toast = useToast();
   const [parent, setParent] = useState(null);
-
+  const router = useRouter();
   return (
     <Layout variant="column" navbarVariant="user">
       <title>{t("create-parents.main-header")}</title>
@@ -47,7 +47,7 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
             mr={5}
             mt={1}
             onClick={() => {
-              Router.back();
+              router.back();
             }}
           >
             {t("create-parents.btn-back")}

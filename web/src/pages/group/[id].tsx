@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { withUrqlClient } from "next-urql";
 import { Layout } from "../../components/Layout";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import {
   Stack,
   Flex,
@@ -68,6 +68,7 @@ const Group: React.FC<GroupProps> = ({}) => {
     cursor: null as null | string,
   });
   const [text, setText] = useState("");
+  const router = useRouter();
   const [, clearGroup] = useClearGroupMutation();
   const groupName = fetchGroup();
   const [, addChildToGroup] = useAddChildToGroupMutation();
@@ -182,10 +183,10 @@ const Group: React.FC<GroupProps> = ({}) => {
                   size="md"
                   onClick={async () => {
                     await clearGroup();
-                    Router.push(
+                    router.push(
                       `/kindergarden/${
-                        typeof Router.query.id === "string"
-                          ? Router.query.id
+                        typeof router.query.id === "string"
+                          ? router.query.id
                           : ""
                       }`
                     );
@@ -241,9 +242,9 @@ const Group: React.FC<GroupProps> = ({}) => {
               display={["none", "none", "none", "flex"]}
               onClick={async () => {
                 await clearGroup();
-                Router.push(
+                router.push(
                   `/kindergarden/${
-                    typeof Router.query.id === "string" ? Router.query.id : ""
+                    typeof router.query.id === "string" ? router.query.id : ""
                   }`
                 );
               }}

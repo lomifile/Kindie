@@ -14,13 +14,14 @@ import {
   Link,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { InputField } from "../components/InputField";
 import NextLink from "next/link";
 import { useLoginMutation, useResendEmailMutation } from "../generated/graphql";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import { toErrormap } from "../utils/toErrorMap";
 import { Footer } from "../components/Footer";
 import { withUrqlClient } from "next-urql";
@@ -37,6 +38,8 @@ const Login: React.FC<loginProps> = ({}) => {
 
   const [verified, setVerified] = useState(false);
   const [remail, setResendEmail] = useState("");
+
+  const router = useRouter();
 
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
@@ -121,10 +124,10 @@ const Login: React.FC<loginProps> = ({}) => {
               }
               setErrors(toErrormap(response.data.login.errors));
             } else if (response.data?.login.user) {
-              if (typeof Router.query.next === "string") {
-                Router.push(Router.query.next);
+              if (typeof router.query.next === "string") {
+                router.push(router.query.next);
               } else {
-                Router.push("/dashboard");
+                router.push("/dashboard");
               }
             }
           }}

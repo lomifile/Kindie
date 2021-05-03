@@ -15,7 +15,7 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import { InputField } from "../../../components/InputField";
 import { Layout } from "../../../components/Layout";
 import { useGetId } from "../../../utils/getID";
@@ -31,6 +31,7 @@ interface EditFatherProps {}
 const EditFather: React.FC<EditFatherProps> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
+  const router = useRouter();
   const id = useGetId();
   const toast = useToast();
   const [{ data, fetching }] = useFindFatherQuery({
@@ -110,7 +111,7 @@ const EditFather: React.FC<EditFatherProps> = ({}) => {
             mr={5}
             mt={1}
             onClick={() => {
-              Router.back();
+              router.back();
             }}
           >
             Back
@@ -146,7 +147,7 @@ const EditFather: React.FC<EditFatherProps> = ({}) => {
                   duration: 9000,
                   isClosable: true,
                 });
-                Router.back();
+                router.back();
               }
             }}
           >
