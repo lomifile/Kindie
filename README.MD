@@ -2,7 +2,7 @@
     <img height=100 src="https://raw.githubusercontent.com/fivanusec/DV-Organizator-WEB/master/src/img/logo.png?token=AOOXF255WVDMZJQUXS7MM7TAL45RI"/>
 </p>
 <p align="center">
-  <strong>DV Organizator a simple web app that helps you orginze professional documentation for wroking with children.</strong>
+  <strong>DV Organizator a simple web app that helps you orginze professional documentation for wroking with children!</strong>
 </p>
 
 <h3 align="center">
