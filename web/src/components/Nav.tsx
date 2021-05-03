@@ -47,9 +47,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
   const router = useRouter();
   const btnRef = React.useRef();
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
-  const [{ data, fetching }] = useMeQuery({
-    pause: isServer(),
-  });
+  const [{ data, fetching }] = useMeQuery({});
   const [, clearKindergarden] = useClearKindergardenMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   let body;

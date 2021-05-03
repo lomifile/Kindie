@@ -45,8 +45,8 @@ import { useIsAuth } from "../utils/useIsAuth";
 interface DashboardProps {}
 
 const Dashboard: React.FC<DashboardProps> = ({}) => {
-  const { t } = useTranslation("data", { useSuspense: false });
   useIsAuth();
+  const { t } = useTranslation("data", { useSuspense: false });
   const router = useRouter();
   const toast = useToast();
   const [, useKindergarden] = useUseKindergardenMutation();
