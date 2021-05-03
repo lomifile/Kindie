@@ -1,9 +1,6 @@
 import { useMeQuery } from "../generated/graphql";
-import { isServer } from "./isServer";
 
 export const fetchPartOf = () => {
-  const [{ data, fetching }] = useMeQuery({
-    pause: isServer(),
-  });
+  const [{ data, fetching }] = useMeQuery();
   return data?.me?.partof ? data?.me?.partof : [];
 };

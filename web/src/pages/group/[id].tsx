@@ -81,6 +81,7 @@ const Group: React.FC<GroupProps> = ({}) => {
       variables: { text },
     }
   );
+  console.log(groupName);
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{groupName}</title>

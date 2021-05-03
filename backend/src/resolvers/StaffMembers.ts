@@ -14,7 +14,15 @@ export class StaffMembersResolver {
     @Ctx() { req }: AppContext
   ) {
     const kindergardenId = req.session.selectedKindergarden;
-
+    const user = await StaffMembers.findOne({
+      where: {
+        userId,
+        kindergardenId,
+      },
+    });
+    if (user) {
+      return false;
+    }
     await StaffMembers.create({
       userId: userId,
       kindergardenId: kindergardenId,

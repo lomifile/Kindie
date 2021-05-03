@@ -1,14 +1,9 @@
 import {
-  useMeQuery,
-  useShowKindergardenQuery,
   useShowKindergardenstaffQuery,
 } from "../generated/graphql";
-import { isServer } from "./isServer";
 
 export const fetchOwnerOf = () => {
-  const [{ data, fetching }] = useShowKindergardenstaffQuery({
-    pause: isServer(),
-  });
+  const [{ data, fetching }] = useShowKindergardenstaffQuery();
   return data?.showKinderGardenStaff?.owning
     ? data?.showKinderGardenStaff?.owning
     : {};

@@ -1,0 +1,22 @@
+{
+  "name": "electron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "compile": "tsc",
+    "watch": "tsc -w",
+    "start": "electron .",
+    "gen-env": "gen-env-types .env -o src/env.d.ts -e ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv-safe": "^8.2.0",
+    "electron": "^12.0.6"
+  },
+  "devDependencies": {
+    "typescript": "^4.2.4"
+  }
+}

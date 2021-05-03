@@ -399,4 +399,4 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(EditChild);
+export default withUrqlClient(createUrqlClient, )(EditChild);

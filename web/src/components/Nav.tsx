@@ -43,11 +43,12 @@ interface NavProps {
 }
 
 export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
-  const { t, i18n } = useTranslation("data", { useSuspense: false });
   const router = useRouter();
-  const btnRef = React.useRef();
+  const { t, i18n } = useTranslation("data", { useSuspense: false });
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
-  const [{ data, fetching }] = useMeQuery({});
+  const [{ data, fetching }] = useMeQuery({
+    pause:isServer()
+  });
   const [, clearKindergarden] = useClearKindergardenMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   let body;
@@ -197,6 +198,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
               <MenuItem
                 onClick={async () => {
                   await logout();
+                  router.reload();
                 }}
               >
                 {t("nav.menu.log-out")}

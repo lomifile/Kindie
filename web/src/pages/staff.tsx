@@ -160,7 +160,7 @@ const Staff: React.FC<StaffProps> = ({}) => {
                               backgroundColor: "#719ABC",
                             }}
                             onClick={() => {
-                              addStaff({ Id: u.Id });
+                              addStaff({Id: u.Id});
                             }}
                           />
                         </Td>
