@@ -1,5 +1,5 @@
 <p align="center">
-    <img height=100 src="https://raw.githubusercontent.com/fivanusec/DV-Organizator-WEB/master/src/img/logo.png?token=AOOXF255WVDMZJQUXS7MM7TAL45RI"/>
+    <img height=100 src="https://raw.githubusercontent.com/fivanusec/DV-Organizator/master/web/src/img/logo.png?token=AOOXF2YW3VEB5QCKMLT6IJTASFXGQ"/>
 </p>
 <p align="center">
   <strong>DV Organizator a simple web app that helps you orginze professional documentation for wroking with children!</strong>
@@ -20,6 +20,7 @@ This code is for DV Organizator a simple web app that helps you orginze professi
 | :----------------- | :------------: |
 | [web](web)         | React Frontend |
 | [backend](backend) | Backend/server |
+| [electron](electron)|Electron desktop app|
 
 # Tools
 
@@ -30,8 +31,6 @@ For creating backend we used Typescript and GraphQL with express and apollo serv
 ## Frontend
 
 For creting frontend we used ChakraUI, Next and React.
-
-#
 
 ## Commiting
 

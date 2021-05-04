@@ -1,12 +1,9 @@
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
 import { ColorModeScript } from "@chakra-ui/react";
 import { AdBanner } from "../components/AdBanner";
-import isElectron from "is-electron";
 
 export default class Document extends NextDocument {
   render() {
-    console.log(isElectron());
-    console.log(process.versions.hasOwnProperty('electron'))
       return (
       <Html>
         <Head>
