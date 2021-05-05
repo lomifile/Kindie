@@ -1,5 +1,5 @@
 <p align="center">
-    <img height=100 src="https://raw.githubusercontent.com/fivanusec/DV-Organizator/master/web/src/img/logo.png?token=AOOXF2YW3VEB5QCKMLT6IJTASFXGQ"/>
+    <img height=100 src="web/src/img/logo.png"/>
 </p>
 <p align="center">
   <strong>DV Organizator a simple web app that helps you orginze professional documentation for wroking with children!</strong>

@@ -64,7 +64,6 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
   const [, useGroup] = useUseGroupMutation();
   const [, useChildren] = useUseChildrenMutation();
   const [, deleteGroup] = useDeleteGroupMutation();
-  const router = useRouter();
 
   if (fetching) {
     return (
@@ -167,9 +166,8 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                   px="4"
                   lineHeight="1"
                   size="md"
-                  onClick={async () => {
-                    await useChildren();
-                    router.push("/children");
+                  onClick={() => {
+                    useChildren();
                   }}
                 >
                   {t("kindergarden.toolbox.btn-children")}
@@ -301,23 +299,24 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
             >
               {t("kindergarden.toolbox.btn-new-group")}
             </Button>
-            <Button
-              bg="blue.400"
-              className="nav-item"
-              colorScheme="navItem"
-              borderRadius="12px"
-              py="4"
-              px="4"
-              lineHeight="1"
-              size="md"
-              display={["none", "none", "none", "flex"]}
-              onClick={async () => {
-                await useChildren();
-                router.push("/children");
-              }}
-            >
-              {t("kindergarden.toolbox.btn-children")}
-            </Button>
+            <NextLink href={"/children"}>
+              <Button
+                bg="blue.400"
+                className="nav-item"
+                colorScheme="navItem"
+                borderRadius="12px"
+                py="4"
+                px="4"
+                lineHeight="1"
+                size="md"
+                display={["none", "none", "none", "flex"]}
+                onClick={async () => {
+                  await useChildren();
+                }}
+              >
+                {t("kindergarden.toolbox.btn-children")}
+              </Button>
+            </NextLink>
             <NextLink href="/parents">
               <Button
                 bg="blue.400"
@@ -427,25 +426,23 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
                           as="h1"
                           lineHeight="tight"
                         >
-                          <Link
-                            color="blue.400"
-                            style={{
-                              fontSize: "26px",
-                              fontWeight: "bold",
-                            }}
-                            onClick={async () => {
-                              await useGroup({ groupId: owning.Id });
-                              router.push(
-                                `/group/${
-                                  typeof router.query.id === "string"
-                                    ? router.query.id
-                                    : ""
-                                }?name=${owning.Name}`
-                              );
-                            }}
+                          <NextLink
+                            href={"/group/[id]"}
+                            as={`/group/${owning.Id}?name=${owning.Name}`}
                           >
-                            {owning.Name}
-                          </Link>
+                            <Link
+                              color="blue.400"
+                              style={{
+                                fontSize: "26px",
+                                fontWeight: "bold",
+                              }}
+                              onClick={() => {
+                                useGroup({ groupId: owning.Id });
+                              }}
+                            >
+                              {owning.Name}
+                            </Link>
+                          </NextLink>
                         </Box>
                       </Box>
                     </Box>

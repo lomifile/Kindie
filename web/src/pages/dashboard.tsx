@@ -26,11 +26,11 @@ import {
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { withUrqlClient } from "next-urql";
-import { useRouter } from "next/router";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { InputField } from "../components/InputField";
 import { Layout } from "../components/Layout";
+import NextLink from "next/link";
 import {
   useCreateKindergardenMutation,
   useDeleteKindergardenMutation,
@@ -47,7 +47,6 @@ interface DashboardProps {}
 const Dashboard: React.FC<DashboardProps> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
-  const router = useRouter();
   const toast = useToast();
   const [, useKindergarden] = useUseKindergardenMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -280,19 +279,23 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                           as="h1"
                           lineHeight="tight"
                         >
-                          <Link
-                            color="blue.400"
-                            style={{
-                              fontSize: "26px",
-                              fontWeight: "bold",
-                            }}
-                            onClick={() => {
-                              useKindergarden({ kindergardenID: owning.Id });
-                              router.push(`/kindergarden/${owning.Id}`);
-                            }}
+                          <NextLink
+                            href={"/kindergarden/[id]"}
+                            as={`/kindergarden/${owning.Id}`}
                           >
-                            {owning.Name}
-                          </Link>
+                            <Link
+                              color="blue.400"
+                              style={{
+                                fontSize: "26px",
+                                fontWeight: "bold",
+                              }}
+                              onClick={() => {
+                                useKindergarden({ kindergardenID: owning.Id });
+                              }}
+                            >
+                              {owning.Name}
+                            </Link>
+                          </NextLink>
                         </Box>
                         <Divider />
                         <Box mt={3}>
@@ -344,19 +347,23 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                           as="h1"
                           lineHeight="tight"
                         >
-                          <Link
-                            color="blue.400"
-                            style={{
-                              fontSize: "26px",
-                              fontWeight: "bold",
-                            }}
-                            onClick={() => {
-                              useKindergarden({ kindergardenID: owning.Id });
-                              router.push(`/kindergarden/${owning.Id}`);
-                            }}
+                          <NextLink
+                            href={"/kindergarden/[id]"}
+                            as={`/kindergarden/${owning.Id}`}
                           >
-                            {owning.Name}
-                          </Link>
+                            <Link
+                              color="blue.400"
+                              style={{
+                                fontSize: "26px",
+                                fontWeight: "bold",
+                              }}
+                              onClick={() => {
+                                useKindergarden({ kindergardenID: owning.Id });
+                              }}
+                            >
+                              {owning.Name}
+                            </Link>
+                          </NextLink>
                         </Box>
                         <Divider />
                         <Box mt={3}>

@@ -81,7 +81,6 @@ const Group: React.FC<GroupProps> = ({}) => {
       variables: { text },
     }
   );
-  console.log(groupName);
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{groupName}</title>
@@ -173,28 +172,28 @@ const Group: React.FC<GroupProps> = ({}) => {
                 >
                   {t("group.btn-add")}
                 </Button>
-                <Button
-                  as={Link}
-                  color="blue.400"
-                  colorScheme="navItem"
-                  borderRadius="12px"
-                  py="4"
-                  px="4"
-                  lineHeight="1"
-                  size="md"
-                  onClick={async () => {
-                    await clearGroup();
-                    router.push(
-                      `/kindergarden/${
-                        typeof router.query.id === "string"
-                          ? router.query.id
-                          : ""
-                      }`
-                    );
-                  }}
+                <NextLink
+                  href={"/kindergarden/[id]"}
+                  as={`/kindergarden/${
+                    typeof router.query.id === "string" ? router.query.id : ""
+                  }`}
                 >
-                  {t("group.btn-return")}
-                </Button>
+                  <Button
+                    as={Link}
+                    color="blue.400"
+                    colorScheme="navItem"
+                    borderRadius="12px"
+                    py="4"
+                    px="4"
+                    lineHeight="1"
+                    size="md"
+                    onClick={() => {
+                      clearGroup();
+                    }}
+                  >
+                    {t("group.btn-return")}
+                  </Button>
+                </NextLink>
               </Stack>
             </DrawerBody>
           </DrawerContent>
@@ -347,4 +346,4 @@ const Group: React.FC<GroupProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Group);
+export default withUrqlClient(createUrqlClient, { ssr: true })(Group);
