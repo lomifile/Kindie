@@ -33,18 +33,21 @@ import {
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
 import { updateQuery } from "./updateQuery";
-import Router from "next/router";
 import { isServer } from "./isServer";
+import Router, { NextRouter } from "next/router";
 
-export const errorExchange: Exchange = ({ forward }) => (ops$) => {
-  return pipe(
-    forward(ops$),
-    tap(({ error }) => {
-      if (error?.message.includes("Not authenticated")) {
-        Router.replace("/login");
-      }
-    })
-  );
+const errorExchange: Exchange = ({ forward }) => {
+  const router: NextRouter = Router;
+  return (ops$) => {
+    return pipe(
+      forward(ops$),
+      tap(({ error }) => {
+        if (error?.message.includes("Not authenticated") && !isServer()) {
+          router.push("/login");
+        }
+      })
+    );
+  };
 };
 
 const cursorPaginationFather = (): Resolver => {
@@ -295,26 +298,23 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               });
             },
 
-            createGroup: async (_result, args, cache, info) => {
-              await cache.updateQuery({ query: ShowGroupsDocument }, (data) => {
+            createGroup: (_result, args, cache, info) => {
+              cache.updateQuery({ query: ShowGroupsDocument }, (data) => {
                 //@ts-ignore
                 data.showGroups.push(_result.createGroup.groups);
                 return data;
               });
             },
 
-            createKindergarden: async (_result, args, cache, info) => {
-              await cache.updateQuery(
-                { query: ShowKindergardenDocument },
-                (data) => {
+            createKindergarden: (_result, args, cache, info) => {
+              cache.updateQuery({ query: ShowKindergardenDocument }, (data) => {
+                //@ts-ignore
+                data.showKindergarden.push(
                   //@ts-ignore
-                  data.showKindergarden.push(
-                    //@ts-ignore
-                    _result.createKindergarden.kindergarden
-                  );
-                  return data;
-                }
-              );
+                  _result.createKindergarden.kindergarden
+                );
+                return data;
+              });
             },
 
             deleteKindergarden: (_result, args, cache, info) => {

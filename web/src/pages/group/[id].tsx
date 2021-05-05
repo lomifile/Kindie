@@ -52,9 +52,8 @@ import {
 } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 
-interface GroupProps {}
-
-const Group: React.FC<GroupProps> = ({}) => {
+const Group = ({}) => {
+  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {

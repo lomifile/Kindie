@@ -11,21 +11,17 @@ import {
   AlertDescription,
   Stack,
   Button,
-  Link,
-  Text,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { InputField } from "../../components/InputField";
-import forgotPassword from "../forgot-password";
 import { useChangePasswordMutation } from "../../generated/graphql";
 import { useRouter } from "next/router";
 import { toErrormap } from "../../utils/toErrorMap";
 import { Footer } from "../../components/Footer";
 import { useTranslation } from "react-i18next";
+import { NextPage } from "next";
 
-interface ChangePasswordProps {}
-
-const ChangePassword: React.FC<ChangePasswordProps> = ({}) => {
+const ChangePassword: NextPage = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const router = useRouter();
   const [, changePassword] = useChangePasswordMutation();

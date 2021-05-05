@@ -18,12 +18,14 @@ import NextLink from "next/link";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useTranslation } from "next-i18next";
+import { AdBanner } from "../components/AdBanner";
 
 const Index = () => {
   const { t } = useTranslation("data", { useSuspense: false });
   return (
     <Layout navbarVariant={"normal"} variant={"column"} navbar={true}>
       <title>DV Organizator [ALPHA]</title>
+      <AdBanner />
       <Flex
         align="center"
         justify={{ base: "center", md: "space-around", xl: "space-between" }}

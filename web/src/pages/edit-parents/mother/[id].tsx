@@ -26,9 +26,7 @@ import { InputField } from "../../../components/InputField";
 import { useTranslation } from "react-i18next";
 import { useIsAuth } from "../../../utils/useIsAuth";
 
-interface EditMotherProps {}
-
-const EditMother: React.FC<EditMotherProps> = ({}) => {
+const EditMother = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const router = useRouter();
   useIsAuth();

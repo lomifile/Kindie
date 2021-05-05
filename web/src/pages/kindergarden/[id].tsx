@@ -38,18 +38,16 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { useIsAuth } from "../../utils/useIsAuth";
 import { Form, Formik } from "formik";
 import { InputField } from "../../components/InputField";
 import { toErrormap } from "../../utils/toErrorMap";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
+import { useIsAuth } from "../../utils/useIsAuth";
 
-interface KindergardenProps {}
-
-const Kindergarden: React.FC<KindergardenProps> = ({}) => {
+const Kindergarden = ({}) => {
+  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -58,7 +56,6 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
     onOpen: drawerOnOpen,
     onClose: drawerOnClose,
   } = useDisclosure();
-  useIsAuth();
   const [{ data, fetching }] = useShowGroupsQuery();
   const [, createGroup] = useCreateGroupMutation();
   const [, useGroup] = useUseGroupMutation();

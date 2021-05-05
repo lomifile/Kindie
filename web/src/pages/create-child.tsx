@@ -22,6 +22,7 @@ import { useTranslation } from "react-i18next";
 interface CreateChildProps {}
 
 const CreateChild: React.FC<CreateChildProps> = ({}) => {
+  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const toast = useToast();
   const router = useRouter();

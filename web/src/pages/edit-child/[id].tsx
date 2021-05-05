@@ -47,9 +47,7 @@ import { AddIcon, SearchIcon } from "@chakra-ui/icons";
 import { ParentCard } from "../../components/ParentCard";
 import { useTranslation } from "react-i18next";
 
-interface EditChildProps {}
-
-const EditChild: React.FC<EditChildProps> = ({}) => {
+const EditChild = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const id = useGetId();
   const toast = useToast();

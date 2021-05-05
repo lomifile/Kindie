@@ -40,7 +40,6 @@ interface ChildrenProps {}
 
 const Children: React.FC<ChildrenProps> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
-  useIsAuth();
   const [variables, setVariables] = useState({
     limit: 10,
     cursor: null as null | string,

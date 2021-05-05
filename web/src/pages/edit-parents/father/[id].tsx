@@ -26,9 +26,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useIsAuth } from "../../../utils/useIsAuth";
 
-interface EditFatherProps {}
-
-const EditFather: React.FC<EditFatherProps> = ({}) => {
+const EditFather = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const router = useRouter();
   useIsAuth();
