@@ -50,7 +50,6 @@ import { useTranslation } from "react-i18next";
 interface KindergardenProps {}
 
 const Kindergarden: React.FC<KindergardenProps> = ({}) => {
-  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -59,6 +58,7 @@ const Kindergarden: React.FC<KindergardenProps> = ({}) => {
     onOpen: drawerOnOpen,
     onClose: drawerOnClose,
   } = useDisclosure();
+  useIsAuth();
   const [{ data, fetching }] = useShowGroupsQuery();
   const [, createGroup] = useCreateGroupMutation();
   const [, useGroup] = useUseGroupMutation();

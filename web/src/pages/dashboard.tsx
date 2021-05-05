@@ -45,9 +45,9 @@ import { useIsAuth } from "../utils/useIsAuth";
 interface DashboardProps {}
 
 const Dashboard: React.FC<DashboardProps> = ({}) => {
-  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const toast = useToast();
+  useIsAuth();
   const [, useKindergarden] = useUseKindergardenMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [{ data, fetching }] = useShowKindergardenQuery();

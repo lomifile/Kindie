@@ -28,9 +28,9 @@ import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 interface ParentsProps {}
 
 const Parents: React.FC<ParentsProps> = ({}) => {
-  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const router = useRouter();
+  useIsAuth();
   const [motherVariables, setMotherVariables] = useState({
     limit: 10,
     cursor: null as null | string,

@@ -29,9 +29,9 @@ import { useIsAuth } from "../../../utils/useIsAuth";
 interface EditMotherProps {}
 
 const EditMother: React.FC<EditMotherProps> = ({}) => {
-  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const router = useRouter();
+  useIsAuth();
   const id = useGetId();
   const toast = useToast();
   const [{ data, fetching }] = useFindMotherQuery({

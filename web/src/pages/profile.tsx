@@ -39,10 +39,10 @@ import { ViewIcon } from "@chakra-ui/icons";
 interface ProfileProps {}
 
 const Profile: React.FC<ProfileProps> = ({}) => {
-  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   let body = null;
   const [redirect, setRedirect] = useState(false);
+  useIsAuth();
   const [{ data, fetching }] = useMeQuery();
   const [, updateUser] = useUpdateUserMutation();
   const [, updatePassowrd] = useUpdatePasswordMutation();
@@ -374,4 +374,4 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   return body;
 };
 
-export default withUrqlClient(createUrqlClient, { ssr:true })(Profile);
+export default withUrqlClient(createUrqlClient, { ssr: true })(Profile);

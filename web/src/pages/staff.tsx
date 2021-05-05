@@ -50,7 +50,6 @@ import { useTranslation } from "react-i18next";
 interface StaffProps {}
 
 const Staff: React.FC<StaffProps> = ({}) => {
-  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -61,6 +60,7 @@ const Staff: React.FC<StaffProps> = ({}) => {
   const btnRef = React.useRef();
   const owner = fetchOwnerOf();
   const staff = fetchStaff();
+  useIsAuth();
   const [, addStaff] = useAddStaffMutation();
   const [, deleteStaff] = useDeleteStaffMutation();
   const [text, setText] = useState("");

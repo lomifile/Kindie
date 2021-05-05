@@ -29,9 +29,9 @@ import { useIsAuth } from "../../../utils/useIsAuth";
 interface EditFatherProps {}
 
 const EditFather: React.FC<EditFatherProps> = ({}) => {
-  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const router = useRouter();
+  useIsAuth();
   const id = useGetId();
   const toast = useToast();
   const [{ data, fetching }] = useFindFatherQuery({
@@ -205,4 +205,4 @@ const EditFather: React.FC<EditFatherProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, )(EditFather);
+export default withUrqlClient(createUrqlClient)(EditFather);
