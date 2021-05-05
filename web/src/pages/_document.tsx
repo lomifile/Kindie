@@ -4,7 +4,7 @@ import { AdBanner } from "../components/AdBanner";
 
 export default class Document extends NextDocument {
   render() {
-      return (
+    return (
       <Html>
         <Head>
           <script
@@ -24,4 +24,3 @@ export default class Document extends NextDocument {
     );
   }
 }
-
