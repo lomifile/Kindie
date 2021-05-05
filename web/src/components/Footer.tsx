@@ -8,7 +8,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
-import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
 
 type Variant = "small" | "regular";

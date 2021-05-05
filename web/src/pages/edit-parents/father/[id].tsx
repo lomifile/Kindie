@@ -205,4 +205,4 @@ const EditFather: React.FC<EditFatherProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(EditFather);
+export default withUrqlClient(createUrqlClient, )(EditFather);
