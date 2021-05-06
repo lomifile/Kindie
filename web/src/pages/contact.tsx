@@ -16,6 +16,7 @@ import { InputField } from "../components/InputField";
 import { Layout } from "../components/Layout";
 import { useSendEmailMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { AdBanner } from "../components/AdBanner";
 
 interface contactProps {}
 
@@ -145,6 +146,7 @@ const Contact: React.FC<contactProps> = ({}) => {
           </Box>
         </Flex>
       </Flex>
+      <AdBanner />
     </Layout>
   );
 };

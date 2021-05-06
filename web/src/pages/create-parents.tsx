@@ -19,6 +19,7 @@ import {
   useAddMotherMutation,
 } from "../generated/graphql";
 import { useTranslation } from "react-i18next";
+import { useIsAuth } from "../utils/useIsAuth";
 
 interface CreateParentsProps {}
 
@@ -29,6 +30,8 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
   const toast = useToast();
   const [parent, setParent] = useState(null);
   const router = useRouter();
+  useIsAuth();
+
   return (
     <Layout variant="column" navbarVariant="user">
       <title>{t("create-parents.main-header")}</title>

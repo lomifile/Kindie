@@ -18,6 +18,7 @@ import { Layout } from "../components/Layout";
 // @ts-ignore
 import filipImg from "../img/filipivanusec.jpg";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { AdBanner } from "../components/AdBanner";
 
 interface AboutusProps {}
 
@@ -115,6 +116,7 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
           ))}
         </Stack>
       </Flex>
+      <AdBanner />
     </Layout>
   );
 };

@@ -39,7 +39,6 @@ import { useTranslation } from "react-i18next";
 interface ChildrenProps {}
 
 const Children: React.FC<ChildrenProps> = ({}) => {
-  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const [variables, setVariables] = useState({
     limit: 10,

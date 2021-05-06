@@ -36,6 +36,7 @@ import { isServer } from "../utils/isServer";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { HamburgerIcon } from "@chakra-ui/icons";
+import { useIsAuth } from "../utils/useIsAuth";
 export type NavbarVariant = "normal" | "user";
 
 interface NavProps {
@@ -198,7 +199,11 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
               <MenuItem
                 onClick={async () => {
                   await logout();
-                  router.reload();
+                  if (isServer()) {
+                    router.push("/login");
+                  } else {
+                    router.reload();
+                  }
                 }}
               >
                 {t("nav.menu.log-out")}

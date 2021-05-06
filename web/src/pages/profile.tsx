@@ -374,4 +374,4 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   return body;
 };
 
-export default withUrqlClient(createUrqlClient, { ssr:true })(Profile);
+export default withUrqlClient(createUrqlClient, { ssr: true })(Profile);

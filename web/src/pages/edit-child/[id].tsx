@@ -47,14 +47,12 @@ import { AddIcon, SearchIcon } from "@chakra-ui/icons";
 import { ParentCard } from "../../components/ParentCard";
 import { useTranslation } from "react-i18next";
 
-interface EditChildProps {}
-
-const EditChild: React.FC<EditChildProps> = ({}) => {
-  useIsAuth();
+const EditChild = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const id = useGetId();
   const toast = useToast();
   const router = useRouter();
+  useIsAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [text, setText] = useState("");
 
@@ -399,4 +397,4 @@ const EditChild: React.FC<EditChildProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, )(EditChild);
+export default withUrqlClient(createUrqlClient)(EditChild);

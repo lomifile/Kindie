@@ -26,12 +26,10 @@ import { InputField } from "../../../components/InputField";
 import { useTranslation } from "react-i18next";
 import { useIsAuth } from "../../../utils/useIsAuth";
 
-interface EditMotherProps {}
-
-const EditMother: React.FC<EditMotherProps> = ({}) => {
-  useIsAuth();
+const EditMother = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const router = useRouter();
+  useIsAuth();
   const id = useGetId();
   const toast = useToast();
   const [{ data, fetching }] = useFindMotherQuery({
