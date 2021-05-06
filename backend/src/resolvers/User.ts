@@ -440,6 +440,9 @@ export class UserResolver {
 
   @Query(() => [User])
   async searchUser(@Arg("text") text: string): Promise<User[]> {
+    if (text == ".") {
+      return User.find();
+    }
     return User.find({
       where: {
         Name: text,

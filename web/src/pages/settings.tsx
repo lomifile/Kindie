@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
   IconButton,
   InputGroup,
   InputRightElement,
@@ -18,7 +17,6 @@ import {
   Text,
   HStack,
   Divider,
-  Link,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
@@ -36,9 +34,7 @@ import { useIsAuth } from "../utils/useIsAuth";
 import { useTranslation } from "react-i18next";
 import { ViewIcon } from "@chakra-ui/icons";
 
-interface ProfileProps {}
-
-const Profile: React.FC<ProfileProps> = ({}) => {
+const Settings: React.FC<{}> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   let body = null;
@@ -49,7 +45,6 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   const toast = useToast();
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
-
   const [role, setRole] = useState("");
   const handleChange = (e) => {
     setRole(e.target.value);
@@ -79,20 +74,17 @@ const Profile: React.FC<ProfileProps> = ({}) => {
       >
         <AlertIcon boxSize="40px" mr={0} />
         <AlertTitle mt={4} mb={1} fontSize="lg">
-          {t("profile.alert.title")}
+          {t("settings.alert.title")}
         </AlertTitle>
         <AlertDescription maxWidth="sm">
-          {t("profile.alert.desc")}
+          {t("settings.alert.desc")}
         </AlertDescription>
       </Alert>
     );
   } else {
     body = (
       <Layout navbarVariant={"user"} variant="column">
-        <title>{t("profile.main-header")}</title>
-        <Heading ml={["25px", "25px", "25px", "25px", "0"]} color="blue.400">
-          {t("profile.acc")}
-        </Heading>
+        <title>{t("settings.main-header")}</title>
         <Flex
           mt="10"
           p="5"
@@ -128,6 +120,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                   variant="ghost"
                   {...(selector === "#profile" ? { bg: "gray.200" } : null)}
                   color="blue.400"
+                  borderRadius={"12px"}
                   p={2}
                   _hover={{
                     backgroundColor: "gray.100",
@@ -136,9 +129,10 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                     setSelector("#profile");
                   }}
                 >
-                  {t("profile.menu-selector.#profile")}
+                  {t("settings.menu-selector.#profile")}
                 </Button>
                 <Button
+                  borderRadius={"12px"}
                   variant="ghost"
                   {...(selector === "#password" ? { bg: "gray.200" } : null)}
                   color="blue.400"
@@ -150,7 +144,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                     setSelector("#password");
                   }}
                 >
-                  {t("profile.menu-selector.#password")}
+                  {t("settings.menu-selector.#password")}
                 </Button>
               </Stack>
             </Box>
@@ -188,7 +182,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                           );
                         } else {
                           toast({
-                            title: t("profile.toast.title"),
+                            title: t("settings.toast.title"),
                             status: "success",
                             duration: 9000,
                             isClosable: true,
@@ -201,19 +195,19 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                           <Stack spacing={4} marginBottom="1rem">
                             <InputField
                               name="name"
-                              placeholder={t("profile.form.placeholders.name")}
-                              label={t("profile.form.name")}
+                              placeholder={t("settings.form.placeholders.name")}
+                              label={t("settings.form.name")}
                               type="text"
                             />
                             <InputField
                               name="surname"
                               placeholder={t(
-                                "profile.form.placeholders.surname"
+                                "settings.form.placeholders.surname"
                               )}
-                              label={t("profile.form.surname")}
+                              label={t("settings.form.surname")}
                               type="text"
                             />
-                            <Text mb={"-10px"}>{t("profile.form.role")}</Text>
+                            <Text mb={"-10px"}>{t("settings.form.role")}</Text>
                             <Select
                               name="role"
                               style={{ borderRadius: "12px" }}
@@ -221,28 +215,30 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                               defaultValue={data?.me.Role}
                             >
                               <option value="Teacher">
-                                {t("profile.selector.teacher")}
+                                {t("settings.selector.teacher")}
                               </option>
                               <option value="Headmaster">
-                                {t("profile.selector.headmaster")}
+                                {t("settings.selector.headmaster")}
                               </option>
                               <option value="Pedagogue">
-                                {t("profile.selector.pedagouge")}
+                                {t("settings.selector.pedagouge")}
                               </option>
                             </Select>
                             <InputField
                               name="email"
-                              placeholder={t("profile.form.placeholders.email")}
-                              label={t("profile.form.email")}
+                              placeholder={t(
+                                "settings.form.placeholders.email"
+                              )}
+                              label={t("settings.form.email")}
                               type="email"
                             />
                             <InputGroup size="md">
                               <InputField
                                 name="password"
                                 placeholder={t(
-                                  "profile.form.placeholders.password"
+                                  "settings.form.placeholders.password"
                                 )}
-                                label={t("profile.form.password")}
+                                label={t("settings.form.password")}
                                 type={show ? "text" : "password"}
                               />
                               <InputRightElement mt={8} width="4.5rem">
@@ -267,7 +263,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                                 isLoading={isSubmitting}
                                 type="submit"
                               >
-                                {t("profile.form.btn")}
+                                {t("settings.form.btn")}
                               </Button>
                             </Stack>
                           </Stack>
@@ -305,7 +301,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                           );
                         } else {
                           toast({
-                            title: t("profile.toast.title"),
+                            title: t("settings.toast.title"),
                             status: "success",
                             duration: 9000,
                             isClosable: true,
@@ -320,9 +316,9 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                               <InputField
                                 name="password"
                                 placeholder={t(
-                                  "profile.form.placeholders.password"
+                                  "settings.form.placeholders.password"
                                 )}
-                                label={t("profile.form.password")}
+                                label={t("settings.form.password")}
                                 type={show ? "text" : "password"}
                               />
                               <InputRightElement mt={8} width="4.5rem">
@@ -338,9 +334,9 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                             <InputField
                               name="repeatPassword"
                               placeholder={t(
-                                "profile.form.placeholders.repeat-password"
+                                "settings.form.placeholders.repeat-password"
                               )}
-                              label={t("profile.form.repeat-password")}
+                              label={t("settings.form.repeat-password")}
                               type="password"
                             />
                             <Stack mt={"1rem"}>
@@ -355,7 +351,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                                 isLoading={isSubmitting}
                                 type="submit"
                               >
-                                {t("profile.form.btn-pass")}
+                                {t("settings.form.btn-pass")}
                               </Button>
                             </Stack>
                           </Stack>
@@ -374,4 +370,4 @@ const Profile: React.FC<ProfileProps> = ({}) => {
   return body;
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Profile);
+export default withUrqlClient(createUrqlClient, { ssr: true })(Settings);

@@ -16,6 +16,7 @@ import {
   AlertTitle,
   Box,
   Button,
+  Divider,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -244,7 +245,11 @@ const Kindergarden = ({}) => {
                       required
                     />
                   </Stack>
-                  <Flex justify="right">
+                  <Divider mt={5} mb={5} />
+                  <Flex
+                    justify={["center", "center", "center", "right", "right"]}
+                    pb={2}
+                  >
                     <Button
                       bg="blue.400"
                       colorScheme="navItem"
@@ -283,7 +288,7 @@ const Kindergarden = ({}) => {
           ]}
           p={5}
         >
-          <HStack p={2} spacing={4}>
+          <HStack p={1} spacing={4}>
             <Button
               bg="blue.400"
               className="nav-item"
@@ -361,8 +366,8 @@ const Kindergarden = ({}) => {
         </Flex>
         {data?.showGroups.length > 0 ? (
           <>
-            <Flex mt={5}>
-              <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
+            <Flex justify={["center", "center", "center", "left", "left"]}>
+              <Heading ml={["0", "0", "0", "10px", "10px"]} color="blue.400">
                 {t("kindergarden.groups-heading")}
               </Heading>
             </Flex>

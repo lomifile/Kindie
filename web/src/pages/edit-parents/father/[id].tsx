@@ -13,6 +13,8 @@ import {
   AlertIcon,
   AlertTitle,
   Spinner,
+  IconButton,
+  HStack,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
@@ -25,6 +27,7 @@ import {
 } from "../../../generated/graphql";
 import { useTranslation } from "react-i18next";
 import { useIsAuth } from "../../../utils/useIsAuth";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 
 const EditFather = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
@@ -95,28 +98,30 @@ const EditFather = ({}) => {
   return (
     <Layout variant="column" navbarVariant="user">
       <title>{t("edit-father.main-header")}</title>
-      <Stack spacing={8}>
-        <Flex mt={5} mb={2}>
-          <Button
+      <Flex
+        justify={["center", "center", "center", "left", "left"]}
+        mt={5}
+        mb={2}
+      >
+        <HStack spacing={5}>
+          <IconButton
             bg="blue.400"
-            className="nav-item"
             colorScheme="navItem"
             borderRadius="12px"
             py="4"
             px="4"
             lineHeight="1"
             size="md"
-            mr={5}
-            mt={1}
+            type="submit"
             onClick={() => {
               router.back();
             }}
-          >
-            Back
-          </Button>
+            aria-label={"Back"}
+            icon={<ArrowBackIcon />}
+          />
           <Heading color="blue.400">{t("edit-father.main-header")}</Heading>
-        </Flex>
-      </Stack>
+        </HStack>
+      </Flex>
       <Flex
         alignItems="center"
         justifyContent="center"

@@ -33,6 +33,7 @@ import {
   CheckCircleIcon,
   DeleteIcon,
   EditIcon,
+  AddIcon,
 } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 
@@ -86,13 +87,13 @@ const Children: React.FC<ChildrenProps> = ({}) => {
     <Layout navbarVariant="user" variant="column">
       <title>{t("children.main-header")}</title>
 
-      <Flex>
-        <HStack spacing={10}>
+      <Flex justify={["center", "center", "center", "left", "left"]}>
+        <HStack spacing={5}>
           <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
             {t("children.main-header")}
           </Heading>
-          <NextLink href="create-child">
-            <Button
+          <NextLink href="/create-child">
+            <IconButton
               bg="blue.400"
               colorScheme="navItem"
               borderRadius="12px"
@@ -101,9 +102,9 @@ const Children: React.FC<ChildrenProps> = ({}) => {
               lineHeight="1"
               size="md"
               ml={"2rem"}
-            >
-              {t("children.btn-add")}
-            </Button>
+              aria-label={"Create child"}
+              icon={<AddIcon />}
+            />
           </NextLink>
         </HStack>
       </Flex>

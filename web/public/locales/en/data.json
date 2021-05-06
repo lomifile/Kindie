@@ -142,9 +142,8 @@
       "btn": "Sign in"
     }
   },
-  "profile": {
-    "main-header": "Profile",
-    "acc": "My account",
+  "settings": {
+    "main-header": "Settings",
     "alert": {
       "title": "There was an error",
       "desc": "An error occured while trying to fetch your data!"

@@ -4,8 +4,6 @@ import { withUrqlClient } from "next-urql";
 import { Layout } from "../components/Layout";
 import {
   Box,
-  Text,
-  Button,
   Flex,
   Heading,
   Stack,
@@ -70,7 +68,7 @@ const Staff: React.FC<StaffProps> = ({}) => {
       text,
     },
   });
-  const [{ data: meData, fetching: meFetching }] = useMeQuery();
+  const [{ data: meData }] = useMeQuery();
 
   return (
     <Layout variant={"column"} navbarVariant={"user"}>
@@ -189,7 +187,11 @@ const Staff: React.FC<StaffProps> = ({}) => {
         </DrawerOverlay>
       </Drawer>
       <Stack spacing={8}>
-        <Flex mt={5} mb={2}>
+        <Flex
+          justify={["center", "center", "center", "left", "left"]}
+          mt={5}
+          mb={2}
+        >
           <Heading color="blue.400">{t("staff.owner-heading")}</Heading>
         </Flex>
         <Box>
@@ -218,14 +220,18 @@ const Staff: React.FC<StaffProps> = ({}) => {
             </Tbody>
           </Table>
         </Box>
-        <Flex mt={20} mb={2}>
+        <Flex
+          justify={["center", "center", "center", "left", "left"]}
+          mt={20}
+          mb={2}
+        >
           <Heading color="blue.400">{t("staff.staff-heading")}</Heading>
           {
             // @ts-ignore
             meData?.me?.Name === owner.Name &&
             // @ts-ignore
             meData?.me?.Surname === owner.Surname ? (
-              <Button
+              <IconButton
                 ml={5}
                 bg="blue.400"
                 colorScheme="navItem"
@@ -236,10 +242,9 @@ const Staff: React.FC<StaffProps> = ({}) => {
                 size="md"
                 type="submit"
                 onClick={onOpen}
-              >
-                <AddIcon mr={2} />
-                <Text mt={0.5}>{t("staff.btn-add")}</Text>
-              </Button>
+                icon={<AddIcon />}
+                aria-label={"Add staff"}
+              />
             ) : null
           }
         </Flex>

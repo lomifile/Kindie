@@ -14,6 +14,8 @@ import {
   Button,
   Flex,
   Heading,
+  HStack,
+  IconButton,
   Spinner,
   Stack,
   useToast,
@@ -25,6 +27,7 @@ import { Formik, Form } from "formik";
 import { InputField } from "../../../components/InputField";
 import { useTranslation } from "react-i18next";
 import { useIsAuth } from "../../../utils/useIsAuth";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 
 const EditMother = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
@@ -93,28 +96,30 @@ const EditMother = ({}) => {
   return (
     <Layout variant={"column"} navbarVariant="user">
       <title>{t("edit-mother.main-header")}</title>
-      <Stack spacing={8}>
-        <Flex mt={5} mb={2}>
-          <Button
+      <Flex
+        justify={["center", "center", "center", "left", "left"]}
+        mt={5}
+        mb={2}
+      >
+        <HStack spacing={5}>
+          <IconButton
             bg="blue.400"
-            className="nav-item"
             colorScheme="navItem"
             borderRadius="12px"
             py="4"
             px="4"
             lineHeight="1"
             size="md"
-            mr={5}
-            mt={1}
+            type="submit"
             onClick={() => {
               router.back();
             }}
-          >
-            {t("edit-mother.btn-back")}
-          </Button>
+            aria-label={"Back"}
+            icon={<ArrowBackIcon />}
+          />
           <Heading color="blue.400">{t("edit-mother.main-header")}</Heading>
-        </Flex>
-      </Stack>
+        </HStack>
+      </Flex>
       <Flex
         alignItems="center"
         justifyContent="center"

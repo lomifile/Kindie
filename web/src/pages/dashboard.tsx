@@ -107,7 +107,12 @@ const Dashboard = ({}) => {
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{t("dashboard.main-header")}</title>
-      <Modal onClose={onClose} size={"md"} isOpen={isOpen}>
+      <Modal
+        closeOnOverlayClick={false}
+        onClose={onClose}
+        size={"md"}
+        isOpen={isOpen}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{t("dashboard.modal-header")}</ModalHeader>
@@ -170,7 +175,11 @@ const Dashboard = ({}) => {
                       required
                     />
                   </Stack>
-                  <Flex justify="right">
+                  <Divider mt={5} mb={5} />
+                  <Flex
+                    justify={["center", "center", "center", "right", "right"]}
+                    pb={2}
+                  >
                     <Button
                       bg="blue.400"
                       colorScheme="navItem"
@@ -192,10 +201,8 @@ const Dashboard = ({}) => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Flex>
-        <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
-          {t("dashboard.main-header")}
-        </Heading>
+      <Flex mt={["10px", "10px", "10px", "0", "0"]} justify={"center"}>
+        <Heading color="blue.400">{t("dashboard.main-header")}</Heading>
         <IconButton
           aria-label="Add"
           icon={<AddIcon />}
@@ -215,9 +222,11 @@ const Dashboard = ({}) => {
       <Stack spacing={10} mt={10}>
         {data?.showKindergarden.length > 0 ? (
           <>
-            <Heading ml="10px" color="blue.400">
-              {t("dashboard.owned-header")}
-            </Heading>
+            <Flex justify={["center", "center", "center", "left", "left"]}>
+              <Heading ml={["0", "0", "0", "10px", "10px"]} color="blue.400">
+                {t("dashboard.owned-header")}
+              </Heading>
+            </Flex>
             <Flex align="center" justify="left" mb={5}>
               <Box
                 w={["100%", "100%", "100%", "400px", "400px"]}
@@ -309,11 +318,15 @@ const Dashboard = ({}) => {
             </Flex>
           </>
         ) : null}
+      </Stack>
+      <Stack Stack spacing={10} mt={10}>
         {notMine.length > 0 ? (
           <>
-            <Heading ml="10px" color="blue.400">
-              {t("dashboard.part-header")}
-            </Heading>
+            <Flex justify={["center", "center", "center", "left", "left"]}>
+              <Heading ml={["0", "0", "0", "10px", "10px"]} color="blue.400">
+                {t("dashboard.part-header")}
+              </Heading>
+            </Flex>
             <Flex align="center" justify="left" mb={5}>
               <Box
                 w={["100%", "100%", "100%", "400px", "400px"]}
