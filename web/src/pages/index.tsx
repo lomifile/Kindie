@@ -18,6 +18,7 @@ import NextLink from "next/link";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useTranslation } from "next-i18next";
+import { AdBanner } from "../components/AdBanner";
 
 const Index = () => {
   const { t } = useTranslation("data", { useSuspense: false });
@@ -149,6 +150,7 @@ const Index = () => {
         </Stack>
       </Flex>
       {/* Reviews */}
+      <AdBanner />
     </Layout>
   );
 };

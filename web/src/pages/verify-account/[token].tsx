@@ -18,11 +18,9 @@ import { useTranslation } from "react-i18next";
 import { Footer } from "../../components/Footer";
 import { useVerifyAccountMutation } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { toErrormap } from "../../utils/toErrorMap";
+import { NextPage } from "next";
 
-interface VerifyAccountProps {}
-
-const VerifyAccount: React.FC<VerifyAccountProps> = ({}) => {
+const VerifyAccount: NextPage = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const [checked, setChecked] = useState(false);
   const [, verifyAccount] = useVerifyAccountMutation();
@@ -31,7 +29,7 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({}) => {
   const handleClick = () => {
     setChecked(true);
   };
-  const year = new Date().getFullYear();
+
   return (
     <Flex
       p={200}

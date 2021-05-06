@@ -222,9 +222,9 @@ const Staff: React.FC<StaffProps> = ({}) => {
           <Heading color="blue.400">{t("staff.staff-heading")}</Heading>
           {
             // @ts-ignore
-            meData.me.Name === owner.Name &&
+            meData?.me?.Name === owner.Name &&
             // @ts-ignore
-            meData.me.Surname === owner.Surname ? (
+            meData?.me?.Surname === owner.Surname ? (
               <Button
                 ml={5}
                 bg="blue.400"
