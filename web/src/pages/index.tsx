@@ -25,7 +25,6 @@ const Index = () => {
   return (
     <Layout navbarVariant={"normal"} variant={"column"} navbar={true}>
       <title>DV Organizator [ALPHA]</title>
-      <AdBanner />
       <Flex
         align="center"
         justify={{ base: "center", md: "space-around", xl: "space-between" }}
@@ -151,6 +150,7 @@ const Index = () => {
         </Stack>
       </Flex>
       {/* Reviews */}
+      <AdBanner />
     </Layout>
   );
 };

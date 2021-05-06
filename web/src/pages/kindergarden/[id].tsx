@@ -154,21 +154,23 @@ const Kindergarden = ({}) => {
                 >
                   {t("kindergarden.toolbox.btn-new-group")}
                 </Button>
-                <Button
-                  as={Link}
-                  color="blue.400"
-                  colorScheme="navItem"
-                  borderRadius="12px"
-                  py="4"
-                  px="4"
-                  lineHeight="1"
-                  size="md"
-                  onClick={() => {
-                    useChildren();
-                  }}
-                >
-                  {t("kindergarden.toolbox.btn-children")}
-                </Button>
+                <NextLink href="/children">
+                  <Button
+                    as={Link}
+                    color="blue.400"
+                    colorScheme="navItem"
+                    borderRadius="12px"
+                    py="4"
+                    px="4"
+                    lineHeight="1"
+                    size="md"
+                    onClick={() => {
+                      useChildren();
+                    }}
+                  >
+                    {t("kindergarden.toolbox.btn-children")}
+                  </Button>
+                </NextLink>
                 <NextLink href="/parents">
                   <Button
                     as={Link}

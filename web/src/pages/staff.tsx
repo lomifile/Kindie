@@ -50,6 +50,7 @@ import { useTranslation } from "react-i18next";
 interface StaffProps {}
 
 const Staff: React.FC<StaffProps> = ({}) => {
+  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -60,7 +61,6 @@ const Staff: React.FC<StaffProps> = ({}) => {
   const btnRef = React.useRef();
   const owner = fetchOwnerOf();
   const staff = fetchStaff();
-  useIsAuth();
   const [, addStaff] = useAddStaffMutation();
   const [, deleteStaff] = useDeleteStaffMutation();
   const [text, setText] = useState("");
@@ -222,9 +222,9 @@ const Staff: React.FC<StaffProps> = ({}) => {
           <Heading color="blue.400">{t("staff.staff-heading")}</Heading>
           {
             // @ts-ignore
-            meData.me.Name === owner.Name &&
+            meData?.me?.Name === owner.Name &&
             // @ts-ignore
-            meData.me.Surname === owner.Surname ? (
+            meData?.me?.Surname === owner.Surname ? (
               <Button
                 ml={5}
                 bg="blue.400"

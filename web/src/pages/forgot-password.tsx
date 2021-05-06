@@ -29,20 +29,34 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
   const year = new Date().getFullYear();
   return (
     <Flex
-      p={200}
+      p={[0, 0, 0, 200, 200]}
+      alignItems="center"
       minHeight="100%"
       width="100%"
-      alignItems="center"
       justifyContent="center"
+      justifySelf="center"
+      justify={{
+        s: "center",
+        md: "center",
+        xl: "center",
+      }}
       flexDirection="column"
+      mt={["-0", "-0", "-0", "auto", "auto"]}
+      mb={["-0", "-0", "-0", "auto", "auto"]}
     >
       <title>{t("forgot-password.main-header")}</title>
       <Box
-        width={{ base: "90%", md: "400px" }}
-        rounded="lg"
+        w={["100%", "100%", "100%", "400px", "400px"]}
+        rounded={["xs", "sm", "md", "lg", "xl"]}
         p={5}
-        border={"1px"}
-        borderColor="blue.400"
+        border={["0", "0", "0", "1px", "1px"]}
+        borderColor={[
+          "transparent",
+          "transparent",
+          "transparent",
+          "blue.400",
+          "blue.400",
+        ]}
         borderRadius={"12px"}
       >
         <Heading color={"blue.400"} marginBottom="1.5rem">
