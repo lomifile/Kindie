@@ -27,7 +27,7 @@ const Index = () => {
       <title>DV Organizator [ALPHA]</title>
       <Flex
         align="center"
-        justify={{ base: "center", md: "space-around", xl: "space-between" }}
+        justify={{ base: "center", md: "center", xl: "space-between" }}
         direction={{ base: "column-reverse", md: "row" }}
         // @ts-ignore
         wrap="no-wrap"
@@ -88,7 +88,11 @@ const Index = () => {
           <Image src={img} size="100%" rounded="1rem" shadow="2xl" />
         </Box>
       </Flex>
-      <Flex pb={"2rem"}>
+      <Flex pb={"2rem"} 
+        justify={["center", "center", "center", "center", "center"]}
+        align="center"      
+        px={8}
+      >
         <Stack>
           <Flex
             ml={{

@@ -25,9 +25,7 @@ import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 
-interface ParentsProps {}
-
-const Parents: React.FC<ParentsProps> = ({}) => {
+const Parents: React.FC<{}> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const [motherVariables, setMotherVariables] = useState({
     limit: 10,
@@ -53,7 +51,7 @@ const Parents: React.FC<ParentsProps> = ({}) => {
           justify="center"
           mb={"2rem"}
           mt={5}
-          border={["0", "0", "0", "1px", "1px"]}
+          border={["0", "0", "0", "0", "1px"]}
           borderColor={[
             "transparent",
             "transparent",
@@ -94,7 +92,7 @@ const Parents: React.FC<ParentsProps> = ({}) => {
         <Stack
           spacing={4}
           w={{ base: "100%", md: "100%" }}
-          align={["center", "center", "flex-start", "flex-start"]}
+          align={["center", "center", "center", "center", "flex-start"]}
         >
           <Heading
             as="h1"
@@ -106,7 +104,7 @@ const Parents: React.FC<ParentsProps> = ({}) => {
             {t("parents.heading-mother")}
           </Heading>
           <Box
-            w={["100%", "100%", "100%", "100%", "100%"]}
+            w={["100%", "100%", "100%", "80%", "100%"]}
             display={["block", "block", "block", "block"]}
             overflowX={["auto", "auto", "hidden", "hidden"]}
           >
@@ -172,7 +170,7 @@ const Parents: React.FC<ParentsProps> = ({}) => {
           mt={"2rem"}
           spacing={4}
           w={{ base: "100%", md: "100%" }}
-          align={["center", "center", "flex-start", "flex-start"]}
+          align={["center", "center", "center", "center", "center"]}
         >
           <Heading
             as="h1"
@@ -184,7 +182,7 @@ const Parents: React.FC<ParentsProps> = ({}) => {
             {t("parents.heading-father")}
           </Heading>
           <Box
-            w={["100%", "100%", "100%", "100%", "100%"]}
+            w={["100%", "100%", "100%", "80%", "100%"]}
             display={["block", "block", "block", "block"]}
             overflowX={["auto", "auto", "hidden", "hidden"]}
           >

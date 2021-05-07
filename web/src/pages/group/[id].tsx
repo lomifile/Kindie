@@ -202,7 +202,7 @@ const Group = ({}) => {
           align="center"
           justify="center"
           mt={5}
-          border={["0", "0", "0", "1px", "1px"]}
+          border={["0", "0", "0", "0", "1px"]}
           borderColor={[
             "transparent",
             "transparent",

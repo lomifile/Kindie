@@ -53,41 +53,18 @@ const Children: React.FC<ChildrenProps> = ({}) => {
   const [, deleteChildren] = useDeleteChildrenMutation();
 
   if (!fetching && !data) {
-    return (
-      <Flex
-        p={200}
-        minHeight="100%"
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      >
-        <Alert
-          status="error"
-          variant="subtle"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          textAlign="center"
-          height="200px"
-        >
-          <AlertIcon boxSize="40px" mr={0} />
-          <AlertTitle mt={4} mb={1} fontSize="lg">
-            {t("children.alert.title")}
-          </AlertTitle>
-          <AlertDescription maxWidth="sm">
-            {t("children.alert.desc")}
-          </AlertDescription>
-        </Alert>
-      </Flex>
-    );
+    return <Alerts 
+               status={"error"}  
+               name={t("children.alert.title")}
+               data={t("children.alert.desc")}
+            />;
   }
 
   return (
     <Layout navbarVariant="user" variant="column">
       <title>{t("children.main-header")}</title>
 
-      <Flex justify={["center", "center", "center", "left", "left"]}>
+      <Flex justify={["center", "center", "center", "center", "left"]}>
         <HStack spacing={5}>
           <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
             {t("children.main-header")}
@@ -108,6 +85,7 @@ const Children: React.FC<ChildrenProps> = ({}) => {
           </NextLink>
         </HStack>
       </Flex>
+      {/* THIS NEEDS TO BE FLEXED!! */}
       <Box
         w={["100%", "100%", "100%", "100%", "100%"]}
         display={["block", "block", "block", "block"]}

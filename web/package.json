@@ -29,7 +29,7 @@
     "is-electron": "^2.2.0",
     "isomorphic-unfetch": "^3.0.0",
     "moment": "^2.29.1",
-    "next": "^9.1.7",
+    "next": "latest",
     "next-i18next": "^8.2.0",
     "next-images": "^1.7.0",
     "next-urql": "^3.0.0",

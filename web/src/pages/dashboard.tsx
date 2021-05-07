@@ -52,24 +52,7 @@ const Dashboard = ({}) => {
 
   if (fetching && !data?.showKindergarden) {
     return (
-      <Flex
-        p={200}
-        minHeight="100%"
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      >
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-          minH="250px"
-          minW="250px"
-        />
-      </Flex>
+      <Spinner />
     );
   } else if (!data?.showKindergarden && !fetching) {
     return (
@@ -199,11 +182,11 @@ const Dashboard = ({}) => {
         {data?.showKindergarden.length > 0 ? (
           <>
             <Flex justify={["center", "center", "center", "left", "left"]}>
-              <Heading ml={["0", "0", "0", "10px", "10px"]} color="blue.400">
+              <Heading ml={["0", "0", "0", "10rem", "10px"]} color="blue.400">
                 {t("dashboard.owned-header")}
               </Heading>
             </Flex>
-            <Flex align="center" justify="left" mb={5}>
+            <Flex align="center" justify="center" mb={5}>
               <Box
                 w={["100%", "100%", "100%", "400px", "400px"]}
                 rounded={["xs", "sm", "md", "lg", "xl"]}
@@ -298,8 +281,8 @@ const Dashboard = ({}) => {
       <Stack Stack spacing={10} mt={10}>
         {notMine.length > 0 ? (
           <>
-            <Flex justify={["center", "center", "center", "left", "left"]}>
-              <Heading ml={["0", "0", "0", "10px", "10px"]} color="blue.400">
+            <Flex justify={["center", "center", "center", "center", "left"]}>
+              <Heading ml={["0", "0", "0", "10rem", "10px"]} color="blue.400">
                 {t("dashboard.part-header")}
               </Heading>
             </Flex>

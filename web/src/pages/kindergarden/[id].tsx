@@ -64,55 +64,13 @@ const Kindergarden = ({}) => {
   const [, deleteGroup] = useDeleteGroupMutation();
 
   if (fetching) {
-    return (
-      <Flex
-        p={200}
-        minHeight="100%"
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      >
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-          minH="250px"
-          minW="250px"
-        />
-      </Flex>
-    );
+    return (<Spinner />);
   } else if (!fetching && !data?.showGroups) {
-    return (
-      <Flex
-        p={200}
-        minHeight="100%"
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      >
-        <Alert
-          status="error"
-          variant="subtle"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          textAlign="center"
-          height="200px"
-        >
-          <AlertIcon boxSize="40px" mr={0} />
-          <AlertTitle mt={4} mb={1} fontSize="lg">
-            {t("kindergarden.alert.title")}
-          </AlertTitle>
-          <AlertDescription maxWidth="sm">
-            {t("kindergarden.alert.desc")}
-          </AlertDescription>
-        </Alert>
-      </Flex>
-    );
+    return (<Alerts 
+               status={"error" } 
+               name={t("kindergarden.alert.title")}
+               data={t("kindergarden.alert.desc")}  
+            />);
   }
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
@@ -278,7 +236,7 @@ const Kindergarden = ({}) => {
           mb={"2rem"}
           mt={5}
           borderRadius="12px"
-          border={["0", "0", "0", "1px", "1px"]}
+          border={["0", "0", "0", "0", "1px"]}
           borderColor={[
             "transparent",
             "transparent",
@@ -366,12 +324,12 @@ const Kindergarden = ({}) => {
         </Flex>
         {data?.showGroups.length > 0 ? (
           <>
-            <Flex justify={["center", "center", "center", "left", "left"]}>
+            <Flex justify={["center", "center", "center", "center", "left"]}>
               <Heading ml={["0", "0", "0", "10px", "10px"]} color="blue.400">
                 {t("kindergarden.groups-heading")}
               </Heading>
             </Flex>
-            <Flex align="center" justify="left" mb={5} mt={5}>
+            <Flex align="center" justify="center" mb={5} mt={5}>
               <Box
                 w={["100%", "100%", "100%", "400px", "400px"]}
                 rounded={["xs", "sm", "md", "lg", "xl"]}
