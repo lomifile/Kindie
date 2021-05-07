@@ -8,10 +8,6 @@ import {
   HStack,
   Spinner,
   Link,
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   Button,
   Modal,
   ModalBody,
@@ -41,6 +37,7 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { fetchPartOf } from "../utils/fetchPartof";
 import { toErrormap } from "../utils/toErrorMap";
 import { useIsAuth } from "../utils/useIsAuth";
+import { CustomAlert } from "../components/Alerts";
 
 const Dashboard = ({}) => {
   useIsAuth();
@@ -76,32 +73,11 @@ const Dashboard = ({}) => {
     );
   } else if (!data?.showKindergarden && !fetching) {
     return (
-      <Flex
-        p={200}
-        minHeight="100%"
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      >
-        <Alert
-          status="error"
-          variant="subtle"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          textAlign="center"
-          height="200px"
-        >
-          <AlertIcon boxSize="40px" mr={0} />
-          <AlertTitle mt={4} mb={1} fontSize="lg">
-            {t("dashboard.alert.title")}
-          </AlertTitle>
-          <AlertDescription maxWidth="sm">
-            {t("dashboard.alert.desc")}
-          </AlertDescription>
-        </Alert>
-      </Flex>
+      <CustomAlert
+        name={t("dashboard.alert.title")}
+        data={t("dashboard.alert.desc")}
+        status={"error"}
+      />
     );
   }
   return (

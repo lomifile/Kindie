@@ -25,7 +25,7 @@ import {
 import { Image } from "@chakra-ui/image";
 // @ts-ignore
 import logo from "../img/logo.png";
-import React, { useState } from "react";
+import React from "react";
 import NextLink from "next/link";
 import {
   useClearKindergardenMutation,
