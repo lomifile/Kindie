@@ -1,0 +1,3 @@
+mutation DeleteMother($motherId:Int!){
+	deleteMother(motherId:$motherId)
+}

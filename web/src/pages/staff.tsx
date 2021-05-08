@@ -45,9 +45,7 @@ import { ShowUser } from "../components/ShowUser";
 import { useIsAuth } from "../utils/useIsAuth";
 import { useTranslation } from "react-i18next";
 
-interface StaffProps {}
-
-const Staff: React.FC<StaffProps> = ({}) => {
+const Staff: React.FC<{}> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const { isOpen, onOpen, onClose } = useDisclosure();

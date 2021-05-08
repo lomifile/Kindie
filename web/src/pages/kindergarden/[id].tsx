@@ -46,6 +46,7 @@ import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
 import { useIsAuth } from "../../utils/useIsAuth";
+import { CustomSpinner } from "../../components/Spinner";
 
 const Kindergarden = ({}) => {
   useIsAuth();
@@ -64,13 +65,15 @@ const Kindergarden = ({}) => {
   const [, deleteGroup] = useDeleteGroupMutation();
 
   if (fetching) {
-    return (<Spinner />);
+    return <CustomSpinner />;
   } else if (!fetching && !data?.showGroups) {
-    return (<Alerts 
-               status={"error" } 
-               name={t("kindergarden.alert.title")}
-               data={t("kindergarden.alert.desc")}  
-            />);
+    return (
+      <Alerts
+        status={"error"}
+        name={t("kindergarden.alert.title")}
+        data={t("kindergarden.alert.desc")}
+      />
+    );
   }
   return (
     <Layout navbarVariant={"user"} variant={"column"}>

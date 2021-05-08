@@ -1,6 +1,6 @@
 fragment GroupFragment on Groups {
-    Id
-    Name
-    createdAt
-    updatedAt
+  Id
+  Name
+  createdAt
+  updatedAt
 }

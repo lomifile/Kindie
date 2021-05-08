@@ -1,5 +1,5 @@
-query ShowSelectedKindergarden{
-  selectedKindergarden{
+query ShowSelectedKindergarden {
+  selectedKindergarden {
     ...KindergardenFragment
   }
 }

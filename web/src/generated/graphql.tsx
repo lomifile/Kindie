@@ -343,7 +343,7 @@ export type MutationDeleteStaffArgs = {
 
 
 export type MutationDeleteFatherArgs = {
-  fatherId: Scalars['Float'];
+  fatherId: Scalars['Int'];
 };
 
 
@@ -359,7 +359,7 @@ export type MutationAddFatherArgs = {
 
 
 export type MutationDeleteMotherArgs = {
-  motherId: Scalars['Float'];
+  motherId: Scalars['Int'];
 };
 
 
@@ -655,6 +655,16 @@ export type DeleteChildrenMutation = (
   & Pick<Mutation, 'deleteChildren'>
 );
 
+export type DeleteFatherMutationVariables = Exact<{
+  fatherId: Scalars['Int'];
+}>;
+
+
+export type DeleteFatherMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteFather'>
+);
+
 export type DeleteGroupMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -673,6 +683,16 @@ export type DeleteKindergardenMutationVariables = Exact<{
 export type DeleteKindergardenMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deleteKindergarden'>
+);
+
+export type DeleteMotherMutationVariables = Exact<{
+  motherId: Scalars['Int'];
+}>;
+
+
+export type DeleteMotherMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteMother'>
 );
 
 export type DeleteStaffMutationVariables = Exact<{
@@ -1398,6 +1418,15 @@ export const DeleteChildrenDocument = gql`
 export function useDeleteChildrenMutation() {
   return Urql.useMutation<DeleteChildrenMutation, DeleteChildrenMutationVariables>(DeleteChildrenDocument);
 };
+export const DeleteFatherDocument = gql`
+    mutation DeleteFather($fatherId: Int!) {
+  deleteFather(fatherId: $fatherId)
+}
+    `;
+
+export function useDeleteFatherMutation() {
+  return Urql.useMutation<DeleteFatherMutation, DeleteFatherMutationVariables>(DeleteFatherDocument);
+};
 export const DeleteGroupDocument = gql`
     mutation DeleteGroup($id: Int!) {
   deleteGroup(id: $id)
@@ -1415,6 +1444,15 @@ export const DeleteKindergardenDocument = gql`
 
 export function useDeleteKindergardenMutation() {
   return Urql.useMutation<DeleteKindergardenMutation, DeleteKindergardenMutationVariables>(DeleteKindergardenDocument);
+};
+export const DeleteMotherDocument = gql`
+    mutation DeleteMother($motherId: Int!) {
+  deleteMother(motherId: $motherId)
+}
+    `;
+
+export function useDeleteMotherMutation() {
+  return Urql.useMutation<DeleteMotherMutation, DeleteMotherMutationVariables>(DeleteMotherDocument);
 };
 export const DeleteStaffDocument = gql`
     mutation DeleteStaff($userId: Int!) {

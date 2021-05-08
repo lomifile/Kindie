@@ -88,9 +88,10 @@ const Index = () => {
           <Image src={img} size="100%" rounded="1rem" shadow="2xl" />
         </Box>
       </Flex>
-      <Flex pb={"2rem"} 
+      <Flex
+        pb={"2rem"}
         justify={["center", "center", "center", "center", "center"]}
-        align="center"      
+        align="center"
         px={8}
       >
         <Stack>

@@ -2,10 +2,13 @@
 .footer-nav-item:after {
   content: "•";
   display: inline-block;
-  margin-left: 0.5rem; }
+  margin-left: 0.5rem;
+}
 
 .footer-nav-item:last-child:after {
-  content: none; }
+  content: none;
+}
 
 .nav-item:hover {
-  text-decoration: none !important; }
+  text-decoration: none !important;
+}
