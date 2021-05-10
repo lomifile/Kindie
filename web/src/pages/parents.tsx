@@ -19,7 +19,12 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useIsAuth } from "../utils/useIsAuth";
-import { useShowfatherQuery, useShowMotherQuery, useDeleteMotherMutation, useDeleteFatherMutation } from "../generated/graphql";
+import {
+  useShowfatherQuery,
+  useShowMotherQuery,
+  useDeleteMotherMutation,
+  useDeleteFatherMutation,
+} from "../generated/graphql";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
@@ -41,7 +46,7 @@ const Parents: React.FC<{}> = ({}) => {
   const [{ data: father, fetching: fatherFetching }] = useShowfatherQuery({
     variables: fatherVariables,
   });
-	
+
   const [, deleteMother] = useDeleteMotherMutation();
   const [, deleteFather] = useDeleteFatherMutation();
 
@@ -158,11 +163,11 @@ const Parents: React.FC<{}> = ({}) => {
                             borderRadius="12px"
                             lineHeight="1"
                             size="md"
-			    onClick={() => {
-				    deleteMother({
-					    motherId: mom.Id
-				});
-			    }}
+                            onClick={() => {
+                              deleteMother({
+                                motherId: mom.Id,
+                              });
+                            }}
                           />
                         </Td>
                       </Tr>
@@ -240,11 +245,11 @@ const Parents: React.FC<{}> = ({}) => {
                             borderRadius="12px"
                             lineHeight="1"
                             size="md"
-			    onClick={() => {
-				deleteFather({
-					fatherId: father.Id
-				});
-			    }}
+                            onClick={() => {
+                              deleteFather({
+                                fatherId: father.Id,
+                              });
+                            }}
                           />
                         </Td>
                       </Tr>

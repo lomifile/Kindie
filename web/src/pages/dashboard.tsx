@@ -38,7 +38,7 @@ import { fetchPartOf } from "../utils/fetchPartof";
 import { toErrormap } from "../utils/toErrorMap";
 import { useIsAuth } from "../utils/useIsAuth";
 import { CustomAlert } from "../components/Alerts";
-import {CustomSpinner} from '../components/Spinner';
+import { CustomSpinner } from "../components/Spinner";
 const Dashboard = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });

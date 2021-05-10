@@ -36,6 +36,7 @@ import {
   AddIcon,
 } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
+import { CustomAlert } from "../components/Alerts";
 
 const Children: React.FC<{}> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
@@ -52,7 +53,7 @@ const Children: React.FC<{}> = ({}) => {
 
   if (!fetching && !data) {
     return (
-      <Alerts
+      <CustomAlert
         status={"error"}
         name={t("children.alert.title")}
         data={t("children.alert.desc")}
@@ -85,7 +86,6 @@ const Children: React.FC<{}> = ({}) => {
           </NextLink>
         </HStack>
       </Flex>
-      {/* THIS NEEDS TO BE FLEXED!! */}
       <Flex justify={"center"}>
         <Box
           w={["100%", "100%", "100%", "80%", "100%"]}

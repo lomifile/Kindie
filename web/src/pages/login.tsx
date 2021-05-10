@@ -27,10 +27,10 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useTranslation } from "react-i18next";
 import { ViewIcon } from "@chakra-ui/icons";
+import  isElectron  from 'is-electron';
+import {isServer} from '../utils/isServer';
 
-interface loginProps {}
-
-const Login: React.FC<loginProps> = ({}) => {
+const Login: React.FC<{}> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const [, login] = useLoginMutation();
   const [, resendEmail] = useResendEmailMutation();
@@ -43,6 +43,8 @@ const Login: React.FC<loginProps> = ({}) => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
+  console.log(isServer());
+  console.log(isElectron());
   return (
     <Flex
       p={[0, 0, 0, 200, 200]}
@@ -205,4 +207,4 @@ const Login: React.FC<loginProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Login);
+export default withUrqlClient(createUrqlClient, { ssr: false })(Login);

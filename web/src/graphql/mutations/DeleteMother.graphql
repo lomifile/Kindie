@@ -1,3 +1,3 @@
-mutation DeleteMother($motherId:Int!){
-	deleteMother(motherId:$motherId)
+mutation DeleteMother($motherId: Int!) {
+  deleteMother(motherId: $motherId)
 }

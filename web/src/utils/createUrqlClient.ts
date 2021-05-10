@@ -30,7 +30,7 @@ import {
   AddChildToGroupMutationVariables,
   DeleteStaffMutationVariables,
   DeleteFatherMutationVariables,
-  DeleteMotherMutationVariables
+  DeleteMotherMutationVariables,
 } from "../generated/graphql";
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
