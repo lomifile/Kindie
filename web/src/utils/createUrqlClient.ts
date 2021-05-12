@@ -285,6 +285,28 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               });
             },
 
+            updateFather: (_result, args, cache, info) => {
+              const allFields = cache.inspectFields("Query");
+              const fieldInfos = allFields.filter(
+                (info) => info.fieldName === "showFather"
+              );
+
+              fieldInfos.forEach((fi) => {
+                cache.invalidate("Query", "showFather", fi.arguments || {});
+              });
+            },
+
+            updateMother: (_result, args, cache, info) => {
+              const allFields = cache.inspectFields("Query");
+              const fieldInfos = allFields.filter(
+                (info) => info.fieldName === "showMother"
+              );
+
+              fieldInfos.forEach((fi) => {
+                cache.invalidate("Query", "showMother", fi.arguments || {});
+              });
+            },
+
             updateChildernParents: (_result, args, cache, info) => {
               const allFields = cache.inspectFields("Query");
               const fieldInfos = allFields.filter(
