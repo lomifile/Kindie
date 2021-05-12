@@ -16,7 +16,6 @@ import {
   AlertTitle,
   Box,
   Button,
-  Divider,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -36,20 +35,24 @@ import {
   ModalOverlay,
   Spinner,
   Stack,
+  useColorMode,
+  useColorModeValue,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import Router from "next/router";
+import { useIsAuth } from "../../utils/useIsAuth";
 import { Form, Formik } from "formik";
 import { InputField } from "../../components/InputField";
 import { toErrormap } from "../../utils/toErrorMap";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
-import { useIsAuth } from "../../utils/useIsAuth";
-import { CustomSpinner } from "../../components/Spinner";
-import { CustomAlert } from "../../components/Alerts";
+import { bgColor } from "../../utils/colorModeColors";
 
-const Kindergarden = ({}) => {
+interface KindergardenProps {}
+
+const Kindergarden: React.FC<KindergardenProps> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const toast = useToast();
@@ -65,19 +68,76 @@ const Kindergarden = ({}) => {
   const [, useChildren] = useUseChildrenMutation();
   const [, deleteGroup] = useDeleteGroupMutation();
 
+  const { colorMode } = useColorMode();
+  const bg = useColorModeValue(bgColor.light, bgColor.dark);
+  const headerColor = useColorModeValue("blue.400", "brand.100");
+  const textColor = useColorModeValue("primary.800", "brand.200");
+  const btnColor = useColorModeValue("blue.400", "transparent");
+  const btnBorderColor = useColorModeValue("none", "brand.200");
+  const btnTextColor = useColorModeValue("white", "brand.200");
+  const featureBorderColor = useColorModeValue("black", "brand.200");
+  const borderColor = useColorModeValue("gray.200", "brand.200");
+  const boxBorderColor = useColorModeValue("blue.400", "brand.200");
+
   if (fetching) {
-    return <CustomSpinner />;
+    return (
+      <Flex
+        p={200}
+        minHeight="100%"
+        width="100%"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+      >
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+          minH="250px"
+          minW="250px"
+        />
+      </Flex>
+    );
   } else if (!fetching && !data?.showGroups) {
     return (
-      <CustomAlert
-        status={"error"}
-        name={t("kindergarden.alert.title")}
-        data={t("kindergarden.alert.desc")}
-      />
+      <Flex
+        p={200}
+        minHeight="100%"
+        width="100%"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+      >
+        <Alert
+          status="error"
+          variant="subtle"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          textAlign="center"
+          height="200px"
+        >
+          <AlertIcon boxSize="40px" mr={0} />
+          <AlertTitle mt={4} mb={1} fontSize="lg">
+            {t("kindergarden.alert.title")}
+          </AlertTitle>
+          <AlertDescription maxWidth="sm">
+            {t("kindergarden.alert.desc")}
+          </AlertDescription>
+        </Alert>
+      </Flex>
     );
   }
   return (
-    <Layout navbarVariant={"user"} variant={"column"}>
+    <Layout
+      // @ts-ignore
+      bg={bg}
+      maxHeight="100vh"
+      navbarVariant={"user"}
+      variant={"column"}
+    >
       <title>{t("kindergarden.main-header")}</title>
       <Drawer placement="left" onClose={drawerOnClose} isOpen={drawerIsOpen}>
         <DrawerOverlay>
@@ -117,23 +177,22 @@ const Kindergarden = ({}) => {
                 >
                   {t("kindergarden.toolbox.btn-new-group")}
                 </Button>
-                <NextLink href="/children">
-                  <Button
-                    as={Link}
-                    color="blue.400"
-                    colorScheme="navItem"
-                    borderRadius="12px"
-                    py="4"
-                    px="4"
-                    lineHeight="1"
-                    size="md"
-                    onClick={() => {
-                      useChildren();
-                    }}
-                  >
-                    {t("kindergarden.toolbox.btn-children")}
-                  </Button>
-                </NextLink>
+                <Button
+                  as={Link}
+                  color="blue.400"
+                  colorScheme="navItem"
+                  borderRadius="12px"
+                  py="4"
+                  px="4"
+                  lineHeight="1"
+                  size="md"
+                  onClick={async () => {
+                    await useChildren();
+                    Router.push("/children");
+                  }}
+                >
+                  {t("kindergarden.toolbox.btn-children")}
+                </Button>
                 <NextLink href="/parents">
                   <Button
                     as={Link}
@@ -207,11 +266,7 @@ const Kindergarden = ({}) => {
                       required
                     />
                   </Stack>
-                  <Divider mt={5} mb={5} />
-                  <Flex
-                    justify={["center", "center", "center", "right", "right"]}
-                    pb={2}
-                  >
+                  <Flex justify="right">
                     <Button
                       bg="blue.400"
                       colorScheme="navItem"
@@ -240,7 +295,7 @@ const Kindergarden = ({}) => {
           mb={"2rem"}
           mt={5}
           borderRadius="12px"
-          border={["0", "0", "0", "0", "1px"]}
+          border={["0", "0", "0", "1px", "1px"]}
           borderColor={[
             "transparent",
             "transparent",
@@ -250,7 +305,7 @@ const Kindergarden = ({}) => {
           ]}
           p={5}
         >
-          <HStack p={1} spacing={4}>
+          <HStack p={2} spacing={4}>
             <Button
               bg="blue.400"
               className="nav-item"
@@ -265,24 +320,23 @@ const Kindergarden = ({}) => {
             >
               {t("kindergarden.toolbox.btn-new-group")}
             </Button>
-            <NextLink href={"/children"}>
-              <Button
-                bg="blue.400"
-                className="nav-item"
-                colorScheme="navItem"
-                borderRadius="12px"
-                py="4"
-                px="4"
-                lineHeight="1"
-                size="md"
-                display={["none", "none", "none", "flex"]}
-                onClick={async () => {
-                  await useChildren();
-                }}
-              >
-                {t("kindergarden.toolbox.btn-children")}
-              </Button>
-            </NextLink>
+            <Button
+              bg="blue.400"
+              className="nav-item"
+              colorScheme="navItem"
+              borderRadius="12px"
+              py="4"
+              px="4"
+              lineHeight="1"
+              size="md"
+              display={["none", "none", "none", "flex"]}
+              onClick={async () => {
+                await useChildren();
+                Router.push("/children");
+              }}
+            >
+              {t("kindergarden.toolbox.btn-children")}
+            </Button>
             <NextLink href="/parents">
               <Button
                 bg="blue.400"
@@ -328,12 +382,12 @@ const Kindergarden = ({}) => {
         </Flex>
         {data?.showGroups.length > 0 ? (
           <>
-            <Flex justify={["center", "center", "center", "center", "left"]}>
-              <Heading ml={["0", "0", "0", "10px", "10px"]} color="blue.400">
+            <Flex mt={5}>
+              <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
                 {t("kindergarden.groups-heading")}
               </Heading>
             </Flex>
-            <Flex align="center" justify="center" mb={5} mt={5}>
+            <Flex align="center" justify="left" mb={5} mt={5}>
               <Box
                 w={["100%", "100%", "100%", "400px", "400px"]}
                 rounded={["xs", "sm", "md", "lg", "xl"]}
@@ -369,13 +423,14 @@ const Kindergarden = ({}) => {
                             if (error) {
                               toast({
                                 title: t("kindergarden.toast.error.title"),
+                                description: t("kindergarden.toast.error.desc"),
                                 status: "error",
                                 duration: 9000,
                                 isClosable: true,
                               });
                             } else {
                               toast({
-                                title: t("kindergarden.toast.delete.title"),
+                                title: t("kindergarden.toast.delete"),
                                 status: "success",
                                 duration: 9000,
                                 isClosable: true,
@@ -391,23 +446,25 @@ const Kindergarden = ({}) => {
                           as="h1"
                           lineHeight="tight"
                         >
-                          <NextLink
-                            href={"/group/[id]"}
-                            as={`/group/${owning.Id}?name=${owning.Name}`}
+                          <Link
+                            color="blue.400"
+                            style={{
+                              fontSize: "26px",
+                              fontWeight: "bold",
+                            }}
+                            onClick={async () => {
+                              await useGroup({ groupId: owning.Id });
+                              Router.push(
+                                `/group/${
+                                  typeof Router.query.id === "string"
+                                    ? Router.query.id
+                                    : ""
+                                }?name=${owning.Name}`
+                              );
+                            }}
                           >
-                            <Link
-                              color="blue.400"
-                              style={{
-                                fontSize: "26px",
-                                fontWeight: "bold",
-                              }}
-                              onClick={() => {
-                                useGroup({ groupId: owning.Id });
-                              }}
-                            >
-                              {owning.Name}
-                            </Link>
-                          </NextLink>
+                            {owning.Name}
+                          </Link>
                         </Box>
                       </Box>
                     </Box>

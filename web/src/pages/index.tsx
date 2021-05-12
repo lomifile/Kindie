@@ -8,6 +8,9 @@ import {
   Stack,
   Text,
   HStack,
+  color,
+  useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
 import { Image } from "@chakra-ui/image";
@@ -18,53 +21,75 @@ import NextLink from "next/link";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useTranslation } from "next-i18next";
-import { AdBanner } from "../components/AdBanner";
+import { bgColor } from "../utils/colorModeColors";
 
 const Index = () => {
   const { t } = useTranslation("data", { useSuspense: false });
+  const { colorMode } = useColorMode();
+  const bg = useColorModeValue(bgColor.light, bgColor.dark);
+  const headerColor = useColorModeValue("blue.400", "brand.100");
+  const textColor = useColorModeValue("primary.800", "brand.200");
+  const btnColor = useColorModeValue("blue.400", "transparent");
+  const btnBorderColor = useColorModeValue("none", "brand.200");
+  const btnTextColor = useColorModeValue("white", "brand.200");
+  const featureBorderColor = useColorModeValue("black", "brand.200");
   return (
-    <Layout navbarVariant={"normal"} variant={"column"} navbar={true}>
+    <Layout
+      // @ts-ignore
+      bg={bg}
+      navbarVariant={"normal"}
+      variant={"column"}
+      navbar={true}
+    >
       <title>DV Organizator [ALPHA]</title>
       <Flex
         align="center"
-        justify={{ base: "center", md: "center", xl: "space-between" }}
+        justify={{ base: "center", md: "space-around", xl: "space-between" }}
         direction={{ base: "column-reverse", md: "row" }}
         // @ts-ignore
         wrap="no-wrap"
         minH="70vh"
         px={8}
         mb={5}
+        maxW={["100%", "100%", "100%", "80%", "80%"]}
+        bg={bg}
       >
         <Stack
           spacing={4}
           w={{ base: "80%", md: "40%" }}
           align={["center", "center", "flex-start", "flex-start"]}
+          bg={bg}
         >
           <Heading
             as="h1"
             size="xl"
             fontWeight="bold"
-            color="blue.400"
+            // color="blue.400"
             textAlign={["center", "center", "left", "left"]}
+            bg={bg}
+            color={headerColor}
           >
             {t("index.picture-data.main-header")}
           </Heading>
           <Heading
             as="h2"
             size="md"
-            color="primary.800"
+            color={textColor}
             opacity="0.8"
             fontWeight="normal"
             lineHeight={1.5}
             textAlign={["center", "center", "left", "left"]}
+            bg={bg}
           >
             {t("index.picture-data.second-header")}
           </Heading>
           <NextLink href="/register">
             <Button
-              bg="blue.400"
+              variant={colorMode === "dark" ? "outline" : "solid"}
+              borderColor={btnBorderColor}
+              bg={btnColor}
+              color={btnTextColor}
               className="nav-item"
-              colorScheme="navItem"
               borderRadius="12px"
               py="4"
               px="4"
@@ -78,7 +103,7 @@ const Index = () => {
             fontSize="xs"
             mt={2}
             textAlign="center"
-            color="primary.800"
+            color={textColor}
             opacity="0.6"
           >
             {t("index.picture-data.small-text")}
@@ -88,12 +113,7 @@ const Index = () => {
           <Image src={img} size="100%" rounded="1rem" shadow="2xl" />
         </Box>
       </Flex>
-      <Flex
-        pb={"2rem"}
-        justify={["center", "center", "center", "center", "center"]}
-        align="center"
-        px={8}
-      >
+      <Flex pb={"2rem"} maxW={["100%", "100%", "100%", "80%", "80%"]}>
         <Stack>
           <Flex
             ml={{
@@ -107,11 +127,12 @@ const Index = () => {
             mb={1}
             pb={"1rem"}
           >
-            <Heading color="blue.400">{t("index.headers.wwd")}</Heading>
+            <Heading color={headerColor}>{t("index.headers.wwd")}</Heading>
           </Flex>
           <br />
           <br />
           <Stack
+            bg={bg}
             spacing={8}
             justify={{
               base: "center",
@@ -121,19 +142,29 @@ const Index = () => {
             direction={{ base: "column-reverse", md: "row" }}
           >
             <Feature
+              //@ts-ignore
+              color={textColor}
+              borderColor={featureBorderColor}
               title={t("index.features.feature-1.title").toString()}
               desc={t("index.features.feature-1.desc")}
             />
             <Feature
+              //@ts-ignore
+              color={textColor}
+              borderColor={featureBorderColor}
               title={t("index.features.feature-2.title")}
               desc={t("index.features.feature-2.desc")}
             />
             <Feature
+              //@ts-ignore
+              color={textColor}
+              borderColor={featureBorderColor}
               title={t("index.features.feature-3.title")}
               desc={t("index.features.feature-3.desc")}
             />
           </Stack>
           <Stack
+            bg={bg}
             pt={"5"}
             spacing={8}
             justify={{
@@ -144,10 +175,16 @@ const Index = () => {
             direction={{ base: "column-reverse", md: "row" }}
           >
             <Feature
+              //@ts-ignore
+              color={textColor}
+              borderColor={featureBorderColor}
               title={t("index.features.feature-4.title")}
               desc={t("index.features.feature-4.desc")}
             />
             <Feature
+              //@ts-ignore
+              color={textColor}
+              borderColor={featureBorderColor}
               title={t("index.features.feature-5.title")}
               desc={t("index.features.feature-5.desc")}
             />
@@ -155,7 +192,6 @@ const Index = () => {
         </Stack>
       </Flex>
       {/* Reviews */}
-      <AdBanner />
     </Layout>
   );
 };

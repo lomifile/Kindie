@@ -14,6 +14,9 @@ import {
   Link,
   Stack,
   Text,
+  useColorMode,
+  useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
@@ -27,10 +30,11 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useTranslation } from "react-i18next";
 import { ViewIcon } from "@chakra-ui/icons";
-import isElectron from "is-electron";
-import { isServer } from "../utils/isServer";
+import { bgColor } from "../utils/colorModeColors";
 
-const Login: React.FC<{}> = ({}) => {
+interface loginProps {}
+
+const Login: React.FC<loginProps> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const [, login] = useLoginMutation();
   const [, resendEmail] = useResendEmailMutation();
@@ -43,8 +47,18 @@ const Login: React.FC<{}> = ({}) => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
-  console.log(isServer());
-  console.log(isElectron());
+  const { colorMode } = useColorMode();
+  const bg = useColorModeValue(bgColor.light, bgColor.dark);
+  const headerColor = useColorModeValue("blue.400", "brand.100");
+  const textColor = useColorModeValue("primary.800", "brand.200");
+  const btnColor = useColorModeValue("blue.400", "transparent");
+  const btnBorderColor = useColorModeValue("blue.400", "brand.200");
+  const btnTextColor = useColorModeValue("white", "brand.200");
+  const btnRegTextColor = useColorModeValue("blue.400", bgColor.dark);
+  const btnRegisterColor = useColorModeValue("transparent", "brand.200");
+  const boxBorderColor = useColorModeValue("blue.400", "brand.200");
+  const showPasswordBtnColor = useColorModeValue("transparent", "brand.200");
+
   return (
     <Flex
       p={[0, 0, 0, 200, 200]}
@@ -61,6 +75,7 @@ const Login: React.FC<{}> = ({}) => {
       flexDirection="column"
       mt={["-0", "-0", "-0", "auto", "auto"]}
       mb={["-0", "-0", "-0", "auto", "auto"]}
+      bg={bg}
     >
       <title>{t("login.main-header")}</title>
       {verified ? (
@@ -86,7 +101,7 @@ const Login: React.FC<{}> = ({}) => {
                   email: remail,
                 });
               }}
-              color="blue.400"
+              color={headerColor}
             >
               {t("login.alert.desc-3")}
             </Link>{" "}
@@ -103,12 +118,12 @@ const Login: React.FC<{}> = ({}) => {
           "transparent",
           "transparent",
           "transparent",
-          "blue.400",
-          "blue.400",
+          boxBorderColor,
+          boxBorderColor,
         ]}
         borderRadius={"12px"}
       >
-        <Heading color={"blue.400"} marginBottom="1.5rem">
+        <Heading color={headerColor} marginBottom="1.5rem">
           {t("login.main-header")}
         </Heading>
         <Formik
@@ -137,6 +152,8 @@ const Login: React.FC<{}> = ({}) => {
             <Form>
               <Stack spacing={4} marginBottom="1rem">
                 <InputField
+                  // @ts-ignore
+                  bg={bg}
                   name="email"
                   placeholder={t("login.form.placeholders.email")}
                   label={t("login.form.email")}
@@ -145,6 +162,8 @@ const Login: React.FC<{}> = ({}) => {
                 <Stack justifyContent="space-between">
                   <InputGroup size="md">
                     <InputField
+                      // @ts-ignore
+                      bg={bg}
                       name="password"
                       placeholder={t("login.form.placeholders.password")}
                       label={t("login.form.password")}
@@ -156,6 +175,7 @@ const Login: React.FC<{}> = ({}) => {
                         icon={<ViewIcon />}
                         h="1.75rem"
                         size="sm"
+                        backgroundColor={showPasswordBtnColor}
                         onClick={handleClick}
                       />
                     </InputRightElement>
@@ -163,12 +183,14 @@ const Login: React.FC<{}> = ({}) => {
                 </Stack>
                 <Stack marginBottom="1rem">
                   <NextLink href="/forgot-password">
-                    <Link color="secondary.link" fontSize="sm" fontWeight="500">
+                    <Link color={headerColor} fontSize="sm" fontWeight="500">
                       {t("login.form.forgot")}
                     </Link>
                   </NextLink>
                   <Button
-                    bg="blue.400"
+                    variant={colorMode === "dark" ? "outline" : "solid"}
+                    bg={btnColor}
+                    color={btnTextColor}
                     colorScheme="navItem"
                     borderRadius="12px"
                     py="4"
@@ -187,15 +209,16 @@ const Login: React.FC<{}> = ({}) => {
         </Formik>
         <Divider marginBottom="1rem" />
         <Stack>
-          <Text textAlign="center" fontWeight="500">
+          <Text textAlign="center" color={textColor} fontWeight="500">
             {t("login.text.acc")}
           </Text>
           <NextLink href="/register">
             <Button
+              variant={colorMode === "dark" ? "soild" : "outline"}
+              borderColor={btnBorderColor}
+              color={btnRegTextColor}
+              bg={btnRegisterColor}
               borderRadius="12px"
-              borderColor="blue.400"
-              variant="outline"
-              color="blue.400"
             >
               {t("login.text.btn")}
             </Button>
@@ -207,4 +230,4 @@ const Login: React.FC<{}> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: false })(Login);
+export default withUrqlClient(createUrqlClient)(Login);

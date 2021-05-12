@@ -8,6 +8,10 @@ import {
   HStack,
   Spinner,
   Link,
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Button,
   Modal,
   ModalBody,
@@ -19,29 +23,35 @@ import {
   useToast,
   Divider,
   IconButton,
+  color,
+  useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { withUrqlClient } from "next-urql";
+import { useRouter } from "next/router";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { InputField } from "../components/InputField";
 import { Layout } from "../components/Layout";
-import NextLink from "next/link";
 import {
   useCreateKindergardenMutation,
   useDeleteKindergardenMutation,
   useShowKindergardenQuery,
   useUseKindergardenMutation,
 } from "../generated/graphql";
+import { bgColor } from "../utils/colorModeColors";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { fetchPartOf } from "../utils/fetchPartof";
 import { toErrormap } from "../utils/toErrorMap";
 import { useIsAuth } from "../utils/useIsAuth";
-import { CustomAlert } from "../components/Alerts";
-import { CustomSpinner } from "../components/Spinner";
-const Dashboard = ({}) => {
-  useIsAuth();
+
+interface DashboardProps {}
+
+const Dashboard: React.FC<DashboardProps> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
+  useIsAuth();
+  const router = useRouter();
   const toast = useToast();
   const [, useKindergarden] = useUseKindergardenMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,28 +60,79 @@ const Dashboard = ({}) => {
   const [, deleteKindergarden] = useDeleteKindergardenMutation();
   const notMine = fetchPartOf();
 
+  const { colorMode } = useColorMode();
+  const bg = useColorModeValue(bgColor.light, bgColor.dark);
+  const headerColor = useColorModeValue("blue.400", "brand.100");
+  const textColor = useColorModeValue("primary.800", "brand.200");
+  const btnColor = useColorModeValue("blue.400", "transparent");
+  const btnBorderColor = useColorModeValue("none", "brand.200");
+  const btnTextColor = useColorModeValue("white", "brand.200");
+  const featureBorderColor = useColorModeValue("black", "brand.200");
+  const borderColor = useColorModeValue("gray.200", "brand.200");
+  const boxBorderColor = useColorModeValue("blue.400", "brand.200");
+
   if (fetching && !data?.showKindergarden) {
-    return <CustomSpinner />;
+    return (
+      <Flex
+        p={200}
+        minHeight="100%"
+        width="100%"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+      >
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+          minH="250px"
+          minW="250px"
+        />
+      </Flex>
+    );
   } else if (!data?.showKindergarden && !fetching) {
     return (
-      <CustomAlert
-        name={t("dashboard.alert.title")}
-        data={t("dashboard.alert.desc")}
-        status={"error"}
-      />
+      <Flex
+        p={200}
+        minHeight="100%"
+        width="100%"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+      >
+        <Alert
+          status="error"
+          variant="subtle"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          textAlign="center"
+          height="200px"
+        >
+          <AlertIcon boxSize="40px" mr={0} />
+          <AlertTitle mt={4} mb={1} fontSize="lg">
+            {t("dashboard.alert.title")}
+          </AlertTitle>
+          <AlertDescription maxWidth="sm">
+            {t("dashboard.alert.desc")}
+          </AlertDescription>
+        </Alert>
+      </Flex>
     );
   }
   return (
-    <Layout navbarVariant={"user"} variant={"column"}>
+    <Layout
+      // @ts-ignore
+      bg={bg}
+      navbarVariant={"user"}
+      variant={"column"}
+    >
       <title>{t("dashboard.main-header")}</title>
-      <Modal
-        closeOnOverlayClick={false}
-        onClose={onClose}
-        size={"md"}
-        isOpen={isOpen}
-      >
+      <Modal onClose={onClose} size={"md"} isOpen={isOpen}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent bg={bg} color={headerColor}>
           <ModalHeader>{t("dashboard.modal-header")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -132,13 +193,12 @@ const Dashboard = ({}) => {
                       required
                     />
                   </Stack>
-                  <Divider mt={5} mb={5} />
-                  <Flex
-                    justify={["center", "center", "center", "right", "right"]}
-                    pb={2}
-                  >
+                  <Flex justify="right">
                     <Button
-                      bg="blue.400"
+                      variant={colorMode === "dark" ? "outline" : "solid"}
+                      borderColor={btnBorderColor}
+                      bg={btnColor}
+                      color={btnTextColor}
                       colorScheme="navItem"
                       borderRadius="12px"
                       py="4"
@@ -158,12 +218,17 @@ const Dashboard = ({}) => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Flex mt={["10px", "10px", "10px", "0", "0"]} justify={"center"}>
-        <Heading color="blue.400">{t("dashboard.main-header")}</Heading>
+      <Flex bg={bg}>
+        <Heading ml={["25px", "25px", "0", "0", "0"]} color={headerColor}>
+          {t("dashboard.main-header")}
+        </Heading>
         <IconButton
           aria-label="Add"
           icon={<AddIcon />}
-          bg="blue.400"
+          variant={colorMode === "dark" ? "outline" : "solid"}
+          borderColor={btnBorderColor}
+          bg={btnColor}
+          color={btnTextColor}
           colorScheme="navItem"
           borderRadius="12px"
           py="4"
@@ -175,16 +240,18 @@ const Dashboard = ({}) => {
           ml={"2rem"}
         />
       </Flex>
-      <Divider mt={5} />
+      <Divider
+        mt={5}
+        borderColor={borderColor}
+        maxW={["100%", "100%", "100%", "80%", "80%"]}
+      />
       <Stack spacing={10} mt={10}>
         {data?.showKindergarden.length > 0 ? (
           <>
-            <Flex justify={["center", "center", "center", "left", "left"]}>
-              <Heading ml={["0", "0", "0", "10rem", "10px"]} color="blue.400">
-                {t("dashboard.owned-header")}
-              </Heading>
-            </Flex>
-            <Flex align="center" justify="center" mb={5}>
+            <Heading ml="10px" color={headerColor}>
+              {t("dashboard.owned-header")}
+            </Heading>
+            <Flex align="center" justify="left" mb={5}>
               <Box
                 w={["100%", "100%", "100%", "400px", "400px"]}
                 rounded={["xs", "sm", "md", "lg", "xl"]}
@@ -194,8 +261,8 @@ const Dashboard = ({}) => {
                   "transparent",
                   "transparent",
                   "transparent",
-                  "blue.400",
-                  "blue.400",
+                  boxBorderColor,
+                  boxBorderColor,
                 ]}
                 borderRadius={"12px"}
                 style={{
@@ -207,9 +274,15 @@ const Dashboard = ({}) => {
               >
                 <HStack spacing={8}>
                   {data?.showKindergarden?.map((owning) => (
-                    <Box maxW="sm" borderWidth="1px" borderRadius="lg">
+                    <Box
+                      maxW="sm"
+                      borderWidth="1px"
+                      borderRadius="lg"
+                      borderColor={boxBorderColor}
+                    >
                       <Flex justify="right">
                         <IconButton
+                          color={headerColor}
                           aria-label="Delete kindergarden"
                           icon={<CloseIcon />}
                           variant="ghost"
@@ -243,26 +316,22 @@ const Dashboard = ({}) => {
                           as="h1"
                           lineHeight="tight"
                         >
-                          <NextLink
-                            href={"/kindergarden/[id]"}
-                            as={`/kindergarden/${owning.Id}`}
+                          <Link
+                            color={headerColor}
+                            style={{
+                              fontSize: "26px",
+                              fontWeight: "bold",
+                            }}
+                            onClick={() => {
+                              useKindergarden({ kindergardenID: owning.Id });
+                              router.push(`/kindergarden/${owning.Id}`);
+                            }}
                           >
-                            <Link
-                              color="blue.400"
-                              style={{
-                                fontSize: "26px",
-                                fontWeight: "bold",
-                              }}
-                              onClick={() => {
-                                useKindergarden({ kindergardenID: owning.Id });
-                              }}
-                            >
-                              {owning.Name}
-                            </Link>
-                          </NextLink>
+                            {owning.Name}
+                          </Link>
                         </Box>
                         <Divider />
-                        <Box mt={3}>
+                        <Box mt={3} color={textColor}>
                           <Text>{owning.Address}</Text>
                           <Text>{owning.City}</Text>
                           <Text>{owning.Zipcode}</Text>
@@ -275,15 +344,11 @@ const Dashboard = ({}) => {
             </Flex>
           </>
         ) : null}
-      </Stack>
-      <Stack Stack spacing={10} mt={10}>
         {notMine.length > 0 ? (
           <>
-            <Flex justify={["center", "center", "center", "center", "left"]}>
-              <Heading ml={["0", "0", "0", "10rem", "10px"]} color="blue.400">
-                {t("dashboard.part-header")}
-              </Heading>
-            </Flex>
+            <Heading ml="10px" color={headerColor}>
+              {t("dashboard.part-header")}
+            </Heading>
             <Flex align="center" justify="left" mb={5}>
               <Box
                 w={["100%", "100%", "100%", "400px", "400px"]}
@@ -294,8 +359,8 @@ const Dashboard = ({}) => {
                   "transparent",
                   "transparent",
                   "transparent",
-                  "blue.400",
-                  "blue.400",
+                  boxBorderColor,
+                  boxBorderColor,
                 ]}
                 borderRadius={"12px"}
                 style={{
@@ -315,26 +380,22 @@ const Dashboard = ({}) => {
                           as="h1"
                           lineHeight="tight"
                         >
-                          <NextLink
-                            href={"/kindergarden/[id]"}
-                            as={`/kindergarden/${owning.Id}`}
+                          <Link
+                            color={headerColor}
+                            style={{
+                              fontSize: "26px",
+                              fontWeight: "bold",
+                            }}
+                            onClick={() => {
+                              useKindergarden({ kindergardenID: owning.Id });
+                              router.push(`/kindergarden/${owning.Id}`);
+                            }}
                           >
-                            <Link
-                              color="blue.400"
-                              style={{
-                                fontSize: "26px",
-                                fontWeight: "bold",
-                              }}
-                              onClick={() => {
-                                useKindergarden({ kindergardenID: owning.Id });
-                              }}
-                            >
-                              {owning.Name}
-                            </Link>
-                          </NextLink>
+                            {owning.Name}
+                          </Link>
                         </Box>
-                        <Divider />
-                        <Box mt={3}>
+                        <Divider borderColor={borderColor} />
+                        <Box mt={3} color={textColor}>
                           <Text>{owning.Address}</Text>
                           <Text>{owning.City}</Text>
                           <Text>{owning.Zipcode}</Text>
@@ -347,36 +408,6 @@ const Dashboard = ({}) => {
             </Flex>
           </>
         ) : null}
-        {/* 
-        <Flex mt={5} mb={2}>
-          <Heading color="blue.400">Activity log</Heading>
-        </Flex>
-        <Box
-          mb={"5rem"}
-          mt={5}
-          borderRadius="12px"
-          border={"1px"}
-          borderColor="blue.400"
-          p={5}
-          style={{
-            display: "block",
-            height: "200px",
-            overflowY: "auto",
-            overflowX: "hidden",
-          }}
-        >
-          <Stack p={2} spacing={4}>
-            <Flex borderRadius={"12px"} p={5} shadow="md" borderWidth="1px">
-              <Text>Filip Ivanusec added Novo Dijete to Nova grupa</Text>
-            </Flex>
-            <Flex borderRadius={"12px"} p={5} shadow="md" borderWidth="1px">
-              <Text>Filip Ivanusec created Neznam Neznam</Text>
-            </Flex>
-            <Flex borderRadius={"12px"} p={5} shadow="md" borderWidth="1px">
-              <Text>Filip Ivanusec created Novo Dijete</Text>
-            </Flex>
-          </Stack>
-        </Box> */}
       </Stack>
     </Layout>
   );
