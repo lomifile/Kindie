@@ -27,8 +27,8 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useTranslation } from "react-i18next";
 import { ViewIcon } from "@chakra-ui/icons";
-import isElectron from "is-electron";
-import { isServer } from "../utils/isServer";
+import  isElectron  from 'is-electron';
+import {isServer} from '../utils/isServer';
 
 const Login: React.FC<{}> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });

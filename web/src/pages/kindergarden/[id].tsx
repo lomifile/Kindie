@@ -47,7 +47,6 @@ import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
 import { useIsAuth } from "../../utils/useIsAuth";
 import { CustomSpinner } from "../../components/Spinner";
-import { CustomAlert } from "../../components/Alerts";
 
 const Kindergarden = ({}) => {
   useIsAuth();
@@ -69,7 +68,7 @@ const Kindergarden = ({}) => {
     return <CustomSpinner />;
   } else if (!fetching && !data?.showGroups) {
     return (
-      <CustomAlert
+      <Alerts
         status={"error"}
         name={t("kindergarden.alert.title")}
         data={t("kindergarden.alert.desc")}
