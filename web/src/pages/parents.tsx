@@ -27,11 +27,10 @@ import {
 } from "../generated/graphql";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 
 const Parents: React.FC<{}> = ({}) => {
-  useIsAuth();
-
   const { t } = useTranslation("data", { useSuspense: false });
   const [motherVariables, setMotherVariables] = useState({
     limit: 10,
@@ -101,19 +100,17 @@ const Parents: React.FC<{}> = ({}) => {
         <Stack
           spacing={4}
           w={{ base: "100%", md: "100%" }}
-          align={["center", "center", "center", "center", "center"]}
+          align={["center", "center", "center", "center", "flex-start"]}
         >
-          {mother?.showMother.mother.length > 0 ? (
-            <Heading
-              as="h1"
-              size="xl"
-              fontWeight="bold"
-              color="blue.400"
-              textAlign={["center", "center", "left", "left"]}
-            >
-              {t("parents.heading-mother")}
-            </Heading>
-          ) : null}
+          <Heading
+            as="h1"
+            size="xl"
+            fontWeight="bold"
+            color="blue.400"
+            textAlign={["center", "center", "left", "left"]}
+          >
+            {t("parents.heading-mother")}
+          </Heading>
           <Box
             w={["100%", "100%", "100%", "80%", "100%"]}
             display={["block", "block", "block", "block"]}
@@ -126,21 +123,19 @@ const Parents: React.FC<{}> = ({}) => {
             ) : (
               <Table mt={"2rem"}>
                 <Thead>
-                  {mother.showMother.mother.length > 0 ? (
-                    <Tr>
-                      <Th>{t("parents.tbl-name")}</Th>
-                      <Th>{t("parents.tbl-surname")}</Th>
-                      <Th></Th>
-                      <Th></Th>
-                    </Tr>
-                  ) : null}
+                  <Tr>
+                    <Th>{t("parents.tbl-name")}</Th>
+                    <Th>{t("parents.tbl-surname")}</Th>
+                    <Th></Th>
+                    <Th></Th>
+                  </Tr>
                 </Thead>
                 <Tbody>
                   {mother!.showMother.mother.map((mom) =>
                     !mom ? null : (
                       <Tr>
                         <Td>{mom.Name}</Td>
-                        <Td>{mom.Surname}</Td>
+                        <Td ml={"2rem"}>{mom.Surname}</Td>
                         <Td>
                           <NextLink
                             href={"/edit-parents/mother/[id]"}
@@ -184,22 +179,20 @@ const Parents: React.FC<{}> = ({}) => {
           </Box>
         </Stack>
         <Stack
-          mt={"3rem"}
+          mt={"2rem"}
           spacing={4}
           w={{ base: "100%", md: "100%" }}
           align={["center", "center", "center", "center", "center"]}
         >
-          {father?.showFather.father.length > 0 ? (
-            <Heading
-              as="h1"
-              size="xl"
-              fontWeight="bold"
-              color="blue.400"
-              textAlign={["center", "center", "left", "left"]}
-            >
-              {t("parents.heading-father")}
-            </Heading>
-          ) : null}
+          <Heading
+            as="h1"
+            size="xl"
+            fontWeight="bold"
+            color="blue.400"
+            textAlign={["center", "center", "left", "left"]}
+          >
+            {t("parents.heading-father")}
+          </Heading>
           <Box
             w={["100%", "100%", "100%", "80%", "100%"]}
             display={["block", "block", "block", "block"]}
@@ -210,23 +203,21 @@ const Parents: React.FC<{}> = ({}) => {
                 <SkeletonText mt="4" noOfLines={4} spacing="4" />
               </Box>
             ) : (
-              <Table mt={"1rem"}>
+              <Table mt={"2rem"}>
                 <Thead>
-                  {father?.showFather.father.length > 0 ? (
-                    <Tr>
-                      <Th>{t("parents.tbl-name")}</Th>
-                      <Th>{t("parents.tbl-surname")}</Th>
-                      <Th></Th>
-                      <Th></Th>
-                    </Tr>
-                  ) : null}
+                  <Tr>
+                    <Th>{t("parents.tbl-name")}</Th>
+                    <Th>{t("parents.tbl-surname")}</Th>
+                    <Th></Th>
+                    <Th></Th>
+                  </Tr>
                 </Thead>
                 <Tbody>
                   {father!.showFather.father.map((father) =>
                     !father ? null : (
                       <Tr>
                         <Td>{father.Name}</Td>
-                        <Td>{father.Surname}</Td>
+                        <Td ml={"2rem"}>{father.Surname}</Td>
                         <Td>
                           <NextLink
                             href={"/edit-parents/father/[id]"}

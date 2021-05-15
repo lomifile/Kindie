@@ -369,13 +369,14 @@ const Kindergarden = ({}) => {
                             if (error) {
                               toast({
                                 title: t("kindergarden.toast.error.title"),
+                                description: t("kindergarden.toast.error.desc"),
                                 status: "error",
                                 duration: 9000,
                                 isClosable: true,
                               });
                             } else {
                               toast({
-                                title: t("kindergarden.toast.delete.title"),
+                                title: t("kindergarden.toast.delete"),
                                 status: "success",
                                 duration: 9000,
                                 isClosable: true,
