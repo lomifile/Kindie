@@ -46,6 +46,8 @@ import {
 import { AddIcon, ArrowBackIcon, SearchIcon } from "@chakra-ui/icons";
 import { ParentCard } from "../../components/ParentCard";
 import { useTranslation } from "react-i18next";
+import { CustomSpinner } from "../../components/Spinner";
+import { CustomAlert } from "../../components/Alerts";
 
 const EditChild = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
@@ -77,54 +79,14 @@ const EditChild = ({}) => {
   const [, updateParents] = useUpdateChildrenParentsMutation();
 
   if (fetching) {
-    return (
-      <Flex
-        p={200}
-        minHeight="100%"
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      >
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-          minH="250px"
-          minW="250px"
-        />
-      </Flex>
-    );
+    return <CustomSpinner />;
   } else if (!data?.findChild) {
     return (
-      <Flex
-        p={200}
-        minHeight="100%"
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      >
-        <Alert
-          status="error"
-          variant="subtle"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          textAlign="center"
-          height="200px"
-        >
-          <AlertIcon boxSize="40px" mr={0} />
-          <AlertTitle mt={4} mb={1} fontSize="lg">
-            {t("edit-child.alert.title")}
-          </AlertTitle>
-          <AlertDescription maxWidth="sm">
-            {t("edit-child.alert.desc")}
-          </AlertDescription>
-        </Alert>
-      </Flex>
+      <CustomAlert
+        name={t("edit-child.alert.title")}
+        data={t("edit-child.alert.desc")}
+        status={"error"}
+      />
     );
   }
 

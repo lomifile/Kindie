@@ -67,6 +67,18 @@ const Staff: React.FC<{}> = ({}) => {
     },
   });
   const [{ data: meData }] = useMeQuery();
+  const translatedRoles = (role: String) => {
+    switch (role) {
+      case "Headmaster":
+        return t("staff.roles.headmaster");
+
+      case "Teacher":
+        return t("staff.roles.teacher");
+
+      case "Pedagogue":
+        return t("staff.roles.pedagogue");
+    }
+  };
 
   return (
     <Layout variant={"column"} navbarVariant={"user"}>
@@ -228,7 +240,9 @@ const Staff: React.FC<{}> = ({}) => {
             // @ts-ignore
             meData?.me?.Name === owner.Name &&
             // @ts-ignore
-            meData?.me?.Surname === owner.Surname ? (
+            meData?.me?.Surname === owner.Surname &&
+            // @ts-ignore
+            meData?.me?.Id === owner.Id ? (
               <IconButton
                 ml={5}
                 bg="blue.400"
@@ -252,7 +266,7 @@ const Staff: React.FC<{}> = ({}) => {
               <Tr>
                 <Th>{t("staff.tbl-name")}</Th>
                 <Th>{t("staff.tbl-surname")}</Th>
-                <Th></Th>
+                <Th>{t("staff.tbl-role")}</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -260,12 +274,15 @@ const Staff: React.FC<{}> = ({}) => {
                 <Tr>
                   <Td>{s.Name}</Td>
                   <Td>{s.Surname}</Td>
+                  <Td>{translatedRoles(s.Role)}</Td>
                   <Td>
                     {
                       // @ts-ignore
                       meData.me.Name === owner.Name &&
                       // @ts-ignore
-                      meData.me.Surname === owner.Surname ? (
+                      meData.me.Surname === owner.Surname &&
+                      // @ts-ignore
+                      meData?.me?.Id === owner.Id ? (
                         <IconButton
                           aria-label="Delete from staff"
                           colorScheme="red"

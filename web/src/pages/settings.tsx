@@ -33,6 +33,7 @@ import { toErrormap } from "../utils/toErrorMap";
 import { useIsAuth } from "../utils/useIsAuth";
 import { useTranslation } from "react-i18next";
 import { ViewIcon } from "@chakra-ui/icons";
+import { CustomAlert } from "../components/Alerts";
 
 const Settings: React.FC<{}> = ({}) => {
   useIsAuth();
@@ -45,10 +46,6 @@ const Settings: React.FC<{}> = ({}) => {
   const toast = useToast();
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
-  const [role, setRole] = useState("");
-  const handleChange = (e) => {
-    setRole(e.target.value);
-  };
 
   const [selector, setSelector] = useState("#profile");
 
@@ -63,23 +60,11 @@ const Settings: React.FC<{}> = ({}) => {
     );
   } else if (!fetching && !data.me && !redirect) {
     body = (
-      <Alert
+      <CustomAlert
+        data={t("settings.alert.desc")}
+        name={t("settings.alert.title")}
         status="error"
-        variant="subtle"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        textAlign="center"
-        height="200px"
-      >
-        <AlertIcon boxSize="40px" mr={0} />
-        <AlertTitle mt={4} mb={1} fontSize="lg">
-          {t("settings.alert.title")}
-        </AlertTitle>
-        <AlertDescription maxWidth="sm">
-          {t("settings.alert.desc")}
-        </AlertDescription>
-      </Alert>
+      />
     );
   } else {
     body = (
@@ -207,23 +192,6 @@ const Settings: React.FC<{}> = ({}) => {
                               label={t("settings.form.surname")}
                               type="text"
                             />
-                            <Text mb={"-10px"}>{t("settings.form.role")}</Text>
-                            <Select
-                              name="role"
-                              style={{ borderRadius: "12px" }}
-                              onChange={handleChange}
-                              defaultValue={data?.me.Role}
-                            >
-                              <option value="Teacher">
-                                {t("settings.selector.teacher")}
-                              </option>
-                              <option value="Headmaster">
-                                {t("settings.selector.headmaster")}
-                              </option>
-                              <option value="Pedagogue">
-                                {t("settings.selector.pedagouge")}
-                              </option>
-                            </Select>
                             <InputField
                               name="email"
                               placeholder={t(

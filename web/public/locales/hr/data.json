@@ -258,6 +258,10 @@
       "title": "Dogodila se greška!",
       "desc": "Dogodila se greška u procesu dohvaćanja vaših podataka!"
     },
+    "tooltip": {
+      "warning": "Neki podaci nedostaju!",
+      "success": "Svi podaci su ovdje!"
+    },
     "btn-add": "Dodaj dijete",
     "tbl-name": "Ime",
     "tbl-surname": "Prezime",
@@ -288,8 +292,14 @@
         "email": "Email"
       }
     },
+    "roles": {
+      "teacher": "Odgajatelj",
+      "headmaster": "Ravnatelj",
+      "pedagogue": "Pedagog"
+    },
     "tbl-name": "Ime",
     "tbl-surname": "Prezime",
+    "tbl-role": "Uloga",
     "btn-add": "Dodaj osoblje"
   },
   "group": {

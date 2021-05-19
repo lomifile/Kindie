@@ -12,10 +12,6 @@ import {
   Button,
   HStack,
   Tooltip,
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   IconButton,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
@@ -37,17 +33,21 @@ import {
 } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 import { CustomAlert } from "../components/Alerts";
+import { getUserRole } from "../utils/getUserRole";
 
 const Children: React.FC<{}> = ({}) => {
+  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const [variables, setVariables] = useState({
     limit: 10,
     cursor: null as null | string,
   });
 
-  const [{ data, fetching, error }] = useShowChildrenNotIngroupQuery({
+  const [{ data, fetching }] = useShowChildrenNotIngroupQuery({
     variables,
   });
+
+  const role = getUserRole();
 
   const [, deleteChildren] = useDeleteChildrenMutation();
 
@@ -64,26 +64,27 @@ const Children: React.FC<{}> = ({}) => {
   return (
     <Layout navbarVariant="user" variant="column">
       <title>{t("children.main-header")}</title>
-
       <Flex justify={["center", "center", "center", "center", "left"]}>
         <HStack spacing={5}>
           <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
             {t("children.main-header")}
           </Heading>
-          <NextLink href="/create-child">
-            <IconButton
-              bg="blue.400"
-              colorScheme="navItem"
-              borderRadius="12px"
-              py="4"
-              px="4"
-              lineHeight="1"
-              size="md"
-              ml={"2rem"}
-              aria-label={"Create child"}
-              icon={<AddIcon />}
-            />
-          </NextLink>
+          {role == "Headmaster" || role == "Pedagogue" ? (
+            <NextLink href="/create-child">
+              <IconButton
+                bg="blue.400"
+                colorScheme="navItem"
+                borderRadius="12px"
+                py="4"
+                px="4"
+                lineHeight="1"
+                size="md"
+                ml={"2rem"}
+                aria-label={"Create child"}
+                icon={<AddIcon />}
+              />
+            </NextLink>
+          ) : null}
         </HStack>
       </Flex>
       <Flex justify={"center"}>
@@ -113,46 +114,50 @@ const Children: React.FC<{}> = ({}) => {
                       <Td>{child.Name}</Td>
                       <Td ml={"2rem"}>{child.Surname}</Td>
                       <Td>
-                        <NextLink
-                          href={"/edit-child/[id]"}
-                          as={`/edit-child/${child.Id}`}
-                        >
-                          <IconButton
-                            aria-label="Edit"
-                            icon={<EditIcon />}
-                            bg="blue.400"
-                            colorScheme="navItem"
-                            borderRadius="12px"
-                            py="4"
-                            px="4"
-                            lineHeight="1"
-                            size="md"
-                            ml={"2rem"}
-                          />
-                        </NextLink>
+                        {role == "Pedagogue" || role == "Headmaster" ? (
+                          <NextLink
+                            href={"/edit-child/[id]"}
+                            as={`/edit-child/${child.Id}`}
+                          >
+                            <IconButton
+                              aria-label="Edit"
+                              icon={<EditIcon />}
+                              bg="blue.400"
+                              colorScheme="navItem"
+                              borderRadius="12px"
+                              py="4"
+                              px="4"
+                              lineHeight="1"
+                              size="md"
+                              ml={"2rem"}
+                            />
+                          </NextLink>
+                        ) : null}
                       </Td>
                       <Td>
-                        <IconButton
-                          aria-label="Delete"
-                          icon={<DeleteIcon />}
-                          colorScheme="red"
-                          borderRadius="12px"
-                          lineHeight="1"
-                          size="md"
-                          onClick={() => {
-                            deleteChildren({
-                              id: child.Id,
-                            });
-                          }}
-                        />
+                        {role == "Pedagogue" || role == "Headmaster" ? (
+                          <IconButton
+                            aria-label="Delete"
+                            icon={<DeleteIcon />}
+                            colorScheme="red"
+                            borderRadius="12px"
+                            lineHeight="1"
+                            size="md"
+                            onClick={() => {
+                              deleteChildren({
+                                id: child.Id,
+                              });
+                            }}
+                          />
+                        ) : null}
                       </Td>
                       <Td>
                         {!child.fatherId || !child.motherId ? (
-                          <Tooltip label="Some data is missing!">
+                          <Tooltip label={t("children.tooltip.warning")}>
                             <WarningIcon color={"yellow.400"} />
                           </Tooltip>
                         ) : (
-                          <Tooltip label="All data is here!">
+                          <Tooltip label={t("children.tooltip.success")}>
                             <CheckCircleIcon color={"green.400"} />
                           </Tooltip>
                         )}

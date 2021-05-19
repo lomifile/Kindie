@@ -204,6 +204,16 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
               >
                 {t("nav.menu.dashboard")}
               </MenuItem>
+              <NextLink href="/">
+                <MenuItem
+                  _hover={{
+                    bg: "gray.100",
+                    borderRadius: "12px",
+                  }}
+                >
+                  {t("nav.menu.landing-page")}
+                </MenuItem>
+              </NextLink>
             </MenuGroup>
             <MenuDivider />
             <MenuGroup title={t("nav.menu.titles.profile")}>
@@ -238,9 +248,9 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             </MenuGroup>
             {/*<MenuDivider />*/}
             {/*<MenuGroup title={t("nav.menu.titles.help")}>*/}
-            {/*  <NextLink href="/">*/}
+            {/* <NextLink href="/">*/}
             {/*    <MenuItem>{t("nav.menu.landing-page")}</MenuItem>*/}
-            {/*  </NextLink>*/}
+            {/*  </NextLink> */}
             {/*  <MenuItem>{t("nav.menu.docs")}</MenuItem>*/}
             {/*  <MenuItem>{t("nav.menu.faq")}</MenuItem>*/}
             {/*</MenuGroup>*/}

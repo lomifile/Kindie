@@ -257,6 +257,10 @@
       "title": "There was an error",
       "desc": "An error occured while trying to fetch your data!"
     },
+    "tooltip": {
+      "warning": "Some data is missing",
+      "success": "All data is here"
+    },
     "btn-add": "Add child",
     "tbl-name": "Name",
     "tbl-surname": "Last name",
@@ -287,8 +291,14 @@
         "email": "Email"
       }
     },
+    "roles": {
+      "teacher": "Teacher",
+      "headmaster": "Headmaster",
+      "pedagogue": "Pedagouge"
+    },
     "tbl-name": "Name",
     "tbl-surname": "Lastname",
+    "tbl-role": "Role",
     "btn-add": "Add staff"
   },
   "group": {

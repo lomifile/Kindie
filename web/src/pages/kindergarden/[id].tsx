@@ -47,6 +47,8 @@ import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
 import { useIsAuth } from "../../utils/useIsAuth";
 import { CustomSpinner } from "../../components/Spinner";
+import { CustomAlert } from "../../components/Alerts";
+import { getUserRole } from "../../utils/getUserRole";
 
 const Kindergarden = ({}) => {
   useIsAuth();
@@ -63,12 +65,13 @@ const Kindergarden = ({}) => {
   const [, useGroup] = useUseGroupMutation();
   const [, useChildren] = useUseChildrenMutation();
   const [, deleteGroup] = useDeleteGroupMutation();
+  const role = getUserRole();
 
   if (fetching) {
     return <CustomSpinner />;
   } else if (!fetching && !data?.showGroups) {
     return (
-      <Alerts
+      <CustomAlert
         status={"error"}
         name={t("kindergarden.alert.title")}
         data={t("kindergarden.alert.desc")}
@@ -100,22 +103,22 @@ const Kindergarden = ({}) => {
                 direction={["column", "column", "column"]}
                 pt={[4, 4, 0, 0]}
               >
-                <Button
-                  as={Link}
-                  color="blue.400"
-                  colorScheme="navItem"
-                  borderRadius="12px"
-                  py="4"
-                  px="4"
-                  lineHeight="1"
-                  size="md"
-                  onClick={() => {
-                    drawerOnClose();
-                    onOpen();
-                  }}
-                >
-                  {t("kindergarden.toolbox.btn-new-group")}
-                </Button>
+                {role === "Headmaster" || role === "Pedagogue" ? (
+                  <Button
+                    bg="blue.400"
+                    className="nav-item"
+                    colorScheme="navItem"
+                    borderRadius="12px"
+                    py="4"
+                    px="4"
+                    lineHeight="1"
+                    size="md"
+                    onClick={onOpen}
+                    display={["none", "none", "none", "flex"]}
+                  >
+                    {t("kindergarden.toolbox.btn-new-group")}
+                  </Button>
+                ) : null}
                 <NextLink href="/children">
                   <Button
                     as={Link}
@@ -250,20 +253,22 @@ const Kindergarden = ({}) => {
           p={5}
         >
           <HStack p={1} spacing={4}>
-            <Button
-              bg="blue.400"
-              className="nav-item"
-              colorScheme="navItem"
-              borderRadius="12px"
-              py="4"
-              px="4"
-              lineHeight="1"
-              size="md"
-              onClick={onOpen}
-              display={["none", "none", "none", "flex"]}
-            >
-              {t("kindergarden.toolbox.btn-new-group")}
-            </Button>
+            {role === "Headmaster" || role === "Pedagogue" ? (
+              <Button
+                bg="blue.400"
+                className="nav-item"
+                colorScheme="navItem"
+                borderRadius="12px"
+                py="4"
+                px="4"
+                lineHeight="1"
+                size="md"
+                onClick={onOpen}
+                display={["none", "none", "none", "flex"]}
+              >
+                {t("kindergarden.toolbox.btn-new-group")}
+              </Button>
+            ) : null}
             <NextLink href={"/children"}>
               <Button
                 bg="blue.400"
@@ -355,35 +360,44 @@ const Kindergarden = ({}) => {
               >
                 <HStack spacing={8}>
                   {data?.showGroups?.map((owning) => (
-                    <Box maxW="sm" borderWidth="1px" borderRadius="lg">
-                      <Flex justify="right">
-                        <IconButton
-                          aria-label="Delete group"
-                          icon={<CloseIcon />}
-                          variant="ghost"
-                          onClick={async () => {
-                            const { error } = await deleteGroup({
-                              id: owning.Id,
-                            });
-                            if (error) {
-                              toast({
-                                title: t("kindergarden.toast.error.title"),
-                                description: t("kindergarden.toast.error.desc"),
-                                status: "error",
-                                duration: 9000,
-                                isClosable: true,
+                    <Box
+                      maxW="sm"
+                      borderWidth="1px"
+                      borderRadius="lg"
+                      shadow="xl"
+                    >
+                      {role == "Headmaster" ? (
+                        <Flex justify="right">
+                          <IconButton
+                            aria-label="Delete group"
+                            icon={<CloseIcon />}
+                            variant="ghost"
+                            onClick={async () => {
+                              const { error } = await deleteGroup({
+                                id: owning.Id,
                               });
-                            } else {
-                              toast({
-                                title: t("kindergarden.toast.delete"),
-                                status: "success",
-                                duration: 9000,
-                                isClosable: true,
-                              });
-                            }
-                          }}
-                        />
-                      </Flex>
+                              if (error) {
+                                toast({
+                                  title: t("kindergarden.toast.error.title"),
+                                  description: t(
+                                    "kindergarden.toast.error.desc"
+                                  ),
+                                  status: "error",
+                                  duration: 9000,
+                                  isClosable: true,
+                                });
+                              } else {
+                                toast({
+                                  title: t("kindergarden.toast.delete"),
+                                  status: "success",
+                                  duration: 9000,
+                                  isClosable: true,
+                                });
+                              }
+                            }}
+                          />
+                        </Flex>
+                      ) : null}
                       <Box p="6">
                         <Box
                           mt="1"

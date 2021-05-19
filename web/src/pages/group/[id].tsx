@@ -51,6 +51,7 @@ import {
   HamburgerIcon,
 } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
+import { getUserRole } from "../../utils/getUserRole";
 
 const Group = ({}) => {
   useIsAuth();
@@ -79,6 +80,7 @@ const Group = ({}) => {
       variables: { text },
     }
   );
+  const role = getUserRole();
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{groupName}</title>
@@ -214,20 +216,22 @@ const Group = ({}) => {
           p={3}
         >
           <HStack p={2} spacing={4}>
-            <Button
-              bg="blue.400"
-              className="nav-item"
-              colorScheme="navItem"
-              borderRadius="12px"
-              py="4"
-              px="4"
-              lineHeight="1"
-              size="md"
-              onClick={onOpen}
-              display={["none", "none", "none", "flex"]}
-            >
-              {t("group.btn-add")}
-            </Button>
+            {role == "Pedagogue" || role == "Headmaster" ? (
+              <Button
+                bg="blue.400"
+                className="nav-item"
+                colorScheme="navItem"
+                borderRadius="12px"
+                py="4"
+                px="4"
+                lineHeight="1"
+                size="md"
+                onClick={onOpen}
+                display={["none", "none", "none", "flex"]}
+              >
+                {t("group.btn-add")}
+              </Button>
+            ) : null}
             <Button
               bg="blue.400"
               className="nav-item"
@@ -289,38 +293,42 @@ const Group = ({}) => {
                     <Td>{child.Name}</Td>
                     <Td ml={"2rem"}>{child.Surname}</Td>
                     <Td>
-                      <NextLink
-                        href={"/edit-child/[id]"}
-                        as={`/edit-child/${child.Id}`}
-                      >
-                        <IconButton
-                          aria-label="Edit"
-                          icon={<EditIcon />}
-                          bg="blue.400"
-                          colorScheme="navItem"
-                          borderRadius="12px"
-                          py="4"
-                          px="4"
-                          lineHeight="1"
-                          size="md"
-                          ml={"2rem"}
-                        />
-                      </NextLink>
+                      {role == "Pedagogue" || role == "Headmaster" ? (
+                        <NextLink
+                          href={"/edit-child/[id]"}
+                          as={`/edit-child/${child.Id}`}
+                        >
+                          <IconButton
+                            aria-label="Edit"
+                            icon={<EditIcon />}
+                            bg="blue.400"
+                            colorScheme="navItem"
+                            borderRadius="12px"
+                            py="4"
+                            px="4"
+                            lineHeight="1"
+                            size="md"
+                            ml={"2rem"}
+                          />
+                        </NextLink>
+                      ) : null}
                     </Td>
                     <Td>
-                      <IconButton
-                        aria-label="Delete"
-                        icon={<DeleteIcon />}
-                        colorScheme="red"
-                        borderRadius="12px"
-                        lineHeight="1"
-                        size="md"
-                        onClick={() => {
-                          deleteChildren({
-                            id: child.Id,
-                          });
-                        }}
-                      />
+                      {role == "Pedagogue" || role == "Headmaster" ? (
+                        <IconButton
+                          aria-label="Delete"
+                          icon={<DeleteIcon />}
+                          colorScheme="red"
+                          borderRadius="12px"
+                          lineHeight="1"
+                          size="md"
+                          onClick={() => {
+                            deleteChildren({
+                              id: child.Id,
+                            });
+                          }}
+                        />
+                      ) : null}
                     </Td>
                     <Td>
                       {!child.fatherId || !child.motherId ? (

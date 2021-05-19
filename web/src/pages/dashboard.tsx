@@ -6,7 +6,6 @@ import {
   Box,
   Text,
   HStack,
-  Spinner,
   Link,
   Button,
   Modal,
@@ -39,6 +38,7 @@ import { toErrormap } from "../utils/toErrorMap";
 import { useIsAuth } from "../utils/useIsAuth";
 import { CustomAlert } from "../components/Alerts";
 import { CustomSpinner } from "../components/Spinner";
+import { getUserRole } from "../utils/getUserRole";
 const Dashboard = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
@@ -49,6 +49,7 @@ const Dashboard = ({}) => {
   const [, createKindergarden] = useCreateKindergardenMutation();
   const [, deleteKindergarden] = useDeleteKindergardenMutation();
   const notMine = fetchPartOf();
+  const role = getUserRole();
 
   if (fetching && !data?.showKindergarden) {
     return <CustomSpinner />;
@@ -160,20 +161,22 @@ const Dashboard = ({}) => {
       </Modal>
       <Flex mt={["10px", "10px", "10px", "0", "0"]} justify={"center"}>
         <Heading color="blue.400">{t("dashboard.main-header")}</Heading>
-        <IconButton
-          aria-label="Add"
-          icon={<AddIcon />}
-          bg="blue.400"
-          colorScheme="navItem"
-          borderRadius="12px"
-          py="4"
-          px="4"
-          lineHeight="1"
-          size="md"
-          type="submit"
-          onClick={onOpen}
-          ml={"2rem"}
-        />
+        {role === "Headmaster" ? (
+          <IconButton
+            aria-label="Add"
+            icon={<AddIcon />}
+            bg="blue.400"
+            colorScheme="navItem"
+            borderRadius="12px"
+            py="4"
+            px="4"
+            lineHeight="1"
+            size="md"
+            type="submit"
+            onClick={onOpen}
+            ml={"2rem"}
+          />
+        ) : null}
       </Flex>
       <Divider mt={5} />
       <Stack spacing={10} mt={10}>
@@ -207,7 +210,12 @@ const Dashboard = ({}) => {
               >
                 <HStack spacing={8}>
                   {data?.showKindergarden?.map((owning) => (
-                    <Box maxW="sm" borderWidth="1px" borderRadius="lg">
+                    <Box
+                      maxW="sm"
+                      borderWidth="1px"
+                      borderRadius="lg"
+                      shadow="xl"
+                    >
                       <Flex justify="right">
                         <IconButton
                           aria-label="Delete kindergarden"
