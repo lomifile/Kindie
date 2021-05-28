@@ -253,6 +253,16 @@
     "groups-heading": "Vase grupe"
   },
   "children": {
+    "modal": {
+      "title": "Pregled",
+      "name": "Ime",
+      "surname": "Prezime",
+      "birth-date": "Datum rođenja",
+      "oib": "OIB",
+      "gender": "Spol",
+      "remarks": "Napomene",
+      "btn": "Zatvori"
+    },
     "main-header": "Djeca",
     "alert": {
       "title": "Dogodila se greška!",

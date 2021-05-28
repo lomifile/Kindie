@@ -108,7 +108,6 @@ export class UserResolver {
           Name: options.name,
           Surname: options.surname,
           Email: options.email,
-          Role: options.role,
         })
         .where("Id=:id", {
           id: req.session.userId,

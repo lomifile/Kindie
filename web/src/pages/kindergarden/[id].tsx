@@ -236,22 +236,7 @@ const Kindergarden = ({}) => {
         </ModalContent>
       </Modal>
       <Stack spacing={8}>
-        <Flex
-          align="center"
-          justify="center"
-          mb={"2rem"}
-          mt={5}
-          borderRadius="12px"
-          border={["0", "0", "0", "0", "1px"]}
-          borderColor={[
-            "transparent",
-            "transparent",
-            "transparent",
-            "blue.400",
-            "blue.400",
-          ]}
-          p={5}
-        >
+        <Flex align="center" justify="center" mt={5} p={5}>
           <HStack p={1} spacing={4}>
             {role === "Headmaster" || role === "Pedagogue" ? (
               <Button
@@ -330,6 +315,7 @@ const Kindergarden = ({}) => {
             />
           </HStack>
         </Flex>
+        <Divider mt={1} />
         {data?.showGroups.length > 0 ? (
           <>
             <Flex justify={["center", "center", "center", "center", "left"]}>
@@ -342,15 +328,6 @@ const Kindergarden = ({}) => {
                 w={["100%", "100%", "100%", "400px", "400px"]}
                 rounded={["xs", "sm", "md", "lg", "xl"]}
                 p={5}
-                border={["0", "0", "0", "1px", "1px"]}
-                borderColor={[
-                  "transparent",
-                  "transparent",
-                  "transparent",
-                  "blue.400",
-                  "blue.400",
-                ]}
-                borderRadius={"12px"}
                 style={{
                   display: "block",
                   width: "1200px",

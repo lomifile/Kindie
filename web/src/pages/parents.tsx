@@ -5,6 +5,7 @@ import { Layout } from "../components/Layout";
 import {
   Box,
   Button,
+  Divider,
   Flex,
   Heading,
   HStack,
@@ -28,7 +29,7 @@ import {
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
-import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import { EditIcon, DeleteIcon, AddIcon } from "@chakra-ui/icons";
 import { getUserRole } from "../utils/getUserRole";
 
 const Parents: React.FC<{}> = ({}) => {
@@ -57,45 +58,32 @@ const Parents: React.FC<{}> = ({}) => {
   return (
     <Layout navbarVariant="user" variant="column">
       <title>{t("parents.main-header")}</title>
-      {role == "Pedagogue" || role == "Headmaster" ? (
-        <Stack spacing={8}>
-          <Flex
-            align="center"
-            justify="center"
-            mb={"2rem"}
-            mt={5}
-            border={["0", "0", "0", "0", "1px"]}
-            borderColor={[
-              "transparent",
-              "transparent",
-              "transparent",
-              "blue.400",
-              "blue.400",
-            ]}
-            borderRadius={"12px"}
-            p={3}
-          >
-            <HStack p={2} spacing={4}>
-              {role == "Headmaster" || role == "Pedagogue" ? (
-                <NextLink href="/create-parents">
-                  <Button
-                    bg="blue.400"
-                    className="nav-item"
-                    colorScheme="navItem"
-                    borderRadius="12px"
-                    py="4"
-                    px="4"
-                    lineHeight="1"
-                    size="md"
-                  >
-                    {t("parents.btn-add")}
-                  </Button>
-                </NextLink>
-              ) : null}
-            </HStack>
-          </Flex>
-        </Stack>
-      ) : null}
+      <Stack spacing={1}>
+        <Flex align="center" justify="center" mt={5} p={3}>
+          <HStack p={2} spacing={4}>
+            <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
+              {t("parents.main-header")}
+            </Heading>
+            {role == "Headmaster" || role == "Pedagogue" ? (
+              <NextLink href="/create-parents">
+                <IconButton
+                  aria-label="Add parents"
+                  icon={<AddIcon />}
+                  bg="blue.400"
+                  className="nav-item"
+                  colorScheme="navItem"
+                  borderRadius="12px"
+                  py="4"
+                  px="4"
+                  lineHeight="1"
+                  size="md"
+                />
+              </NextLink>
+            ) : null}
+          </HStack>
+        </Flex>
+      </Stack>
+      <Divider mt={5} />
       <Flex
         align="center"
         justify={{ base: "center", md: "center", xl: "space-between" }}
@@ -103,6 +91,7 @@ const Parents: React.FC<{}> = ({}) => {
         // @ts-ignore
         wrap="no-wrap"
         minH="20vh"
+        mt={10}
         mb={5}
       >
         {!(mother?.showMother.mother.length <= 0) ? (

@@ -252,6 +252,16 @@
     "groups-heading": "Your groups"
   },
   "children": {
+    "modal": {
+      "title": "Overview",
+      "name": "Name",
+      "surname": "Last name",
+      "birth-date": "Birth date",
+      "oib": "PIN",
+      "gender": "Gender",
+      "remarks": "remarks",
+      "btn": "Close"
+    },
     "main-header": "Children",
     "alert": {
       "title": "There was an error",

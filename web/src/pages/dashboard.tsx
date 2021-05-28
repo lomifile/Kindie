@@ -192,15 +192,6 @@ const Dashboard = ({}) => {
                 w={["100%", "100%", "100%", "400px", "400px"]}
                 rounded={["xs", "sm", "md", "lg", "xl"]}
                 p={5}
-                border={["0", "0", "0", "1px", "1px"]}
-                borderColor={[
-                  "transparent",
-                  "transparent",
-                  "transparent",
-                  "blue.400",
-                  "blue.400",
-                ]}
-                borderRadius={"12px"}
                 style={{
                   display: "block",
                   width: "1200px",
@@ -297,15 +288,6 @@ const Dashboard = ({}) => {
                 w={["100%", "100%", "100%", "400px", "400px"]}
                 rounded={["xs", "sm", "md", "lg", "xl"]}
                 p={5}
-                border={["0", "0", "0", "1px", "1px"]}
-                borderColor={[
-                  "transparent",
-                  "transparent",
-                  "transparent",
-                  "blue.400",
-                  "blue.400",
-                ]}
-                borderRadius={"12px"}
                 style={{
                   display: "block",
                   width: "1200px",

@@ -13,6 +13,17 @@ import {
   HStack,
   Tooltip,
   IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+  Stack,
+  Text,
+  Divider,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React, { useState } from "react";
@@ -30,10 +41,13 @@ import {
   DeleteIcon,
   EditIcon,
   AddIcon,
+  ViewIcon,
 } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 import { CustomAlert } from "../components/Alerts";
 import { getUserRole } from "../utils/getUserRole";
+import moment from "moment";
+import { ChildrenModal } from "../components/ChildrenModal";
 
 const Children: React.FC<{}> = ({}) => {
   useIsAuth();
@@ -51,6 +65,10 @@ const Children: React.FC<{}> = ({}) => {
 
   const [, deleteChildren] = useDeleteChildrenMutation();
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [child, setChild] = useState(null);
+
   if (!fetching && !data) {
     return (
       <CustomAlert
@@ -64,7 +82,10 @@ const Children: React.FC<{}> = ({}) => {
   return (
     <Layout navbarVariant="user" variant="column">
       <title>{t("children.main-header")}</title>
-      <Flex justify={["center", "center", "center", "center", "left"]}>
+      {role == "Teacher" ? (
+        <ChildrenModal onClose={onClose} isOpen={isOpen} child={child} />
+      ) : null}
+      <Flex justify={["center", "center", "center", "center", "center"]}>
         <HStack spacing={5}>
           <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
             {t("children.main-header")}
@@ -87,6 +108,7 @@ const Children: React.FC<{}> = ({}) => {
           ) : null}
         </HStack>
       </Flex>
+      <Divider mt={5} />
       <Flex justify={"center"}>
         <Box
           w={["100%", "100%", "100%", "80%", "100%"]}
@@ -99,20 +121,39 @@ const Children: React.FC<{}> = ({}) => {
             </Box>
           ) : (
             <Table mt={"2rem"}>
-              <Thead>
-                <Tr>
-                  <Th>{t("children.tbl-name")}</Th>
-                  <Th>{t("children.tbl-surname")}</Th>
-                  <Th></Th>
-                  <Th></Th>
-                </Tr>
-              </Thead>
+              {data!.showChildrenFilterNotInGroup.children.length > 0 ? (
+                <Thead>
+                  <Tr>
+                    <Th>{t("children.tbl-name")}</Th>
+                    <Th>{t("children.tbl-surname")}</Th>
+                    <Th></Th>
+                    <Th></Th>
+                  </Tr>
+                </Thead>
+              ) : null}
               <Tbody>
                 {data!.showChildrenFilterNotInGroup.children.map((child) =>
                   !child ? null : (
                     <Tr>
                       <Td>{child.Name}</Td>
                       <Td ml={"2rem"}>{child.Surname}</Td>
+                      {role == "Teacher" ? (
+                        <Td>
+                          <IconButton
+                            aria-label="View user"
+                            icon={<ViewIcon />}
+                            color="white"
+                            bg="blue.400"
+                            _hover={{
+                              backgroundColor: "#719ABC",
+                            }}
+                            onClick={() => {
+                              setChild(child);
+                              onOpen();
+                            }}
+                          />
+                        </Td>
+                      ) : null}
                       <Td>
                         {role == "Pedagogue" || role == "Headmaster" ? (
                           <NextLink
@@ -151,17 +192,19 @@ const Children: React.FC<{}> = ({}) => {
                           />
                         ) : null}
                       </Td>
-                      <Td>
-                        {!child.fatherId || !child.motherId ? (
-                          <Tooltip label={t("children.tooltip.warning")}>
-                            <WarningIcon color={"yellow.400"} />
-                          </Tooltip>
-                        ) : (
-                          <Tooltip label={t("children.tooltip.success")}>
-                            <CheckCircleIcon color={"green.400"} />
-                          </Tooltip>
-                        )}
-                      </Td>
+                      {role == "Pedagogue" || role == "Headmaster" ? (
+                        <Td>
+                          {!child.fatherId || !child.motherId ? (
+                            <Tooltip label={t("children.tooltip.warning")}>
+                              <WarningIcon color={"yellow.400"} />
+                            </Tooltip>
+                          ) : (
+                            <Tooltip label={t("children.tooltip.success")}>
+                              <CheckCircleIcon color={"green.400"} />
+                            </Tooltip>
+                          )}
+                        </Td>
+                      ) : null}
                     </Tr>
                   )
                 )}
