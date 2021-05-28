@@ -32,7 +32,7 @@ export class Children extends BaseEntity {
   @Column()
   Gender!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => Date, { nullable: true })
   @Column({ type: "date", nullable: true })
   BirthDate!: Date;
 

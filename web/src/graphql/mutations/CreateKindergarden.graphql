@@ -1,9 +1,9 @@
-mutation CreateKindergarden($options: KinderGardenInput!){
-  createKindergarden(options: $options){
-    kindergarden{
+mutation CreateKindergarden($options: KinderGardenInput!) {
+  createKindergarden(options: $options) {
+    kindergarden {
       ...KindergardenFragment
     }
-    errors{
+    errors {
       ...ErrorFragment
     }
   }

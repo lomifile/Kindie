@@ -12,11 +12,18 @@ import {
   Button,
   HStack,
   Tooltip,
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+  Stack,
+  Text,
+  Divider,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React, { useState } from "react";
@@ -33,184 +40,206 @@ import {
   CheckCircleIcon,
   DeleteIcon,
   EditIcon,
+  AddIcon,
+  ViewIcon,
 } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
+import { CustomAlert } from "../components/Alerts";
+import { getUserRole } from "../utils/getUserRole";
+import moment from "moment";
+import { ChildrenModal } from "../components/ChildrenModal";
 
-interface ChildrenProps {}
-
-const Children: React.FC<ChildrenProps> = ({}) => {
+const Children: React.FC<{}> = ({}) => {
+  useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const [variables, setVariables] = useState({
     limit: 10,
     cursor: null as null | string,
   });
 
-  const [{ data, fetching, error }] = useShowChildrenNotIngroupQuery({
+  const [{ data, fetching }] = useShowChildrenNotIngroupQuery({
     variables,
   });
 
+  const role = getUserRole();
+
   const [, deleteChildren] = useDeleteChildrenMutation();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [child, setChild] = useState(null);
 
   if (!fetching && !data) {
     return (
-      <Flex
-        p={200}
-        minHeight="100%"
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      >
-        <Alert
-          status="error"
-          variant="subtle"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          textAlign="center"
-          height="200px"
-        >
-          <AlertIcon boxSize="40px" mr={0} />
-          <AlertTitle mt={4} mb={1} fontSize="lg">
-            {t("children.alert.title")}
-          </AlertTitle>
-          <AlertDescription maxWidth="sm">
-            {t("children.alert.desc")}
-          </AlertDescription>
-        </Alert>
-      </Flex>
+      <CustomAlert
+        status={"error"}
+        name={t("children.alert.title")}
+        data={t("children.alert.desc")}
+      />
     );
   }
 
   return (
     <Layout navbarVariant="user" variant="column">
       <title>{t("children.main-header")}</title>
-
-      <Flex>
-        <HStack spacing={10}>
+      {role == "Teacher" ? (
+        <ChildrenModal onClose={onClose} isOpen={isOpen} child={child} />
+      ) : null}
+      <Flex justify={["center", "center", "center", "center", "center"]}>
+        <HStack spacing={5}>
           <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
             {t("children.main-header")}
           </Heading>
-          <NextLink href="create-child">
-            <Button
-              bg="blue.400"
-              colorScheme="navItem"
-              borderRadius="12px"
-              py="4"
-              px="4"
-              lineHeight="1"
-              size="md"
-              ml={"2rem"}
-            >
-              {t("children.btn-add")}
-            </Button>
-          </NextLink>
+          {role == "Headmaster" || role == "Pedagogue" ? (
+            <NextLink href="/create-child">
+              <IconButton
+                bg="blue.400"
+                colorScheme="navItem"
+                borderRadius="12px"
+                py="4"
+                px="4"
+                lineHeight="1"
+                size="md"
+                ml={"2rem"}
+                aria-label={"Create child"}
+                icon={<AddIcon />}
+              />
+            </NextLink>
+          ) : null}
         </HStack>
       </Flex>
-      <Box
-        w={["100%", "100%", "100%", "100%", "100%"]}
-        display={["block", "block", "block", "block"]}
-        overflowX={["auto", "auto", "hidden", "hidden"]}
-      >
-        {fetching && !data ? (
-          <Box mt={10} mb={10} padding="10" boxShadow="lg" bg="white">
-            <SkeletonText mt="4" noOfLines={4} spacing="4" />
-          </Box>
-        ) : (
-          <Table mt={"2rem"}>
-            <Thead>
-              <Tr>
-                <Th>{t("children.tbl-name")}</Th>
-                <Th>{t("children.tbl-surname")}</Th>
-                <Th></Th>
-                <Th></Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {data!.showChildrenFilterNotInGroup.children.map((child) =>
-                !child ? null : (
+      <Divider mt={5} />
+      <Flex justify={"center"}>
+        <Box
+          w={["100%", "100%", "100%", "80%", "100%"]}
+          display={["block", "block", "block", "block"]}
+          overflowX={["auto", "auto", "hidden", "hidden"]}
+        >
+          {fetching && !data ? (
+            <Box mt={10} mb={10} padding="10" boxShadow="lg" bg="white">
+              <SkeletonText mt="4" noOfLines={4} spacing="4" />
+            </Box>
+          ) : (
+            <Table mt={"2rem"}>
+              {data!.showChildrenFilterNotInGroup.children.length > 0 ? (
+                <Thead>
                   <Tr>
-                    <Td>{child.Name}</Td>
-                    <Td ml={"2rem"}>{child.Surname}</Td>
-                    <Td>
-                      <NextLink
-                        href={"/edit-child/[id]"}
-                        as={`/edit-child/${child.Id}`}
-                      >
-                        <IconButton
-                          aria-label="Edit"
-                          icon={<EditIcon />}
-                          bg="blue.400"
-                          colorScheme="navItem"
-                          borderRadius="12px"
-                          py="4"
-                          px="4"
-                          lineHeight="1"
-                          size="md"
-                          ml={"2rem"}
-                        />
-                      </NextLink>
-                    </Td>
-                    <Td>
-                      <IconButton
-                        aria-label="Delete"
-                        icon={<DeleteIcon />}
-                        colorScheme="red"
-                        borderRadius="12px"
-                        lineHeight="1"
-                        size="md"
-                        onClick={() => {
-                          deleteChildren({
-                            id: child.Id,
-                          });
-                        }}
-                      />
-                    </Td>
-                    <Td>
-                      {!child.fatherId || !child.motherId ? (
-                        <Tooltip label="Some data is missing!">
-                          <WarningIcon color={"yellow.400"} />
-                        </Tooltip>
-                      ) : (
-                        <Tooltip label="All data is here!">
-                          <CheckCircleIcon color={"green.400"} />
-                        </Tooltip>
-                      )}
-                    </Td>
+                    <Th>{t("children.tbl-name")}</Th>
+                    <Th>{t("children.tbl-surname")}</Th>
+                    <Th></Th>
+                    <Th></Th>
                   </Tr>
-                )
-              )}
-            </Tbody>
-          </Table>
-        )}
-        {data && data.showChildrenFilterNotInGroup.hasMore ? (
-          <Flex>
-            <Button
-              onClick={() => {
-                setVariables({
-                  limit: variables.limit,
-                  cursor:
-                    data.showChildrenFilterNotInGroup.children[
-                      data.showChildrenFilterNotInGroup.children.length - 1
-                    ].createdAt,
-                });
-              }}
-              isLoading={fetching}
-              m="auto"
-              my={8}
-              bg="blue.400"
-              colorScheme="navItem"
-              borderRadius="12px"
-              py="4"
-              px="4"
-              lineHeight="1"
-              size="md"
-            >
-              {t("children.btn-load-more")}
-            </Button>
-          </Flex>
-        ) : null}
-      </Box>
+                </Thead>
+              ) : null}
+              <Tbody>
+                {data!.showChildrenFilterNotInGroup.children.map((child) =>
+                  !child ? null : (
+                    <Tr>
+                      <Td>{child.Name}</Td>
+                      <Td ml={"2rem"}>{child.Surname}</Td>
+                      {role == "Teacher" ? (
+                        <Td>
+                          <IconButton
+                            aria-label="View user"
+                            icon={<ViewIcon />}
+                            color="white"
+                            bg="blue.400"
+                            _hover={{
+                              backgroundColor: "#719ABC",
+                            }}
+                            onClick={() => {
+                              setChild(child);
+                              onOpen();
+                            }}
+                          />
+                        </Td>
+                      ) : null}
+                      <Td>
+                        {role == "Pedagogue" || role == "Headmaster" ? (
+                          <NextLink
+                            href={"/edit-child/[id]"}
+                            as={`/edit-child/${child.Id}`}
+                          >
+                            <IconButton
+                              aria-label="Edit"
+                              icon={<EditIcon />}
+                              bg="blue.400"
+                              colorScheme="navItem"
+                              borderRadius="12px"
+                              py="4"
+                              px="4"
+                              lineHeight="1"
+                              size="md"
+                              ml={"2rem"}
+                            />
+                          </NextLink>
+                        ) : null}
+                      </Td>
+                      <Td>
+                        {role == "Pedagogue" || role == "Headmaster" ? (
+                          <IconButton
+                            aria-label="Delete"
+                            icon={<DeleteIcon />}
+                            colorScheme="red"
+                            borderRadius="12px"
+                            lineHeight="1"
+                            size="md"
+                            onClick={() => {
+                              deleteChildren({
+                                id: child.Id,
+                              });
+                            }}
+                          />
+                        ) : null}
+                      </Td>
+                      {role == "Pedagogue" || role == "Headmaster" ? (
+                        <Td>
+                          {!child.fatherId || !child.motherId ? (
+                            <Tooltip label={t("children.tooltip.warning")}>
+                              <WarningIcon color={"yellow.400"} />
+                            </Tooltip>
+                          ) : (
+                            <Tooltip label={t("children.tooltip.success")}>
+                              <CheckCircleIcon color={"green.400"} />
+                            </Tooltip>
+                          )}
+                        </Td>
+                      ) : null}
+                    </Tr>
+                  )
+                )}
+              </Tbody>
+            </Table>
+          )}
+          {data && data.showChildrenFilterNotInGroup.hasMore ? (
+            <Flex>
+              <Button
+                onClick={() => {
+                  setVariables({
+                    limit: variables.limit,
+                    cursor:
+                      data.showChildrenFilterNotInGroup.children[
+                        data.showChildrenFilterNotInGroup.children.length - 1
+                      ].createdAt,
+                  });
+                }}
+                isLoading={fetching}
+                m="auto"
+                my={8}
+                bg="blue.400"
+                colorScheme="navItem"
+                borderRadius="12px"
+                py="4"
+                px="4"
+                lineHeight="1"
+                size="md"
+              >
+                {t("children.btn-load-more")}
+              </Button>
+            </Flex>
+          ) : null}
+        </Box>
+      </Flex>
     </Layout>
   );
 };

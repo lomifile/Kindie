@@ -25,7 +25,7 @@ import {
 import { Image } from "@chakra-ui/image";
 // @ts-ignore
 import logo from "../img/logo.png";
-import React, { useState } from "react";
+import React from "react";
 import NextLink from "next/link";
 import {
   useClearKindergardenMutation,
@@ -36,7 +36,8 @@ import { isServer } from "../utils/isServer";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { useIsAuth } from "../utils/useIsAuth";
+import Flags from "country-flag-icons/react/3x2";
+
 export type NavbarVariant = "normal" | "user";
 
 interface NavProps {
@@ -52,6 +53,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
   });
   const [, clearKindergarden] = useClearKindergardenMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   let body;
   if (fetching) {
     body = (
@@ -74,6 +76,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             color="blue.400"
             colorScheme="navItem"
             variant="ghost"
+            borderRadius={"12px"}
           >
             {t("nav.home")}
           </Button>
@@ -85,6 +88,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             color="blue.400"
             colorScheme="navItem"
             variant="ghost"
+            borderRadius={"12px"}
           >
             {t("nav.About-us")}
           </Button>
@@ -96,6 +100,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             color="blue.400"
             colorScheme="navItem"
             variant="ghost"
+            borderRadius={"12px"}
           >
             {t("nav.Contact-us")}
           </Button>
@@ -108,6 +113,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             colorScheme="navItem"
             variant="ghost"
             ml={"4"}
+            borderRadius={"12px"}
           >
             {t("nav.Sign-in")}
           </Button>
@@ -135,6 +141,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             color="blue.400"
             colorScheme="navItem"
             variant="ghost"
+            borderRadius={"12px"}
           >
             {t("nav.home")}
           </Button>
@@ -146,6 +153,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             color="blue.400"
             colorScheme="navItem"
             variant="ghost"
+            borderRadius={"12px"}
           >
             {t("nav.About-us")}
           </Button>
@@ -157,6 +165,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
             color="blue.400"
             colorScheme="navItem"
             variant="ghost"
+            borderRadius={"12px"}
           >
             {t("nav.Contact-us")}
           </Button>
@@ -180,9 +189,14 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
           <MenuButton ml={["15px", "15px", "0", "0", "0"]} mb={"10px"}>
             <Avatar name={data.me.Name + " " + data.me.Surname} />
           </MenuButton>
-          <MenuList>
+          <MenuList borderRadius={"12px"} p={"3"}>
             <MenuGroup title={t("nav.menu.titles.navigation")}>
               <MenuItem
+                borderRadius={"12px"}
+                _hover={{
+                  bg: "gray.100",
+                  borderRadius: "12px",
+                }}
                 onClick={() => {
                   clearKindergarden();
                   router.push("/dashboard");
@@ -190,13 +204,36 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
               >
                 {t("nav.menu.dashboard")}
               </MenuItem>
-            </MenuGroup>
-            <MenuGroup title={t("nav.menu.titles.profile")}>
-              <NextLink href="/profile">
-                <MenuItem>{t("nav.menu.acc")}</MenuItem>
+              <NextLink href="/">
+                <MenuItem
+                  _hover={{
+                    bg: "gray.100",
+                    borderRadius: "12px",
+                  }}
+                >
+                  {t("nav.menu.landing-page")}
+                </MenuItem>
               </NextLink>
-              <MenuItem>{t("nav.menu.settings")}</MenuItem>
+            </MenuGroup>
+            <MenuDivider />
+            <MenuGroup title={t("nav.menu.titles.profile")}>
+              <NextLink href="/settings">
+                <MenuItem
+                  borderRadius={"12px"}
+                  _hover={{
+                    bg: "gray.100",
+                    borderRadius: "12px",
+                  }}
+                >
+                  {t("nav.menu.settings")}
+                </MenuItem>
+              </NextLink>
               <MenuItem
+                borderRadius={"12px"}
+                _hover={{
+                  bg: "gray.100",
+                  borderRadius: "12px",
+                }}
                 onClick={async () => {
                   await logout();
                   if (isServer()) {
@@ -209,14 +246,14 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
                 {t("nav.menu.log-out")}
               </MenuItem>
             </MenuGroup>
-            <MenuDivider />
-            <MenuGroup title={t("nav.menu.titles.help")}>
-              <NextLink href="/">
-                <MenuItem>{t("nav.menu.landing-page")}</MenuItem>
-              </NextLink>
-              <MenuItem>{t("nav.menu.docs")}</MenuItem>
-              <MenuItem>{t("nav.menu.faq")}</MenuItem>
-            </MenuGroup>
+            {/*<MenuDivider />*/}
+            {/*<MenuGroup title={t("nav.menu.titles.help")}>*/}
+            {/* <NextLink href="/">*/}
+            {/*    <MenuItem>{t("nav.menu.landing-page")}</MenuItem>*/}
+            {/*  </NextLink> */}
+            {/*  <MenuItem>{t("nav.menu.docs")}</MenuItem>*/}
+            {/*  <MenuItem>{t("nav.menu.faq")}</MenuItem>*/}
+            {/*</MenuGroup>*/}
             <MenuGroup alignContent="center">
               <Flex
                 mt={5}
@@ -225,20 +262,24 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
                 display={["inline-flex", "none", "none", "none"]}
               >
                 <Button
+                  h={"50px"}
+                  w={"50px"}
                   bg="transparent"
                   onClick={() => {
                     i18n.changeLanguage("hr");
                   }}
                 >
-                  🇭🇷
+                  <Flags.HR title="Hrvatski" />
                 </Button>
                 <Button
+                  h={"50px"}
+                  w={"50px"}
                   bg="transparent"
                   onClick={(e) => {
                     i18n.changeLanguage("en");
                   }}
                 >
-                  🇬🇧
+                  <Flags.GB title="English" />
                 </Button>
               </Flex>
             </MenuGroup>
@@ -288,20 +329,24 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
                   display={["inline-flex", "none", "none", "none"]}
                 >
                   <Button
+                    h={"50px"}
+                    w={"50px"}
                     bg="transparent"
                     onClick={() => {
                       i18n.changeLanguage("hr");
                     }}
                   >
-                    🇭🇷
+                    <Flags.HR title="Hrvatski" />
                   </Button>
                   <Button
+                    h={"50px"}
+                    w={"50px"}
                     bg="transparent"
                     onClick={(e) => {
                       i18n.changeLanguage("en");
                     }}
                   >
-                    🇬🇧
+                    <Flags.GB title="English" />
                   </Button>
                 </Flex>
               </Stack>
@@ -327,20 +372,24 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
         </Heading>
         <Box display={["none", "inline-flex", "inline-flex", "inline-flex"]}>
           <Button
+            h={"50px"}
+            w={"50px"}
             bg="transparent"
             onClick={() => {
               i18n.changeLanguage("hr");
             }}
           >
-            🇭🇷
+            <Flags.HR title="Hrvatski" />
           </Button>
           <Button
+            h={"50px"}
+            w={"50px"}
             bg="transparent"
             onClick={(e) => {
               i18n.changeLanguage("en");
             }}
           >
-            🇬🇧
+            <Flags.GB title="English" />
           </Button>
         </Box>
       </Stack>

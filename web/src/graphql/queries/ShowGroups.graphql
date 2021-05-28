@@ -1,5 +1,5 @@
-query ShowGroups{
-  showGroups{
+query ShowGroups {
+  showGroups {
     ...GroupFragment
   }
 }

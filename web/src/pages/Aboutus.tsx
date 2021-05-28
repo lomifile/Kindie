@@ -38,7 +38,7 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
       <title>{t("about-us.main-heading")}</title>
       <Flex
         align="center"
-        justify={{ base: "center", md: "space-around", xl: "space-between" }}
+        justify={{ base: "center", md: "center", xl: "space-between" }}
         direction={{ base: "column", md: "row" }}
         // @ts-ignore
         wrap="no-wrap"
@@ -95,10 +95,11 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
       <Flex pt={"3rem"} pb={3}>
         <Stack>
           <Flex
+            justify={"center"}
             ml={{
               xs: "1rem",
               sm: "3rem",
-              md: "8rem",
+              md: "10rem",
               lg: "12rem",
               xl: "15rem",
             }}

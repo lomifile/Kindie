@@ -4,8 +4,6 @@ import { withUrqlClient } from "next-urql";
 import { Layout } from "../components/Layout";
 import {
   Box,
-  Text,
-  Button,
   Flex,
   Heading,
   Stack,
@@ -47,9 +45,7 @@ import { ShowUser } from "../components/ShowUser";
 import { useIsAuth } from "../utils/useIsAuth";
 import { useTranslation } from "react-i18next";
 
-interface StaffProps {}
-
-const Staff: React.FC<StaffProps> = ({}) => {
+const Staff: React.FC<{}> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -70,7 +66,19 @@ const Staff: React.FC<StaffProps> = ({}) => {
       text,
     },
   });
-  const [{ data: meData, fetching: meFetching }] = useMeQuery();
+  const [{ data: meData }] = useMeQuery();
+  const translatedRoles = (role: String) => {
+    switch (role) {
+      case "Headmaster":
+        return t("staff.roles.headmaster");
+
+      case "Teacher":
+        return t("staff.roles.teacher");
+
+      case "Pedagogue":
+        return t("staff.roles.pedagogue");
+    }
+  };
 
   return (
     <Layout variant={"column"} navbarVariant={"user"}>
@@ -189,7 +197,11 @@ const Staff: React.FC<StaffProps> = ({}) => {
         </DrawerOverlay>
       </Drawer>
       <Stack spacing={8}>
-        <Flex mt={5} mb={2}>
+        <Flex
+          justify={["center", "center", "center", "left", "left"]}
+          mt={5}
+          mb={2}
+        >
           <Heading color="blue.400">{t("staff.owner-heading")}</Heading>
         </Flex>
         <Box>
@@ -218,14 +230,20 @@ const Staff: React.FC<StaffProps> = ({}) => {
             </Tbody>
           </Table>
         </Box>
-        <Flex mt={20} mb={2}>
+        <Flex
+          justify={["center", "center", "center", "left", "left"]}
+          mt={20}
+          mb={2}
+        >
           <Heading color="blue.400">{t("staff.staff-heading")}</Heading>
           {
             // @ts-ignore
             meData?.me?.Name === owner.Name &&
             // @ts-ignore
-            meData?.me?.Surname === owner.Surname ? (
-              <Button
+            meData?.me?.Surname === owner.Surname &&
+            // @ts-ignore
+            meData?.me?.Id === owner.Id ? (
+              <IconButton
                 ml={5}
                 bg="blue.400"
                 colorScheme="navItem"
@@ -236,10 +254,9 @@ const Staff: React.FC<StaffProps> = ({}) => {
                 size="md"
                 type="submit"
                 onClick={onOpen}
-              >
-                <AddIcon mr={2} />
-                <Text mt={0.5}>{t("staff.btn-add")}</Text>
-              </Button>
+                icon={<AddIcon />}
+                aria-label={"Add staff"}
+              />
             ) : null
           }
         </Flex>
@@ -249,7 +266,7 @@ const Staff: React.FC<StaffProps> = ({}) => {
               <Tr>
                 <Th>{t("staff.tbl-name")}</Th>
                 <Th>{t("staff.tbl-surname")}</Th>
-                <Th></Th>
+                <Th>{t("staff.tbl-role")}</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -257,12 +274,15 @@ const Staff: React.FC<StaffProps> = ({}) => {
                 <Tr>
                   <Td>{s.Name}</Td>
                   <Td>{s.Surname}</Td>
+                  <Td>{translatedRoles(s.Role)}</Td>
                   <Td>
                     {
                       // @ts-ignore
                       meData.me.Name === owner.Name &&
                       // @ts-ignore
-                      meData.me.Surname === owner.Surname ? (
+                      meData.me.Surname === owner.Surname &&
+                      // @ts-ignore
+                      meData?.me?.Id === owner.Id ? (
                         <IconButton
                           aria-label="Delete from staff"
                           colorScheme="red"

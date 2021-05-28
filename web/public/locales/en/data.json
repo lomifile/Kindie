@@ -142,9 +142,8 @@
       "btn": "Sign in"
     }
   },
-  "profile": {
-    "main-header": "Profile",
-    "acc": "My account",
+  "settings": {
+    "main-header": "Settings",
     "alert": {
       "title": "There was an error",
       "desc": "An error occured while trying to fetch your data!"
@@ -253,10 +252,24 @@
     "groups-heading": "Your groups"
   },
   "children": {
+    "modal": {
+      "title": "Overview",
+      "name": "Name",
+      "surname": "Last name",
+      "birth-date": "Birth date",
+      "oib": "PIN",
+      "gender": "Gender",
+      "remarks": "remarks",
+      "btn": "Close"
+    },
     "main-header": "Children",
     "alert": {
       "title": "There was an error",
       "desc": "An error occured while trying to fetch your data!"
+    },
+    "tooltip": {
+      "warning": "Some data is missing",
+      "success": "All data is here"
     },
     "btn-add": "Add child",
     "tbl-name": "Name",
@@ -288,8 +301,14 @@
         "email": "Email"
       }
     },
+    "roles": {
+      "teacher": "Teacher",
+      "headmaster": "Headmaster",
+      "pedagogue": "Pedagouge"
+    },
     "tbl-name": "Name",
     "tbl-surname": "Lastname",
+    "tbl-role": "Role",
     "btn-add": "Add staff"
   },
   "group": {

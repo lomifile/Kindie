@@ -17,11 +17,11 @@ export const Card: React.FC<CardProps> = ({
     <Box
       maxW="sm"
       borderWidth={["0", "0", "0", "1px", "1px"]}
-      borderRadius="lg"
+      borderRadius="20px"
     >
-      <Image src={imageSrc} />
       <Box p="6">
-        <Box mt="1" fontWeight="semibold" as="h1" lineHeight="tight">
+        <Image src={imageSrc} />
+        <Box mt="5" fontWeight="semibold" as="h1" lineHeight="tight">
           {cardTitle}
         </Box>
         {!cardText ? null : <Box mt={3}>{cardText}</Box>}

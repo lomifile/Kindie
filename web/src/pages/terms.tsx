@@ -2,9 +2,7 @@ import { Heading, ListItem, Text, UnorderedList } from "@chakra-ui/layout";
 import React from "react";
 import { Wrapper } from "../components/Wrapper";
 
-interface TermsProps {}
-
-const Terms: React.FC<TermsProps> = ({}) => {
+const Terms: React.FC<{}> = ({}) => {
   return (
     <Wrapper variant={"regular"}>
       <Heading as={"h2"} mb={"10"}>

@@ -7,6 +7,8 @@ import {
   Button,
   Flex,
   Heading,
+  HStack,
+  IconButton,
   Select,
   Stack,
   useToast,
@@ -20,6 +22,7 @@ import {
 } from "../generated/graphql";
 import { useTranslation } from "react-i18next";
 import { useIsAuth } from "../utils/useIsAuth";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 
 interface CreateParentsProps {}
 
@@ -35,52 +38,53 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
   return (
     <Layout variant="column" navbarVariant="user">
       <title>{t("create-parents.main-header")}</title>
-      <Stack spacing={8}>
-        <Flex mt={5} mb={2}>
-          <Button
+      <Flex
+        justify={["center", "center", "center", "left", "left"]}
+        mt={5}
+        mb={2}
+      >
+        <HStack spacing={5}>
+          <IconButton
             bg="blue.400"
-            className="nav-item"
             colorScheme="navItem"
             borderRadius="12px"
-            display={["none", "none", "none", "flex"]}
             py="4"
             px="4"
             lineHeight="1"
             size="md"
-            mr={5}
-            mt={1}
+            type="submit"
             onClick={() => {
               router.back();
             }}
-          >
-            {t("create-parents.btn-back")}
-          </Button>
+            aria-label={"Back"}
+            icon={<ArrowBackIcon />}
+          />
           <Heading color="blue.400">{t("create-parents.main-header")}</Heading>
-          <Select
-            ml={5}
-            id="parentSelector"
-            onClick={() => {
-              // @ts-ignore
-              setParent(document.getElementById("parentSelector").value);
-            }}
-            width={"sm"}
-            borderRadius="12px"
-          >
-            <option value="father">
-              {t("create-parents.select.mother.name")}
-            </option>
-            <option value="mother">
-              {t("create-parents.select.father.name")}
-            </option>
-          </Select>
-        </Flex>
-      </Stack>
+        </HStack>
+      </Flex>
       <Flex
         alignItems="center"
         justifyContent="center"
         flexDirection="column"
         mt={10}
       >
+        <Select
+          id="parentSelector"
+          onClick={() => {
+            // @ts-ignore
+            setParent(document.getElementById("parentSelector").value);
+          }}
+          width={["xs", "sm", "md", "md", "md"]}
+          borderRadius="12px"
+          mb={"25px"}
+        >
+          <option value="father">
+            {t("create-parents.select.mother.name")}
+          </option>
+          <option value="mother">
+            {t("create-parents.select.father.name")}
+          </option>
+        </Select>
         <Box width={{ base: "90%", md: "400px" }} rounded="lg">
           <Formik
             initialValues={{
@@ -127,7 +131,6 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
               } else {
                 toast({
                   title: "There was an error",
-                  description: "You didn't select parent type!",
                   status: "error",
                   duration: 9000,
                   isClosable: true,

@@ -76,7 +76,7 @@ export class FatherResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  async deleteFather(@Arg("fatherId") fatherId: number) {
+  async deleteFather(@Arg("fatherId", () => Int) fatherId: number) {
     await Father.delete(fatherId);
     return true;
   }
