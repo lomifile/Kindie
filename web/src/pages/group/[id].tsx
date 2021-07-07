@@ -305,7 +305,7 @@ const Group = ({}) => {
             <Tbody>
               {data!.showChildrenFilterInGroup.children.map((child) =>
                 !child ? null : (
-                  <Tr>
+                  <Tr key={child.Id}>
                     <Td>{child.Name}</Td>
                     <Td ml={"2rem"}>{child.Surname}</Td>
                     <Td>

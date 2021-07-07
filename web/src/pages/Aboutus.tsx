@@ -92,7 +92,7 @@ const Aboutus: React.FC<AboutusProps> = ({}) => {
         </Box>
       </Flex>
       <Divider />
-      <Flex pt={"3rem"} pb={3}>
+      <Flex pt={"3rem"} pb={3} mb="5">
         <Stack>
           <Flex
             justify={"center"}

@@ -18,6 +18,7 @@ import {
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useIsAuth } from "../utils/useIsAuth";
 import {
@@ -28,14 +29,16 @@ import {
 } from "../generated/graphql";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
-import { useRouter } from "next/router";
-import { EditIcon, DeleteIcon, AddIcon } from "@chakra-ui/icons";
+import { EditIcon, DeleteIcon, AddIcon, ViewIcon } from "@chakra-ui/icons";
 import { getUserRole } from "../utils/getUserRole";
+import { ParentsModal } from "../components/ParentsModal";
 
 const Parents: React.FC<{}> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const role = getUserRole();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [parent, setParent] = useState(null);
 
   const [motherVariables, setMotherVariables] = useState({
     limit: 10,
@@ -58,6 +61,7 @@ const Parents: React.FC<{}> = ({}) => {
   return (
     <Layout navbarVariant="user" variant="column">
       <title>{t("parents.main-header")}</title>
+      <ParentsModal data={parent} isOpen={isOpen} onClose={onClose} />
       <Stack spacing={1}>
         <Flex align="center" justify="center" mt={5} p={3}>
           <HStack p={2} spacing={4}>
@@ -134,6 +138,23 @@ const Parents: React.FC<{}> = ({}) => {
                         <Tr>
                           <Td>{mom.Name}</Td>
                           <Td ml={"2rem"}>{mom.Surname}</Td>
+                          {role == "Teacher" ? (
+                            <Td>
+                              <IconButton
+                                aria-label="View user"
+                                icon={<ViewIcon />}
+                                color="white"
+                                bg="blue.400"
+                                _hover={{
+                                  backgroundColor: "#719ABC",
+                                }}
+                                onClick={() => {
+                                  setParent(mom);
+                                  onOpen();
+                                }}
+                              />
+                            </Td>
+                          ) : null}
                           <Td>
                             {role == "Pedagogue" || role == "Headmaster" ? (
                               <NextLink
@@ -222,6 +243,23 @@ const Parents: React.FC<{}> = ({}) => {
                         <Tr>
                           <Td>{father.Name}</Td>
                           <Td ml={"2rem"}>{father.Surname}</Td>
+                          {role == "Teacher" ? (
+                            <Td>
+                              <IconButton
+                                aria-label="View user"
+                                icon={<ViewIcon />}
+                                color="white"
+                                bg="blue.400"
+                                _hover={{
+                                  backgroundColor: "#719ABC",
+                                }}
+                                onClick={() => {
+                                  setParent(father);
+                                  onOpen();
+                                }}
+                              />
+                            </Td>
+                          ) : null}
                           <Td>
                             {role == "Pedagogue" || role == "Headmaster" ? (
                               <NextLink

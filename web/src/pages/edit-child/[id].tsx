@@ -8,10 +8,6 @@ import {
   Button,
   useToast,
   Spinner,
-  AlertIcon,
-  Alert,
-  AlertDescription,
-  AlertTitle,
   HStack,
   Heading,
   Drawer,
@@ -48,6 +44,7 @@ import { ParentCard } from "../../components/ParentCard";
 import { useTranslation } from "react-i18next";
 import { CustomSpinner } from "../../components/Spinner";
 import { CustomAlert } from "../../components/Alerts";
+import moment from "moment";
 
 const EditChild = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
@@ -206,7 +203,7 @@ const EditChild = ({}) => {
           </DrawerContent>
         </DrawerOverlay>
       </Drawer>
-      <Flex justify={["center", "center", "center", "left", "left"]}>
+      <Flex justify={["center", "center", "center", "center", "left"]}>
         <HStack spacing={5} mb={10}>
           <IconButton
             bg="blue.400"
@@ -242,7 +239,9 @@ const EditChild = ({}) => {
               name: data.findChild.Name,
               surname: data.findChild.Surname,
               gender: data.findChild.Gender,
-              birthdate: data.findChild.BirthDate,
+              birthdate: moment(
+                new Date(data?.findChild.BirthDate).toString()
+              ).format("DD/MM/YYYY"),
               oib: data.findChild.OIB.toString(),
               remarks: data.findChild.Remarks,
             }}
@@ -297,7 +296,8 @@ const EditChild = ({}) => {
                     name="birthdate"
                     placeholder={t("edit-child.form.placeholders.birth-date")}
                     label={t("edit-child.form.birth-date")}
-                    type="date"
+                    type="text"
+                    readOnly={true}
                     required
                   />
                   <InputField
@@ -351,8 +351,16 @@ const EditChild = ({}) => {
             </>
           ) : (
             <>
-              <ParentCard data={data.findChild.mother} />
-              <ParentCard data={data.findChild.father} />
+              <ParentCard
+                parent="mother"
+                layout={true}
+                data={data.findChild.mother}
+              />
+              <ParentCard
+                parent="father"
+                layout={true}
+                data={data.findChild.father}
+              />
             </>
           )}
         </Box>

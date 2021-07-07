@@ -10,10 +10,6 @@ import {
   useUseGroupMutation,
 } from "../../generated/graphql";
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   Box,
   Button,
   Divider,
@@ -34,7 +30,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Spinner,
   Stack,
   useDisclosure,
   useToast,
@@ -315,7 +310,6 @@ const Kindergarden = ({}) => {
             />
           </HStack>
         </Flex>
-        <Divider mt={1} />
         {data?.showGroups.length > 0 ? (
           <>
             <Flex justify={["center", "center", "center", "center", "left"]}>
@@ -335,13 +329,14 @@ const Kindergarden = ({}) => {
                   overflowX: "auto",
                 }}
               >
-                <HStack spacing={8}>
+                <HStack spacing={8} padding={5}>
                   {data?.showGroups?.map((owning) => (
                     <Box
                       maxW="sm"
                       borderWidth="1px"
                       borderRadius="lg"
                       shadow="xl"
+                      key={owning.Id}
                     >
                       {role == "Headmaster" ? (
                         <Flex justify="right">

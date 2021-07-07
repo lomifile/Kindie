@@ -1,14 +1,5 @@
 import { Layout } from "../components/Layout";
-import {
-  Box,
-  Flex,
-  Button,
-  Heading,
-  Link,
-  Stack,
-  Text,
-  HStack,
-} from "@chakra-ui/react";
+import { Box, Flex, Button, Heading, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 import { Image } from "@chakra-ui/image";
 // @ts-ignore
@@ -32,8 +23,7 @@ const Index = () => {
         // @ts-ignore
         wrap="no-wrap"
         minH="70vh"
-        px={8}
-        mb={5}
+        px={5}
       >
         <Stack
           spacing={4}
@@ -89,10 +79,10 @@ const Index = () => {
         </Box>
       </Flex>
       <Flex
-        pb={"2rem"}
+        p={"2"}
         justify={["center", "center", "center", "center", "center"]}
         align="center"
-        px={8}
+        mb={10}
       >
         <Stack>
           <Flex
@@ -103,14 +93,11 @@ const Index = () => {
               lg: "12rem",
               xl: "15rem",
             }}
-            pt={1}
-            mb={1}
-            pb={"1rem"}
+            p="5"
+            mb="2"
           >
             <Heading color="blue.400">{t("index.headers.wwd")}</Heading>
           </Flex>
-          <br />
-          <br />
           <Stack
             spacing={8}
             justify={{

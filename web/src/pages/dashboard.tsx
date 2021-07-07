@@ -179,165 +179,167 @@ const Dashboard = ({}) => {
         ) : null}
       </Flex>
       <Divider mt={5} />
-      <Stack spacing={10} mt={10}>
-        {data?.showKindergarden.length > 0 ? (
-          <>
-            <Flex justify={["center", "center", "center", "left", "left"]}>
-              <Heading ml={["0", "0", "0", "10rem", "10px"]} color="blue.400">
-                {t("dashboard.owned-header")}
-              </Heading>
-            </Flex>
-            <Flex align="center" justify="center" mb={5}>
-              <Box
-                w={["100%", "100%", "100%", "400px", "400px"]}
-                rounded={["xs", "sm", "md", "lg", "xl"]}
-                p={5}
-                style={{
-                  display: "block",
-                  width: "1200px",
-                  overflowY: "hidden",
-                  overflowX: "auto",
-                }}
-              >
-                <HStack spacing={8}>
-                  {data?.showKindergarden?.map((owning) => (
-                    <Box
-                      maxW="sm"
-                      borderWidth="1px"
-                      borderRadius="lg"
-                      shadow="xl"
-                    >
-                      <Flex justify="right">
-                        <IconButton
-                          aria-label="Delete kindergarden"
-                          icon={<CloseIcon />}
-                          variant="ghost"
-                          onClick={async () => {
-                            const { error } = await deleteKindergarden({
-                              id: owning.Id,
+      {data?.showKindergarden.length > 0 ? (
+        <Stack spacing={10} mt={10} padding="5">
+          <Flex justify={["center", "center", "center", "left", "left"]}>
+            <Heading ml={["0", "0", "0", "10rem", "10px"]} color="blue.400">
+              {t("dashboard.owned-header")}
+            </Heading>
+          </Flex>
+          <Flex align="center" justify="center" mb={5}>
+            <Box
+              w={["100%", "100%", "100%", "400px", "400px"]}
+              rounded={["xs", "sm", "md", "lg", "xl"]}
+              p={5}
+              style={{
+                display: "block",
+                width: "1200px",
+                overflowY: "hidden",
+                overflowX: "auto",
+              }}
+            >
+              <HStack spacing={8} padding="2">
+                {data?.showKindergarden?.map((owning) => (
+                  <Box
+                    maxW="sm"
+                    borderWidth="1px"
+                    borderRadius="lg"
+                    shadow="xl"
+                  >
+                    <Flex justify="right">
+                      <IconButton
+                        aria-label="Delete kindergarden"
+                        icon={<CloseIcon />}
+                        variant="ghost"
+                        onClick={async () => {
+                          const { error } = await deleteKindergarden({
+                            id: owning.Id,
+                          });
+                          if (error) {
+                            toast({
+                              title: t("dashboard.toast.error.title"),
+                              description: t("dashboard.toast.error.desc"),
+                              status: "error",
+                              duration: 9000,
+                              isClosable: true,
                             });
-                            if (error) {
-                              toast({
-                                title: t("dashboard.toast.error.title"),
-                                description: t("dashboard.toast.error.desc"),
-                                status: "error",
-                                duration: 9000,
-                                isClosable: true,
-                              });
-                            } else {
-                              toast({
-                                title: t("dashboard.toast.delete.title"),
-                                status: "success",
-                                duration: 9000,
-                                isClosable: true,
-                              });
-                            }
-                          }}
-                        />
-                      </Flex>
-                      <Box p="6">
-                        <Box
-                          mt="1"
-                          fontWeight="semibold"
-                          as="h1"
-                          lineHeight="tight"
+                          } else {
+                            toast({
+                              title: t("dashboard.toast.delete.title"),
+                              status: "success",
+                              duration: 9000,
+                              isClosable: true,
+                            });
+                          }
+                        }}
+                      />
+                    </Flex>
+                    <Box p="6">
+                      <Box
+                        mt="1"
+                        fontWeight="semibold"
+                        as="h1"
+                        lineHeight="tight"
+                      >
+                        <NextLink
+                          href={"/kindergarden/[id]"}
+                          as={`/kindergarden/${owning.Id}`}
                         >
-                          <NextLink
-                            href={"/kindergarden/[id]"}
-                            as={`/kindergarden/${owning.Id}`}
+                          <Link
+                            color="blue.400"
+                            style={{
+                              fontSize: "26px",
+                              fontWeight: "bold",
+                            }}
+                            onClick={() => {
+                              useKindergarden({ kindergardenID: owning.Id });
+                            }}
                           >
-                            <Link
-                              color="blue.400"
-                              style={{
-                                fontSize: "26px",
-                                fontWeight: "bold",
-                              }}
-                              onClick={() => {
-                                useKindergarden({ kindergardenID: owning.Id });
-                              }}
-                            >
-                              {owning.Name}
-                            </Link>
-                          </NextLink>
-                        </Box>
-                        <Divider />
-                        <Box mt={3}>
-                          <Text>{owning.Address}</Text>
-                          <Text>{owning.City}</Text>
-                          <Text>{owning.Zipcode}</Text>
-                        </Box>
+                            {owning.Name}
+                          </Link>
+                        </NextLink>
+                      </Box>
+                      <Divider />
+                      <Box mt={3}>
+                        <Text>{owning.Address}</Text>
+                        <Text>{owning.City}</Text>
+                        <Text>{owning.Zipcode}</Text>
                       </Box>
                     </Box>
-                  ))}
-                </HStack>
-              </Box>
-            </Flex>
-          </>
-        ) : null}
-      </Stack>
-      <Stack Stack spacing={10} mt={10}>
-        {notMine.length > 0 ? (
-          <>
-            <Flex justify={["center", "center", "center", "center", "left"]}>
-              <Heading ml={["0", "0", "0", "10rem", "10px"]} color="blue.400">
-                {t("dashboard.part-header")}
-              </Heading>
-            </Flex>
-            <Flex align="center" justify="left" mb={5}>
-              <Box
-                w={["100%", "100%", "100%", "400px", "400px"]}
-                rounded={["xs", "sm", "md", "lg", "xl"]}
-                p={5}
-                style={{
-                  display: "block",
-                  width: "1200px",
-                  overflowY: "hidden",
-                  overflowX: "auto",
-                }}
-              >
-                <HStack spacing={8}>
-                  {notMine.map((owning) => (
-                    <Box maxW="sm" borderWidth="1px" borderRadius="lg">
-                      <Box p="6">
-                        <Box
-                          mt="1"
-                          fontWeight="semibold"
-                          as="h1"
-                          lineHeight="tight"
+                  </Box>
+                ))}
+              </HStack>
+            </Box>
+          </Flex>
+        </Stack>
+      ) : null}
+      {notMine.length > 0 ? (
+        <Stack spacing={10} mt={10} p="5">
+          <Flex justify={["center", "center", "center", "center", "center"]}>
+            <Heading ml={["0", "0", "0", "10px", "10px"]} color="blue.400">
+              {t("dashboard.part-header")}
+            </Heading>
+          </Flex>
+          <Flex align="center" justify="left" mb={5}>
+            <Box
+              w={["100%", "100%", "100%", "400px", "400px"]}
+              rounded={["xs", "sm", "md", "lg", "xl"]}
+              p={5}
+              style={{
+                display: "block",
+                width: "1200px",
+                overflowY: "hidden",
+                overflowX: "auto",
+              }}
+            >
+              <HStack spacing={8} p="2">
+                {notMine.map((owning) => (
+                  <Box
+                    maxW="sm"
+                    borderWidth="1px"
+                    borderRadius="lg"
+                    boxShadow="xl"
+                  >
+                    <Box p="6">
+                      <Box
+                        mt="1"
+                        fontWeight="semibold"
+                        as="h1"
+                        lineHeight="tight"
+                      >
+                        <NextLink
+                          href={"/kindergarden/[id]"}
+                          as={`/kindergarden/${owning.Id}`}
                         >
-                          <NextLink
-                            href={"/kindergarden/[id]"}
-                            as={`/kindergarden/${owning.Id}`}
+                          <Link
+                            color="blue.400"
+                            style={{
+                              fontSize: "26px",
+                              fontWeight: "bold",
+                            }}
+                            onClick={() => {
+                              useKindergarden({ kindergardenID: owning.Id });
+                            }}
                           >
-                            <Link
-                              color="blue.400"
-                              style={{
-                                fontSize: "26px",
-                                fontWeight: "bold",
-                              }}
-                              onClick={() => {
-                                useKindergarden({ kindergardenID: owning.Id });
-                              }}
-                            >
-                              {owning.Name}
-                            </Link>
-                          </NextLink>
-                        </Box>
-                        <Divider />
-                        <Box mt={3}>
-                          <Text>{owning.Address}</Text>
-                          <Text>{owning.City}</Text>
-                          <Text>{owning.Zipcode}</Text>
-                        </Box>
+                            {owning.Name}
+                          </Link>
+                        </NextLink>
+                      </Box>
+                      <Divider />
+                      <Box mt={3}>
+                        <Text>{owning.Address}</Text>
+                        <Text>{owning.City}</Text>
+                        <Text>{owning.Zipcode}</Text>
                       </Box>
                     </Box>
-                  ))}
-                </HStack>
-              </Box>
-            </Flex>
-          </>
-        ) : null}
-        {/* 
+                  </Box>
+                ))}
+              </HStack>
+            </Box>
+          </Flex>
+        </Stack>
+      ) : null}
+      {/* 
         <Flex mt={5} mb={2}>
           <Heading color="blue.400">Activity log</Heading>
         </Flex>
@@ -367,7 +369,6 @@ const Dashboard = ({}) => {
             </Flex>
           </Stack>
         </Box> */}
-      </Stack>
     </Layout>
   );
 };

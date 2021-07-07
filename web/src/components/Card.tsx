@@ -18,6 +18,7 @@ export const Card: React.FC<CardProps> = ({
       maxW="sm"
       borderWidth={["0", "0", "0", "1px", "1px"]}
       borderRadius="20px"
+      shadow="lg"
     >
       <Box p="6">
         <Image src={imageSrc} />

@@ -3,7 +3,6 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { withUrqlClient } from "next-urql";
 import { Layout } from "../components/Layout";
 import {
-  toast,
   Stack,
   Flex,
   Button,
@@ -40,6 +39,7 @@ import { useIsAuth } from "../utils/useIsAuth";
 import { useTranslation } from "react-i18next";
 import { SearchIcon, AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import { ParentCard } from "../components/ParentCard";
+import moment from "moment";
 
 interface CreateChildProps {}
 
@@ -223,13 +223,18 @@ const CreateChild: React.FC<CreateChildProps> = ({}) => {
                   Name: values.name,
                   Surname: values.surname,
                   Gender: values.gender,
-                  BirthDate: values.birthdate,
+                  BirthDate: moment(new Date(values.birthdate)).format(
+                    "MM-DD-YYYY"
+                  ),
                   OIB: parseInt(values.oib),
                   Remarks: values.remarks,
                   mother: motherId,
                   father: fatherId,
                 },
               });
+              console.log(
+                moment(new Date(values.birthdate)).format("DD/MM/YYYY")
+              );
               if (!error) {
                 toast({
                   title: t("create-child.toast.title"),

@@ -261,7 +261,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "showChildrenFilterNotInGroup"
               );
-              console.log(allFields, fieldInfos);
               fieldInfos.forEach((fi) => {
                 cache.invalidate(
                   "Query",

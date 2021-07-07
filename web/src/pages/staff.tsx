@@ -96,6 +96,7 @@ const Staff: React.FC<{}> = ({}) => {
               border={"1px"}
               borderColor="blue.400"
               borderRadius={"12px"}
+              mb="2"
             >
               <Stack spacing={4}>
                 <ShowUser
