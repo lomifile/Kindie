@@ -9,11 +9,11 @@ interface FeatureProps {
 export const Feature: React.FC<FeatureProps> = ({ title, desc, ...rest }) => {
   return (
     <Box
-      p={5}
-      shadow="md"
+      p={6}
+      shadow="xl"
       borderWidth="1px"
       flex="1"
-      borderRadius="md"
+      borderRadius="20px"
       {...rest}
     >
       <Heading fontSize="xl">{title}</Heading>

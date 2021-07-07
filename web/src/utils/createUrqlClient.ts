@@ -29,6 +29,8 @@ import {
   AddStaffMutationVariables,
   AddChildToGroupMutationVariables,
   DeleteStaffMutationVariables,
+  DeleteFatherMutationVariables,
+  DeleteMotherMutationVariables,
 } from "../generated/graphql";
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
@@ -191,6 +193,18 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            deleteMother: (_result, args, cache, info) => {
+              cache.invalidate({
+                __typename: "Query",
+                Id: (args as DeleteMotherMutationVariables).motherId,
+              });
+            },
+            deleteFather: (_result, args, cache, info) => {
+              cache.invalidate({
+                __typename: "Query",
+                Id: (args as DeleteFatherMutationVariables).fatherId,
+              });
+            },
             deleteStaff: (_result, args, cache, info) => {
               cache.invalidate({
                 __typename: "Query",
@@ -247,7 +261,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "showChildrenFilterNotInGroup"
               );
-              console.log(allFields, fieldInfos);
               fieldInfos.forEach((fi) => {
                 cache.invalidate(
                   "Query",

@@ -6,12 +6,7 @@ import {
   Box,
   Text,
   HStack,
-  Spinner,
   Link,
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   Button,
   Modal,
   ModalBody,
@@ -41,7 +36,9 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { fetchPartOf } from "../utils/fetchPartof";
 import { toErrormap } from "../utils/toErrorMap";
 import { useIsAuth } from "../utils/useIsAuth";
-
+import { CustomAlert } from "../components/Alerts";
+import { CustomSpinner } from "../components/Spinner";
+import { getUserRole } from "../utils/getUserRole";
 const Dashboard = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
@@ -52,62 +49,28 @@ const Dashboard = ({}) => {
   const [, createKindergarden] = useCreateKindergardenMutation();
   const [, deleteKindergarden] = useDeleteKindergardenMutation();
   const notMine = fetchPartOf();
+  const role = getUserRole();
 
   if (fetching && !data?.showKindergarden) {
-    return (
-      <Flex
-        p={200}
-        minHeight="100%"
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      >
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-          minH="250px"
-          minW="250px"
-        />
-      </Flex>
-    );
+    return <CustomSpinner />;
   } else if (!data?.showKindergarden && !fetching) {
     return (
-      <Flex
-        p={200}
-        minHeight="100%"
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      >
-        <Alert
-          status="error"
-          variant="subtle"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          textAlign="center"
-          height="200px"
-        >
-          <AlertIcon boxSize="40px" mr={0} />
-          <AlertTitle mt={4} mb={1} fontSize="lg">
-            {t("dashboard.alert.title")}
-          </AlertTitle>
-          <AlertDescription maxWidth="sm">
-            {t("dashboard.alert.desc")}
-          </AlertDescription>
-        </Alert>
-      </Flex>
+      <CustomAlert
+        name={t("dashboard.alert.title")}
+        data={t("dashboard.alert.desc")}
+        status={"error"}
+      />
     );
   }
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{t("dashboard.main-header")}</title>
-      <Modal onClose={onClose} size={"md"} isOpen={isOpen}>
+      <Modal
+        closeOnOverlayClick={false}
+        onClose={onClose}
+        size={"md"}
+        isOpen={isOpen}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{t("dashboard.modal-header")}</ModalHeader>
@@ -170,7 +133,11 @@ const Dashboard = ({}) => {
                       required
                     />
                   </Stack>
-                  <Flex justify="right">
+                  <Divider mt={5} mb={5} />
+                  <Flex
+                    justify={["center", "center", "center", "right", "right"]}
+                    pb={2}
+                  >
                     <Button
                       bg="blue.400"
                       colorScheme="navItem"
@@ -192,192 +159,187 @@ const Dashboard = ({}) => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Flex>
-        <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
-          {t("dashboard.main-header")}
-        </Heading>
-        <IconButton
-          aria-label="Add"
-          icon={<AddIcon />}
-          bg="blue.400"
-          colorScheme="navItem"
-          borderRadius="12px"
-          py="4"
-          px="4"
-          lineHeight="1"
-          size="md"
-          type="submit"
-          onClick={onOpen}
-          ml={"2rem"}
-        />
+      <Flex mt={["10px", "10px", "10px", "0", "0"]} justify={"center"}>
+        <Heading color="blue.400">{t("dashboard.main-header")}</Heading>
+        {role === "Headmaster" ? (
+          <IconButton
+            aria-label="Add"
+            icon={<AddIcon />}
+            bg="blue.400"
+            colorScheme="navItem"
+            borderRadius="12px"
+            py="4"
+            px="4"
+            lineHeight="1"
+            size="md"
+            type="submit"
+            onClick={onOpen}
+            ml={"2rem"}
+          />
+        ) : null}
       </Flex>
       <Divider mt={5} />
-      <Stack spacing={10} mt={10}>
-        {data?.showKindergarden.length > 0 ? (
-          <>
-            <Heading ml="10px" color="blue.400">
+      {data?.showKindergarden.length > 0 ? (
+        <Stack spacing={10} mt={10} padding="5">
+          <Flex justify={["center", "center", "center", "left", "left"]}>
+            <Heading ml={["0", "0", "0", "10rem", "10px"]} color="blue.400">
               {t("dashboard.owned-header")}
             </Heading>
-            <Flex align="center" justify="left" mb={5}>
-              <Box
-                w={["100%", "100%", "100%", "400px", "400px"]}
-                rounded={["xs", "sm", "md", "lg", "xl"]}
-                p={5}
-                border={["0", "0", "0", "1px", "1px"]}
-                borderColor={[
-                  "transparent",
-                  "transparent",
-                  "transparent",
-                  "blue.400",
-                  "blue.400",
-                ]}
-                borderRadius={"12px"}
-                style={{
-                  display: "block",
-                  width: "1200px",
-                  overflowY: "hidden",
-                  overflowX: "auto",
-                }}
-              >
-                <HStack spacing={8}>
-                  {data?.showKindergarden?.map((owning) => (
-                    <Box maxW="sm" borderWidth="1px" borderRadius="lg">
-                      <Flex justify="right">
-                        <IconButton
-                          aria-label="Delete kindergarden"
-                          icon={<CloseIcon />}
-                          variant="ghost"
-                          onClick={async () => {
-                            const { error } = await deleteKindergarden({
-                              id: owning.Id,
+          </Flex>
+          <Flex align="center" justify="center" mb={5}>
+            <Box
+              w={["100%", "100%", "100%", "400px", "400px"]}
+              rounded={["xs", "sm", "md", "lg", "xl"]}
+              p={5}
+              style={{
+                display: "block",
+                width: "1200px",
+                overflowY: "hidden",
+                overflowX: "auto",
+              }}
+            >
+              <HStack spacing={8} padding="2">
+                {data?.showKindergarden?.map((owning) => (
+                  <Box
+                    maxW="sm"
+                    borderWidth="1px"
+                    borderRadius="lg"
+                    shadow="xl"
+                  >
+                    <Flex justify="right">
+                      <IconButton
+                        aria-label="Delete kindergarden"
+                        icon={<CloseIcon />}
+                        variant="ghost"
+                        onClick={async () => {
+                          const { error } = await deleteKindergarden({
+                            id: owning.Id,
+                          });
+                          if (error) {
+                            toast({
+                              title: t("dashboard.toast.error.title"),
+                              description: t("dashboard.toast.error.desc"),
+                              status: "error",
+                              duration: 9000,
+                              isClosable: true,
                             });
-                            if (error) {
-                              toast({
-                                title: t("dashboard.toast.error.title"),
-                                description: t("dashboard.toast.error.desc"),
-                                status: "error",
-                                duration: 9000,
-                                isClosable: true,
-                              });
-                            } else {
-                              toast({
-                                title: t("dashboard.toast.delete.title"),
-                                status: "success",
-                                duration: 9000,
-                                isClosable: true,
-                              });
-                            }
-                          }}
-                        />
-                      </Flex>
-                      <Box p="6">
-                        <Box
-                          mt="1"
-                          fontWeight="semibold"
-                          as="h1"
-                          lineHeight="tight"
+                          } else {
+                            toast({
+                              title: t("dashboard.toast.delete.title"),
+                              status: "success",
+                              duration: 9000,
+                              isClosable: true,
+                            });
+                          }
+                        }}
+                      />
+                    </Flex>
+                    <Box p="6">
+                      <Box
+                        mt="1"
+                        fontWeight="semibold"
+                        as="h1"
+                        lineHeight="tight"
+                      >
+                        <NextLink
+                          href={"/kindergarden/[id]"}
+                          as={`/kindergarden/${owning.Id}`}
                         >
-                          <NextLink
-                            href={"/kindergarden/[id]"}
-                            as={`/kindergarden/${owning.Id}`}
+                          <Link
+                            color="blue.400"
+                            style={{
+                              fontSize: "26px",
+                              fontWeight: "bold",
+                            }}
+                            onClick={() => {
+                              useKindergarden({ kindergardenID: owning.Id });
+                            }}
                           >
-                            <Link
-                              color="blue.400"
-                              style={{
-                                fontSize: "26px",
-                                fontWeight: "bold",
-                              }}
-                              onClick={() => {
-                                useKindergarden({ kindergardenID: owning.Id });
-                              }}
-                            >
-                              {owning.Name}
-                            </Link>
-                          </NextLink>
-                        </Box>
-                        <Divider />
-                        <Box mt={3}>
-                          <Text>{owning.Address}</Text>
-                          <Text>{owning.City}</Text>
-                          <Text>{owning.Zipcode}</Text>
-                        </Box>
+                            {owning.Name}
+                          </Link>
+                        </NextLink>
+                      </Box>
+                      <Divider />
+                      <Box mt={3}>
+                        <Text>{owning.Address}</Text>
+                        <Text>{owning.City}</Text>
+                        <Text>{owning.Zipcode}</Text>
                       </Box>
                     </Box>
-                  ))}
-                </HStack>
-              </Box>
-            </Flex>
-          </>
-        ) : null}
-        {notMine.length > 0 ? (
-          <>
-            <Heading ml="10px" color="blue.400">
+                  </Box>
+                ))}
+              </HStack>
+            </Box>
+          </Flex>
+        </Stack>
+      ) : null}
+      {notMine.length > 0 ? (
+        <Stack spacing={10} mt={10} p="5">
+          <Flex justify={["center", "center", "center", "center", "center"]}>
+            <Heading ml={["0", "0", "0", "10px", "10px"]} color="blue.400">
               {t("dashboard.part-header")}
             </Heading>
-            <Flex align="center" justify="left" mb={5}>
-              <Box
-                w={["100%", "100%", "100%", "400px", "400px"]}
-                rounded={["xs", "sm", "md", "lg", "xl"]}
-                p={5}
-                border={["0", "0", "0", "1px", "1px"]}
-                borderColor={[
-                  "transparent",
-                  "transparent",
-                  "transparent",
-                  "blue.400",
-                  "blue.400",
-                ]}
-                borderRadius={"12px"}
-                style={{
-                  display: "block",
-                  width: "1200px",
-                  overflowY: "hidden",
-                  overflowX: "auto",
-                }}
-              >
-                <HStack spacing={8}>
-                  {notMine.map((owning) => (
-                    <Box maxW="sm" borderWidth="1px" borderRadius="lg">
-                      <Box p="6">
-                        <Box
-                          mt="1"
-                          fontWeight="semibold"
-                          as="h1"
-                          lineHeight="tight"
+          </Flex>
+          <Flex align="center" justify="left" mb={5}>
+            <Box
+              w={["100%", "100%", "100%", "400px", "400px"]}
+              rounded={["xs", "sm", "md", "lg", "xl"]}
+              p={5}
+              style={{
+                display: "block",
+                width: "1200px",
+                overflowY: "hidden",
+                overflowX: "auto",
+              }}
+            >
+              <HStack spacing={8} p="2">
+                {notMine.map((owning) => (
+                  <Box
+                    maxW="sm"
+                    borderWidth="1px"
+                    borderRadius="lg"
+                    boxShadow="xl"
+                  >
+                    <Box p="6">
+                      <Box
+                        mt="1"
+                        fontWeight="semibold"
+                        as="h1"
+                        lineHeight="tight"
+                      >
+                        <NextLink
+                          href={"/kindergarden/[id]"}
+                          as={`/kindergarden/${owning.Id}`}
                         >
-                          <NextLink
-                            href={"/kindergarden/[id]"}
-                            as={`/kindergarden/${owning.Id}`}
+                          <Link
+                            color="blue.400"
+                            style={{
+                              fontSize: "26px",
+                              fontWeight: "bold",
+                            }}
+                            onClick={() => {
+                              useKindergarden({ kindergardenID: owning.Id });
+                            }}
                           >
-                            <Link
-                              color="blue.400"
-                              style={{
-                                fontSize: "26px",
-                                fontWeight: "bold",
-                              }}
-                              onClick={() => {
-                                useKindergarden({ kindergardenID: owning.Id });
-                              }}
-                            >
-                              {owning.Name}
-                            </Link>
-                          </NextLink>
-                        </Box>
-                        <Divider />
-                        <Box mt={3}>
-                          <Text>{owning.Address}</Text>
-                          <Text>{owning.City}</Text>
-                          <Text>{owning.Zipcode}</Text>
-                        </Box>
+                            {owning.Name}
+                          </Link>
+                        </NextLink>
+                      </Box>
+                      <Divider />
+                      <Box mt={3}>
+                        <Text>{owning.Address}</Text>
+                        <Text>{owning.City}</Text>
+                        <Text>{owning.Zipcode}</Text>
                       </Box>
                     </Box>
-                  ))}
-                </HStack>
-              </Box>
-            </Flex>
-          </>
-        ) : null}
-        {/* 
+                  </Box>
+                ))}
+              </HStack>
+            </Box>
+          </Flex>
+        </Stack>
+      ) : null}
+      {/* 
         <Flex mt={5} mb={2}>
           <Heading color="blue.400">Activity log</Heading>
         </Flex>
@@ -407,7 +369,6 @@ const Dashboard = ({}) => {
             </Flex>
           </Stack>
         </Box> */}
-      </Stack>
     </Layout>
   );
 };

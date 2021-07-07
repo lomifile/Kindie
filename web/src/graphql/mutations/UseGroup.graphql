@@ -1,9 +1,9 @@
-mutation UseGroup($groupId: Float!){
-  useGroup(groupId: $groupId){
-    groups{
+mutation UseGroup($groupId: Float!) {
+  useGroup(groupId: $groupId) {
+    groups {
       ...GroupFragment
     }
-    errors{
+    errors {
       ...ErrorFragment
     }
   }

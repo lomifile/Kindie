@@ -1,9 +1,9 @@
-mutation CreateGroup($name: String!){
-  createGroup(name: $name){
-    groups{
+mutation CreateGroup($name: String!) {
+  createGroup(name: $name) {
+    groups {
       ...GroupFragment
     }
-    errors{
+    errors {
       ...ErrorFragment
     }
   }

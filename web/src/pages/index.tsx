@@ -1,14 +1,5 @@
 import { Layout } from "../components/Layout";
-import {
-  Box,
-  Flex,
-  Button,
-  Heading,
-  Link,
-  Stack,
-  Text,
-  HStack,
-} from "@chakra-ui/react";
+import { Box, Flex, Button, Heading, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 import { Image } from "@chakra-ui/image";
 // @ts-ignore
@@ -27,13 +18,12 @@ const Index = () => {
       <title>DV Organizator [ALPHA]</title>
       <Flex
         align="center"
-        justify={{ base: "center", md: "space-around", xl: "space-between" }}
+        justify={{ base: "center", md: "center", xl: "space-between" }}
         direction={{ base: "column-reverse", md: "row" }}
         // @ts-ignore
         wrap="no-wrap"
         minH="70vh"
-        px={8}
-        mb={5}
+        px={5}
       >
         <Stack
           spacing={4}
@@ -88,7 +78,12 @@ const Index = () => {
           <Image src={img} size="100%" rounded="1rem" shadow="2xl" />
         </Box>
       </Flex>
-      <Flex pb={"2rem"}>
+      <Flex
+        p={"2"}
+        justify={["center", "center", "center", "center", "center"]}
+        align="center"
+        mb={10}
+      >
         <Stack>
           <Flex
             ml={{
@@ -98,14 +93,11 @@ const Index = () => {
               lg: "12rem",
               xl: "15rem",
             }}
-            pt={1}
-            mb={1}
-            pb={"1rem"}
+            p="5"
+            mb="2"
           >
             <Heading color="blue.400">{t("index.headers.wwd")}</Heading>
           </Flex>
-          <br />
-          <br />
           <Stack
             spacing={8}
             justify={{

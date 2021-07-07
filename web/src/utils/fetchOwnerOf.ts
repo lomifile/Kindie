@@ -1,6 +1,4 @@
-import {
-  useShowKindergardenstaffQuery,
-} from "../generated/graphql";
+import { useShowKindergardenstaffQuery } from "../generated/graphql";
 
 export const fetchOwnerOf = () => {
   const [{ data, fetching }] = useShowKindergardenstaffQuery();

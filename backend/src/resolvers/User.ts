@@ -108,7 +108,6 @@ export class UserResolver {
           Name: options.name,
           Surname: options.surname,
           Email: options.email,
-          Role: options.role,
         })
         .where("Id=:id", {
           id: req.session.userId,
@@ -440,6 +439,9 @@ export class UserResolver {
 
   @Query(() => [User])
   async searchUser(@Arg("text") text: string): Promise<User[]> {
+    if (text == ".") {
+      return User.find();
+    }
     return User.find({
       where: {
         Name: text,
