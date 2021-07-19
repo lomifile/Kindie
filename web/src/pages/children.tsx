@@ -13,16 +13,7 @@ import {
   HStack,
   Tooltip,
   IconButton,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   useDisclosure,
-  Stack,
-  Text,
   Divider,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
@@ -42,11 +33,14 @@ import {
   EditIcon,
   AddIcon,
   ViewIcon,
+  ArrowBackIcon,
 } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 import { CustomAlert } from "../components/Alerts";
 import { getUserRole } from "../utils/getUserRole";
 import { ChildrenModal } from "../components/ChildrenModal";
+import isElectron from "is-electron";
+import router from "next/router";
 
 const Children: React.FC<{}> = ({}) => {
   useIsAuth();
@@ -86,6 +80,24 @@ const Children: React.FC<{}> = ({}) => {
       ) : null}
       <Flex justify={["center", "center", "center", "center", "center"]}>
         <HStack spacing={5}>
+          {isElectron() ? (
+            <IconButton
+              bg="blue.400"
+              colorScheme="navItem"
+              borderRadius="12px"
+              py="4"
+              px="4"
+              lineHeight="1"
+              size="md"
+              type="submit"
+              onClick={() => {
+                router.back();
+              }}
+              aria-label={"Back"}
+              icon={<ArrowBackIcon />}
+              mr={2}
+            />
+          ) : null}
           <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
             {t("children.main-header")}
           </Heading>

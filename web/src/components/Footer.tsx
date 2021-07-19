@@ -7,6 +7,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import isElectron from "is-electron";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -40,7 +41,7 @@ export const Footer: React.FC<FooterProps> = ({ variant = "regular" }) => {
           </Link>
           <Link
             className="footer-nav-item"
-            href="/contact"
+            href={isElectron() ? null : "/contact"}
             color="secondary.link"
           >
             {t("footer.contact")}
@@ -48,7 +49,11 @@ export const Footer: React.FC<FooterProps> = ({ variant = "regular" }) => {
         </Stack>
         <Stack isInline marginTop="1rem" fontWeight="500" fontSize="sm">
           <Text color="secondary.link">&copy; {year}</Text>
-          <Link href="/" color="secondary.link" fontWeight="bold">
+          <Link
+            href={isElectron() ? null : "/"}
+            color="secondary.link"
+            fontWeight="bold"
+          >
             DV Organizator
           </Link>
           <Text color="secondary.link">&mdash; {t("footer.rights")}</Text>

@@ -1,4 +1,5 @@
 import { Heading, Text, Link, UnorderedList, ListItem } from "@chakra-ui/react";
+import isElectron from "is-electron";
 import React from "react";
 import { Wrapper } from "../components/Wrapper";
 
@@ -292,6 +293,10 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({}) => {
         encourage you to contact us immediately and we will do our best efforts
         to promptly remove such information from our records.
       </Text>
+
+      <Link mt={"5rem"} mb={"5rem"} color="blue.400" href="/login">
+        Return
+      </Link>
     </Wrapper>
   );
 };

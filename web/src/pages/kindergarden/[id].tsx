@@ -44,6 +44,7 @@ import { useIsAuth } from "../../utils/useIsAuth";
 import { CustomSpinner } from "../../components/Spinner";
 import { CustomAlert } from "../../components/Alerts";
 import { getUserRole } from "../../utils/getUserRole";
+import isElectron from "is-electron";
 
 const Kindergarden = ({}) => {
   useIsAuth();
@@ -76,94 +77,96 @@ const Kindergarden = ({}) => {
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{t("kindergarden.main-header")}</title>
-      <Drawer placement="left" onClose={drawerOnClose} isOpen={drawerIsOpen}>
-        <DrawerOverlay>
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerHeader>
-              <Heading
-                fontSize="xl"
-                fontWeight="500"
-                color="blue.400"
-                style={{ fontWeight: "bold", textTransform: "uppercase" }}
-              >
-                DV Organizator
-              </Heading>
-            </DrawerHeader>
-            <DrawerBody>
-              <Stack
-                spacing={8}
-                align="center"
-                justify={["center", "space-between"]}
-                direction={["column", "column", "column"]}
-                pt={[4, 4, 0, 0]}
-              >
-                {role === "Headmaster" || role === "Pedagogue" ? (
-                  <Button
-                    bg="blue.400"
-                    className="nav-item"
-                    colorScheme="navItem"
-                    borderRadius="12px"
-                    py="4"
-                    px="4"
-                    lineHeight="1"
-                    size="md"
-                    onClick={onOpen}
-                    display={["none", "none", "none", "flex"]}
-                  >
-                    {t("kindergarden.toolbox.btn-new-group")}
-                  </Button>
-                ) : null}
-                <NextLink href="/children">
-                  <Button
-                    as={Link}
-                    color="blue.400"
-                    colorScheme="navItem"
-                    borderRadius="12px"
-                    py="4"
-                    px="4"
-                    lineHeight="1"
-                    size="md"
-                    onClick={() => {
-                      useChildren();
-                    }}
-                  >
-                    {t("kindergarden.toolbox.btn-children")}
-                  </Button>
-                </NextLink>
-                <NextLink href="/parents">
-                  <Button
-                    as={Link}
-                    color="blue.400"
-                    colorScheme="navItem"
-                    borderRadius="12px"
-                    py="4"
-                    px="4"
-                    lineHeight="1"
-                    size="md"
-                  >
-                    {t("kindergarden.toolbox.btn-parents")}
-                  </Button>
-                </NextLink>
-                <NextLink href="/staff">
-                  <Button
-                    as={Link}
-                    color="blue.400"
-                    colorScheme="navItem"
-                    borderRadius="12px"
-                    py="4"
-                    px="4"
-                    lineHeight="1"
-                    size="md"
-                  >
-                    {t("kindergarden.toolbox.btn-staff")}
-                  </Button>
-                </NextLink>
-              </Stack>
-            </DrawerBody>
-          </DrawerContent>
-        </DrawerOverlay>
-      </Drawer>
+      {!isElectron() ? (
+        <Drawer placement="left" onClose={drawerOnClose} isOpen={drawerIsOpen}>
+          <DrawerOverlay>
+            <DrawerContent>
+              <DrawerCloseButton />
+              <DrawerHeader>
+                <Heading
+                  fontSize="xl"
+                  fontWeight="500"
+                  color="blue.400"
+                  style={{ fontWeight: "bold", textTransform: "uppercase" }}
+                >
+                  DV Organizator
+                </Heading>
+              </DrawerHeader>
+              <DrawerBody>
+                <Stack
+                  spacing={8}
+                  align="center"
+                  justify={["center", "space-between"]}
+                  direction={["column", "column", "column"]}
+                  pt={[4, 4, 0, 0]}
+                >
+                  {role === "Headmaster" || role === "Pedagogue" ? (
+                    <Button
+                      bg="blue.400"
+                      className="nav-item"
+                      colorScheme="navItem"
+                      borderRadius="12px"
+                      py="4"
+                      px="4"
+                      lineHeight="1"
+                      size="md"
+                      onClick={onOpen}
+                      display={["none", "none", "none", "flex"]}
+                    >
+                      {t("kindergarden.toolbox.btn-new-group")}
+                    </Button>
+                  ) : null}
+                  <NextLink href="/children">
+                    <Button
+                      as={Link}
+                      color="blue.400"
+                      colorScheme="navItem"
+                      borderRadius="12px"
+                      py="4"
+                      px="4"
+                      lineHeight="1"
+                      size="md"
+                      onClick={() => {
+                        useChildren();
+                      }}
+                    >
+                      {t("kindergarden.toolbox.btn-children")}
+                    </Button>
+                  </NextLink>
+                  <NextLink href="/parents">
+                    <Button
+                      as={Link}
+                      color="blue.400"
+                      colorScheme="navItem"
+                      borderRadius="12px"
+                      py="4"
+                      px="4"
+                      lineHeight="1"
+                      size="md"
+                    >
+                      {t("kindergarden.toolbox.btn-parents")}
+                    </Button>
+                  </NextLink>
+                  <NextLink href="/staff">
+                    <Button
+                      as={Link}
+                      color="blue.400"
+                      colorScheme="navItem"
+                      borderRadius="12px"
+                      py="4"
+                      px="4"
+                      lineHeight="1"
+                      size="md"
+                    >
+                      {t("kindergarden.toolbox.btn-staff")}
+                    </Button>
+                  </NextLink>
+                </Stack>
+              </DrawerBody>
+            </DrawerContent>
+          </DrawerOverlay>
+        </Drawer>
+      ) : null}
       <Modal
         onClose={onClose}
         size={"md"}
@@ -244,7 +247,9 @@ const Kindergarden = ({}) => {
                 lineHeight="1"
                 size="md"
                 onClick={onOpen}
-                display={["none", "none", "none", "flex"]}
+                display={
+                  !isElectron() ? ["none", "none", "none", "flex"] : "flex"
+                }
               >
                 {t("kindergarden.toolbox.btn-new-group")}
               </Button>
@@ -259,7 +264,9 @@ const Kindergarden = ({}) => {
                 px="4"
                 lineHeight="1"
                 size="md"
-                display={["none", "none", "none", "flex"]}
+                display={
+                  !isElectron() ? ["none", "none", "none", "flex"] : "flex"
+                }
                 onClick={async () => {
                   await useChildren();
                 }}
@@ -277,7 +284,9 @@ const Kindergarden = ({}) => {
                 px="4"
                 lineHeight="1"
                 size="md"
-                display={["none", "none", "none", "flex"]}
+                display={
+                  !isElectron() ? ["none", "none", "none", "flex"] : "flex"
+                }
               >
                 {t("kindergarden.toolbox.btn-parents")}
               </Button>
@@ -292,22 +301,26 @@ const Kindergarden = ({}) => {
                 px="4"
                 lineHeight="1"
                 size="md"
-                display={["none", "none", "none", "flex"]}
+                display={
+                  !isElectron() ? ["none", "none", "none", "flex"] : "flex"
+                }
               >
                 {t("kindergarden.toolbox.btn-staff")}
               </Button>
             </NextLink>
-            <IconButton
-              display={["flex", "flex", "flex", "none"]}
-              colorScheme="navItem"
-              color="white"
-              bg="blue.400"
-              borderRadius={"12px"}
-              className="menu-btn"
-              aria-label="Open menu"
-              onClick={drawerOnOpen}
-              icon={<HamburgerIcon />}
-            />
+            {!isElectron() ? (
+              <IconButton
+                display={["flex", "flex", "flex", "none"]}
+                colorScheme="navItem"
+                color="white"
+                bg="blue.400"
+                borderRadius={"12px"}
+                className="menu-btn"
+                aria-label="Open menu"
+                onClick={drawerOnOpen}
+                icon={<HamburgerIcon />}
+              />
+            ) : null}
           </HStack>
         </Flex>
         {data?.showGroups.length > 0 ? (

@@ -1,4 +1,5 @@
 import { Heading, ListItem, Text, UnorderedList } from "@chakra-ui/layout";
+import { Link } from "@chakra-ui/react";
 import React from "react";
 import { Wrapper } from "../components/Wrapper";
 
@@ -339,6 +340,9 @@ const Terms: React.FC<{}> = ({}) => {
         are provided free of charge, we will not be liable for any loss or
         damage of any nature.
       </Text>
+      <Link mt={"5rem"} mb={"5rem"} color="blue.400" href="/login">
+        Return
+      </Link>
     </Wrapper>
   );
 };

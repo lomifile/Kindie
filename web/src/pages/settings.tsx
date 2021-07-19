@@ -17,6 +17,8 @@ import {
   Text,
   HStack,
   Divider,
+  Radio,
+  RadioGroup,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
@@ -34,10 +36,11 @@ import { useIsAuth } from "../utils/useIsAuth";
 import { useTranslation } from "react-i18next";
 import { ViewIcon } from "@chakra-ui/icons";
 import { CustomAlert } from "../components/Alerts";
+import isElectron from "is-electron";
 
 const Settings: React.FC<{}> = ({}) => {
   useIsAuth();
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t, i18n } = useTranslation("data", { useSuspense: false });
   let body = null;
   const [redirect, setRedirect] = useState(false);
   const [{ data, fetching }] = useMeQuery();
@@ -116,6 +119,23 @@ const Settings: React.FC<{}> = ({}) => {
                 >
                   {t("settings.menu-selector.#profile")}
                 </Button>
+                {isElectron() ? (
+                  <Button
+                    variant="ghost"
+                    {...(selector === "#app" ? { bg: "gray.200" } : null)}
+                    color="blue.400"
+                    borderRadius={"12px"}
+                    p={2}
+                    _hover={{
+                      backgroundColor: "gray.100",
+                    }}
+                    onClick={() => {
+                      setSelector("#app");
+                    }}
+                  >
+                    {t("settings.menu-selector.#app")}
+                  </Button>
+                ) : null}
                 <Button
                   borderRadius={"12px"}
                   variant="ghost"
@@ -135,6 +155,30 @@ const Settings: React.FC<{}> = ({}) => {
             </Box>
             <Divider orientation="vertical" />
           </HStack>
+          {selector === "#app" ? (
+            <Box id="#app" minW={["100%", "100%", "100%", "70%", "800px"]}>
+              <Stack spacing={10}>
+                <Box
+                  w={["100%", "100%", "80%", "80%", "80%"]}
+                  rounded={["xs", "sm", "md", "lg", "xl"]}
+                  display="inline-flex"
+                >
+                  <Text mr={5}>{t("settings.app-language")}:</Text>
+                  <RadioGroup
+                    onChange={(e) => {
+                      i18n.changeLanguage(e.toString());
+                    }}
+                    defaultValue={i18n.language}
+                  >
+                    <Stack direction="row">
+                      <Radio value="hr">🇭🇷</Radio>
+                      <Radio value="en">🇬🇧</Radio>
+                    </Stack>
+                  </RadioGroup>
+                </Box>
+              </Stack>
+            </Box>
+          ) : null}
           {selector === "#profile" ? (
             <Box id="#profile" minW={["100%", "100%", "100%", "70%", "800px"]}>
               <Stack spacing={10}>

@@ -37,6 +37,7 @@ import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
 import { updateQuery } from "./updateQuery";
 import { isServer } from "./isServer";
 import Router, { NextRouter } from "next/router";
+import isElectron from "is-electron";
 
 const errorExchange: Exchange = ({ forward }) => {
   const router: NextRouter = Router;

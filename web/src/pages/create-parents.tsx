@@ -23,6 +23,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useIsAuth } from "../utils/useIsAuth";
 import { ArrowBackIcon } from "@chakra-ui/icons";
+import isElectron from "is-electron";
 
 interface CreateParentsProps {}
 
@@ -44,21 +45,24 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
         mb={2}
       >
         <HStack spacing={5}>
-          <IconButton
-            bg="blue.400"
-            colorScheme="navItem"
-            borderRadius="12px"
-            py="4"
-            px="4"
-            lineHeight="1"
-            size="md"
-            type="submit"
-            onClick={() => {
-              router.back();
-            }}
-            aria-label={"Back"}
-            icon={<ArrowBackIcon />}
-          />
+          {isElectron() ? (
+            <IconButton
+              bg="blue.400"
+              colorScheme="navItem"
+              borderRadius="12px"
+              py="4"
+              px="4"
+              lineHeight="1"
+              size="md"
+              type="submit"
+              onClick={() => {
+                router.back();
+              }}
+              aria-label={"Back"}
+              icon={<ArrowBackIcon />}
+              mr={5}
+            />
+          ) : null}
           <Heading color="blue.400">{t("create-parents.main-header")}</Heading>
         </HStack>
       </Flex>
@@ -78,10 +82,10 @@ const CreateParents: React.FC<CreateParentsProps> = ({}) => {
           borderRadius="12px"
           mb={"25px"}
         >
-          <option value="father">
+          <option value="mother">
             {t("create-parents.select.mother.name")}
           </option>
-          <option value="mother">
+          <option value="father">
             {t("create-parents.select.father.name")}
           </option>
         </Select>

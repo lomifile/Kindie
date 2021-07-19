@@ -145,6 +145,7 @@
   },
   "settings": {
     "main-header": "Postavke",
+    "app-language": "Jezik",
     "alert": {
       "title": "Dogodila se greška!",
       "desc": "Dogodila se greška u procesu dohvaćanja vaših podataka!"
@@ -169,7 +170,8 @@
     },
     "menu-selector": {
       "#profile": "Profil",
-      "#password": "Lozinka"
+      "#password": "Lozinka",
+      "#app": "Aplikacija"
     },
     "selector": {
       "headmaster": "Ravnatelj",
@@ -372,6 +374,14 @@
         "email": "Email"
       }
     },
+    "toast": {
+      "mother": {
+        "title": "Majka uspjesno dodana"
+      },
+      "father": {
+        "title": "Otac uspjesno dodan"
+      }
+    },
     "btn-back": "Povratak"
   },
   "edit-child": {
@@ -498,5 +508,12 @@
     "surname": "Prezime",
     "phone": "Mobitel",
     "email": "Email"
+  },
+  "electron": {
+    "toolbox": {
+      "btn-dash": "Vase odaje",
+      "btn-settings": "Postavke",
+      "btn-logout": "Odjava"
+    }
   }
 }

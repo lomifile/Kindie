@@ -35,7 +35,7 @@ const Contact: React.FC<contactProps> = ({}) => {
         wrap="no-wrap"
         minH="70vh"
         px={8}
-        mb={5}
+        mb={2}
       >
         <Stack
           spacing={4}

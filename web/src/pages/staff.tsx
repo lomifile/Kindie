@@ -34,7 +34,13 @@ import {
 } from "@chakra-ui/react";
 import { fetchOwnerOf } from "../utils/fetchOwnerOf";
 import { fetchStaff } from "../utils/fetchStaff";
-import { AddIcon, DeleteIcon, SearchIcon, ViewIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  ArrowBackIcon,
+  DeleteIcon,
+  SearchIcon,
+  ViewIcon,
+} from "@chakra-ui/icons";
 import {
   useAddStaffMutation,
   useDeleteStaffMutation,
@@ -44,6 +50,8 @@ import {
 import { ShowUser } from "../components/ShowUser";
 import { useIsAuth } from "../utils/useIsAuth";
 import { useTranslation } from "react-i18next";
+import isElectron from "is-electron";
+import router from "next/router";
 
 const Staff: React.FC<{}> = ({}) => {
   useIsAuth();
@@ -203,6 +211,24 @@ const Staff: React.FC<{}> = ({}) => {
           mt={5}
           mb={2}
         >
+          {isElectron() ? (
+            <IconButton
+              bg="blue.400"
+              colorScheme="navItem"
+              borderRadius="12px"
+              py="4"
+              px="4"
+              lineHeight="1"
+              size="md"
+              type="submit"
+              onClick={() => {
+                router.back();
+              }}
+              aria-label={"Back"}
+              icon={<ArrowBackIcon />}
+              mr={5}
+            />
+          ) : null}
           <Heading color="blue.400">{t("staff.owner-heading")}</Heading>
         </Flex>
         <Box>

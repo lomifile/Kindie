@@ -31,12 +31,14 @@ import {
   useClearKindergardenMutation,
   useLogoutMutation,
   useMeQuery,
+  useUseChildrenMutation,
 } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import Flags from "country-flag-icons/react/3x2";
+import isElectron from "is-electron";
 
 export type NavbarVariant = "normal" | "user";
 
@@ -53,6 +55,12 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
   });
   const [, clearKindergarden] = useClearKindergardenMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: drawerIsOpen,
+    onOpen: drawerOnOpen,
+    onClose: drawerOnClose,
+  } = useDisclosure();
+  const [, useChildren] = useUseChildrenMutation();
 
   let body;
   if (fetching) {
@@ -182,7 +190,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
         </NextLink>
       </>
     );
-  } else if (variant == "user" && data?.me) {
+  } else if (variant == "user" && data?.me && !isElectron()) {
     body = (
       <Stack direction={["column", "row"]}>
         <Menu>
@@ -246,14 +254,6 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
                 {t("nav.menu.log-out")}
               </MenuItem>
             </MenuGroup>
-            {/*<MenuDivider />*/}
-            {/*<MenuGroup title={t("nav.menu.titles.help")}>*/}
-            {/* <NextLink href="/">*/}
-            {/*    <MenuItem>{t("nav.menu.landing-page")}</MenuItem>*/}
-            {/*  </NextLink> */}
-            {/*  <MenuItem>{t("nav.menu.docs")}</MenuItem>*/}
-            {/*  <MenuItem>{t("nav.menu.faq")}</MenuItem>*/}
-            {/*</MenuGroup>*/}
             <MenuGroup alignContent="center">
               <Flex
                 mt={5}
@@ -360,38 +360,129 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
         mt={"auto"}
         mb={"auto"}
       >
-        <Image boxSize="56px" src={logo} ml={"5rem"} mb={"4"} />
-        <Heading
-          display={["none", "none", "block", "block"]}
-          fontSize="xl"
-          fontWeight="500"
-          color="blue.400"
-          style={{ fontWeight: "bold", textTransform: "uppercase" }}
-        >
-          DV Organizator
-        </Heading>
-        <Box display={["none", "inline-flex", "inline-flex", "inline-flex"]}>
-          <Button
-            h={"50px"}
-            w={"50px"}
-            bg="transparent"
-            onClick={() => {
-              i18n.changeLanguage("hr");
-            }}
-          >
-            <Flags.HR title="Hrvatski" />
-          </Button>
-          <Button
-            h={"50px"}
-            w={"50px"}
-            bg="transparent"
-            onClick={(e) => {
-              i18n.changeLanguage("en");
-            }}
-          >
-            <Flags.GB title="English" />
-          </Button>
-        </Box>
+        {!isElectron() ? (
+          <>
+            <Image boxSize="56px" src={logo} ml={"5rem"} mb={"4"} />
+            <Heading
+              display={["none", "none", "block", "block"]}
+              fontSize="xl"
+              fontWeight="500"
+              color="blue.400"
+              style={{ fontWeight: "bold", textTransform: "uppercase" }}
+            >
+              DV Organizator
+            </Heading>
+            <Box
+              display={["none", "inline-flex", "inline-flex", "inline-flex"]}
+            >
+              <Button
+                h={"50px"}
+                w={"50px"}
+                bg="transparent"
+                onClick={() => {
+                  i18n.changeLanguage("hr");
+                }}
+              >
+                <Flags.HR title="Hrvatski" />
+              </Button>
+              <Button
+                h={"50px"}
+                w={"50px"}
+                bg="transparent"
+                onClick={(e) => {
+                  i18n.changeLanguage("en");
+                }}
+              >
+                <Flags.GB title="English" />
+              </Button>
+            </Box>
+          </>
+        ) : (
+          <>
+            <Drawer
+              placement="left"
+              onClose={drawerOnClose}
+              isOpen={drawerIsOpen}
+            >
+              <DrawerOverlay>
+                <DrawerContent>
+                  <DrawerCloseButton />
+                  <DrawerHeader>
+                    <Heading
+                      fontSize="xl"
+                      fontWeight="500"
+                      color="blue.400"
+                      style={{ fontWeight: "bold", textTransform: "uppercase" }}
+                    >
+                      DV Organizator
+                    </Heading>
+                  </DrawerHeader>
+                  <DrawerBody>
+                    <Stack spacing={8} align="center">
+                      <NextLink href="/dashboard">
+                        <Button
+                          borderRadius={"12px"}
+                          variant="ghost"
+                          color="blue.400"
+                          p={15}
+                          _hover={{
+                            backgroundColor: "gray.100",
+                          }}
+                        >
+                          {t("electron.toolbox.btn-dash")}
+                        </Button>
+                      </NextLink>
+                      <NextLink href="/settings">
+                        <Button
+                          borderRadius={"12px"}
+                          variant="ghost"
+                          color="blue.400"
+                          p={2}
+                          _hover={{
+                            backgroundColor: "gray.100",
+                          }}
+                        >
+                          {t("electron.toolbox.btn-settings")}
+                        </Button>
+                      </NextLink>
+                      <Button
+                        borderRadius={"12px"}
+                        variant="ghost"
+                        color="blue.400"
+                        p={2}
+                        _hover={{
+                          backgroundColor: "gray.100",
+                        }}
+                        onClick={async () => {
+                          await logout();
+                          if (isServer()) {
+                            router.push("/login");
+                          } else {
+                            router.reload();
+                          }
+                        }}
+                      >
+                        {t("electron.toolbox.btn-logout")}
+                      </Button>
+                    </Stack>
+                  </DrawerBody>
+                </DrawerContent>
+              </DrawerOverlay>
+            </Drawer>
+            <IconButton
+              display={["flex", "flex", "flex", "flex"]}
+              marginLeft={"5rem"}
+              colorScheme="navItem"
+              color="white"
+              bg="blue.400"
+              borderRadius={"12px"}
+              className="menu-btn"
+              aria-label="Open menu"
+              onClick={drawerOnOpen}
+              icon={<HamburgerIcon />}
+            />
+          </>
+        )}
       </Stack>
       {variant === "user" ? (
         <Box

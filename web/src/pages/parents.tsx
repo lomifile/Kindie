@@ -29,9 +29,17 @@ import {
 } from "../generated/graphql";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
-import { EditIcon, DeleteIcon, AddIcon, ViewIcon } from "@chakra-ui/icons";
+import {
+  EditIcon,
+  DeleteIcon,
+  AddIcon,
+  ViewIcon,
+  ArrowBackIcon,
+} from "@chakra-ui/icons";
 import { getUserRole } from "../utils/getUserRole";
 import { ParentsModal } from "../components/ParentsModal";
+import isElectron from "is-electron";
+import router from "next/router";
 
 const Parents: React.FC<{}> = ({}) => {
   useIsAuth();
@@ -65,6 +73,26 @@ const Parents: React.FC<{}> = ({}) => {
       <Stack spacing={1}>
         <Flex align="center" justify="center" mt={5} p={3}>
           <HStack p={2} spacing={4}>
+            {isElectron() ? (
+              <Flex justifyContent="left" alignContent="flex-start">
+                <IconButton
+                  bg="blue.400"
+                  colorScheme="navItem"
+                  borderRadius="12px"
+                  py="4"
+                  px="4"
+                  lineHeight="1"
+                  size="md"
+                  type="submit"
+                  onClick={() => {
+                    router.back();
+                  }}
+                  aria-label={"Back"}
+                  icon={<ArrowBackIcon />}
+                  mr={2}
+                />
+              </Flex>
+            ) : null}
             <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
               {t("parents.main-header")}
             </Heading>

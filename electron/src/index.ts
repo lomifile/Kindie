@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, Notification } = require("electron");
 import path from "path";
 
 function createWindow() {
@@ -6,17 +6,23 @@ function createWindow() {
     width: 800,
     height: 600,
     title: "DV Organizator",
-    icon: __dirname + "/img/logo.png",
+    icon: __dirname + "../img/logo.ico",
     webPreferences: {
-      devTools: false,
+      devTools: true,
       nodeIntegration: true,
       preload: path.join(__dirname + "../dist/preload.js"),
     },
   });
-
-  mainWindow.loadURL("http://localhost:3000/login");
+  mainWindow.loadURL("http://localhost:3000/dashboard");
   // mainWindow.loadURL("https://dv-organizator.vercel.app/login"); // prod
 }
+
+const showNotification = () => {
+  new Notification({
+    title: "App is ready",
+    message: "Your DV Organizator app is ready",
+  }).show();
+};
 
 app
   .whenReady()
@@ -26,9 +32,7 @@ app
       if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
   })
-  .catch((err: any) => {
-    console.error(err);
-  });
+  .then(showNotification);
 
 app.on("window-all-closed", function () {
   if (process.platform !== "darwin") app.quit();

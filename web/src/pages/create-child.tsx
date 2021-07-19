@@ -40,6 +40,7 @@ import { useTranslation } from "react-i18next";
 import { SearchIcon, AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import { ParentCard } from "../components/ParentCard";
 import moment from "moment";
+import isElectron from "is-electron";
 
 interface CreateChildProps {}
 
@@ -179,22 +180,25 @@ const CreateChild: React.FC<CreateChildProps> = ({}) => {
         </DrawerOverlay>
       </Drawer>
       <title>{t("create-child.main-header")}</title>
-      <HStack mb={5} spacing={5}>
-        <IconButton
-          bg="blue.400"
-          colorScheme="navItem"
-          borderRadius="12px"
-          py="4"
-          px="4"
-          lineHeight="1"
-          size="md"
-          type="submit"
-          onClick={() => {
-            router.back();
-          }}
-          aria-label={"Back"}
-          icon={<ArrowBackIcon />}
-        />
+      <HStack mb={5} spacing={5} justify="center">
+        {isElectron() ? (
+          <IconButton
+            bg="blue.400"
+            colorScheme="navItem"
+            borderRadius="12px"
+            py="4"
+            px="4"
+            lineHeight="1"
+            size="md"
+            type="submit"
+            onClick={() => {
+              router.back();
+            }}
+            aria-label={"Back"}
+            icon={<ArrowBackIcon />}
+            mr={2}
+          />
+        ) : null}
         <Heading color="blue.400">{t("create-child.main-header")}</Heading>
       </HStack>
       <Flex
@@ -328,8 +332,8 @@ const CreateChild: React.FC<CreateChildProps> = ({}) => {
             </>
           ) : (
             <>
-              <ParentCard data={motherObject} />
-              <ParentCard data={fatherObject} />
+              <ParentCard parent="mother" layout={true} data={motherObject} />
+              <ParentCard parent="father" layout={true} data={fatherObject} />
             </>
           )}
         </Box>
