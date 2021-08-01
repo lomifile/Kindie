@@ -32,6 +32,7 @@ export type Query = {
   showChildrenFilterInGroup: PaginatedChildren;
   showChildren: Array<Children>;
   findChild?: Maybe<Children>;
+  searchFather: Array<Mother>;
   showFather: PaginatedFather;
   findFather: Father;
   filterFather: Array<Father>;
@@ -65,6 +66,11 @@ export type QueryShowChildrenArgs = {
 
 export type QueryFindChildArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QuerySearchFatherArgs = {
+  text: Scalars['String'];
 };
 
 

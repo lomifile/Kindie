@@ -225,18 +225,13 @@ const CreateChild: React.FC<{}> = ({}) => {
                   Name: values.name,
                   Surname: values.surname,
                   Gender: values.gender,
-                  BirthDate: moment(new Date(values.birthdate)).format(
-                    "MM-DD-YYYY"
-                  ),
+                  BirthDate: values.birthdate,
                   OIB: parseInt(values.oib),
                   Remarks: values.remarks,
                   mother: motherId,
                   father: fatherId,
                 },
               });
-              console.log(
-                moment(new Date(values.birthdate)).format("DD/MM/YYYY")
-              );
               if (!error) {
                 toast({
                   title: t("create-child.toast.title"),
