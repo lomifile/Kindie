@@ -3,12 +3,10 @@ import {
   Box,
   Heading,
   Stack,
-  Link,
   Button,
   Divider,
   Text,
   Select,
-  FormLabel,
   Checkbox,
   useToast,
   InputGroup,
@@ -20,7 +18,7 @@ import React, { useState } from "react";
 import { InputField } from "../components/InputField";
 import NextLink from "next/link";
 import { useRegisterMutation } from "../generated/graphql";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { toErrormap } from "../utils/toErrorMap";
 import { Footer } from "../components/Footer";
 import { withUrqlClient } from "next-urql";
@@ -28,9 +26,7 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { useTranslation } from "react-i18next";
 import { ViewIcon } from "@chakra-ui/icons";
 
-interface registerProps {}
-
-const Register: React.FC<registerProps> = ({}) => {
+const Register: React.FC<{}> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const [privacy, setPrivacy] = useState(true);
 

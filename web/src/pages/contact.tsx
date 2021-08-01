@@ -3,7 +3,6 @@ import {
   Button,
   Flex,
   Heading,
-  Link,
   Stack,
   Text,
   useToast,
@@ -18,9 +17,7 @@ import { useSendEmailMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { AdBanner } from "../components/AdBanner";
 
-interface contactProps {}
-
-const Contact: React.FC<contactProps> = ({}) => {
+const Contact: React.FC<{}> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const [, sendEmail] = useSendEmailMutation();
   const toast = useToast();

@@ -42,9 +42,7 @@ import { ParentCard } from "../components/ParentCard";
 import moment from "moment";
 import isElectron from "is-electron";
 
-interface CreateChildProps {}
-
-const CreateChild: React.FC<CreateChildProps> = ({}) => {
+const CreateChild: React.FC<{}> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const toast = useToast();

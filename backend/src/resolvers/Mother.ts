@@ -158,4 +158,28 @@ export class MotherResolver {
       )
       .getMany();
   }
+
+  @Query(() => [Mother])
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async searchFather(
+    @Arg("text", () => String) text: string,
+    @Ctx() { req }: AppContext
+  ): Promise<Mother[] | undefined> {
+    return !Mother.find({
+      where: { Name: text, inKindergardenId: req.session.selectedKindergarden },
+    })
+      ? Mother.find({
+          where: {
+            Surname: text,
+            inKindergardenId: req.session.selectedKindergarden,
+          },
+        })
+      : Mother.find({
+          where: {
+            Name: text,
+            inKindergardenId: req.session.selectedKindergarden,
+          },
+        });
+  }
 }

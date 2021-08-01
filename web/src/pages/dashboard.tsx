@@ -39,7 +39,7 @@ import { useIsAuth } from "../utils/useIsAuth";
 import { CustomAlert } from "../components/Alerts";
 import { CustomSpinner } from "../components/Spinner";
 import { getUserRole } from "../utils/getUserRole";
-import isElectron from "is-electron";
+
 const Dashboard = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });

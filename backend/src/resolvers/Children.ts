@@ -269,4 +269,28 @@ export class ChildrenResolver {
     req.session.selectedChildren = req.session.selectedKindergarden;
     return { children };
   }
+
+  @Query(() => [Children])
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async searchFather(
+    @Arg("text", () => String) text: string,
+    @Ctx() { req }: AppContext
+  ): Promise<Children[] | undefined> {
+    return !Children.find({
+      where: { Name: text, inKindergardenId: req.session.selectedKindergarden },
+    })
+      ? Children.find({
+          where: {
+            Surname: text,
+            inKindergardenId: req.session.selectedKindergarden,
+          },
+        })
+      : Children.find({
+          where: {
+            Name: text,
+            inKindergardenId: req.session.selectedKindergarden,
+          },
+        });
+  }
 }

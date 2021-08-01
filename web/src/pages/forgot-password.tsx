@@ -20,9 +20,7 @@ import { InputField } from "../components/InputField";
 import { useForgotPasswordMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
-interface ForgotPasswordProps {}
-
-const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
+const ForgotPassword: React.FC<{}> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const [complete, setComplete] = useState(false);
   const [, forgotPassword] = useForgotPasswordMutation();

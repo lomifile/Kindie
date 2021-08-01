@@ -1,28 +1,15 @@
-import {
-  Flex,
-  Stack,
-  Heading,
-  Link,
-  Button,
-  Box,
-  HStack,
-  Text,
-  Divider,
-} from "@chakra-ui/react";
+import { Flex, Stack, Heading, Box, Divider } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "../components/Card";
-import { Feature } from "../components/Feature";
 import { Layout } from "../components/Layout";
 // @ts-ignore
 import filipImg from "../img/filipivanusec.jpg";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { AdBanner } from "../components/AdBanner";
 
-interface AboutusProps {}
-
-const Aboutus: React.FC<AboutusProps> = ({}) => {
+const Aboutus: React.FC<{}> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const text = {
     devs: [

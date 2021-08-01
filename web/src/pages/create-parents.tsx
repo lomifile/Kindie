@@ -25,9 +25,7 @@ import { useIsAuth } from "../utils/useIsAuth";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import isElectron from "is-electron";
 
-interface CreateParentsProps {}
-
-const CreateParents: React.FC<CreateParentsProps> = ({}) => {
+const CreateParents: React.FC<{}> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
   const [, addMother] = useAddMotherMutation();
   const [, addFather] = useAddFatherMutation();

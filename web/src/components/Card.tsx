@@ -1,6 +1,5 @@
-import { StarIcon } from "@chakra-ui/icons";
-import { Box, Badge, Image, Flex } from "@chakra-ui/react";
-import React, { ReactNode } from "react";
+import { Box, Image } from "@chakra-ui/react";
+import React from "react";
 
 interface CardProps {
   imageSrc?: string;

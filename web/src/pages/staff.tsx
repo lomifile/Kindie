@@ -165,37 +165,41 @@ const Staff: React.FC<{}> = ({}) => {
                   ) : (
                     userSearch?.searchUser.map((u) => (
                       <Tr>
-                        <Td>{u.Name}</Td>
-                        <Td>{u.Surname}</Td>
-                        <Td>
-                          <IconButton
-                            aria-label="Add to staff"
-                            icon={<AddIcon />}
-                            color="white"
-                            bg="blue.400"
-                            _hover={{
-                              backgroundColor: "#719ABC",
-                            }}
-                            onClick={() => {
-                              addStaff({ Id: u.Id });
-                            }}
-                          />
-                        </Td>
-                        <Td>
-                          <IconButton
-                            aria-label="View user"
-                            icon={<ViewIcon />}
-                            color="white"
-                            bg="blue.400"
-                            _hover={{
-                              backgroundColor: "#719ABC",
-                            }}
-                            onClick={() => {
-                              setShow(u);
-                              openModal();
-                            }}
-                          />
-                        </Td>
+                        {u.partof.length <= 0 ? (
+                          <>
+                            <Td>{u.Name}</Td>
+                            <Td>{u.Surname}</Td>
+                            <Td>
+                              <IconButton
+                                aria-label="Add to staff"
+                                icon={<AddIcon />}
+                                color="white"
+                                bg="blue.400"
+                                _hover={{
+                                  backgroundColor: "#719ABC",
+                                }}
+                                onClick={() => {
+                                  addStaff({ Id: u.Id });
+                                }}
+                              />
+                            </Td>
+                            <Td>
+                              <IconButton
+                                aria-label="View user"
+                                icon={<ViewIcon />}
+                                color="white"
+                                bg="blue.400"
+                                _hover={{
+                                  backgroundColor: "#719ABC",
+                                }}
+                                onClick={() => {
+                                  setShow(u);
+                                  openModal();
+                                }}
+                              />
+                            </Td>
+                          </>
+                        ) : null}
                       </Tr>
                     ))
                   )}

@@ -1,11 +1,8 @@
 import { Heading, Text, Link, UnorderedList, ListItem } from "@chakra-ui/react";
-import isElectron from "is-electron";
 import React from "react";
 import { Wrapper } from "../components/Wrapper";
 
-interface PrivacyPolicyProps {}
-
-const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({}) => {
+const PrivacyPolicy: React.FC<{}> = ({}) => {
   return (
     <Wrapper variant={"regular"}>
       <title>Privacy policy</title>
