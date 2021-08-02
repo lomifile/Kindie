@@ -12,8 +12,9 @@ import React from "react";
 interface CustomDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  header: JSX.Element | any;
-  body: JSX.Element | any;
+  header?: JSX.Element | any;
+  body?: JSX.Element | any;
+  size?: string;
 }
 
 export const CustomDrawer: React.FC<CustomDrawerProps> = ({
@@ -21,10 +22,17 @@ export const CustomDrawer: React.FC<CustomDrawerProps> = ({
   body,
   onClose,
   isOpen,
+  size = "md",
   ...props
 }) => {
   return (
-    <Drawer placement="left" onClose={onClose} isOpen={isOpen} {...props}>
+    <Drawer
+      placement="left"
+      onClose={onClose}
+      isOpen={isOpen}
+      size={size}
+      {...props}
+    >
       <DrawerOverlay>
         <DrawerContent>
           <DrawerCloseButton />
