@@ -1,17 +1,7 @@
 import React, { useState } from "react";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { withUrqlClient } from "next-urql";
-import {
-  Flex,
-  Box,
-  Heading,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  Stack,
-  Button,
-} from "@chakra-ui/react";
+import { Flex, Box, Heading, Stack, Button } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { InputField } from "../../components/InputField";
 import {
@@ -19,7 +9,7 @@ import {
   Exact,
   useChangePasswordMutation,
 } from "../../generated/graphql";
-import router, { NextRouter, useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import { toErrormap } from "../../utils/toErrorMap";
 import { Footer } from "../../components/Footer";
 import { TFunction, useTranslation } from "react-i18next";
