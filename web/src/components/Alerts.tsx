@@ -10,7 +10,7 @@ import { AlertTypes } from "../utils/types";
 
 interface CustomAlertProps {
   name: string;
-  data: string;
+  data: string | JSX.Element;
   status: AlertTypes;
 }
 
