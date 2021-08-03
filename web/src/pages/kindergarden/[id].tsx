@@ -15,12 +15,6 @@ import {
 import {
   Button,
   Divider,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
   Flex,
   Heading,
   HStack,
@@ -352,15 +346,17 @@ const Kindergarden = ({}) => {
           isOpen={drawerIsOpen}
           onClose={drawerOnClose}
           header={DrawerMenuHeader}
-          body={DrawerMenu(role, drawerOnOpen, t, useChildren)}
-        />
+        >
+          {DrawerMenu(role, drawerOnOpen, t, useChildren)}
+        </CustomDrawer>
       ) : null}
       <CustomModal
         isOpen={isOpen}
         onClose={onClose}
-        body={CreateGroupForm(toast, t, onClose, createGroup)}
         header={t("kindergarden.modal.header")}
-      />
+      >
+        {CreateGroupForm(toast, t, onClose, createGroup)}
+      </CustomModal>
       <Stack spacing={8}>
         <Flex align="center" justify="center" mt={5} p={5}>
           {MainMenu(role, onOpen, t, drawerOnOpen, useChildren)}

@@ -8,18 +8,18 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
+import children from "../pages/children";
 
 interface CustomDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   header?: JSX.Element | any;
-  body?: JSX.Element | any;
   size?: string;
 }
 
 export const CustomDrawer: React.FC<CustomDrawerProps> = ({
   header,
-  body,
+  children,
   onClose,
   isOpen,
   size = "md",
@@ -37,7 +37,7 @@ export const CustomDrawer: React.FC<CustomDrawerProps> = ({
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>{header}</DrawerHeader>
-          <DrawerBody>{body}</DrawerBody>
+          <DrawerBody>{children}</DrawerBody>
         </DrawerContent>
       </DrawerOverlay>
     </Drawer>

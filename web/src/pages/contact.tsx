@@ -123,8 +123,8 @@ const Contact: React.FC<{}> = ({}) => {
           w={{ base: "90%", md: "40%" }}
           align={["center", "center", "flex-start", "flex-start"]}
         >
-          <CustomHeader data={t("contact-us.main-heading")} />
-          <CustomHeader data={t("contact-us.description")} />
+          <CustomHeader>{t("contact-us.main-heading")}</CustomHeader>
+          <CustomHeader>{t("contact-us.description")}</CustomHeader>
           <Text
             fontSize="xs"
             mt={2}

@@ -1,14 +1,7 @@
 import { Heading } from "@chakra-ui/react";
 import React from "react";
 
-interface CustomHeaderProps {
-  data: string;
-}
-
-export const CustomHeader: React.FC<CustomHeaderProps> = ({
-  data,
-  ...props
-}) => {
+export const CustomHeader: React.FC<{}> = ({ children, ...props }) => {
   return (
     <Heading
       as="h1"
@@ -18,7 +11,7 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
       textAlign={["center", "center", "left", "left"]}
       {...props}
     >
-      {data}
+      {children}
     </Heading>
   );
 };

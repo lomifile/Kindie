@@ -13,15 +13,14 @@ import React from "react";
 interface CustomModalProps {
   isOpen: boolean;
   onClose: () => void;
-  header: JSX.Element | string | any;
-  body: JSX.Element | any;
+  header?: JSX.Element | string | any;
 }
 
 export const CustomModal: React.FC<CustomModalProps> = ({
   isOpen,
   onClose,
   header,
-  body,
+  children,
   ...props
 }) => {
   return (
@@ -36,7 +35,7 @@ export const CustomModal: React.FC<CustomModalProps> = ({
       <ModalContent>
         <ModalHeader>{header}</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>{body}</ModalBody>
+        <ModalBody>{children}</ModalBody>
       </ModalContent>
     </Modal>
   );
