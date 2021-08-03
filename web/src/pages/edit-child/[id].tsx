@@ -176,6 +176,140 @@ const UpdateChildForm = (
   </Formik>
 );
 
+const MotherDataTable = (
+  data: FindChildQuery,
+  motherFetching: boolean,
+  mother: FilterMotherQuery,
+  t: TFunction<"data">,
+  updateParents: (
+    variables?: Exact<{
+      childId: number;
+      motherId?: number;
+      fatherId?: number;
+    }>,
+    context?: Partial<OperationContext>
+  ) => Promise<
+    OperationResult<
+      UpdateChildrenParentsMutation,
+      Exact<{
+        childId: number;
+        motherId?: number;
+        fatherId?: number;
+      }>
+    >
+  >
+) => (
+  <>
+    <Heading mt={5} color="blue.400">
+      {t("edit-child.drawer.tbl-mother")}
+    </Heading>
+    <Table mt={5}>
+      <Tbody>
+        {!mother && motherFetching ? (
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
+          />
+        ) : null}
+        {mother?.filterMother.map((m) => (
+          <Tr>
+            <Td>{m.Name}</Td>
+            <Td>{m.Surname}</Td>
+            <Td>
+              <IconButton
+                aria-label="Add to group"
+                icon={<AddIcon />}
+                color="white"
+                bg="blue.400"
+                _hover={{
+                  backgroundColor: "#719ABC",
+                }}
+                onClick={() => {
+                  updateParents({
+                    childId: data.findChild.Id,
+                    motherId: m.Id,
+                    fatherId: data.findChild.fatherId,
+                  });
+                }}
+              />
+            </Td>
+          </Tr>
+        ))}
+      </Tbody>
+    </Table>
+  </>
+);
+
+const FatherDataTable = (
+  data: FindChildQuery,
+  fatherFetching: boolean,
+  father: FilterFatherQuery,
+  t: TFunction<"data">,
+  updateParents: (
+    variables?: Exact<{
+      childId: number;
+      motherId?: number;
+      fatherId?: number;
+    }>,
+    context?: Partial<OperationContext>
+  ) => Promise<
+    OperationResult<
+      UpdateChildrenParentsMutation,
+      Exact<{
+        childId: number;
+        motherId?: number;
+        fatherId?: number;
+      }>
+    >
+  >
+) => (
+  <>
+    <Heading mt={5} color="blue.400">
+      {t("edit-child.drawer.tbl-father")}
+    </Heading>
+    <Table mt={5}>
+      <Tbody>
+        {!father && fatherFetching ? (
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
+          />
+        ) : null}
+        {father?.filterFather.map((f) => (
+          <Tr>
+            <Td>{f.Name}</Td>
+            <Td>{f.Surname}</Td>
+            <Td>
+              <IconButton
+                aria-label="Add to group"
+                icon={<AddIcon />}
+                color="white"
+                bg="blue.400"
+                _hover={{
+                  backgroundColor: "#719ABC",
+                }}
+                onClick={() => {
+                  updateParents({
+                    childId: data.findChild.Id,
+                    motherId: data.findChild.motherId,
+                    fatherId: f.Id,
+                  });
+                }}
+              />
+            </Td>
+          </Tr>
+        ))}
+      </Tbody>
+    </Table>
+  </>
+);
+
 const AddParentsDrawer = (
   isOpen: boolean,
   onClose: () => void,
@@ -225,94 +359,12 @@ const AddParentsDrawer = (
               }}
             />
           </InputGroup>
-          {data.findChild.motherId ? null : (
-            <>
-              <Heading mt={5} color="blue.400">
-                {t("edit-child.drawer.tbl-mother")}
-              </Heading>
-              <Table mt={5}>
-                <Tbody>
-                  {!mother && motherFetching ? (
-                    <Spinner
-                      thickness="4px"
-                      speed="0.65s"
-                      emptyColor="gray.200"
-                      color="blue.500"
-                      size="xl"
-                    />
-                  ) : null}
-                  {mother?.filterMother.map((m) => (
-                    <Tr>
-                      <Td>{m.Name}</Td>
-                      <Td>{m.Surname}</Td>
-                      <Td>
-                        <IconButton
-                          aria-label="Add to group"
-                          icon={<AddIcon />}
-                          color="white"
-                          bg="blue.400"
-                          _hover={{
-                            backgroundColor: "#719ABC",
-                          }}
-                          onClick={() => {
-                            updateParents({
-                              childId: data.findChild.Id,
-                              motherId: m.Id,
-                              fatherId: data.findChild.fatherId,
-                            });
-                          }}
-                        />
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </>
-          )}
-          {data.findChild.fatherId ? null : (
-            <>
-              <Heading mt={5} color="blue.400">
-                {t("edit-child.drawer.tbl-father")}
-              </Heading>
-              <Table mt={5}>
-                <Tbody>
-                  {!father && fatherFetching ? (
-                    <Spinner
-                      thickness="4px"
-                      speed="0.65s"
-                      emptyColor="gray.200"
-                      color="blue.500"
-                      size="xl"
-                    />
-                  ) : null}
-                  {father?.filterFather.map((f) => (
-                    <Tr>
-                      <Td>{f.Name}</Td>
-                      <Td>{f.Surname}</Td>
-                      <Td>
-                        <IconButton
-                          aria-label="Add to group"
-                          icon={<AddIcon />}
-                          color="white"
-                          bg="blue.400"
-                          _hover={{
-                            backgroundColor: "#719ABC",
-                          }}
-                          onClick={() => {
-                            updateParents({
-                              childId: data.findChild.Id,
-                              motherId: data.findChild.motherId,
-                              fatherId: f.Id,
-                            });
-                          }}
-                        />
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </>
-          )}
+          {data.findChild.motherId
+            ? null
+            : MotherDataTable(data, motherFetching, mother, t, updateParents)}
+          {data.findChild.fatherId
+            ? null
+            : FatherDataTable(data, fatherFetching, father, t, updateParents)}
         </DrawerBody>
       </DrawerContent>
     </DrawerOverlay>
