@@ -310,7 +310,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
                 color="blue.400"
                 style={{ fontWeight: "bold", textTransform: "uppercase" }}
               >
-                DV Organizator
+                Kindie
               </Heading>
             </DrawerHeader>
             <DrawerBody>
@@ -370,7 +370,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
               color="blue.400"
               style={{ fontWeight: "bold", textTransform: "uppercase" }}
             >
-              DV Organizator
+              Kindie
             </Heading>
             <Box
               display={["none", "inline-flex", "inline-flex", "inline-flex"]}
@@ -414,7 +414,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
                       color="blue.400"
                       style={{ fontWeight: "bold", textTransform: "uppercase" }}
                     >
-                      DV Organizator
+                      Kindie
                     </Heading>
                   </DrawerHeader>
                   <DrawerBody>

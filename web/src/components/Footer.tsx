@@ -54,7 +54,7 @@ export const Footer: React.FC<FooterProps> = ({ variant = "regular" }) => {
             color="secondary.link"
             fontWeight="bold"
           >
-            DV Organizator
+            Kindie
           </Link>
           <Text color="secondary.link">&mdash; {t("footer.rights")}</Text>
         </Stack>
@@ -66,7 +66,7 @@ export const Footer: React.FC<FooterProps> = ({ variant = "regular" }) => {
         <Box pt={"2.5rem"} pb={"1.5rem"}>
           <Center>
             <Heading textTransform={"uppercase"} color="white" as={"h6"}>
-              DV Organizator
+              Kindie
             </Heading>
           </Center>
           <Stack
@@ -95,7 +95,7 @@ export const Footer: React.FC<FooterProps> = ({ variant = "regular" }) => {
           <Stack isInline marginTop="1.5rem" fontWeight="500" fontSize="m">
             <Text color="white">&copy; {year}</Text>
             <Link href="/" color="white" fontWeight="bold">
-              DV Organizator
+              Kindie
             </Link>
             <Text color="white">&mdash; {t("footer.rights")}</Text>
           </Stack>
