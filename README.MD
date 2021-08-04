@@ -2,25 +2,25 @@
     <img height=100 src="web/src/img/logo.png"/>
 </p>
 <p align="center">
-  <strong>DV Organizator a simple web app that helps you orginze professional documentation for wroking with children!</strong>
+  <strong>Kindie a simple web app that helps you orginze professional documentation for wroking with children!</strong>
 </p>
 
 <h3 align="center">
 </h3>
 
-[![Node.js CI](https://github.com/fivanusec/DV-Organizator/actions/workflows/node.js.yml/badge.svg)](https://github.com/fivanusec/DV-Organizator/actions/workflows/node.js.yml)
+[![Node.js CI](https://github.com/fivanusec/DV-Organizator/actions/workflows/node.js.yml/badge.svg)](https://github.com/fivanusec/Kindie/actions/workflows/node.js.yml)
 
 ## Introduction
 
-This code is for DV Organizator a simple web app that helps you orginze professional documentation for wroking with children.
+This code is for Kinide a simple web app that helps you orginze professional documentation for wroking with children.
 
 ## Structure
 
-| Codebase           |  Description   |
-| :----------------- | :------------: |
-| [web](web)         | React Frontend |
-| [backend](backend) | Backend/server |
-| [electron](electron)|Electron desktop app|
+| Codebase             |     Description      |
+| :------------------- | :------------------: |
+| [web](web)           |    React Frontend    |
+| [backend](backend)   |    Backend/server    |
+| [electron](electron) | Electron desktop app |
 
 # Tools
 
