@@ -5,10 +5,8 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
-  useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
-import children from "../pages/children";
 
 interface CustomDrawerProps {
   isOpen: boolean;

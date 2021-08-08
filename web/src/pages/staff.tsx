@@ -52,6 +52,7 @@ import { OperationContext, OperationResult } from "urql";
 
 const AddStaffBody = (
   userSearch: SearchUserQuery,
+  setText: React.Dispatch<React.SetStateAction<string>>,
   fetching: boolean,
   t: TFunction<"data">,
   setShow: React.Dispatch<any>,
@@ -311,7 +312,15 @@ const Staff: React.FC<{}> = ({}) => {
         onClose={onClose}
         header={t("staff.drawer.header")}
       >
-        {AddStaffBody(userSearch, fetching, t, setShow, openModal, addStaff)}
+        {AddStaffBody(
+          userSearch,
+          setText,
+          fetching,
+          t,
+          setShow,
+          openModal,
+          addStaff
+        )}
       </CustomDrawer>
       <Stack spacing={8}>
         <Flex
