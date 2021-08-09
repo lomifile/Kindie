@@ -51,6 +51,7 @@ import { CustomDrawer } from "../components/CustomDrawer";
 import { OperationContext, OperationResult } from "urql";
 
 const AddStaffBody = (
+  setText: React.Dispatch<React.SetStateAction<string>>,
   userSearch: SearchUserQuery,
   fetching: boolean,
   t: TFunction<"data">,
@@ -311,7 +312,15 @@ const Staff: React.FC<{}> = ({}) => {
         onClose={onClose}
         header={t("staff.drawer.header")}
       >
-        {AddStaffBody(userSearch, fetching, t, setShow, openModal, addStaff)}
+        {AddStaffBody(
+          setText,
+          userSearch,
+          fetching,
+          t,
+          setShow,
+          openModal,
+          addStaff
+        )}
       </CustomDrawer>
       <Stack spacing={8}>
         <Flex

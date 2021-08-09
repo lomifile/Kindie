@@ -523,6 +523,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
   } else if (variant == "user" && data?.me && !isElectron()) {
     body = DashMenu(data, router, t, i18n, logout, clearKindergarden);
   }
+
   return (
     <Flex
       as="nav"
