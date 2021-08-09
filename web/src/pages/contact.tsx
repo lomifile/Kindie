@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Flex,
+  Heading,
   Stack,
   Text,
   useToast,
@@ -124,7 +125,17 @@ const Contact: React.FC<{}> = ({}) => {
           align={["center", "center", "flex-start", "flex-start"]}
         >
           <CustomHeader>{t("contact-us.main-heading")}</CustomHeader>
-          <CustomHeader>{t("contact-us.description")}</CustomHeader>
+          <Heading
+            as="h2"
+            size="md"
+            color="primary.800"
+            opacity="0.8"
+            fontWeight="normal"
+            lineHeight={1.5}
+            textAlign={["center", "center", "left", "left"]}
+          >
+            {t("contact-us.description")}
+          </Heading>
           <Text
             fontSize="xs"
             mt={2}

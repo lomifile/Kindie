@@ -270,6 +270,25 @@ export class ChildrenResolver {
     return { children };
   }
 
+  @Mutation(() => Children, { nullable: true })
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  @UseMiddleware(isGroupSelected)
+  async removeChildFromGroup(
+    @Arg("Id", () => Int) Id: number
+  ): Promise<Children | undefined> {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .update(Children)
+      .set({
+        inGroupId: undefined,
+      })
+      .where("Id=:id", { id: Id })
+      .returning("*")
+      .execute();
+    return result.raw[0];
+  }
+
   @Query(() => [Children])
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)

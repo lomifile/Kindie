@@ -1,0 +1,5 @@
+mutation RemoveChildFromGroup($Id: Int!) {
+  removeChildFromGroup(Id: $Id) {
+    ...ChildrenFragment
+  }
+}

@@ -37,11 +37,14 @@ import {
   ClearGroupMutation,
   DeleteChildrenMutation,
   Exact,
+  RemoveChildFromGroupDocument,
+  RemoveChildFromGroupMutation,
   ShowChildrenFilterInGroupQuery,
   ShowChildrenQuery,
   useAddChildToGroupMutation,
   useClearGroupMutation,
   useDeleteChildrenMutation,
+  useRemoveChildFromGroupMutation,
   useShowChildrenFilterInGroupQuery,
   useShowChildrenQuery,
 } from "../../generated/graphql";
@@ -57,6 +60,7 @@ import {
   DeleteIcon,
   HamburgerIcon,
   ViewIcon,
+  MinusIcon,
 } from "@chakra-ui/icons";
 import { TFunction, useTranslation } from "react-i18next";
 import { getUserRole } from "../../utils/getUserRole";
@@ -80,6 +84,19 @@ const DataTable = (
       DeleteChildrenMutation,
       Exact<{
         id: number;
+      }>
+    >
+  >,
+  removeFromGroup: (
+    variables?: Exact<{
+      Id: number;
+    }>,
+    context?: Partial<OperationContext>
+  ) => Promise<
+    OperationResult<
+      RemoveChildFromGroupMutation,
+      Exact<{
+        Id: number;
       }>
     >
   >,
@@ -140,6 +157,24 @@ const DataTable = (
                 />
               </Td>
             ) : null}
+            <Td>
+              {role == "Pedagogue" || role == "Headmaster" ? (
+                <IconButton
+                  aria-label="Remove from group"
+                  icon={<MinusIcon />}
+                  color="white"
+                  colorScheme="yellow"
+                  borderRadius="12px"
+                  lineHeight="1"
+                  size="md"
+                  onClick={() => {
+                    removeFromGroup({
+                      Id: child.Id,
+                    });
+                  }}
+                />
+              ) : null}
+            </Td>
             <Td>
               {role == "Pedagogue" || role == "Headmaster" ? (
                 <IconButton
@@ -253,6 +288,7 @@ const MenuDrawer = (
 );
 
 const AddGroupDrawer = (
+  setText: React.Dispatch<React.SetStateAction<string>>,
   isOpen: boolean,
   onClose: () => void,
   children: ShowChildrenQuery,
@@ -421,6 +457,48 @@ const Menu = (
   }
 };
 
+const HasMoreBtn = (
+  setVariables: (
+    value: React.SetStateAction<{
+      limit: number;
+      cursor: string;
+    }>
+  ) => void,
+  variables: {
+    limit: number;
+    cursor: string;
+  },
+  data: ShowChildrenFilterInGroupQuery,
+  fetching: boolean,
+  t: TFunction<"data">
+) => (
+  <Flex>
+    <Button
+      onClick={() => {
+        setVariables({
+          limit: variables.limit,
+          cursor:
+            data.showChildrenFilterInGroup.children[
+              data.showChildrenFilterInGroup.children.length - 1
+            ].createdAt,
+        });
+      }}
+      isLoading={fetching}
+      m="auto"
+      my={8}
+      bg="blue.400"
+      colorScheme="navItem"
+      borderRadius="12px"
+      py="4"
+      px="4"
+      lineHeight="1"
+      size="md"
+    >
+      {t("children.btn-load-more")}
+    </Button>
+  </Flex>
+);
+
 const Group = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
@@ -442,6 +520,7 @@ const Group = ({}) => {
   const [{ data, fetching }] = useShowChildrenFilterInGroupQuery({
     variables,
   });
+  const [, removeFromGroup] = useRemoveChildFromGroupMutation();
   const [, deleteChildren] = useDeleteChildrenMutation();
   const [{ data: children, fetching: fetchingChildren }] = useShowChildrenQuery(
     {
@@ -468,6 +547,7 @@ const Group = ({}) => {
       {role == "Headmaster" || role == "Pedagouge" ? (
         <>
           {AddGroupDrawer(
+            setText,
             isOpen,
             onClose,
             children,
@@ -522,9 +602,13 @@ const Group = ({}) => {
             setChild,
             teacherChildViewOnOpen,
             deleteChildren,
+            removeFromGroup,
             t
           )
         )}
+        {data && data.showChildrenFilterInGroup.hasMore
+          ? HasMoreBtn(setVariables, variables, data, fetchingChildren, t)
+          : null}
       </Box>
     </Layout>
   );

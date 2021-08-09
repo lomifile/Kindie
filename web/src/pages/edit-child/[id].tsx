@@ -287,7 +287,7 @@ const FatherDataTable = (
             <Td>{f.Surname}</Td>
             <Td>
               <IconButton
-                aria-label="Add to group"
+                aria-label="Add parents"
                 icon={<AddIcon />}
                 color="white"
                 bg="blue.400"
@@ -480,11 +480,13 @@ const EditChild = ({}) => {
           ) : (
             <>
               <ParentCard
+                child={data.findChild}
                 parent="mother"
                 layout={true}
                 data={data.findChild.mother}
               />
               <ParentCard
+                child={data.findChild}
                 parent="father"
                 layout={true}
                 data={data.findChild.father}
