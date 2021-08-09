@@ -44,7 +44,6 @@ import Flags from "country-flag-icons/react/3x2";
 import isElectron from "is-electron";
 import { OperationContext, OperationResult } from "urql";
 import { CustomSpinner } from "./Spinner";
-import { CustomDrawer } from "./CustomDrawer";
 
 const DashNav = (t: TFunction<"data">) => (
   <>
@@ -197,7 +196,7 @@ const DashMenu = (
   <Stack direction={["column", "row"]}>
     <Menu>
       <MenuButton ml={["15px", "15px", "0", "0", "0"]} mb={"10px"}>
-        <Avatar name={data?.me.Name + " " + data?.me.Surname} />
+        <Avatar name={data.me.Name + " " + data.me.Surname} />
       </MenuButton>
       <MenuList borderRadius={"12px"} p={"3"}>
         <MenuGroup title={t("nav.menu.titles.navigation")}>
@@ -296,58 +295,61 @@ const DrawerNav = (
   isOpen: boolean,
   i18n: i18n
 ) => (
-  <CustomDrawer
-    size={"sm"}
-    header={
-      <Heading
-        fontSize="xl"
-        fontWeight="500"
-        color="blue.400"
-        style={{ fontWeight: "bold", textTransform: "uppercase" }}
-      >
-        Kindie
-      </Heading>
-    }
-    onClose={onClose}
-    isOpen={isOpen}
-  >
-    <Stack
-      spacing={8}
-      align="center"
-      justify={["center", "space-between"]}
-      direction={["column", "column", "column"]}
-      pt={[4, 4, 0, 0]}
-    >
-      {body}
-      <Flex
-        mt={5}
-        align="center"
-        justify="center"
-        display={["inline-flex", "none", "none", "none"]}
-      >
-        <Button
-          h={"50px"}
-          w={"50px"}
-          bg="transparent"
-          onClick={() => {
-            i18n.changeLanguage("hr");
-          }}
-        >
-          <Flags.HR title="Hrvatski" />
-        </Button>
-        <Button
-          h={"50px"}
-          w={"50px"}
-          bg="transparent"
-          onClick={(e) => {
-            i18n.changeLanguage("en");
-          }}
-        >
-          <Flags.GB title="English" />
-        </Button>
-      </Flex>
-    </Stack>
-  </CustomDrawer>
+  <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+    <DrawerOverlay>
+      <DrawerContent>
+        <DrawerCloseButton />
+        <DrawerHeader>
+          <Heading
+            fontSize="xl"
+            fontWeight="500"
+            color="blue.400"
+            style={{ fontWeight: "bold", textTransform: "uppercase" }}
+          >
+            Kindie
+          </Heading>
+        </DrawerHeader>
+        <DrawerBody>
+          <Stack
+            spacing={8}
+            align="center"
+            justify={["center", "space-between"]}
+            direction={["column", "column", "column"]}
+            pt={[4, 4, 0, 0]}
+          >
+            {body}
+            <Flex
+              mt={5}
+              align="center"
+              justify="center"
+              display={["inline-flex", "none", "none", "none"]}
+            >
+              <Button
+                h={"50px"}
+                w={"50px"}
+                bg="transparent"
+                onClick={() => {
+                  i18n.changeLanguage("hr");
+                }}
+              >
+                <Flags.HR title="Hrvatski" />
+              </Button>
+              <Button
+                h={"50px"}
+                w={"50px"}
+                bg="transparent"
+                onClick={(e) => {
+                  i18n.changeLanguage("en");
+                }}
+              >
+                <Flags.GB title="English" />
+              </Button>
+            </Flex>
+          </Stack>
+        </DrawerBody>
+      </DrawerContent>
+    </DrawerOverlay>
+  </Drawer>
 );
 
 const ElectronMenu = (
@@ -371,68 +373,72 @@ const ElectronMenu = (
   >
 ) => (
   <>
-    <CustomDrawer
-      header={
-        <Heading
-          fontSize="xl"
-          fontWeight="500"
-          color="blue.400"
-          style={{ fontWeight: "bold", textTransform: "uppercase" }}
-        >
-          Kindie
-        </Heading>
-      }
-      isOpen={drawerIsOpen}
-      onClose={drawerOnClose}
-    >
-      <Stack spacing={8} align="center">
-        <NextLink href="/dashboard">
-          <Button
-            borderRadius={"12px"}
-            variant="ghost"
-            color="blue.400"
-            p={15}
-            _hover={{
-              backgroundColor: "gray.100",
-            }}
-          >
-            {t("electron.toolbox.btn-dash")}
-          </Button>
-        </NextLink>
-        <NextLink href="/settings">
-          <Button
-            borderRadius={"12px"}
-            variant="ghost"
-            color="blue.400"
-            p={2}
-            _hover={{
-              backgroundColor: "gray.100",
-            }}
-          >
-            {t("electron.toolbox.btn-settings")}
-          </Button>
-        </NextLink>
-        <Button
-          borderRadius={"12px"}
-          variant="ghost"
-          color="blue.400"
-          p={2}
-          _hover={{
-            backgroundColor: "gray.100",
-          }}
-          onClick={async () => {
-            await logout();
-            if (isServer()) {
-              router.push("/login");
-            } else {
-              router.reload();
-            }
-          }}
-        >
-          {t("electron.toolbox.btn-logout")}
-        </Button>
-      </Stack>
-    </CustomDrawer>
+    <Drawer placement="left" onClose={drawerOnClose} isOpen={drawerIsOpen}>
+      <DrawerOverlay>
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>
+            <Heading
+              fontSize="xl"
+              fontWeight="500"
+              color="blue.400"
+              style={{ fontWeight: "bold", textTransform: "uppercase" }}
+            >
+              Kindie
+            </Heading>
+          </DrawerHeader>
+          <DrawerBody>
+            <Stack spacing={8} align="center">
+              <NextLink href="/dashboard">
+                <Button
+                  borderRadius={"12px"}
+                  variant="ghost"
+                  color="blue.400"
+                  p={15}
+                  _hover={{
+                    backgroundColor: "gray.100",
+                  }}
+                >
+                  {t("electron.toolbox.btn-dash")}
+                </Button>
+              </NextLink>
+              <NextLink href="/settings">
+                <Button
+                  borderRadius={"12px"}
+                  variant="ghost"
+                  color="blue.400"
+                  p={2}
+                  _hover={{
+                    backgroundColor: "gray.100",
+                  }}
+                >
+                  {t("electron.toolbox.btn-settings")}
+                </Button>
+              </NextLink>
+              <Button
+                borderRadius={"12px"}
+                variant="ghost"
+                color="blue.400"
+                p={2}
+                _hover={{
+                  backgroundColor: "gray.100",
+                }}
+                onClick={async () => {
+                  await logout();
+                  if (isServer()) {
+                    router.push("/login");
+                  } else {
+                    router.reload();
+                  }
+                }}
+              >
+                {t("electron.toolbox.btn-logout")}
+              </Button>
+            </Stack>
+          </DrawerBody>
+        </DrawerContent>
+      </DrawerOverlay>
+    </Drawer>
     <IconButton
       display={["flex", "flex", "flex", "flex"]}
       marginLeft={"5rem"}
@@ -510,16 +516,13 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
   if (fetching) {
     body = <CustomSpinner />;
   }
-
-  switch (variant && data?.me) {
-    case "normal" && !data?.me:
-      body = SignInNav(t);
-    case "normal" && data?.me:
-      body = DashNav(t);
-    case "normal" && data?.me && isElectron():
-      body = DashMenu(data, router, t, i18n, logout, clearKindergarden);
+  if (variant == "normal" && !data?.me) {
+    body = SignInNav(t);
+  } else if (variant == "normal" && data?.me) {
+    body = DashNav(t);
+  } else if (variant == "user" && data?.me && !isElectron()) {
+    body = DashMenu(data, router, t, i18n, logout, clearKindergarden);
   }
-
   return (
     <Flex
       as="nav"
