@@ -1,83 +1,16 @@
 import { MinusIcon } from "@chakra-ui/icons";
-import { Box as Box, Divider, Stack, Text } from "@chakra-ui/layout";
+import { Box, Divider, Stack, Text } from "@chakra-ui/layout";
 import { Heading, HStack, IconButton } from "@chakra-ui/react";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Children,
-  Father,
-  FindChildQuery,
-  Mother,
-  useUpdateChildrenParentsMutation,
-} from "../generated/graphql";
-import { ParentTypes } from "../utils/types";
+import { useUpdateChildrenParentsMutation } from "../generated/graphql";
+import { ChildDataType, ParentDataTypes, ParentTypes } from "../utils/types";
 
 interface ParentCardProps {
-  data:
-    | any
-    | ({
-        __typename?: "Mother";
-      } & {
-        __typename?: "Mother";
-      } & Pick<
-          Mother,
-          | "Id"
-          | "Name"
-          | "Surname"
-          | "createdAt"
-          | "updatedAt"
-          | "Email"
-          | "Phone"
-        >)
-    | ({
-        __typename?: "Father";
-      } & {
-        __typename?: "Father";
-      } & Pick<
-          Father,
-          | "Id"
-          | "Name"
-          | "Surname"
-          | "createdAt"
-          | "updatedAt"
-          | "Email"
-          | "Phone"
-        >);
+  data: ParentDataTypes;
   layout?: boolean;
   parent?: ParentTypes;
-  child: {
-    __typename?: "Children";
-  } & {
-    __typename?: "Children";
-  } & Pick<
-      Children,
-      | "Id"
-      | "Name"
-      | "Surname"
-      | "Gender"
-      | "BirthDate"
-      | "OIB"
-      | "Remarks"
-      | "motherId"
-      | "fatherId"
-      | "createdAt"
-      | "updatedAt"
-    > & {
-      mother?: {
-        __typename?: "Mother";
-      } & {
-        __typename?: "Mother";
-      } & Pick<
-          Mother,
-          | "Id"
-          | "Name"
-          | "Surname"
-          | "createdAt"
-          | "updatedAt"
-          | "Email"
-          | "Phone"
-        >;
-    };
+  child: ChildDataType;
 }
 
 export const ParentCard: React.FC<ParentCardProps> = ({

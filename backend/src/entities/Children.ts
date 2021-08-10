@@ -82,6 +82,8 @@ export class Children extends BaseEntity {
   @ManyToOne(() => Mother, (mother) => mother.children, {
     nullable: true,
     lazy: true,
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
   })
   mother: Mother;
 
@@ -89,6 +91,8 @@ export class Children extends BaseEntity {
   @ManyToOne(() => Father, (father) => father.children, {
     nullable: true,
     lazy: true,
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
   })
   father: Father;
 }

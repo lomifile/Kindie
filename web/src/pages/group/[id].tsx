@@ -68,6 +68,7 @@ import { ChildrenModal } from "../../components/ChildrenModal";
 import isElectron from "is-electron";
 import { NextRouter } from "next/dist/next-server/lib/router/router";
 import { OperationContext, OperationResult } from "@urql/core";
+import { CustomDrawer } from "../../components/CustomDrawer";
 
 const DataTable = (
   data: ShowChildrenFilterInGroupQuery,
@@ -108,6 +109,8 @@ const DataTable = (
         <Tr>
           <Th>{t("group.tbl-name")}</Th>
           <Th>{t("group.tbl-surname")}</Th>
+          <Th></Th>
+          <Th></Th>
           <Th></Th>
           <Th></Th>
         </Tr>
@@ -230,61 +233,54 @@ const MenuDrawer = (
     >
   >
 ) => (
-  <Drawer isOpen={isOpenMenu} placement="left" onClose={onCloseMenu}>
-    <DrawerOverlay>
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerBody>
-          <Stack
-            spacing={8}
-            align="center"
-            justify={["center", "space-between"]}
-            direction={["column", "column", "column"]}
-            pt={[4, 4, 0, 0]}
-          >
-            <Button
-              as={Link}
-              color="blue.400"
-              colorScheme="navItem"
-              borderRadius="12px"
-              py="4"
-              px="4"
-              lineHeight="1"
-              size="md"
-              onClick={() => {
-                onCloseMenu();
-                onOpen();
-              }}
-            >
-              {t("group.btn-add")}
-            </Button>
-            <NextLink
-              href={"/kindergarden/[id]"}
-              as={`/kindergarden/${
-                typeof router.query.id === "string" ? router.query.id : ""
-              }`}
-            >
-              <Button
-                as={Link}
-                color="blue.400"
-                colorScheme="navItem"
-                borderRadius="12px"
-                py="4"
-                px="4"
-                lineHeight="1"
-                size="md"
-                onClick={() => {
-                  clearGroup();
-                }}
-              >
-                {t("group.btn-return")}
-              </Button>
-            </NextLink>
-          </Stack>
-        </DrawerBody>
-      </DrawerContent>
-    </DrawerOverlay>
-  </Drawer>
+  <CustomDrawer isOpen={isOpenMenu} onClose={onCloseMenu} size={"sm"}>
+    <Stack
+      spacing={8}
+      align="center"
+      justify={["center", "space-between"]}
+      direction={["column", "column", "column"]}
+      pt={[4, 4, 0, 0]}
+    >
+      <Button
+        as={Link}
+        color="blue.400"
+        colorScheme="navItem"
+        borderRadius="12px"
+        py="4"
+        px="4"
+        lineHeight="1"
+        size="md"
+        onClick={() => {
+          onCloseMenu();
+          onOpen();
+        }}
+      >
+        {t("group.btn-add")}
+      </Button>
+      <NextLink
+        href={"/kindergarden/[id]"}
+        as={`/kindergarden/${
+          typeof router.query.id === "string" ? router.query.id : ""
+        }`}
+      >
+        <Button
+          as={Link}
+          color="blue.400"
+          colorScheme="navItem"
+          borderRadius="12px"
+          py="4"
+          px="4"
+          lineHeight="1"
+          size="md"
+          onClick={() => {
+            clearGroup();
+          }}
+        >
+          {t("group.btn-return")}
+        </Button>
+      </NextLink>
+    </Stack>
+  </CustomDrawer>
 );
 
 const AddGroupDrawer = (
@@ -308,66 +304,62 @@ const AddGroupDrawer = (
     >
   >
 ) => (
-  <Drawer isOpen={isOpen} placement="left" onClose={onClose} size={"md"}>
-    <DrawerOverlay>
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader>{t("group.drawer.header")}</DrawerHeader>
-        <DrawerBody>
-          <InputGroup>
-            <InputLeftElement
-              pointerEvents="none"
-              children={<SearchIcon color="gray.300" />}
-            />
-            <Input
-              style={{ borderRadius: "12px" }}
-              placeholder={t("group.drawer.placeholder")}
-              id="text"
-              onChange={() => {
-                // @ts-ignore
-                setText(document.getElementById("text").value);
-              }}
-            />
-          </InputGroup>
-          <Table mt={5}>
-            <Tbody>
-              {!children && fetchingChildren ? (
-                <Spinner
-                  thickness="4px"
-                  speed="0.65s"
-                  emptyColor="gray.200"
-                  color="blue.500"
-                  size="xl"
-                />
-              ) : null}
-              {children?.showChildren.map((c) => (
-                <Tr>
-                  <Td>{c.Name}</Td>
-                  <Td>{c.Surname}</Td>
-                  <Td>
-                    <IconButton
-                      aria-label="Add to group"
-                      icon={<AddIcon />}
-                      color="white"
-                      bg="blue.400"
-                      _hover={{
-                        backgroundColor: "#719ABC",
-                      }}
-                      onClick={() => {
-                        addChildToGroup({
-                          id: c.Id,
-                        });
-                      }}
-                    />
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </DrawerBody>
-      </DrawerContent>
-    </DrawerOverlay>
-  </Drawer>
+  <CustomDrawer
+    isOpen={isOpen}
+    onClose={onClose}
+    header={t("group.drawer.header")}
+  >
+    <InputGroup>
+      <InputLeftElement
+        pointerEvents="none"
+        children={<SearchIcon color="gray.300" />}
+      />
+      <Input
+        style={{ borderRadius: "12px" }}
+        placeholder={t("group.drawer.placeholder")}
+        id="text"
+        onChange={() => {
+          // @ts-ignore
+          setText(document.getElementById("text").value);
+        }}
+      />
+    </InputGroup>
+    <Table mt={5}>
+      <Tbody>
+        {!children && fetchingChildren ? (
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
+          />
+        ) : null}
+        {children?.showChildren.map((c) => (
+          <Tr>
+            <Td>{c.Name}</Td>
+            <Td>{c.Surname}</Td>
+            <Td>
+              <IconButton
+                aria-label="Add to group"
+                icon={<AddIcon />}
+                color="white"
+                bg="blue.400"
+                _hover={{
+                  backgroundColor: "#719ABC",
+                }}
+                onClick={() => {
+                  addChildToGroup({
+                    id: c.Id,
+                  });
+                }}
+              />
+            </Td>
+          </Tr>
+        ))}
+      </Tbody>
+    </Table>
+  </CustomDrawer>
 );
 
 const Menu = (
