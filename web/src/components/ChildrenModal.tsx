@@ -64,10 +64,10 @@ export const ChildrenModal: React.FC<ChildrenModalProps> = ({
             {child?.mother && child?.father ? (
               <Stack>
                 <Box>
-                  <ParentCard data={child?.mother} layout={false} />
+                  <ParentCard child={child}  data={child?.mother} layout={false} />
                 </Box>
                 <Box>
-                  <ParentCard data={child?.father} layout={false} />
+                  <ParentCard child={child}  data={child?.father} layout={false} />
                 </Box>
               </Stack>
             ) : null}
