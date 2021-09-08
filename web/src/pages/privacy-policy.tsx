@@ -2,9 +2,7 @@ import { Heading, Text, Link, UnorderedList, ListItem } from "@chakra-ui/react";
 import React from "react";
 import { Wrapper } from "../components/Wrapper";
 
-interface PrivacyPolicyProps {}
-
-const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({}) => {
+const PrivacyPolicy: React.FC<{}> = ({}) => {
   return (
     <Wrapper variant={"regular"}>
       <title>Privacy policy</title>
@@ -292,6 +290,10 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({}) => {
         encourage you to contact us immediately and we will do our best efforts
         to promptly remove such information from our records.
       </Text>
+
+      <Link mt={"5rem"} mb={"5rem"} color="blue.400" href="/login">
+        Return
+      </Link>
     </Wrapper>
   );
 };

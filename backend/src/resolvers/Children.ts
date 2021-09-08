@@ -269,4 +269,47 @@ export class ChildrenResolver {
     req.session.selectedChildren = req.session.selectedKindergarden;
     return { children };
   }
+
+  @Mutation(() => Children, { nullable: true })
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  @UseMiddleware(isGroupSelected)
+  async removeChildFromGroup(
+    @Arg("Id", () => Int) Id: number
+  ): Promise<Children | undefined> {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .update(Children)
+      .set({
+        inGroupId: undefined,
+      })
+      .where("Id=:id", { id: Id })
+      .returning("*")
+      .execute();
+    return result.raw[0];
+  }
+
+  @Query(() => [Children])
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async searchFather(
+    @Arg("text", () => String) text: string,
+    @Ctx() { req }: AppContext
+  ): Promise<Children[] | undefined> {
+    return !Children.find({
+      where: { Name: text, inKindergardenId: req.session.selectedKindergarden },
+    })
+      ? Children.find({
+          where: {
+            Surname: text,
+            inKindergardenId: req.session.selectedKindergarden,
+          },
+        })
+      : Children.find({
+          where: {
+            Name: text,
+            inKindergardenId: req.session.selectedKindergarden,
+          },
+        });
+  }
 }

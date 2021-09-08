@@ -16,7 +16,7 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { getConnection } from "typeorm";
+import { getConnection, getRepository, Not } from "typeorm";
 import argon2 from "argon2";
 import {
   ACCOUNT_VERIFICATION_PREFIX,
@@ -438,14 +438,24 @@ export class UserResolver {
   }
 
   @Query(() => [User])
-  async searchUser(@Arg("text") text: string): Promise<User[]> {
+  async searchUser(
+    @Arg("text") text: string,
+    @Ctx() { req }: AppContext
+  ): Promise<User[]> {
     if (text == ".") {
-      return User.find();
+      return await getRepository(User).find({
+        relations: ["partof"],
+        where: {
+          Id: Not(req.session.userId),
+        },
+      });
     }
-    return User.find({
+    return !User.find({
       where: {
         Name: text,
       },
-    });
+    })
+      ? User.find({ where: { Surname: text } })
+      : User.find({ where: { Name: text } });
   }
 }

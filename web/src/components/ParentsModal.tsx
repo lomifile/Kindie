@@ -7,13 +7,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { ParentCard } from "./ParentCard";
 
 interface ParentsModalProps {
-  data: Object;
+  data: any;
   onClose: () => void;
   isOpen: boolean;
 }

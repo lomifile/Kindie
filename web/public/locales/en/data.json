@@ -124,6 +124,7 @@
       "placeholders": {
         "name": "Name",
         "surname": "Last name",
+        "role": "Your role",
         "email": "Email",
         "password": "Password",
         "repeat-password": "Repeat password"
@@ -144,6 +145,7 @@
   },
   "settings": {
     "main-header": "Settings",
+    "app-language": "Language",
     "alert": {
       "title": "There was an error",
       "desc": "An error occured while trying to fetch your data!"
@@ -168,7 +170,8 @@
     },
     "menu-selector": {
       "#profile": "Profile",
-      "#password": "Password"
+      "#password": "Password",
+      "#app": "Application"
     },
     "selector": {
       "headmaster": "Headmaster",
@@ -500,5 +503,12 @@
     "surname": "Last name",
     "phone": "Phone",
     "email": "Email"
+  },
+  "electron": {
+    "toolbox": {
+      "btn-dash": "Dashboard",
+      "btn-settings": "Settings",
+      "btn-logout": "Log out"
+    }
   }
 }

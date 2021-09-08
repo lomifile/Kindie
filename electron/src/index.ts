@@ -1,35 +1,42 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, Notification } = require("electron");
 import path from "path";
+import { __prod__ } from "./Constants";
 
-function createWindow() {
+const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    title: "DV Organizator",
-    icon: __dirname + "/img/logo.png",
+    title: "Kindie",
     webPreferences: {
-      devTools: false,
+      devTools: !__prod__,
       nodeIntegration: true,
-      preload: path.join(__dirname + "../dist/preload.js"),
+      preload: path.join(__dirname + "/preload.js"),
     },
   });
+    
+  mainWindow.setMenu(null);
 
-  mainWindow.loadURL("http://localhost:3000/login");
-  // mainWindow.loadURL("https://dv-organizator.vercel.app/login"); // prod
-}
+  !__prod__
+    ? mainWindow.loadURL("http://localhost:3000/dashboard")
+    : mainWindow.loadURL("https://dv-organizator.vercel.app/dashboard"); // prod
+};
+
+const showNotification = () => {
+  new Notification({
+    title: "Kindie is ready",
+  }).show();
+};
 
 app
   .whenReady()
   .then(() => {
     createWindow();
-    app.on("activate", function () {
+    app.on("activate", () => {
       if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
   })
-  .catch((err: any) => {
-    console.error(err);
-  });
+  .then(showNotification);
 
-app.on("window-all-closed", function () {
+app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });

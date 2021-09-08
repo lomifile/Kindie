@@ -83,8 +83,10 @@ const main = async () => {
     cors: false, //for now
   });
 
-  app.listen(parseInt(process.env.PORT), () => {
-    console.log(`Server started on localhost:${parseInt(process.env.PORT)}`);
+  app.listen(parseInt(process.env.PORT as string), () => {
+    console.log(
+      `Server started on localhost:${parseInt(process.env.PORT as string)}`
+    );
   });
 };
 

@@ -31,12 +31,14 @@ import {
   DeleteStaffMutationVariables,
   DeleteFatherMutationVariables,
   DeleteMotherMutationVariables,
+  RemoveChildFromGroupMutationVariables,
 } from "../generated/graphql";
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
 import { updateQuery } from "./updateQuery";
 import { isServer } from "./isServer";
 import Router, { NextRouter } from "next/router";
+import isElectron from "is-electron";
 
 const errorExchange: Exchange = ({ forward }) => {
   const router: NextRouter = Router;
@@ -186,6 +188,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         resolvers: {
           Query: {
+            showChildrenFilterInGroup: cursorPaginationChildren(),
             showChildrenFilterNotInGroup: cursorPaginationChildren(),
             showMother: cursorPaginationMother(),
             showFather: cursorPaginationFather(),
@@ -193,25 +196,31 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
-            deleteMother: (_result, args, cache, info) => {
+            removeChildFromGroup: (_result, args, cache, _info) => {
+              cache.invalidate({
+                __typename: "Query",
+                Id: (args as RemoveChildFromGroupMutationVariables).Id,
+              });
+            },
+            deleteMother: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Query",
                 Id: (args as DeleteMotherMutationVariables).motherId,
               });
             },
-            deleteFather: (_result, args, cache, info) => {
+            deleteFather: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Query",
                 Id: (args as DeleteFatherMutationVariables).fatherId,
               });
             },
-            deleteStaff: (_result, args, cache, info) => {
+            deleteStaff: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Query",
                 Id: (args as DeleteStaffMutationVariables).userId,
               });
             },
-            addFather: (_result, args, cache, info) => {
+            addFather: (_result, _args, cache, _info) => {
               const allFields = cache.inspectFields("Query");
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "showFather"
@@ -220,7 +229,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 cache.invalidate("Query", "showFather", fi.arguments || {});
               });
             },
-            addMother: (_result, args, cache, info) => {
+            addMother: (_result, _args, cache, _info) => {
               const allFields = cache.inspectFields("Query");
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "showMother"
@@ -230,7 +239,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               });
             },
 
-            addChildToGroup: (_result, args, cache, info) => {
+            addChildToGroup: (_result, args, cache, _info) => {
               const allFields = cache.inspectFields("Query");
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "showChildrenFilterInGroup"
@@ -249,14 +258,14 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               });
             },
 
-            addStaff: (_result, args, cache, info) => {
+            addStaff: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Query",
                 Id: (args as AddStaffMutationVariables).Id,
               });
             },
 
-            createChild: (_result, args, cache, info) => {
+            createChild: (_result, _args, cache, _info) => {
               const allFields = cache.inspectFields("Query");
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "showChildrenFilterNotInGroup"
@@ -270,7 +279,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               });
             },
 
-            updateChild: (_result, args, cache, info) => {
+            updateChild: (_result, _args, cache, _info) => {
               const allFields = cache.inspectFields("Query");
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "showChildrenFilterNotInGroup"
@@ -284,7 +293,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               });
             },
 
-            updateChildernParents: (_result, args, cache, info) => {
+            updateChildernParents: (_result, _args, cache, _info) => {
               const allFields = cache.inspectFields("Query");
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "findChild"
@@ -304,14 +313,14 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               });
             },
 
-            deleteChildren: (_result, args, cache, info) => {
+            deleteChildren: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Query",
                 Id: (args as DeleteChildrenMutationVariables).id,
               });
             },
 
-            createGroup: (_result, args, cache, info) => {
+            createGroup: (_result, _args, cache, _info) => {
               cache.updateQuery({ query: ShowGroupsDocument }, (data) => {
                 //@ts-ignore
                 data.showGroups.push(_result.createGroup.groups);
@@ -319,7 +328,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               });
             },
 
-            createKindergarden: (_result, args, cache, info) => {
+            createKindergarden: (_result, _args, cache, _info) => {
               cache.updateQuery({ query: ShowKindergardenDocument }, (data) => {
                 //@ts-ignore
                 data.showKindergarden.push(
@@ -330,14 +339,14 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               });
             },
 
-            deleteKindergarden: (_result, args, cache, info) => {
+            deleteKindergarden: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Query",
                 Id: (args as DeleteKindergardenMutationVariables).id,
               });
             },
 
-            logout: (_result, args, cache, info) => {
+            logout: (_result, _args, cache, _info) => {
               updateQuery<LogoutMutation, MeQuery>(
                 cache,
                 { query: MeDocument },
@@ -346,7 +355,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               );
             },
 
-            login: (_result, args, cache, info) => {
+            login: (_result, _args, cache, _info) => {
               cache.updateQuery({ query: ShowKindergardenDocument }, (data) => {
                 // @ts-ignore
                 data?.showKindergarden.push(_result.login.user.Id);
@@ -369,7 +378,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               );
             },
 
-            register: (_result, args, cache, info) => {
+            register: (_result, _args, cache, _info) => {
               updateQuery<RegisterMutation, MeQuery>(
                 cache,
                 { query: MeDocument },
@@ -388,7 +397,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               );
             },
 
-            updateUser: (_result, args, cache, info) => {
+            updateUser: (_result, _args, cache, _info) => {
               updateQuery<UpdateUserMutation, MeQuery>(
                 cache,
                 { query: MeDocument },
@@ -407,7 +416,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               );
             },
 
-            useKindergarden: (_result, args, cache, info) => {
+            useKindergarden: (_result, _args, cache, _info) => {
               const allFields = cache.inspectFields("Query");
 
               const fieldInfos = allFields.filter(
@@ -463,7 +472,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               );
             },
 
-            clearKindergarden: (_result, args, cache, info) => {
+            clearKindergarden: (_result, _args, cache, _info) => {
               updateQuery<
                 ClearKindergardenMutation,
                 ShowSelectedKindergardenQuery
@@ -475,7 +484,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               );
             },
 
-            useGroup: (_result, args, cache, info) => {
+            useGroup: (_result, _args, cache, _info) => {
               const allFields = cache.inspectFields("Query");
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "showChildrenFilterInGroup"
@@ -511,14 +520,14 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               );
             },
 
-            deleteGroup: (_result, args, cache, info) => {
+            deleteGroup: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Query",
                 Id: (args as DeleteGroupMutationVariables).id,
               });
             },
 
-            clearGroup: (_result, args, cache, info) => {
+            clearGroup: (_result, _args, cache, _info) => {
               updateQuery<ClearGroupMutation, ShowSelectedGroupQuery>(
                 cache,
                 { query: ShowSelectedGroupDocument },
@@ -527,7 +536,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               );
             },
 
-            useChildren: (_result, args, cache, info) => {
+            useChildren: (_result, _args, cache, _info) => {
               const allFields = cache.inspectFields("Query");
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "showChildrenFilterNotInGroup"

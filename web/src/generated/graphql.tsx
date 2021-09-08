@@ -32,6 +32,7 @@ export type Query = {
   showChildrenFilterInGroup: PaginatedChildren;
   showChildren: Array<Children>;
   findChild?: Maybe<Children>;
+  searchFather: Array<Mother>;
   showFather: PaginatedFather;
   findFather: Father;
   filterFather: Array<Father>;
@@ -65,6 +66,11 @@ export type QueryShowChildrenArgs = {
 
 export type QueryFindChildArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QuerySearchFatherArgs = {
+  text: Scalars['String'];
 };
 
 
@@ -220,6 +226,7 @@ export type Mutation = {
   updateChildernParents: Children;
   createChild: Children;
   useChildren: ChildrenResponse;
+  removeChildFromGroup?: Maybe<Children>;
   addStaff: Scalars['Boolean'];
   deleteStaff: Scalars['Boolean'];
   deleteFather: Scalars['Boolean'];
@@ -330,6 +337,11 @@ export type MutationUpdateChildernParentsArgs = {
 
 export type MutationCreateChildArgs = {
   options: ChildrenInput;
+};
+
+
+export type MutationRemoveChildFromGroupArgs = {
+  Id: Scalars['Int'];
 };
 
 
@@ -760,6 +772,19 @@ export type RegisterMutation = (
       & ErrorFragmentFragment
     )>> }
   ) }
+);
+
+export type RemoveChildFromGroupMutationVariables = Exact<{
+  Id: Scalars['Int'];
+}>;
+
+
+export type RemoveChildFromGroupMutation = (
+  { __typename?: 'Mutation' }
+  & { removeChildFromGroup?: Maybe<(
+    { __typename?: 'Children' }
+    & ChildrenFragmentFragment
+  )> }
 );
 
 export type ResendEmailMutationVariables = Exact<{
@@ -1514,6 +1539,17 @@ ${ErrorFragmentFragmentDoc}`;
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const RemoveChildFromGroupDocument = gql`
+    mutation RemoveChildFromGroup($Id: Int!) {
+  removeChildFromGroup(Id: $Id) {
+    ...ChildrenFragment
+  }
+}
+    ${ChildrenFragmentFragmentDoc}`;
+
+export function useRemoveChildFromGroupMutation() {
+  return Urql.useMutation<RemoveChildFromGroupMutation, RemoveChildFromGroupMutationVariables>(RemoveChildFromGroupDocument);
 };
 export const ResendEmailDocument = gql`
     mutation ResendEmail($email: String!) {
