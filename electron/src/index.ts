@@ -6,13 +6,15 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    title: "DV Organizator",
+    title: "Kindie",
     webPreferences: {
       devTools: !__prod__,
       nodeIntegration: true,
       preload: path.join(__dirname + "/preload.js"),
     },
   });
+    
+  mainWindow.setMenu(null);
 
   !__prod__
     ? mainWindow.loadURL("http://localhost:3000/dashboard")
@@ -21,7 +23,7 @@ const createWindow = () => {
 
 const showNotification = () => {
   new Notification({
-    title: "App is ready",
+    title: "Kindie is ready",
   }).show();
 };
 
