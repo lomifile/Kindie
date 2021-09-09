@@ -9,6 +9,9 @@
     "gen-env": "gen-env-types .env -o src/env.d.ts -e .",
     "gen": "graphql-codegen --config codegen.yml"
   },
+  "engines": {
+    "node": ">=10"
+  },
   "dependencies": {
     "@chakra-ui/icons": "^1.0.7",
     "@chakra-ui/image": "^1.0.8",
