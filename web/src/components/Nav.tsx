@@ -456,6 +456,7 @@ const ElectronMenu = (
 
 const BrowserNav = (i18n: i18n) => (
   <>
+    {/* @ts-ignore */}
     <Image boxSize="56px" src={logo} ml={"5rem"} mb={"4"} />
     <Heading
       display={["none", "none", "block", "block"]}
