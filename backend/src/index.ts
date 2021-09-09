@@ -20,17 +20,18 @@ import "dotenv-safe/config";
 import { ContactResolver } from "./resolvers/Contact";
 
 const main = async () => {
-  const ormconfig = require("../ormconfig.json");
-  //@ts-ignore
-  const connection = await createConnection(ormconfig);
+  // @ts-ignore
+  const connection = await createConnection({
+    type: "postgres",
+    url: process.env.DATABASE_URL,
+    logging: true,
+    synchronize: true,
+    entities: ["dist/entities/*.js"],
+  });
 
   const app = express();
   const RedisStore = connectRedis(session);
-  const redis = new Redis({
-    port: parseInt(process.env.REDIS_PORT),
-    host: process.env.REDIS_URL,
-    password: process.env.REDIS_PASSWORD,
-  });
+  const redis = new Redis(process.env.REDIS_URL);
 
   app.use(
     cors({
@@ -39,7 +40,7 @@ const main = async () => {
     })
   );
 
-  app.set("trust proxy", "1");
+  app.set("trust proxy", 1);
   app.use(
     session({
       name: COOKIE_NAME,
@@ -50,9 +51,9 @@ const main = async () => {
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
         httpOnly: true,
-        path: "/",
         sameSite: "lax",
         secure: __prod__,
+        domain: __prod__ ? ".kindieapi.xyz" : undefined,
       },
       saveUninitialized: false,
       secret: process.env.SESSION_SECRET,
