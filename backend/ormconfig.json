@@ -1,8 +1,6 @@
 {
   "type": "postgres",
-  "database": "dv_organizator",
-  "username": "postgres",
-  "password": "00259641",
+  "url": "postgresql://postgres:postgres@localhost:5432/dv_organizator",
   "logging": true,
   "synchronize": true,
   "entities": ["dist/entities/*.js"]
