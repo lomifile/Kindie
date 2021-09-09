@@ -53,7 +53,7 @@ import { useTranslation, TFunction } from "react-i18next";
 import { CustomSpinner } from "../../components/Spinner";
 import { CustomAlert } from "../../components/Alerts";
 import { OperationContext, OperationResult } from "urql";
-import { NextRouter } from "next/dist/next-server/lib/router/router";
+import { NextRouter } from "next/router";
 import moment from "moment";
 
 const UpdateChildForm = (
