@@ -95,7 +95,6 @@ const Aboutus: React.FC<{}> = ({}) => {
           >
             <Heading color="blue.400">{t("about-us.meet")}</Heading>
           </Flex>
-          {/* @ts-ignore */}
           {text.devs.map((dev) => (
             <Card
               imageSrc={dev.devImg}
