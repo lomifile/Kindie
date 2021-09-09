@@ -4,10 +4,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "../components/Card";
 import { Layout } from "../components/Layout";
-// @ts-ignore
-import filipImg from "../img/filipivanusec.jpg";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { AdBanner } from "../components/AdBanner";
+
+import devImg from "../../public/img/filipivanusec.png";
 
 const Aboutus: React.FC<{}> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
@@ -16,7 +16,7 @@ const Aboutus: React.FC<{}> = ({}) => {
       {
         name: t("about-us.text.devs.filip.name"),
         about: t("about-us.text.devs.filip.about"),
-        devImg: filipImg,
+        devImg: devImg,
       },
     ],
   };

@@ -1,9 +1,8 @@
 import { Layout } from "../components/Layout";
 import { Box, Flex, Button, Heading, Stack, Text } from "@chakra-ui/react";
 import React from "react";
-import { Image } from "@chakra-ui/image";
-// @ts-ignore
-import img from "../img/main.png";
+import Image from "next/image";
+import img from "../../public/img/main.png";
 import { Feature } from "../components/Feature";
 import NextLink from "next/link";
 import { withUrqlClient } from "next-urql";
@@ -145,7 +144,7 @@ const Index = () => {
       >
         {MainText(t)}
         <Box w={{ base: "80%", sm: "60%", md: "50%" }} mb={{ base: 12, md: 0 }}>
-          <Image src={img} size="100%" rounded="1rem" shadow="2xl" />
+          <Image src={img} className="img" />
         </Box>
       </Flex>
       {Cards(t)}

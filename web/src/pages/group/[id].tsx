@@ -66,7 +66,7 @@ import { TFunction, useTranslation } from "react-i18next";
 import { getUserRole } from "../../utils/getUserRole";
 import { ChildrenModal } from "../../components/ChildrenModal";
 import isElectron from "is-electron";
-import { NextRouter } from "next/dist/next-server/lib/router/router";
+import { NextRouter } from "next/router";
 import { OperationContext, OperationResult } from "@urql/core";
 import { CustomDrawer } from "../../components/CustomDrawer";
 

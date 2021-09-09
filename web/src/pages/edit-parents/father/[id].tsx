@@ -30,7 +30,7 @@ import { useIsAuth } from "../../../utils/useIsAuth";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { CustomAlert } from "../../../components/Alerts";
 import { CustomSpinner } from "../../../components/Spinner";
-import { NextRouter } from "next/dist/next-server/lib/router/router";
+import { NextRouter } from "next/router";
 import { OperationContext, OperationResult } from "urql";
 
 const EditFatherForm = (

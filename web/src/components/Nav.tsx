@@ -21,9 +21,8 @@ import {
   useDisclosure,
   DrawerCloseButton,
 } from "@chakra-ui/react";
-import { Image } from "@chakra-ui/image";
-// @ts-ignore
-import logo from "../img/logo.png";
+import Image from "next/image";
+import logo from "../../public/img/logo.png";
 import React from "react";
 import NextLink from "next/link";
 import {
@@ -456,13 +455,12 @@ const ElectronMenu = (
 
 const BrowserNav = (i18n: i18n) => (
   <>
-    {/* @ts-ignore */}
-    <Image boxSize="56px" src={logo} ml={"5rem"} mb={"4"} />
     <Heading
       display={["none", "none", "block", "block"]}
-      fontSize="xl"
+      fontSize="3xl"
       fontWeight="500"
       color="blue.400"
+      ml={"10rem"}
       style={{ fontWeight: "bold", textTransform: "uppercase" }}
     >
       Kindie
