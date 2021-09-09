@@ -97,6 +97,7 @@ const Aboutus: React.FC<{}> = ({}) => {
           </Flex>
           {text.devs.map((dev) => (
             <Card
+              // @ts-ignore
               imageSrc={dev.devImg}
               cardTitle={dev.name}
               cardText={dev.about}
