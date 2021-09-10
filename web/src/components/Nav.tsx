@@ -242,13 +242,9 @@ const DashMenu = (
               bg: "gray.100",
               borderRadius: "12px",
             }}
-            onClick={async () => {
-              await logout();
-              if (isServer()) {
-                router.push("/login");
-              } else {
-                router.reload();
-              }
+            onClick={() => {
+              router.push("/login");
+              logout();
             }}
           >
             {t("nav.menu.log-out")}
