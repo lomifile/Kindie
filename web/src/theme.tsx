@@ -4,11 +4,11 @@ import { createBreakpoints } from "@chakra-ui/theme-tools";
 const fonts = { mono: `'Menlo', monospace`, heading: `'Cairo', sans-serif` };
 
 const breakpoints = createBreakpoints({
-  xs: "320px",
-  sm: "375px",
-  md: "768px",
-  lg: "1024px",
-  xl: "1440px",
+  sm: "30em",
+  md: "48em",
+  lg: "62em",
+  xl: "80em",
+  "2xl": "96em",
 });
 
 const theme = extendTheme({
@@ -16,7 +16,6 @@ const theme = extendTheme({
     black: "#16161D",
   },
   fonts,
-  // @ts-ignore
   breakpoints,
   icons: {
     logo: {

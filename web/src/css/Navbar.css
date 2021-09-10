@@ -9,9 +9,3 @@
 
 .nav-item:hover {
   text-decoration: none !important; }
-
-.nav-img {
-  border-radius: 1rem;
-  margin-bottom: 4px;
-  margin-left: 5rem;
-  box-sizing: 56px; }

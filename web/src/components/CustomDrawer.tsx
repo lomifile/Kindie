@@ -21,7 +21,7 @@ export const CustomDrawer: React.FC<CustomDrawerProps> = ({
   children,
   onClose,
   isOpen,
-  size = "md",
+  size,
   ...props
 }) => {
   return (

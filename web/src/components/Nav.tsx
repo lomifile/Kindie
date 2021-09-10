@@ -21,8 +21,6 @@ import {
   useDisclosure,
   DrawerCloseButton,
 } from "@chakra-ui/react";
-import Image from "next/image";
-import logo from "../../public/img/logo.png";
 import React from "react";
 import NextLink from "next/link";
 import {
@@ -456,7 +454,7 @@ const BrowserNav = (i18n: i18n) => (
       fontSize="3xl"
       fontWeight="500"
       color="blue.400"
-      ml={"10rem"}
+      ml={["10px", "2rem", "5rem", "5rem", "10rem"]}
       style={{ fontWeight: "bold", textTransform: "uppercase" }}
     >
       Kindie

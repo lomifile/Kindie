@@ -5,6 +5,7 @@
 <p align="center">
   <strong>Kindie a simple web app that helps you orginze professional documentation for wroking with children!</strong>
   <br />
+  <br />
   <img src="https://github.com/fivanusec/DV-Organizator/actions/workflows/node.js.yml/badge.svg" />
 </p>
 
