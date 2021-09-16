@@ -18,6 +18,17 @@ import { MotherResolver } from "./resolvers/Mother";
 import cors from "cors";
 import "dotenv-safe/config";
 import { ContactResolver } from "./resolvers/Contact";
+import path from "path";
+
+// Entities
+import { KinderGarden } from "./entities/Kindergarden";
+import { User } from "./entities/User";
+import { Children } from "./entities/Children";
+import { Contact } from "./entities/Contact";
+import { Groups } from "./entities/Groups";
+import { Mother } from "./entities/Mother";
+import { Father } from "./entities/Father";
+import { StaffMembers } from "./entities/SatffMembers";
 
 const main = async () => {
   // @ts-ignore
@@ -25,9 +36,20 @@ const main = async () => {
     type: "postgres",
     url: process.env.DATABASE_URL,
     logging: true,
-    synchronize: true,
-    entities: ["dist/entities/*.js"],
+    migrations: [path.join(__dirname, "./migrations/*")],
+    entities: [
+      User,
+      KinderGarden,
+      Children,
+      Contact,
+      Groups,
+      Mother,
+      Father,
+      StaffMembers,
+    ],
   });
+
+  await connection.runMigrations();
 
   const app = express();
   const RedisStore = connectRedis(session);
