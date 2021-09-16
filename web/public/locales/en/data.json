@@ -277,7 +277,14 @@
     "btn-add": "Add child",
     "tbl-name": "Name",
     "tbl-surname": "Last name",
-    "btn-load-more": "Load more"
+    "btn-load-more": "Load more",
+    "btn-tooltip": {
+      "edit": "Edit child",
+      "delete": "Delete child",
+      "add": "Add child",
+      "view": "View child",
+      "remove-from-group": "Remove from group"
+    }
   },
   "parents": {
     "main-header": "Parents",

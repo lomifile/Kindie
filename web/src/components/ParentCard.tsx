@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useUpdateChildrenParentsMutation } from "../generated/graphql";
 import { ChildDataType, ParentDataTypes, ParentTypes } from "../utils/types";
 
-// temp fix 
+// temp fix
 
 interface ParentCardProps {
   data: ParentDataTypes;
