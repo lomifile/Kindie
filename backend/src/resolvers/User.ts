@@ -29,7 +29,7 @@ import { isAuth } from "../middleware/isAuth";
 import { FieldError } from "../utils/Errors";
 
 @ObjectType()
-class UserResponse {
+export class UserResponse {
   @Field(() => [FieldError], { nullable: true })
   errors?: FieldError[];
 
@@ -275,7 +275,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async register(
     @Arg("options") options: UsernamePasswordInput,
-    @Ctx() { req, redis }: AppContext
+    @Ctx() { redis }: AppContext
   ): Promise<UserResponse> {
     const errors = ValidateRegister(options);
     if (errors) {
@@ -328,8 +328,6 @@ export class UserResolver {
         };
       }
     }
-
-    req.session.userId = user.id;
 
     return { user };
   }
@@ -423,15 +421,15 @@ export class UserResolver {
   }
 
   @Mutation(() => Boolean)
-  logout(@Ctx() { req, res }: AppContext) {
+  async logout(@Ctx() { req, res }: AppContext): Promise<Boolean> {
     return new Promise((resolve) =>
-      req.session.destroy((err) => {
-        res.clearCookie(COOKIE_NAME);
+      req.session!.destroy((err) => {
         if (err) {
           console.log(err);
           resolve(false);
           return;
         }
+        res.clearCookie(COOKIE_NAME);
         resolve(true);
       })
     );
