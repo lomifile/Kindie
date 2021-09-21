@@ -101,6 +101,8 @@ const main = async () => {
     context: ({ req, res }) => ({ req, res, redis }),
   });
 
+  await apolloServer.start();
+
   apolloServer.applyMiddleware({
     app,
     cors: false, //for now
