@@ -253,7 +253,12 @@ const DashMenu = (
             mt={5}
             align="center"
             justify="center"
-            display={["inline-flex", "none", "none", "none"]}
+            display={[
+              "inline-flex",
+              "inline-flex",
+              "inline-flex",
+              "inline-flex",
+            ]}
           >
             <Button
               h={"50px"}
@@ -447,7 +452,7 @@ const ElectronMenu = (
   </>
 );
 
-const BrowserNav = (i18n: i18n) => (
+const BrowserNav = (i18n: i18n, router: NextRouter) => (
   <>
     <Heading
       display={["none", "none", "block", "block"]}
@@ -459,28 +464,31 @@ const BrowserNav = (i18n: i18n) => (
     >
       Kindie
     </Heading>
-    <Box display={["none", "inline-flex", "inline-flex", "inline-flex"]}>
-      <Button
-        h={"50px"}
-        w={"50px"}
-        bg="transparent"
-        onClick={() => {
-          i18n.changeLanguage("hr");
-        }}
-      >
-        <Flags.HR title="Hrvatski" />
-      </Button>
-      <Button
-        h={"50px"}
-        w={"50px"}
-        bg="transparent"
-        onClick={(e) => {
-          i18n.changeLanguage("en");
-        }}
-      >
-        <Flags.GB title="English" />
-      </Button>
-    </Box>
+    {router.pathname.includes("/contact") ||
+    router.pathname.includes("/Aboutus") ? (
+      <Box display={["none", "inline-flex", "inline-flex", "inline-flex"]}>
+        <Button
+          h={"50px"}
+          w={"50px"}
+          bg="transparent"
+          onClick={() => {
+            i18n.changeLanguage("hr");
+          }}
+        >
+          <Flags.HR title="Hrvatski" />
+        </Button>
+        <Button
+          h={"50px"}
+          w={"50px"}
+          bg="transparent"
+          onClick={(e) => {
+            i18n.changeLanguage("en");
+          }}
+        >
+          <Flags.GB title="English" />
+        </Button>
+      </Box>
+    ) : null}
   </>
 );
 
@@ -511,9 +519,9 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
   }
   if (variant == "normal" && !data?.me) {
     body = SignInNav(t);
-  } else if (variant == "normal" && data?.me) {
+  } else if (variant === "normal" && data?.me) {
     body = DashNav(t);
-  } else if (variant == "user" && data?.me && !isElectron()) {
+  } else if (variant === "user" && data?.me && !isElectron()) {
     body = DashMenu(data, router, t, i18n, logout, clearKindergarden);
   }
 
@@ -536,7 +544,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
         mb={"auto"}
       >
         {!isElectron()
-          ? BrowserNav(i18n)
+          ? BrowserNav(i18n, router)
           : ElectronMenu(
               drawerOnClose,
               drawerIsOpen,

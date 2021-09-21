@@ -376,7 +376,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async verifyAccount(
     @Arg("token") token: string,
-    @Ctx() { redis }: AppContext
+    @Ctx() { req, redis }: AppContext
   ): Promise<UserResponse> {
     const key = ACCOUNT_VERIFICATION_PREFIX + token;
     const userID = await redis.get(key);
@@ -412,6 +412,8 @@ export class UserResolver {
         confirmed: true,
       }
     );
+
+    req.session.userId = userData.Id;
 
     await redis.del(key);
 

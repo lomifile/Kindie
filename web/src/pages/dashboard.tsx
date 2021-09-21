@@ -1,12 +1,10 @@
-import { AddIcon, CloseIcon } from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import {
   Flex,
   Stack,
   Heading,
   Box,
-  Text,
   HStack,
-  Link,
   Button,
   useDisclosure,
   useToast,
@@ -20,19 +18,14 @@ import React from "react";
 import { useTranslation, TFunction } from "react-i18next";
 import { InputField } from "../components/InputField";
 import { Layout } from "../components/Layout";
-import NextLink from "next/link";
 import {
   CreateKindergardenMutation,
-  DeleteKindergardenMutation,
   Exact,
   KinderGarden,
   KinderGardenInput,
   ShowKindergardenQuery,
   useCreateKindergardenMutation,
-  useDeleteKindergardenMutation,
-  UseKindergardenMutation,
   useShowKindergardenQuery,
-  useUseKindergardenMutation,
 } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { fetchPartOf } from "../utils/fetchPartof";
@@ -43,6 +36,7 @@ import { CustomSpinner } from "../components/Spinner";
 import { getUserRole } from "../utils/getUserRole";
 import { OperationContext, OperationResult } from "urql";
 import { CustomModal } from "../components/CustomModal";
+import { KindergardenCard } from "../components/KindergardenCard";
 
 const CreateKindergardenForm = (
   toast: (options?: UseToastOptions) => string | number,
@@ -139,37 +133,7 @@ const CreateKindergardenForm = (
   </Formik>
 );
 
-const OwnedKindergardenCards = (
-  data: ShowKindergardenQuery,
-  t: TFunction<"data">,
-  toast: (options?: UseToastOptions) => string | number,
-  useKindergarden: (
-    variables?: Exact<{
-      kindergardenID: number;
-    }>,
-    context?: Partial<OperationContext>
-  ) => Promise<
-    OperationResult<
-      UseKindergardenMutation,
-      Exact<{
-        kindergardenID: number;
-      }>
-    >
-  >,
-  deleteKindergarden: (
-    variables?: Exact<{
-      id: number;
-    }>,
-    context?: Partial<OperationContext>
-  ) => Promise<
-    OperationResult<
-      DeleteKindergardenMutation,
-      Exact<{
-        id: number;
-      }>
-    >
-  >
-) => (
+const OwnedKindergardenCards = (data: ShowKindergardenQuery) => (
   <Box
     w={["100%", "100%", "100%", "400px", "400px"]}
     rounded={["xs", "sm", "md", "lg", "xl"]}
@@ -183,63 +147,7 @@ const OwnedKindergardenCards = (
   >
     <HStack spacing={8} padding="2">
       {data?.showKindergarden?.map((owning) => (
-        <Box maxW="sm" borderWidth="1px" borderRadius="lg" shadow="xl">
-          <Flex justify="right">
-            <IconButton
-              aria-label="Delete kindergarden"
-              icon={<CloseIcon />}
-              variant="ghost"
-              onClick={async () => {
-                const { error } = await deleteKindergarden({
-                  id: owning.Id,
-                });
-                if (error) {
-                  toast({
-                    title: t("dashboard.toast.error.title"),
-                    description: t("dashboard.toast.error.desc"),
-                    status: "error",
-                    duration: 9000,
-                    isClosable: true,
-                  });
-                } else {
-                  toast({
-                    title: t("dashboard.toast.delete.title"),
-                    status: "success",
-                    duration: 9000,
-                    isClosable: true,
-                  });
-                }
-              }}
-            />
-          </Flex>
-          <Box p="6">
-            <Box mt="1" fontWeight="semibold" as="h1" lineHeight="tight">
-              <NextLink
-                href={"/kindergarden/[id]"}
-                as={`/kindergarden/${owning.Id}`}
-              >
-                <Link
-                  color="blue.400"
-                  style={{
-                    fontSize: "26px",
-                    fontWeight: "bold",
-                  }}
-                  onClick={() => {
-                    useKindergarden({ kindergardenID: owning.Id });
-                  }}
-                >
-                  {owning.Name}
-                </Link>
-              </NextLink>
-            </Box>
-            <Divider />
-            <Box mt={3}>
-              <Text>{owning.Address}</Text>
-              <Text>{owning.City}</Text>
-              <Text>{owning.Zipcode}</Text>
-            </Box>
-          </Box>
-        </Box>
+        <KindergardenCard owning={owning} />
       ))}
     </HStack>
   </Box>
@@ -255,20 +163,7 @@ const PartOfKindergardenCards = (
       __typename?: "KinderGarden";
     } & {
       __typename?: "KinderGarden";
-    } & Pick<KinderGarden, "Id" | "Name" | "City" | "Address" | "Zipcode">)[],
-  useKindergarden: (
-    variables?: Exact<{
-      kindergardenID: number;
-    }>,
-    context?: Partial<OperationContext>
-  ) => Promise<
-    OperationResult<
-      UseKindergardenMutation,
-      Exact<{
-        kindergardenID: number;
-      }>
-    >
-  >
+    } & Pick<KinderGarden, "Id" | "Name" | "City" | "Address" | "Zipcode">)[]
 ) => (
   <Box
     w={["100%", "100%", "100%", "400px", "400px"]}
@@ -283,35 +178,7 @@ const PartOfKindergardenCards = (
   >
     <HStack spacing={8} p="2">
       {notMine.map((owning) => (
-        <Box maxW="sm" borderWidth="1px" borderRadius="lg" boxShadow="xl">
-          <Box p="6">
-            <Box mt="1" fontWeight="semibold" as="h1" lineHeight="tight">
-              <NextLink
-                href={"/kindergarden/[id]"}
-                as={`/kindergarden/${owning.Id}`}
-              >
-                <Link
-                  color="blue.400"
-                  style={{
-                    fontSize: "26px",
-                    fontWeight: "bold",
-                  }}
-                  onClick={() => {
-                    useKindergarden({ kindergardenID: owning.Id });
-                  }}
-                >
-                  {owning.Name}
-                </Link>
-              </NextLink>
-            </Box>
-            <Divider />
-            <Box mt={3}>
-              <Text>{owning.Address}</Text>
-              <Text>{owning.City}</Text>
-              <Text>{owning.Zipcode}</Text>
-            </Box>
-          </Box>
-        </Box>
+        <KindergardenCard owning={owning} />
       ))}
     </HStack>
   </Box>
@@ -321,11 +188,9 @@ const Dashboard = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const toast = useToast();
-  const [, useKindergarden] = useUseKindergardenMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [{ data, fetching }] = useShowKindergardenQuery();
   const [, createKindergarden] = useCreateKindergardenMutation();
-  const [, deleteKindergarden] = useDeleteKindergardenMutation();
   const notMine = fetchPartOf();
   const role = getUserRole();
 
@@ -378,13 +243,7 @@ const Dashboard = ({}) => {
             </Heading>
           </Flex>
           <Flex align="center" justify="center" mb={5}>
-            {OwnedKindergardenCards(
-              data,
-              t,
-              toast,
-              useKindergarden,
-              deleteKindergarden
-            )}
+            {OwnedKindergardenCards(data)}
           </Flex>
         </Stack>
       ) : null}
@@ -396,7 +255,7 @@ const Dashboard = ({}) => {
             </Heading>
           </Flex>
           <Flex align="center" justify="left" mb={5}>
-            {PartOfKindergardenCards(notMine, useKindergarden)}
+            {PartOfKindergardenCards(notMine)}
           </Flex>
         </Stack>
       ) : null}
