@@ -2,6 +2,6 @@
   "type": "postgres",
   "url": "postgresql://postgres:postgres@localhost:5432/dv_organizator",
   "logging": true,
-  "synchronize": true,
-  "entities": ["dist/entities/*.js"]
+  "entities": ["dist/entities/*.js"],
+  "migrations": ["dist/migrations/*.js"]
 }

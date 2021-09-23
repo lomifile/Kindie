@@ -7,7 +7,8 @@
     "start": "next start",
     "sass": "node-sass -w src/scss/ -o src/css/",
     "gen-env": "gen-env-types .env -o src/env.d.ts -e .",
-    "gen": "graphql-codegen --config codegen.yml"
+    "gen": "graphql-codegen --config codegen.yml",
+    "format": "prettier --write ."
   },
   "engines": {
     "node": ">=12"

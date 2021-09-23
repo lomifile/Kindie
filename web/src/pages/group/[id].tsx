@@ -233,7 +233,7 @@ const MenuDrawer = (
     >
   >
 ) => (
-  <CustomDrawer isOpen={isOpenMenu} onClose={onCloseMenu} size={"sm"}>
+  <CustomDrawer isOpen={isOpenMenu} onClose={onCloseMenu}>
     <Stack
       spacing={8}
       align="center"

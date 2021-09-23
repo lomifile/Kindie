@@ -34,6 +34,7 @@ import {
   DeleteStaffMutation,
   Exact,
   KinderGarden,
+  MeQuery,
   SearchUserQuery,
   useAddStaffMutation,
   useDeleteStaffMutation,
@@ -201,7 +202,9 @@ const StaffTable = (
         userId: number;
       }>
     >
-  >
+  >,
+  meData: MeQuery,
+  owner: {}
 ) => (
   <Box>
     <Table>
@@ -221,9 +224,9 @@ const StaffTable = (
             <Td>
               {
                 // @ts-ignore
-                meData.me.Name === owner.Name &&
+                meData?.me.Name === owner.Name &&
                 // @ts-ignore
-                meData.me.Surname === owner.Surname &&
+                meData?.me.Surname === owner.Surname &&
                 // @ts-ignore
                 meData?.me?.Id === owner.Id ? (
                   <IconButton
@@ -379,7 +382,7 @@ const Staff: React.FC<{}> = ({}) => {
             ) : null
           }
         </Flex>
-        {StaffTable(staff, translatedRoles, t, deleteStaff)}
+        {StaffTable(staff, translatedRoles, t, deleteStaff, meData, owner)}
       </Stack>
     </Layout>
   );

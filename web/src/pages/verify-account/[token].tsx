@@ -44,13 +44,13 @@ const VerifyAccountForm = (
 ) => {
   const [checked, setChecked] = useState(false);
   const handleClick = () => setChecked(!checked);
-  console.log(checked);
+
   return (
     <Formik
       initialValues={{
         token: typeof router.query.token === "string" ? router.query.token : "",
       }}
-      onSubmit={async (values, { setErrors }) => {
+      onSubmit={async () => {
         const response = await verifyAccount({
           token:
             typeof router.query.token === "string" ? router.query.token : "",
@@ -128,7 +128,7 @@ const VerifyAccount: NextPage = ({}) => {
         xl: "center",
       }}
       flexDirection="column"
-      mt={["-0", "-0", "-0", "auto", "auto"]}
+      mt={["10px", "10px", "10px", "auto", "auto"]}
       mb={["-0", "-0", "-0", "auto", "auto"]}
     >
       <Box

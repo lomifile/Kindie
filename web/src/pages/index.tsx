@@ -8,7 +8,7 @@ import NextLink from "next/link";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useTranslation, TFunction } from "react-i18next";
-import { AdBanner } from "../components/AdBanner";
+import GoogleAds from "../components/AdBanner";
 
 const MainText = (t: TFunction<"data">) => (
   <Stack
@@ -149,7 +149,7 @@ const Index = () => {
       </Flex>
       {Cards(t)}
       {/* Reviews */}
-      <AdBanner />
+      <GoogleAds />
     </Layout>
   );
 };

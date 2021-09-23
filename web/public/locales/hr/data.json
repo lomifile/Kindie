@@ -277,7 +277,14 @@
     "btn-add": "Dodaj dijete",
     "tbl-name": "Ime",
     "tbl-surname": "Prezime",
-    "btn-load-more": "Učitaj vise"
+    "btn-load-more": "Učitaj vise",
+    "btn-tooltip": {
+      "edit": "Uredi dijete",
+      "delete": "Obrisi dijete",
+      "add": "Dodaj dijete",
+      "view": "Pregledaj dijete",
+      "remove-from-group": "Obrisi iz grupe"
+    }
   },
   "parents": {
     "main-header": "Roditelji",

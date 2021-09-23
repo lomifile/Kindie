@@ -1,18 +1,20 @@
-<p align="center">
-    <img height=100 src="web/src/img/logo.png"/>
-</p>
+<div align="center" markdown="1">
+<h1>Kindie</h1>
+</div>
+
 <p align="center">
   <strong>Kindie a simple web app that helps you orginze professional documentation for wroking with children!</strong>
+  <br />
+  <br />
+  <img src="https://github.com/fivanusec/DV-Organizator/actions/workflows/node.js.yml/badge.svg" />
 </p>
 
-<h3 align="center">
-</h3>
-
-[![Node.js CI](https://github.com/fivanusec/DV-Organizator/actions/workflows/node.js.yml/badge.svg)](https://github.com/fivanusec/Kindie/actions/workflows/node.js.yml)
+<!-- [![Node.js CI](https://github.com/fivanusec/DV-Organizator/actions/workflows/node.js.yml/badge.svg)](https://github.com/fivanusec/Kindie/actions/workflows/node.js.yml) -->
 
 ## Introduction
 
-This code is for Kinide a simple web app that helps you orginze professional documentation for wroking with children.
+The main goal of this app is to ease up the process of handling children's data and ease up the process of searching for them in multiple groups.
+It also gives you and your staff the possibility to manage your daily practice easily as all of your staff can have access to kindergarten.
 
 ## Structure
 
@@ -21,16 +23,6 @@ This code is for Kinide a simple web app that helps you orginze professional doc
 | [web](web)           |    React Frontend    |
 | [backend](backend)   |    Backend/server    |
 | [electron](electron) | Electron desktop app |
-
-# Tools
-
-## Backend
-
-For creating backend we used Typescript and GraphQL with express and apollo server.
-
-## Frontend
-
-For creting frontend we used ChakraUI, Next and React.
 
 ## Commiting
 
