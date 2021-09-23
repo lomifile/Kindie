@@ -5,9 +5,9 @@ import { useTranslation } from "react-i18next";
 import { Card } from "../components/Card";
 import { Layout } from "../components/Layout";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import { AdBanner } from "../components/AdBanner";
 
 import devImg from "../../public/img/filipivanusec.png";
+import GoogleAds from "../components/AdBanner";
 
 const Aboutus: React.FC<{}> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
@@ -105,7 +105,7 @@ const Aboutus: React.FC<{}> = ({}) => {
           ))}
         </Stack>
       </Flex>
-      <AdBanner />
+      <GoogleAds />
     </Layout>
   );
 };

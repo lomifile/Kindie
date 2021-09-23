@@ -21,7 +21,6 @@ import {
   useSendEmailMutation,
 } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import { AdBanner } from "../components/AdBanner";
 import { OperationContext, OperationResult } from "urql";
 import { CustomHeader } from "../components/CustomHeader";
 
@@ -160,7 +159,6 @@ const Contact: React.FC<{}> = ({}) => {
           </Box>
         </Flex>
       </Flex>
-      <AdBanner />
     </Layout>
   );
 };
