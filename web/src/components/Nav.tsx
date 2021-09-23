@@ -41,6 +41,8 @@ import Flags from "country-flag-icons/react/3x2";
 import isElectron from "is-electron";
 import { OperationContext, OperationResult } from "urql";
 import { CustomSpinner } from "./Spinner";
+import Image from "next/image";
+import imgNav from "../../public/img/Kindie.png";
 
 const DashNav = (t: TFunction<"data">) => (
   <>
@@ -464,6 +466,7 @@ const BrowserNav = (i18n: i18n, router: NextRouter) => (
     >
       Kindie
     </Heading>
+    {/* <Image src={imgNav} width="50px" height="50px" /> */}
     {router.pathname.includes("/contact") ||
     router.pathname.includes("/Aboutus") ? (
       <Box display={["none", "inline-flex", "inline-flex", "inline-flex"]}>
