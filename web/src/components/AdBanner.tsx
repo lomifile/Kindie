@@ -9,9 +9,9 @@ class GoogleAds extends Component {
   render() {
     return (
       <ins
-        class="adsbygoogle"
+        className="adsbygoogle"
         // @ts-ignore
-        style="display:block"
+        style={{ display: "block" }}
         data-ad-client="ca-pub-7377394476088299"
         data-ad-slot="5100220885"
         data-ad-format="auto"
