@@ -77,7 +77,6 @@ const DrawerMenu = (
         lineHeight="1"
         size="md"
         onClick={onOpen}
-        display={["none", "none", "none", "flex"]}
       >
         {t("kindergarden.toolbox.btn-new-group")}
       </Button>

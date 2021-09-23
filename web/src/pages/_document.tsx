@@ -6,6 +6,7 @@ export default class Document extends NextDocument {
     return (
       <Html>
         <Head>
+          <link rel="shortcut icon" href="/favicon.ico" />
           <script
             data-ad-client="ca-pub-7377394476088299"
             async
