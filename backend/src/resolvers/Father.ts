@@ -14,7 +14,7 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection, getRepository } from "typeorm";
-import { AppContext } from "src/Types";
+import { AppContext } from "../Types";
 
 // @ObjectType()
 // class FatherResponse {
@@ -86,7 +86,8 @@ export class FatherResolver {
   @UseMiddleware(isKinderGardenSelected)
   async updateFather(
     @Arg("options") options: ParentsInput,
-    @Arg("fatherId", () => Int) fatherId: number
+    @Arg("fatherId", () => Int) fatherId: number,
+    @Ctx() { req }: AppContext
   ): Promise<Father | undefined> {
     const result = await getConnection()
       .createQueryBuilder()
@@ -96,6 +97,7 @@ export class FatherResolver {
         Surname: options.surname,
         Email: options.email,
         Phone: options.phone,
+        updatedById: req.session.userId,
       })
       .where("Id=:id", { id: fatherId })
       .returning("*")
@@ -116,6 +118,7 @@ export class FatherResolver {
       Email: options.email,
       Phone: options.phone,
       inKindergardenId: req.session.selectedKindergarden,
+      createdById: req.session.userId,
     }).save();
   }
 

@@ -3,5 +3,8 @@
   "url": "postgresql://postgres:postgres@localhost:5432/dv_organizator",
   "logging": true,
   "entities": ["dist/entities/*.js"],
-  "migrations": ["dist/migrations/*.js"]
+  "migrations": ["dist/migrations/*.js"],
+  "cli": {
+    "migrationsDir": "./src/migrations"
+  }
 }

@@ -12,6 +12,7 @@ import { Father } from "./Father";
 import { Groups } from "./Groups";
 import { KinderGarden } from "./Kindergarden";
 import { Mother } from "./Mother";
+import { User } from "./User";
 
 @ObjectType()
 @Entity()
@@ -66,6 +67,12 @@ export class Children extends BaseEntity {
   @Column({ nullable: true })
   inKindergardenId: number;
 
+  @Column({ nullable: true })
+  createdById: number;
+
+  @Column({ nullable: true })
+  updatedById: number;
+
   @ManyToOne(() => KinderGarden, (kindergarden) => kindergarden.children, {
     lazy: true,
   })
@@ -95,4 +102,22 @@ export class Children extends BaseEntity {
     onUpdate: "CASCADE",
   })
   father: Father;
+
+  @Field(() => User, { nullable: true })
+  @ManyToOne(() => User, (user) => user.createdChildren, {
+    lazy: true,
+    nullable: true,
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  createdBy: User;
+
+  @Field(() => User, { nullable: true })
+  @ManyToOne(() => User, (user) => user.createdChildren, {
+    lazy: true,
+    nullable: true,
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  updatedBy: User;
 }

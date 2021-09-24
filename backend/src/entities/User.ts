@@ -10,7 +10,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Children } from "./Children";
 import { KinderGarden } from "./Kindergarden";
+import { Mother } from "./Mother";
+import { Father } from "./Father";
 
 @ObjectType()
 @Entity()
@@ -65,6 +68,48 @@ export class User extends BaseEntity {
 
   @Column({ nullable: true })
   confirmed: boolean;
+
+  @Field(() => [Children], { nullable: true })
+  @OneToMany(() => Children, (children) => children.createdBy, {
+    lazy: true,
+    nullable: true,
+  })
+  createdChildren: Children[];
+
+  @Field(() => [Children], { nullable: true })
+  @OneToMany(() => Children, (children) => children.updatedBy, {
+    lazy: true,
+    nullable: true,
+  })
+  updatedChildren: Children[];
+
+  @Field(() => [Mother], { nullable: true })
+  @OneToMany(() => Mother, (mother) => mother.createdBy, {
+    lazy: true,
+    nullable: true,
+  })
+  createdMother: Mother[];
+
+  @Field(() => [Mother], { nullable: true })
+  @OneToMany(() => Mother, (mother) => mother.updatedBy, {
+    lazy: true,
+    nullable: true,
+  })
+  updatedMother: Mother[];
+
+  @Field(() => [Father], { nullable: true })
+  @OneToMany(() => Father, (father) => father.createdBy, {
+    lazy: true,
+    nullable: true,
+  })
+  createdFather: Father[];
+
+  @Field(() => [Father], { nullable: true })
+  @OneToMany(() => Father, (father) => father.updatedBy, {
+    lazy: true,
+    nullable: true,
+  })
+  updatedFather: Father[];
 
   @Field(() => String)
   @CreateDateColumn()

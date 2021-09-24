@@ -19,6 +19,7 @@ import cors from "cors";
 import "dotenv-safe/config";
 import { ContactResolver } from "./resolvers/Contact";
 import path from "path";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 
 // Entities
 import { KinderGarden } from "./entities/Kindergarden";
@@ -98,6 +99,7 @@ const main = async () => {
       ],
       validate: false,
     }),
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
     context: ({ req, res }) => ({ req, res, redis }),
   });
 

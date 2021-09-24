@@ -169,6 +169,7 @@ export class ChildrenResolver {
       .update(Children)
       .set({
         inGroupId: req.session.selectedGroup,
+        updatedById: req.session.userId,
       })
       .where("Id=:id", { id: id })
       .returning("*")
@@ -181,7 +182,8 @@ export class ChildrenResolver {
   @UseMiddleware(isKinderGardenSelected)
   async updateChild(
     @Arg("kidId", () => Int) kidId: number,
-    @Arg("options") options: ChildrenInput
+    @Arg("options") options: ChildrenInput,
+    @Ctx() { req }: AppContext
   ): Promise<Children | undefined> {
     const result = await getConnection()
       .createQueryBuilder()
@@ -193,6 +195,7 @@ export class ChildrenResolver {
         OIB: options.OIB,
         Remarks: options.Remarks,
         Gender: options.Gender,
+        updatedById: req.session.userId,
       })
       .where("Id=:id", { id: kidId })
       .returning("*")
@@ -214,7 +217,8 @@ export class ChildrenResolver {
   async updateChildernParents(
     @Arg("kidId", () => Int) kidId: number,
     @Arg("motherId", () => Int, { nullable: true }) motherId: number,
-    @Arg("fatherId", () => Int, { nullable: true }) fatherId: number
+    @Arg("fatherId", () => Int, { nullable: true }) fatherId: number,
+    @Ctx() { req }: AppContext
   ): Promise<Children | undefined> {
     const result = await getConnection()
       .createQueryBuilder()
@@ -222,6 +226,7 @@ export class ChildrenResolver {
       .set({
         motherId: motherId,
         fatherId: fatherId,
+        updatedById: req.session.userId,
       })
       .where("Id=:id", { id: kidId })
       .returning("*")
@@ -253,6 +258,7 @@ export class ChildrenResolver {
       motherId: options.mother,
       fatherId: options.father,
       inKindergardenId: req.session.selectedChildren,
+      createdById: req.session.userId,
     }).save();
   }
 
