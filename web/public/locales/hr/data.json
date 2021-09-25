@@ -417,7 +417,10 @@
         "gender": "Spol",
         "birth-date": "Datum rođenja",
         "pin": "OIB",
-        "remarks": "Napomene"
+        "remarks": "Napomene",
+        "createdBy": "Kreirao",
+        "editedBy": "Azurirao",
+        "date": "Datum"
       }
     },
     "toast": {

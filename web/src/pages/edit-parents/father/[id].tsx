@@ -11,6 +11,12 @@ import {
   IconButton,
   HStack,
   UseToastOptions,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
@@ -32,6 +38,7 @@ import { CustomAlert } from "../../../components/Alerts";
 import { CustomSpinner } from "../../../components/Spinner";
 import { NextRouter } from "next/router";
 import { OperationContext, OperationResult } from "urql";
+import moment from "moment";
 
 const EditFatherForm = (
   data: FindFatherQuery,
@@ -114,6 +121,50 @@ const EditFatherForm = (
             type="number"
             required
           />
+
+          <Flex flexDirection="column">
+            <Table size="sm">
+              <Thead>
+                <Tr>
+                  <Th>{t("edit-child.form.placeholders.createdBy")}</Th>
+                  <Th>{t("edit-child.form.placeholders.date")}</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr>
+                  <Td>
+                    {data.findFather.createdBy.Name +
+                      " " +
+                      data.findFather.createdBy.Surname}
+                  </Td>
+                  <Td>
+                    {moment(data.findFather.createdAt).format("DD-MM-yyyy")}
+                  </Td>
+                </Tr>
+              </Tbody>
+            </Table>
+            <Table size="sm" mt={5} mb={2}>
+              <Thead>
+                <Tr>
+                  <Th>{t("edit-child.form.placeholders.editedBy")}</Th>
+                  <Th>{t("edit-child.form.placeholders.date")}</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr>
+                  <Td>
+                    {data.findFather.updatedBy.Name +
+                      " " +
+                      data.findFather.updatedBy.Surname}
+                  </Td>
+                  <Td>
+                    {moment(data.findFather.updatedAt).format("DD-MM-yyyy")}
+                  </Td>
+                </Tr>
+              </Tbody>
+            </Table>
+          </Flex>
+
           <Button
             bg="blue.400"
             colorScheme="navItem"

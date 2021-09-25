@@ -42,11 +42,11 @@ export class Father extends BaseEntity {
   @Column({ nullable: true })
   updatedById: number;
 
-  @Field(() => String)
+  @Field(() => Date)
   @CreateDateColumn()
   createdAt: Date;
 
-  @Field(() => String)
+  @Field(() => Date)
   @UpdateDateColumn()
   updatedAt: Date;
 
@@ -62,11 +62,13 @@ export class Father extends BaseEntity {
   })
   inKindergarden: KinderGarden;
 
+  @Field(() => User, { nullable: true })
   @ManyToOne(() => User, (user) => user.createdFather, {
     lazy: true,
   })
   createdBy: User;
 
+  @Field(() => User, { nullable: true })
   @ManyToOne(() => User, (user) => user.updatedFather, {
     lazy: true,
   })

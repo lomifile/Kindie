@@ -7,14 +7,6 @@ import Redis from "ioredis";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { COOKIE_NAME, __prod__ } from "./Constants";
-import { HelloResolver } from "./resolvers/Hello";
-import { UserResolver } from "./resolvers/User";
-import { KindergardenResolver } from "./resolvers/Kindergarden";
-import { GroupsResolver } from "./resolvers/Groups";
-import { ChildrenResolver } from "./resolvers/Children";
-import { StaffMembersResolver } from "./resolvers/StaffMembers";
-import { FatherResolver } from "./resolvers/Father";
-import { MotherResolver } from "./resolvers/Mother";
 import cors from "cors";
 import "dotenv-safe/config";
 import { ContactResolver } from "./resolvers/Contact";
@@ -30,6 +22,16 @@ import { Groups } from "./entities/Groups";
 import { Mother } from "./entities/Mother";
 import { Father } from "./entities/Father";
 import { StaffMembers } from "./entities/SatffMembers";
+
+// Resolvers
+import { HelloResolver } from "./resolvers/Hello";
+import { UserResolver } from "./resolvers/User";
+import { KindergardenResolver } from "./resolvers/Kindergarden";
+import { GroupsResolver } from "./resolvers/Groups";
+import { ChildrenResolver } from "./resolvers/Children";
+import { StaffMembersResolver } from "./resolvers/StaffMembers";
+import { FatherResolver } from "./resolvers/Father";
+import { MotherResolver } from "./resolvers/Mother";
 
 const main = async () => {
   // @ts-ignore

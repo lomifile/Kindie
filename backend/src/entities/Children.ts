@@ -45,11 +45,11 @@ export class Children extends BaseEntity {
   @Column()
   Remarks: string;
 
-  @Field(() => String)
+  @Field(() => Date)
   @CreateDateColumn()
   createdAt: Date;
 
-  @Field(() => String)
+  @Field(() => Date)
   @UpdateDateColumn()
   updatedAt: Date;
 
@@ -67,9 +67,11 @@ export class Children extends BaseEntity {
   @Column({ nullable: true })
   inKindergardenId: number;
 
+  @Field({ nullable: true })
   @Column({ nullable: true })
   createdById: number;
 
+  @Field({ nullable: true })
   @Column({ nullable: true })
   updatedById: number;
 
@@ -107,8 +109,6 @@ export class Children extends BaseEntity {
   @ManyToOne(() => User, (user) => user.createdChildren, {
     lazy: true,
     nullable: true,
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
   })
   createdBy: User;
 
@@ -116,8 +116,6 @@ export class Children extends BaseEntity {
   @ManyToOne(() => User, (user) => user.createdChildren, {
     lazy: true,
     nullable: true,
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
   })
   updatedBy: User;
 }

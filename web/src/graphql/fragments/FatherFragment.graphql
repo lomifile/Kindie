@@ -4,6 +4,12 @@ fragment FatherFragment on Father {
   Surname
   Email
   Phone
+  createdBy {
+    ...UserFragment
+  }
+  updatedBy {
+    ...UserFragment
+  }
   createdAt
   updatedAt
 }

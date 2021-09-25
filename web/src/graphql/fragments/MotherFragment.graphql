@@ -4,6 +4,12 @@ fragment MotherFragment on Mother {
   Surname
   Email
   Phone
+  createdBy {
+    ...UserFragment
+  }
+  updatedBy {
+    ...UserFragment
+  }
   createdAt
   updatedAt
 }
