@@ -509,7 +509,11 @@ const EditChild = ({}) => {
         <Box width={{ base: "90%", md: "400px" }} rounded="lg">
           {UpdateChildForm(data, updateChild, toast, router, id, t)}
         </Box>
-        <Box width={{ base: "90%", md: "400px" }} rounded="lg">
+        <Box
+          width={{ base: "90%", md: "400px" }}
+          rounded="lg"
+          ml={[0, 0, "30px", 0, 0]}
+        >
           {!data.findChild.motherId || !data.findChild.fatherId ? (
             <>
               <Button

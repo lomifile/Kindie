@@ -526,6 +526,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
       zIndex="99"
       borderTop={"4px"}
       borderColor="blue.400"
+      mb={["15px", "15px", "15px", "0px", "0px"]}
     >
       <Image
         className="nav-pic-dummy"
