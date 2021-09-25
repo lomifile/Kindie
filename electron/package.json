@@ -9,6 +9,15 @@
     "start": "electron .",
     "gen-env": "gen-env-types .env -o src/env.d.ts -e ."
   },
+  "directories": {
+    "buildResources": "public"
+  },
+  "linux": {
+    "icon": "./public/favicon.ico"
+  },
+  "files":[
+    "./public/*"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",

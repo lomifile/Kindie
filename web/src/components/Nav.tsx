@@ -300,14 +300,7 @@ const DrawerNav = (
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader>
-          <Heading
-            fontSize="xl"
-            fontWeight="500"
-            color="blue.400"
-            style={{ fontWeight: "bold", textTransform: "uppercase" }}
-          >
-            Kindie
-          </Heading>
+          <Image className="nav-pic" width="300px" height="100px" src={logo} />
         </DrawerHeader>
         <DrawerBody>
           <Stack
@@ -378,14 +371,7 @@ const ElectronMenu = (
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>
-            <Heading
-              fontSize="xl"
-              fontWeight="500"
-              color="blue.400"
-              style={{ fontWeight: "bold", textTransform: "uppercase" }}
-            >
-              Kindie
-            </Heading>
+            <Image className="nav-pic" width="200px" height="80px" src={logo} />
           </DrawerHeader>
           <DrawerBody>
             <Stack spacing={8} align="center">
@@ -526,7 +512,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
       zIndex="99"
       borderTop={"4px"}
       borderColor="blue.400"
-      mb={["15px", "15px", "15px", "0px", "0px"]}
+      mb={["15px", "15px", "15px", "15px", "15px"]}
     >
       <Image
         className="nav-pic-dummy"

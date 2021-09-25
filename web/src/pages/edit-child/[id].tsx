@@ -26,7 +26,6 @@ import {
   Tr,
   useDisclosure,
   UseToastOptions,
-  Text,
   Thead,
   Th,
 } from "@chakra-ui/react";
