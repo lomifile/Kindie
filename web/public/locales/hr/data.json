@@ -423,6 +423,7 @@
         "date": "Datum"
       }
     },
+    "tbl-update-message": "Nema zadnjih azuriranja",
     "toast": {
       "title": "Dijete uspješno ažurirano"
     },

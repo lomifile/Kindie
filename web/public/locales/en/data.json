@@ -423,6 +423,7 @@
         "date": "Date"
       }
     },
+    "tbl-update-message": "No last updates",
     "toast": {
       "title": "Child updated successfully!"
     },

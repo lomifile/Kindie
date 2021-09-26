@@ -191,9 +191,11 @@ const UpdateChildForm = (
               <Tbody>
                 <Tr>
                   <Td>
-                    {data.findChild.updatedBy.Name +
-                      " " +
-                      data.findChild.updatedBy.Surname}
+                    {data.findChild?.updatedBy === null
+                      ? t("edit-child.tbl-update-message")
+                      : data.findChild?.updatedBy?.Name +
+                        " " +
+                        data.findChild?.updatedBy?.Surname}
                   </Td>
                   <Td>
                     {moment(data.findChild.updatedAt).format("DD-MM-yyyy")}
