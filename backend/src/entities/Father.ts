@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { Children } from "./Children";
 import { KinderGarden } from "./Kindergarden";
+import { User } from "./User";
 
 @ObjectType()
 @Entity()
@@ -35,11 +36,17 @@ export class Father extends BaseEntity {
   @Column({ type: "bigint" })
   Phone: number;
 
-  @Field(() => String)
+  @Column({ nullable: true })
+  createdById: number;
+
+  @Column({ nullable: true })
+  updatedById: number;
+
+  @Field(() => Date)
   @CreateDateColumn()
   createdAt: Date;
 
-  @Field(() => String)
+  @Field(() => Date)
   @UpdateDateColumn()
   updatedAt: Date;
 
@@ -54,6 +61,18 @@ export class Father extends BaseEntity {
     lazy: true,
   })
   inKindergarden: KinderGarden;
+
+  @Field(() => User, { nullable: true })
+  @ManyToOne(() => User, (user) => user.createdFather, {
+    lazy: true,
+  })
+  createdBy: User;
+
+  @Field(() => User, { nullable: true })
+  @ManyToOne(() => User, (user) => user.updatedFather, {
+    lazy: true,
+  })
+  updatedBy: User;
 
   @Column({ nullable: true })
   inKindergardenId: number;

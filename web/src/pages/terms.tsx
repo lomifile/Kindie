@@ -10,17 +10,17 @@ const Terms: React.FC<{}> = ({}) => {
         <strong>Terms and Conditions</strong>
       </Heading>
 
-      <Text>Welcome to DV Organizator!</Text>
+      <Text>Welcome to Kindie!</Text>
 
       <Text>
         These terms and conditions outline the rules and regulations for the use
-        of FSoftware's Website, located at https://www.dvorganizator.hr.
+        of FSoftware's Website, located at https://www.kindieapi.xyz.
       </Text>
 
       <Text>
         By accessing this website we assume you accept these terms and
-        conditions. Do not continue to use DV Organizator if you do not agree to
-        take all of the terms and conditions stated on this page.
+        conditions. Do not continue to use Kindie if you do not agree to take
+        all of the terms and conditions stated on this page.
       </Text>
 
       <Text>
@@ -45,8 +45,8 @@ const Terms: React.FC<{}> = ({}) => {
       </Heading>
 
       <Text>
-        We employ the use of cookies. By accessing DV Organizator, you agreed to
-        use cookies in agreement with the FSoftware's Privacy Policy.{" "}
+        We employ the use of cookies. By accessing Kindie, you agreed to use
+        cookies in agreement with the FSoftware's Privacy Policy.{" "}
       </Text>
 
       <Text>
@@ -63,7 +63,7 @@ const Terms: React.FC<{}> = ({}) => {
 
       <Text>
         Unless otherwise stated, FSoftware and/or its licensors own the
-        intellectual property rights for all material on DV Organizator. All
+        intellectual property rights for all material on Kindie. All
         intellectual property rights are reserved. You may access this from DV
         Organizator for your own personal use subjected to restrictions set in
         these terms and conditions.
@@ -71,14 +71,10 @@ const Terms: React.FC<{}> = ({}) => {
 
       <Text>You must not:</Text>
       <UnorderedList>
-        <ListItem>Republish material from DV Organizator</ListItem>
-        <ListItem>
-          Sell, rent or sub-license material from DV Organizator
-        </ListItem>
-        <ListItem>
-          Reproduce, duplicate or copy material from DV Organizator
-        </ListItem>
-        <ListItem>Redistribute content from DV Organizator</ListItem>
+        <ListItem>Republish material from Kindie</ListItem>
+        <ListItem>Sell, rent or sub-license material from Kindie</ListItem>
+        <ListItem>Reproduce, duplicate or copy material from Kindie</ListItem>
+        <ListItem>Redistribute content from Kindie</ListItem>
       </UnorderedList>
 
       <Text>

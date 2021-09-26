@@ -6,6 +6,12 @@ fragment ChildrenFragment on Children {
   BirthDate
   OIB
   Remarks
+  createdBy {
+    ...UserFragment
+  }
+  updatedBy {
+    ...UserFragment
+  }
   mother {
     ...MotherFragment
   }

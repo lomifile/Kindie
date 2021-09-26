@@ -26,6 +26,8 @@ import {
   Tr,
   useDisclosure,
   UseToastOptions,
+  Thead,
+  Th,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
@@ -157,6 +159,52 @@ const UpdateChildForm = (
             textArea
             required
           />
+
+          <Flex flexDirection="column">
+            <Table size="sm">
+              <Thead>
+                <Tr>
+                  <Th>{t("edit-child.form.placeholders.createdBy")}</Th>
+                  <Th>{t("edit-child.form.placeholders.date")}</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr>
+                  <Td>
+                    {data.findChild.createdBy.Name +
+                      " " +
+                      data.findChild.createdBy.Surname}
+                  </Td>
+                  <Td>
+                    {moment(data.findChild.createdAt).format("DD-MM-yyyy")}
+                  </Td>
+                </Tr>
+              </Tbody>
+            </Table>
+            <Table size="sm" mt={5} mb={2}>
+              <Thead>
+                <Tr>
+                  <Th>{t("edit-child.form.placeholders.editedBy")}</Th>
+                  <Th>{t("edit-child.form.placeholders.date")}</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr>
+                  <Td>
+                    {data.findChild?.updatedBy === null
+                      ? t("edit-child.tbl-update-message")
+                      : data.findChild?.updatedBy?.Name +
+                        " " +
+                        data.findChild?.updatedBy?.Surname}
+                  </Td>
+                  <Td>
+                    {moment(data.findChild.updatedAt).format("DD-MM-yyyy")}
+                  </Td>
+                </Tr>
+              </Tbody>
+            </Table>
+          </Flex>
+
           <Button
             bg="blue.400"
             colorScheme="navItem"
@@ -400,6 +448,8 @@ const EditChild = ({}) => {
   const [, updateChild] = useUpdateChildMutation();
   const [, updateParents] = useUpdateChildrenParentsMutation();
 
+  console.log(data);
+
   if (fetching) {
     return <CustomSpinner />;
   } else if (!data?.findChild) {
@@ -460,7 +510,11 @@ const EditChild = ({}) => {
         <Box width={{ base: "90%", md: "400px" }} rounded="lg">
           {UpdateChildForm(data, updateChild, toast, router, id, t)}
         </Box>
-        <Box width={{ base: "90%", md: "400px" }} rounded="lg">
+        <Box
+          width={{ base: "90%", md: "400px" }}
+          rounded="lg"
+          ml={[0, 0, "30px", 0, 0]}
+        >
           {!data.findChild.motherId || !data.findChild.fatherId ? (
             <>
               <Button

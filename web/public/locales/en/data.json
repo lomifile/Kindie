@@ -417,9 +417,13 @@
         "gender": "Gender",
         "birth-date": "Birth date",
         "pin": "PIN",
-        "remarks": "Remarks"
+        "remarks": "Remarks",
+        "createdBy": "Created by",
+        "editedBy": "Updated by",
+        "date": "Date"
       }
     },
+    "tbl-update-message": "No last updates",
     "toast": {
       "title": "Child updated successfully!"
     },

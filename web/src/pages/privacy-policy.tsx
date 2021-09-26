@@ -11,10 +11,10 @@ const PrivacyPolicy: React.FC<{}> = ({}) => {
       </Heading>
 
       <Text>
-        At DV Organizator, accessible from https://www.dvorganizator.hr, one of
-        our main priorities is the privacy of our visitors. This Privacy Policy
-        document contains types of information that is collected and recorded by
-        DV Organizator and how we use it.
+        At Kindie, accessible from https://www.kindieapi.xyz, one of our main
+        priorities is the privacy of our visitors. This Privacy Policy document
+        contains types of information that is collected and recorded by Kindie
+        and how we use it.
       </Text>
 
       <Text>
@@ -25,9 +25,9 @@ const PrivacyPolicy: React.FC<{}> = ({}) => {
       <Text>
         This Privacy Policy applies only to our online activities and is valid
         for visitors to our website with regards to the information that they
-        shared and/or collect in DV Organizator. This policy is not applicable
-        to any information collected offline or via channels other than this
-        website. Our Privacy Policy was created with the help of the{" "}
+        shared and/or collect in Kindie. This policy is not applicable to any
+        information collected offline or via channels other than this website.
+        Our Privacy Policy was created with the help of the{" "}
         <Link href="https://www.privacypolicygenerator.info/#wizard">
           Free Privacy Policy Generator
         </Link>
@@ -94,16 +94,15 @@ const PrivacyPolicy: React.FC<{}> = ({}) => {
       </Heading>
 
       <Text>
-        DV Organizator follows Link standard procedure of using log files. These
-        files log visitors when they visit websites. All hosting companies do
-        this and Link part of hosting services' analytics. The information
-        collected by log files include internet protocol (IP) addresses, browser
-        type, Internet Service Provider (ISP), date and time stamp,
-        referring/exit pages, and possibly the number of clicks. These are not
-        linked to any information that is personally identifiable. The purpose
-        of the information is for analyzing trends, administering the site,
-        tracking users' movement on the website, and gathering demographic
-        information.
+        Kindie follows Link standard procedure of using log files. These files
+        log visitors when they visit websites. All hosting companies do this and
+        Link part of hosting services' analytics. The information collected by
+        log files include internet protocol (IP) addresses, browser type,
+        Internet Service Provider (ISP), date and time stamp, referring/exit
+        pages, and possibly the number of clicks. These are not linked to any
+        information that is personally identifiable. The purpose of the
+        information is for analyzing trends, administering the site, tracking
+        users' movement on the website, and gathering demographic information.
       </Text>
 
       <Heading as={"h2"} mt="10" mb="10">
@@ -111,11 +110,11 @@ const PrivacyPolicy: React.FC<{}> = ({}) => {
       </Heading>
 
       <Text>
-        Like any other website, DV Organizator uses 'cookies'. These cookies are
-        used to store information including visitors' preferences, and the pages
-        on the website that the visitor accessed or visited. The information is
-        used to optimize the users' experience by customizing our web page
-        content based on visitors' browser type and/or other information.
+        Like any other website, Kindie uses 'cookies'. These cookies are used to
+        store information including visitors' preferences, and the pages on the
+        website that the visitor accessed or visited. The information is used to
+        optimize the users' experience by customizing our web page content based
+        on visitors' browser type and/or other information.
       </Text>
 
       <Text>
@@ -170,22 +169,22 @@ const PrivacyPolicy: React.FC<{}> = ({}) => {
 
       <Text>
         You may consult this list to find the Privacy Policy for each of the
-        advertising partners of DV Organizator.
+        advertising partners of Kindie.
       </Text>
 
       <Text>
         Third-party ad servers or ad networks uses technologies like cookies,
         JavaScript, or Web Beacons that are used in their respective
-        advertisements and links that appear on DV Organizator, which are sent
-        directly to users' browser. They automatically receive your IP address
-        when this occurs. These technologies are used to measure the
-        effectiveness of their advertising campaigns and/or to personalize the
-        advertising content that you see on websites that you visit.
+        advertisements and links that appear on Kindie, which are sent directly
+        to users' browser. They automatically receive your IP address when this
+        occurs. These technologies are used to measure the effectiveness of
+        their advertising campaigns and/or to personalize the advertising
+        content that you see on websites that you visit.
       </Text>
 
       <Text>
-        Note that DV Organizator has no access to or control over these cookies
-        that are used by third-party advertisers.
+        Note that Kindie has no access to or control over these cookies that are
+        used by third-party advertisers.
       </Text>
 
       <Heading as={"h2"} mt="10" mb="10">
@@ -193,11 +192,11 @@ const PrivacyPolicy: React.FC<{}> = ({}) => {
       </Heading>
 
       <Text>
-        DV Organizator's Privacy Policy does not apply to other advertisers or
-        websites. Thus, we are advising you to consult the respective Privacy
-        Policies of these third-party ad servers for more detailed information.
-        It may include their practices and instructions about how to opt-out of
-        certain options.{" "}
+        Kindie's Privacy Policy does not apply to other advertisers or websites.
+        Thus, we are advising you to consult the respective Privacy Policies of
+        these third-party ad servers for more detailed information. It may
+        include their practices and instructions about how to opt-out of certain
+        options.{" "}
       </Text>
 
       <Text>
@@ -284,11 +283,11 @@ const PrivacyPolicy: React.FC<{}> = ({}) => {
       </Text>
 
       <Text>
-        DV Organizator does not knowingly collect any Personal Identifiable
-        Information from children under the age of 13. If you think that your
-        child provided this kind of information on our website, we strongly
-        encourage you to contact us immediately and we will do our best efforts
-        to promptly remove such information from our records.
+        Kindie does not knowingly collect any Personal Identifiable Information
+        from children under the age of 13. If you think that your child provided
+        this kind of information on our website, we strongly encourage you to
+        contact us immediately and we will do our best efforts to promptly
+        remove such information from our records.
       </Text>
 
       <Link mt={"5rem"} mb={"5rem"} color="blue.400" href="/login">

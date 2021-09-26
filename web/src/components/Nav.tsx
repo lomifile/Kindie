@@ -42,7 +42,7 @@ import isElectron from "is-electron";
 import { OperationContext, OperationResult } from "urql";
 import { CustomSpinner } from "./Spinner";
 import Image from "next/image";
-import imgNav from "../../public/img/Kindie.png";
+import logo from "../../public/img/logo.png";
 
 const DashNav = (t: TFunction<"data">) => (
   <>
@@ -300,14 +300,7 @@ const DrawerNav = (
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader>
-          <Heading
-            fontSize="xl"
-            fontWeight="500"
-            color="blue.400"
-            style={{ fontWeight: "bold", textTransform: "uppercase" }}
-          >
-            Kindie
-          </Heading>
+          <Image className="nav-pic" width="300px" height="100px" src={logo} />
         </DrawerHeader>
         <DrawerBody>
           <Stack
@@ -378,14 +371,7 @@ const ElectronMenu = (
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>
-            <Heading
-              fontSize="xl"
-              fontWeight="500"
-              color="blue.400"
-              style={{ fontWeight: "bold", textTransform: "uppercase" }}
-            >
-              Kindie
-            </Heading>
+            <Image className="nav-pic" width="200px" height="80px" src={logo} />
           </DrawerHeader>
           <DrawerBody>
             <Stack spacing={8} align="center">
@@ -454,21 +440,9 @@ const ElectronMenu = (
   </>
 );
 
-const BrowserNav = (i18n: i18n, router: NextRouter) => (
+const BrowserNav = (i18n: i18n, variant: NavbarVariant) => (
   <>
-    <Heading
-      display={["none", "none", "block", "block"]}
-      fontSize="3xl"
-      fontWeight="500"
-      color="blue.400"
-      ml={["10px", "2rem", "5rem", "5rem", "10rem"]}
-      style={{ fontWeight: "bold", textTransform: "uppercase" }}
-    >
-      Kindie
-    </Heading>
-    {/* <Image src={imgNav} width="50px" height="50px" /> */}
-    {router.pathname.includes("/contact") ||
-    router.pathname.includes("/Aboutus") ? (
+    {variant === "normal" ? (
       <Box display={["none", "inline-flex", "inline-flex", "inline-flex"]}>
         <Button
           h={"50px"}
@@ -538,16 +512,27 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
       zIndex="99"
       borderTop={"4px"}
       borderColor="blue.400"
+      mb={["15px", "15px", "15px", "15px", "15px"]}
     >
+      <Image
+        className="nav-pic-dummy"
+        width="190px"
+        height="100px"
+        src={logo}
+      />
       {DrawerNav(body, onClose, isOpen, i18n)}
       <Stack
+        display="flex"
         direction={["column", "row"]}
         alignItems={["flex-end", "center"]}
         mt={"auto"}
         mb={"auto"}
       >
+        <Flex>
+          <Image className="nav-pic" width="300px" height="100px" src={logo} />
+        </Flex>
         {!isElectron()
-          ? BrowserNav(i18n, router)
+          ? BrowserNav(i18n, variant)
           : ElectronMenu(
               drawerOnClose,
               drawerIsOpen,

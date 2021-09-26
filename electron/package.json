@@ -9,12 +9,22 @@
     "start": "electron .",
     "gen-env": "gen-env-types .env -o src/env.d.ts -e ."
   },
+  "directories": {
+    "buildResources": "public"
+  },
+  "linux": {
+    "icon": "./public/favicon.ico"
+  },
+  "files": [
+    "./public/*"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "dotenv-safe": "^8.2.0",
-    "electron": "^12.0.6"
+    "electron": "^12.0.6",
+    "electron-builder": "^22.11.7"
   },
   "devDependencies": {
     "prettier": "^2.2.1",

@@ -213,6 +213,7 @@ const StaffTable = (
           <Th>{t("staff.tbl-name")}</Th>
           <Th>{t("staff.tbl-surname")}</Th>
           <Th>{t("staff.tbl-role")}</Th>
+          <Td></Td>
         </Tr>
       </Thead>
       <Tbody>

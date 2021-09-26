@@ -1,4 +1,11 @@
 @charset "UTF-8";
+
+@media only screen and (min-width: 360px) {
+  .nav-pic {
+    margin-top: 1px !important;
+  }
+}
+
 .footer-nav-item:after {
   content: "•";
   display: inline-block;
@@ -11,4 +18,15 @@
 
 .nav-item:hover {
   text-decoration: none !important;
+}
+
+.nav-pic {
+  margin-top: 7px !important;
+}
+
+.nav-pic-dummy {
+  display: none !important;
+  margin-top: 20px !important;
+  margin-left: 2rem !important;
+  padding-left: 5rem !important;
 }

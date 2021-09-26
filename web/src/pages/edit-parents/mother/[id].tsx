@@ -17,6 +17,12 @@ import {
   HStack,
   IconButton,
   Stack,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
   useToast,
   UseToastOptions,
 } from "@chakra-ui/react";
@@ -31,6 +37,7 @@ import { Layout } from "../../../components/Layout";
 import { InputField } from "../../../components/InputField";
 import { CustomAlert } from "../../../components/Alerts";
 import { CustomSpinner } from "../../../components/Spinner";
+import moment from "moment";
 
 const EditMotherForm = (
   data: FindMotherQuery,
@@ -113,6 +120,50 @@ const EditMotherForm = (
             type="text"
             required
           />
+
+          <Flex flexDirection="column">
+            <Table size="sm">
+              <Thead>
+                <Tr>
+                  <Th>{t("edit-child.form.placeholders.createdBy")}</Th>
+                  <Th>{t("edit-child.form.placeholders.date")}</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr>
+                  <Td>
+                    {data.findMother.createdBy.Name +
+                      " " +
+                      data.findMother.createdBy.Surname}
+                  </Td>
+                  <Td>
+                    {moment(data.findMother.createdAt).format("DD-MM-yyyy")}
+                  </Td>
+                </Tr>
+              </Tbody>
+            </Table>
+            <Table size="sm" mt={5} mb={2}>
+              <Thead>
+                <Tr>
+                  <Th>{t("edit-child.form.placeholders.editedBy")}</Th>
+                  <Th>{t("edit-child.form.placeholders.date")}</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr>
+                  <Td>
+                    {data.findMother.updatedBy.Name +
+                      " " +
+                      data.findMother.updatedBy.Surname}
+                  </Td>
+                  <Td>
+                    {moment(data.findMother.updatedAt).format("DD-MM-yyyy")}
+                  </Td>
+                </Tr>
+              </Tbody>
+            </Table>
+          </Flex>
+
           <Button
             bg="blue.400"
             colorScheme="navItem"

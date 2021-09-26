@@ -11,14 +11,15 @@ const createWindow = () => {
       devTools: !__prod__,
       nodeIntegration: true,
       preload: path.join(__dirname + "/preload.js"),
+      icon: __dirname + "../public/favicon.ico",
     },
   });
-    
+
   mainWindow.setMenu(null);
 
   !__prod__
     ? mainWindow.loadURL("http://localhost:3000/dashboard")
-    : mainWindow.loadURL("https://dv-organizator.vercel.app/dashboard"); // prod
+    : mainWindow.loadURL("https://kindieapi.xyz/dashboard"); // prod
 };
 
 const showNotification = () => {

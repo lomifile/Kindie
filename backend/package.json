@@ -8,7 +8,8 @@
     "watch": "tsc -w",
     "dev": "nodemon dist/index.js",
     "gen-env": "gen-env-types .env -o src/env.d.ts -e .",
-    "gen:migrations": "typeorm migration:generate -n db",
+    "gen:migrations": "typeorm migration:generate -n kindie",
+    "run:migrations": "typeorm migration:run",
     "setup:db": "ts-node ./src/helpers/setup.ts",
     "test": "npm run setup:db && jest"
   },

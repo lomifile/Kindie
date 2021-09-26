@@ -417,9 +417,13 @@
         "gender": "Spol",
         "birth-date": "Datum rođenja",
         "pin": "OIB",
-        "remarks": "Napomene"
+        "remarks": "Napomene",
+        "createdBy": "Kreirao",
+        "editedBy": "Azurirao",
+        "date": "Datum"
       }
     },
+    "tbl-update-message": "Nema zadnjih azuriranja",
     "toast": {
       "title": "Dijete uspješno ažurirano"
     },

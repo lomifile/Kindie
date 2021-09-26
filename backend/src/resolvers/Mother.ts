@@ -14,7 +14,7 @@ import { isAuth } from "../middleware/isAuth";
 import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
 import { ParentsInput } from "../utils/inputs/ParentsInput";
 import { getConnection, getRepository } from "typeorm";
-import { AppContext } from "src/Types";
+import { AppContext } from "../Types";
 
 // @ObjectType()
 // class MotherResponse {
@@ -84,7 +84,8 @@ export class MotherResolver {
   @UseMiddleware(isKinderGardenSelected)
   async updateMother(
     @Arg("options") options: ParentsInput,
-    @Arg("motherId", () => Int) motherId: number
+    @Arg("motherId", () => Int) motherId: number,
+    @Ctx() { req }: AppContext
   ): Promise<Mother | undefined> {
     const result = await getConnection()
       .createQueryBuilder()
@@ -94,6 +95,7 @@ export class MotherResolver {
         Surname: options.surname,
         Email: options.email,
         Phone: options.phone,
+        updatedById: req.session.userId,
       })
       .where("Id=:id", { id: motherId })
       .returning("*")
@@ -114,6 +116,7 @@ export class MotherResolver {
       Email: options.email,
       Phone: options.phone,
       inKindergardenId: req.session.selectedKindergarden,
+      createdById: req.session.userId,
     }).save();
   }
 
