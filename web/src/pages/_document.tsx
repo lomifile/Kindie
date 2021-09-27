@@ -6,7 +6,7 @@ export default class Document extends NextDocument {
     return (
       <Html>
         <Head>
-          <link rel="shortcut icon" href="/favicon.ico" />
+          <link rel="shortcut icon" href="favicon.ico" />
           <script
             data-ad-client="ca-pub-7377394476088299"
             async
@@ -16,7 +16,6 @@ export default class Document extends NextDocument {
         <body>
           {/* Make Color mode to persists when you refresh the page. */}
           <ColorModeScript />
-
           <Main />
           <NextScript />
         </body>

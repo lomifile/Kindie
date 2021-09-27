@@ -10,6 +10,10 @@ import {
   Heading,
   HStack,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   SkeletonText,
   Stack,
   Table,
@@ -40,6 +44,7 @@ import {
   AddIcon,
   ViewIcon,
   ArrowBackIcon,
+  ChevronDownIcon,
 } from "@chakra-ui/icons";
 import { getUserRole } from "../utils/getUserRole";
 import { ParentsModal } from "../components/ParentsModal";
@@ -354,20 +359,37 @@ const Parents: React.FC<{}> = ({}) => {
               {t("parents.main-header")}
             </Heading>
             {role == "Headmaster" || role == "Pedagogue" ? (
-              <NextLink href="/create-parents">
-                <IconButton
-                  aria-label="Add parents"
-                  icon={<AddIcon />}
-                  bg="blue.400"
-                  className="nav-item"
-                  colorScheme="navItem"
-                  borderRadius="12px"
-                  py="4"
-                  px="4"
-                  lineHeight="1"
-                  size="md"
-                />
-              </NextLink>
+              <>
+                <Menu>
+                  <MenuButton
+                    bg="blue.400"
+                    className="nav-item"
+                    colorScheme="navItem"
+                    borderRadius="12px"
+                    py="4"
+                    px="4"
+                    ml={5}
+                    lineHeight="1"
+                    size="md"
+                    as={Button}
+                    rightIcon={<ChevronDownIcon />}
+                  >
+                    <AddIcon />
+                  </MenuButton>
+                  <MenuList borderRadius={"12px"}>
+                    <NextLink href="/create-mother">
+                      <MenuItem>
+                        {t("create-parents.main-header-mother")}
+                      </MenuItem>
+                    </NextLink>
+                    <NextLink href="create-father">
+                      <MenuItem>
+                        {t("create-parents.main-header-father")}
+                      </MenuItem>
+                    </NextLink>
+                  </MenuList>
+                </Menu>
+              </>
             ) : null}
           </HStack>
         </Flex>
@@ -389,15 +411,17 @@ const Parents: React.FC<{}> = ({}) => {
             w={{ base: "100%", md: "100%" }}
             align={["center", "center", "center", "center", "center"]}
           >
-            <Heading
-              as="h1"
-              size="xl"
-              fontWeight="bold"
-              color="blue.400"
-              textAlign={["center", "center", "left", "left"]}
-            >
-              {t("parents.heading-mother")}
-            </Heading>
+            <Flex flexDirection="row">
+              <Heading
+                as="h1"
+                size="xl"
+                fontWeight="bold"
+                color="blue.400"
+                textAlign={["center", "center", "left", "left"]}
+              >
+                {t("parents.heading-mother")}
+              </Heading>
+            </Flex>
             <Box
               w={["100%", "100%", "100%", "80%", "100%"]}
               display={["block", "block", "block", "block"]}
@@ -420,15 +444,17 @@ const Parents: React.FC<{}> = ({}) => {
             w={{ base: "100%", md: "100%" }}
             align={["center", "center", "center", "center", "center"]}
           >
-            <Heading
-              as="h1"
-              size="xl"
-              fontWeight="bold"
-              color="blue.400"
-              textAlign={["center", "center", "left", "left"]}
-            >
-              {t("parents.heading-father")}
-            </Heading>
+            <Flex flexDirection="row">
+              <Heading
+                as="h1"
+                size="xl"
+                fontWeight="bold"
+                color="blue.400"
+                textAlign={["center", "center", "left", "left"]}
+              >
+                {t("parents.heading-father")}
+              </Heading>
+            </Flex>
             <Box
               w={["100%", "100%", "100%", "80%", "100%"]}
               display={["block", "block", "block", "block"]}

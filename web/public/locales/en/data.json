@@ -357,7 +357,8 @@
     "btn-back": "Back"
   },
   "create-parents": {
-    "main-header": "Add parents",
+    "main-header-mother": "Create mother",
+    "main-header-father": "Create father",
     "select": {
       "mother": {
         "name": "Mother",

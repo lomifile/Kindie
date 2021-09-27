@@ -1,73 +1,36 @@
-import React, { useState } from "react";
+import React from "react";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { withUrqlClient } from "next-urql";
-import { Layout } from "../components/Layout";
 import {
-  Box,
+  UseToastOptions,
+  Stack,
   Button,
+  Box,
   Flex,
   Heading,
   HStack,
   IconButton,
-  Select,
-  Stack,
   useToast,
-  UseToastOptions,
 } from "@chakra-ui/react";
-import { Form, Formik } from "formik";
-import { useRouter } from "next/router";
+import { OperationContext, OperationResult } from "@urql/core";
+import { Formik, Form } from "formik";
+import { TFunction, useTranslation } from "react-i18next";
 import { InputField } from "../components/InputField";
 import {
-  AddFatherMutation,
-  AddMotherMutation,
   Exact,
   ParentsInput,
+  AddFatherMutation,
   useAddFatherMutation,
-  useAddMotherMutation,
 } from "../generated/graphql";
-import { useTranslation, TFunction } from "react-i18next";
-import { useIsAuth } from "../utils/useIsAuth";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import isElectron from "is-electron";
-import { OperationContext, OperationResult } from "urql";
+import { NextRouter, useRouter } from "next/router";
+import { Layout } from "../components/Layout";
+import { useIsAuth } from "../utils/useIsAuth";
 
-const ParentSelector = (
-  setParent: React.Dispatch<React.SetStateAction<string>>,
-  t: TFunction<"data">
-) => (
-  <Select
-    id="parentSelector"
-    onClick={() => {
-      // @ts-ignore
-      setParent(document.getElementById("parentSelector").value);
-    }}
-    width={["xs", "sm", "md", "md", "md"]}
-    borderRadius="12px"
-    mb={"25px"}
-    defaultValue="mother"
-  >
-    <option value="mother">{t("create-parents.select.mother.name")}</option>
-    <option value="father">{t("create-parents.select.father.name")}</option>
-  </Select>
-);
-
-const CreateParentsForm = (
-  parent: string,
+const CreateFatherForm = (
   toast: (options?: UseToastOptions) => string | number,
   t: TFunction<"data">,
-  addMother: (
-    variables?: Exact<{
-      options: ParentsInput;
-    }>,
-    context?: Partial<OperationContext>
-  ) => Promise<
-    OperationResult<
-      AddMotherMutation,
-      Exact<{
-        options: ParentsInput;
-      }>
-    >
-  >,
   addFather: (
     variables?: Exact<{
       options: ParentsInput;
@@ -80,7 +43,8 @@ const CreateParentsForm = (
         options: ParentsInput;
       }>
     >
-  >
+  >,
+  router: NextRouter
 ) => (
   <Formik
     initialValues={{
@@ -90,47 +54,22 @@ const CreateParentsForm = (
       phone: "",
     }}
     onSubmit={async (values) => {
-      if (parent === "mother") {
-        const { error } = await addMother({
-          options: {
-            name: values.name,
-            surname: values.surname,
-            email: values.email,
-            phone: parseInt(values.phone),
-          },
-        });
-        if (!error) {
-          toast({
-            title: t("create-parents.toast.mother.title"),
-            status: "success",
-            duration: 9000,
-            isClosable: true,
-          });
-        }
-      } else if (parent === "father") {
-        const { error } = await addFather({
-          options: {
-            name: values.name,
-            surname: values.surname,
-            email: values.email,
-            phone: parseInt(values.phone),
-          },
-        });
-        if (!error) {
-          toast({
-            title: t("create-parents.toast.father.title"),
-            status: "success",
-            duration: 9000,
-            isClosable: true,
-          });
-        }
-      } else {
+      const { error } = await addFather({
+        options: {
+          name: values.name,
+          surname: values.surname,
+          email: values.email,
+          phone: parseInt(values.phone),
+        },
+      });
+      if (!error) {
         toast({
-          title: "There was an error",
-          status: "error",
+          title: t("create-parents.toast.father.title"),
+          status: "success",
           duration: 9000,
           isClosable: true,
         });
+        router.back();
       }
     }}
   >
@@ -166,7 +105,6 @@ const CreateParentsForm = (
             required
           />
           <Button
-            isDisabled={!parent}
             bg="blue.400"
             colorScheme="navItem"
             borderRadius="12px"
@@ -185,12 +123,10 @@ const CreateParentsForm = (
   </Formik>
 );
 
-const CreateParents: React.FC<{}> = ({}) => {
+const CreateFather: React.FC<{}> = ({}) => {
   const { t } = useTranslation("data", { useSuspense: false });
-  const [, addMother] = useAddMotherMutation();
   const [, addFather] = useAddFatherMutation();
   const toast = useToast();
-  const [parent, setParent] = useState("mother");
   const router = useRouter();
   useIsAuth();
 
@@ -221,7 +157,9 @@ const CreateParents: React.FC<{}> = ({}) => {
               mr={5}
             />
           ) : null}
-          <Heading color="blue.400">{t("create-parents.main-header")}</Heading>
+          <Heading color="blue.400">
+            {t("create-parents.main-header-father")}
+          </Heading>
         </HStack>
       </Flex>
       <Flex
@@ -230,13 +168,12 @@ const CreateParents: React.FC<{}> = ({}) => {
         flexDirection="column"
         mt={10}
       >
-        {ParentSelector(setParent, t)}
         <Box width={{ base: "90%", md: "400px" }} rounded="lg">
-          {CreateParentsForm(parent, toast, t, addMother, addFather)}
+          {CreateFatherForm(toast, t, addFather, router)}
         </Box>
       </Flex>
     </Layout>
   );
 };
 
-export default withUrqlClient(createUrqlClient)(CreateParents);
+export default withUrqlClient(createUrqlClient)(CreateFather);

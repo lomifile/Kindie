@@ -42,8 +42,6 @@ import { CustomModal } from "../../components/CustomModal";
 import { CustomDrawer } from "../../components/CustomDrawer";
 
 const DrawerMenu = (
-  role: string,
-  onOpen: () => void,
   t: TFunction<"data">,
   useChildren: (
     variables?: Exact<{
@@ -66,21 +64,6 @@ const DrawerMenu = (
     direction={["column", "column", "column"]}
     pt={[4, 4, 0, 0]}
   >
-    {role === "Headmaster" || role === "Pedagogue" ? (
-      <Button
-        bg="blue.400"
-        className="nav-item"
-        colorScheme="navItem"
-        borderRadius="12px"
-        py="4"
-        px="4"
-        lineHeight="1"
-        size="md"
-        onClick={onOpen}
-      >
-        {t("kindergarden.toolbox.btn-new-group")}
-      </Button>
-    ) : null}
     <NextLink href="/children">
       <Button
         as={Link}
@@ -136,7 +119,7 @@ const DrawerMenuHeader = () => (
     color="blue.400"
     style={{ fontWeight: "bold", textTransform: "uppercase" }}
   >
-    DV Organizator
+    Kindie
   </Heading>
 );
 
@@ -293,6 +276,22 @@ const MainMenu = (
         {t("kindergarden.toolbox.btn-staff")}
       </Button>
     </NextLink>
+    {role === "Headmaster" || role === "Pedagogue" ? (
+      <Button
+        bg="blue.400"
+        className="nav-item"
+        colorScheme="navItem"
+        borderRadius="12px"
+        py="4"
+        px="4"
+        lineHeight="1"
+        size="md"
+        onClick={onOpen}
+        display={["flex", "flex", "flex", "none"]}
+      >
+        {t("kindergarden.toolbox.btn-new-group")}
+      </Button>
+    ) : null}
     {!isElectron() ? (
       <IconButton
         display={["flex", "flex", "flex", "none"]}
@@ -346,7 +345,7 @@ const Kindergarden = ({}) => {
           onClose={drawerOnClose}
           header={DrawerMenuHeader}
         >
-          {DrawerMenu(role, drawerOnOpen, t, useChildren)}
+          {DrawerMenu(t, useChildren)}
         </CustomDrawer>
       ) : null}
       <CustomModal
