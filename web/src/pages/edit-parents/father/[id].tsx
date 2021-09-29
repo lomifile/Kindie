@@ -153,9 +153,9 @@ const EditFatherForm = (
               <Tbody>
                 <Tr>
                   <Td>
-                    {data.findFather.updatedBy.Name +
+                    {data.findFather.updatedBy?.Name +
                       " " +
-                      data.findFather.updatedBy.Surname}
+                      data.findFather.updatedBy?.Surname}
                   </Td>
                   <Td>
                     {moment(data.findFather.updatedAt).format("DD-MM-yyyy")}

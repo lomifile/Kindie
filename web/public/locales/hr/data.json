@@ -357,7 +357,8 @@
     "btn-back": "Povratak"
   },
   "create-parents": {
-    "main-header": "Dodaj roditelje",
+    "main-header-mother": "Dodaj majku",
+    "main-header-father": "Dodaj oca",
     "select": {
       "mother": {
         "name": "Majka",
