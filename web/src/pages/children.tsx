@@ -15,6 +15,9 @@ import {
   IconButton,
   useDisclosure,
   Divider,
+  Input,
+  InputGroup,
+  InputLeftAddon,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React, { useState } from "react";
@@ -46,6 +49,14 @@ import isElectron from "is-electron";
 import router, { NextRouter } from "next/router";
 import { OperationContext, OperationResult } from "urql";
 
+const findChild = (data: ShowChildrenNotIngroupQuery, filter: string) => {
+  let filterdChild = data?.showChildrenFilterNotInGroup.children.filter(
+    (child) => child.Name === filter
+  );
+  console.log(typeof filterdChild);
+  return filterdChild;
+};
+
 const DataTable = (
   data: ShowChildrenNotIngroupQuery,
   role: string,
@@ -64,7 +75,9 @@ const DataTable = (
         id: number;
       }>
     >
-  >
+  >,
+  childrenFilter: string,
+  setChildrenFilter: React.Dispatch<React.SetStateAction<string>>
 ) => (
   <Table mt={"2rem"}>
     {data!.showChildrenFilterNotInGroup.children.length > 0 ? (
@@ -78,82 +91,160 @@ const DataTable = (
       </Thead>
     ) : null}
     <Tbody>
-      {data!.showChildrenFilterNotInGroup.children.map((child) =>
-        !child ? null : (
-          <Tr>
-            <Td>{child.Name}</Td>
-            <Td ml={"2rem"}>{child.Surname}</Td>
-            {role == "Teacher" ? (
-              <Td>
-                <IconButton
-                  aria-label="View user"
-                  icon={<ViewIcon />}
-                  color="white"
-                  bg="blue.400"
-                  _hover={{
-                    backgroundColor: "#719ABC",
-                  }}
-                  onClick={() => {
-                    setChild(child);
-                    onOpen();
-                  }}
-                />
-              </Td>
-            ) : null}
-            <Td>
-              {role == "Pedagogue" || role == "Headmaster" ? (
-                <NextLink
-                  href={"/edit-child/[id]"}
-                  as={`/edit-child/${child.Id}`}
-                >
+      {!childrenFilter
+        ? data!.showChildrenFilterNotInGroup.children.map((child) =>
+            !child ? null : (
+              <Tr>
+                <Td>{child.Name}</Td>
+                <Td ml={"2rem"}>{child.Surname}</Td>
+                {role == "Teacher" ? (
+                  <Td>
+                    <IconButton
+                      aria-label="View user"
+                      icon={<ViewIcon />}
+                      color="white"
+                      bg="blue.400"
+                      _hover={{
+                        backgroundColor: "#719ABC",
+                      }}
+                      onClick={() => {
+                        setChild(child);
+                        onOpen();
+                      }}
+                    />
+                  </Td>
+                ) : null}
+                <Td>
+                  {role == "Pedagogue" || role == "Headmaster" ? (
+                    <NextLink
+                      href={"/edit-child/[id]"}
+                      as={`/edit-child/${child.Id}`}
+                    >
+                      <IconButton
+                        aria-label="Edit"
+                        icon={<EditIcon />}
+                        bg="blue.400"
+                        colorScheme="navItem"
+                        borderRadius="12px"
+                        py="4"
+                        px="4"
+                        lineHeight="1"
+                        size="md"
+                        ml={"2rem"}
+                      />
+                    </NextLink>
+                  ) : null}
+                </Td>
+                <Td>
+                  {role == "Pedagogue" || role == "Headmaster" ? (
+                    <IconButton
+                      aria-label="Delete"
+                      icon={<DeleteIcon />}
+                      colorScheme="red"
+                      borderRadius="12px"
+                      lineHeight="1"
+                      size="md"
+                      onClick={() => {
+                        deleteChildren({
+                          id: child.Id,
+                        });
+                      }}
+                    />
+                  ) : null}
+                </Td>
+                {role == "Pedagogue" || role == "Headmaster" ? (
+                  <Td>
+                    {!child.fatherId || !child.motherId ? (
+                      <Tooltip label={t("children.tooltip.warning")}>
+                        <WarningIcon color={"yellow.400"} />
+                      </Tooltip>
+                    ) : (
+                      <Tooltip label={t("children.tooltip.success")}>
+                        <CheckCircleIcon color={"green.400"} />
+                      </Tooltip>
+                    )}
+                  </Td>
+                ) : null}
+              </Tr>
+            )
+          )
+        : null}
+      {childrenFilter
+        ? findChild(data, childrenFilter).map((child) => (
+            <Tr>
+              <Td>{child.Name}</Td>
+              <Td ml={"2rem"}>{child.Surname}</Td>
+              {role == "Teacher" ? (
+                <Td>
                   <IconButton
-                    aria-label="Edit"
-                    icon={<EditIcon />}
+                    aria-label="View user"
+                    icon={<ViewIcon />}
+                    color="white"
                     bg="blue.400"
-                    colorScheme="navItem"
+                    _hover={{
+                      backgroundColor: "#719ABC",
+                    }}
+                    onClick={() => {
+                      setChild(child);
+                      onOpen();
+                    }}
+                  />
+                </Td>
+              ) : null}
+              <Td>
+                {role == "Pedagogue" || role == "Headmaster" ? (
+                  <NextLink
+                    href={"/edit-child/[id]"}
+                    as={`/edit-child/${child.Id}`}
+                  >
+                    <IconButton
+                      aria-label="Edit"
+                      icon={<EditIcon />}
+                      bg="blue.400"
+                      colorScheme="navItem"
+                      borderRadius="12px"
+                      py="4"
+                      px="4"
+                      lineHeight="1"
+                      size="md"
+                      ml={"2rem"}
+                    />
+                  </NextLink>
+                ) : null}
+              </Td>
+              <Td>
+                {role == "Pedagogue" || role == "Headmaster" ? (
+                  <IconButton
+                    aria-label="Delete"
+                    icon={<DeleteIcon />}
+                    colorScheme="red"
                     borderRadius="12px"
-                    py="4"
-                    px="4"
                     lineHeight="1"
                     size="md"
-                    ml={"2rem"}
+                    onClick={() => {
+                      deleteChildren({
+                        id: child.Id,
+                      });
+                    }}
                   />
-                </NextLink>
-              ) : null}
-            </Td>
-            <Td>
-              {role == "Pedagogue" || role == "Headmaster" ? (
-                <IconButton
-                  aria-label="Delete"
-                  icon={<DeleteIcon />}
-                  colorScheme="red"
-                  borderRadius="12px"
-                  lineHeight="1"
-                  size="md"
-                  onClick={() => {
-                    deleteChildren({
-                      id: child.Id,
-                    });
-                  }}
-                />
-              ) : null}
-            </Td>
-            {role == "Pedagogue" || role == "Headmaster" ? (
-              <Td>
-                {!child.fatherId || !child.motherId ? (
-                  <Tooltip label={t("children.tooltip.warning")}>
-                    <WarningIcon color={"yellow.400"} />
-                  </Tooltip>
-                ) : (
-                  <Tooltip label={t("children.tooltip.success")}>
-                    <CheckCircleIcon color={"green.400"} />
-                  </Tooltip>
-                )}
+                ) : null}
               </Td>
-            ) : null}
-          </Tr>
-        )
-      )}
+              {role == "Pedagogue" || role == "Headmaster" ? (
+                <Td>
+                  {!child.fatherId || !child.motherId ? (
+                    <Tooltip label={t("children.tooltip.warning")}>
+                      <WarningIcon color={"yellow.400"} />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip label={t("children.tooltip.success")}>
+                      <CheckCircleIcon color={"green.400"} />
+                    </Tooltip>
+                  )}
+                </Td>
+              ) : null}
+            </Tr>
+          ))
+        : null}
     </Tbody>
   </Table>
 );
@@ -251,7 +342,7 @@ const Children: React.FC<{}> = ({}) => {
     limit: 10,
     cursor: null as null | string,
   });
-
+  const [childrenFilter, setChildrenFilter] = useState("");
   const [{ data, fetching }] = useShowChildrenNotIngroupQuery({
     variables,
   });
@@ -281,19 +372,42 @@ const Children: React.FC<{}> = ({}) => {
         <ChildrenModal onClose={onClose} isOpen={isOpen} child={child} />
       ) : null}
       {MainHeader(role, t, router)}
-      <Divider mt={5} />
       <Flex justify={"center"}>
         <Box
           w={["100%", "100%", "100%", "80%", "100%"]}
           display={["block", "block", "block", "block"]}
           overflowX={["auto", "auto", "hidden", "hidden"]}
         >
+          <Flex mt="5">
+            <InputGroup mt="2" flex="1" justifySelf="center">
+              <InputLeftAddon borderRadius="48px" children="Filter child" />
+              <Input
+                borderRadius="48px"
+                name="search"
+                id="search"
+                type="text"
+                placeholder="Input name..."
+                onChange={(e) => {
+                  setChildrenFilter(e.currentTarget.value);
+                }}
+              />
+            </InputGroup>
+          </Flex>
           {fetching && !data ? (
             <Box mt={10} mb={10} padding="10" boxShadow="lg" bg="white">
               <SkeletonText mt="4" noOfLines={4} spacing="4" />
             </Box>
           ) : (
-            DataTable(data, role, setChild, onOpen, t, deleteChildren)
+            DataTable(
+              data,
+              role,
+              setChild,
+              onOpen,
+              t,
+              deleteChildren,
+              childrenFilter,
+              setChildrenFilter
+            )
           )}
           {data && data.showChildrenFilterNotInGroup.hasMore
             ? HasMoreBtn(setVariables, variables, data, fetching, t)
