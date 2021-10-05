@@ -258,7 +258,7 @@ const CreateChildForm = (
           duration: 9000,
           isClosable: true,
         });
-        router.back();
+        router.push("/children");
       }
     }}
   >

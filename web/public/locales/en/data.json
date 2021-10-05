@@ -277,6 +277,7 @@
     "btn-add": "Add child",
     "tbl-name": "Name",
     "tbl-surname": "Last name",
+    "tbl-date": "Date created",
     "btn-load-more": "Load more",
     "btn-tooltip": {
       "edit": "Edit child",

@@ -277,6 +277,7 @@
     "btn-add": "Dodaj dijete",
     "tbl-name": "Ime",
     "tbl-surname": "Prezime",
+    "tbl-date": "Datum kreacije",
     "btn-load-more": "Učitaj vise",
     "btn-tooltip": {
       "edit": "Uredi dijete",
