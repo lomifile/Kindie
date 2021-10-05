@@ -294,7 +294,10 @@
     "btn-add": "Add parents",
     "tbl-name": "Name",
     "btn-load-more": "Load more",
-    "tbl-surname": "Surname"
+    "tbl-surname": "Surname",
+    "tbl-filter-mother": "Filter mother",
+    "tbl-filter-father": "Filter father",
+    "input": "Unesi ime"
   },
   "staff": {
     "main-header": "Staff",

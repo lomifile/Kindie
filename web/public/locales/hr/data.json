@@ -294,7 +294,9 @@
     "btn-add": "Dodaj roditelje",
     "tbl-name": "Ime",
     "btn-load-more": "Učitaj vise",
-    "tbl-surname": "Prezime"
+    "tbl-surname": "Prezime",
+    "tbl-filter-mother": "Filtriraj majke",
+    "tbl-filter-father": "Filtriraj oceve"
   },
   "staff": {
     "main-header": "Osoblje",
