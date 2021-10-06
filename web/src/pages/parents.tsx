@@ -208,7 +208,7 @@ const Parents: React.FC<{}> = ({}) => {
                 </Box>
               </Stack>
             ) : null}
-            {mother!.showMother.hasMore ? (
+            {mother!.showMother?.hasMore ? (
               <Flex>
                 <Button
                   onClick={() => {
@@ -294,7 +294,7 @@ const Parents: React.FC<{}> = ({}) => {
                 </Box>
               </Stack>
             ) : null}
-            {father.showFather.hasMore ? (
+            {father!.showFather?.hasMore ? (
               <Flex>
                 <Button
                   onClick={() => {

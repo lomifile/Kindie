@@ -49,7 +49,7 @@ export class MotherResolver {
     replacements.push(req.session.selectedKindergarden);
 
     if (cursor) {
-      replacements.push(new Date(parseInt(cursor)));
+      replacements.push(cursor);
     }
 
     const mom = await getConnection().query(
