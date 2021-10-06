@@ -20,6 +20,7 @@ import {
 import NextLink from "next/link";
 import { faAngleUp, faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import moment from "moment";
 
 interface FatherDataTableProps {
   father: ShowfatherQuery;
@@ -133,6 +134,12 @@ export const FatherDataTable: React.FC<FatherDataTableProps> = ({
               {getClassNamesFor("Surname")}
             </Button>
           </Th>
+          <Th>
+            <Button onClick={() => requestSort("createdAt")}>
+              {t("parents.tbl-date")}
+              {getClassNamesFor("createdAt")}
+            </Button>
+          </Th>
           <Th></Th>
           <Th></Th>
         </Tr>
@@ -144,6 +151,7 @@ export const FatherDataTable: React.FC<FatherDataTableProps> = ({
                 <Tr>
                   <Td>{father.Name}</Td>
                   <Td ml={"2rem"}>{father.Surname}</Td>
+                  <Td>{moment(father.createdAt).format("DD-MM-yyyy")}</Td>
                   {role == "Teacher" ? (
                     <Td>
                       <IconButton

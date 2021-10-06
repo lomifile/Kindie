@@ -295,6 +295,7 @@
     "tbl-name": "Name",
     "btn-load-more": "Load more",
     "tbl-surname": "Surname",
+    "tbl-date": "Date created",
     "tbl-filter-mother": "Filter mother",
     "tbl-filter-father": "Filter father",
     "input": "Unesi ime"

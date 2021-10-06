@@ -295,6 +295,7 @@
     "tbl-name": "Ime",
     "btn-load-more": "Učitaj vise",
     "tbl-surname": "Prezime",
+    "tbl-date": "Datum kreacije",
     "tbl-filter-mother": "Filtriraj majke",
     "tbl-filter-father": "Filtriraj oceve"
   },
