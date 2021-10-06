@@ -69,6 +69,7 @@ const Parents: React.FC<{}> = ({}) => {
   const [, deleteFather] = useDeleteFatherMutation();
 
   const [motherFilter, setMotherFilter] = useState("");
+  const [fatherFilter, setFatherFilter] = useState("");
 
   return (
     <Layout navbarVariant="user" variant="column">
@@ -207,7 +208,7 @@ const Parents: React.FC<{}> = ({}) => {
                 </Box>
               </Stack>
             ) : null}
-            {mother.showMother.hasMore ? (
+            {mother!.showMother.hasMore ? (
               <Flex>
                 <Button
                   onClick={() => {
@@ -258,6 +259,24 @@ const Parents: React.FC<{}> = ({}) => {
                   display={["block", "block", "block", "block"]}
                   overflowX={["auto", "auto", "hidden", "hidden"]}
                 >
+                  <Flex mt="5">
+                    <InputGroup mt="2" flex="1" justifySelf="center">
+                      <InputLeftAddon
+                        borderRadius="48px"
+                        children={t("parents.tbl-filter-father")}
+                      />
+                      <Input
+                        borderRadius="48px"
+                        name="search"
+                        id="search"
+                        type="text"
+                        placeholder={t("parents.input")}
+                        onChange={(e) => {
+                          setFatherFilter(e.currentTarget.value);
+                        }}
+                      />
+                    </InputGroup>
+                  </Flex>
                   {fatherFetching && !father ? (
                     <Box mt={10} mb={10} padding="10" boxShadow="lg" bg="white">
                       <SkeletonText mt="4" noOfLines={4} spacing="4" />
@@ -269,6 +288,7 @@ const Parents: React.FC<{}> = ({}) => {
                       onOpen={onOpen}
                       role={role}
                       setParent={setParent}
+                      fatherFilter={fatherFilter}
                     />
                   )}
                 </Box>
