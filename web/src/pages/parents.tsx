@@ -138,10 +138,14 @@ const Parents: React.FC<{}> = ({}) => {
         </Flex>
       </Stack>
       <Divider mt={5} mb={5} />
-      <Tabs variant="soft-rounded">
+      <Tabs variant="solid-rounded" colorScheme="blue">
         <TabList>
-          <Tab>{t("parents.heading-mother")}</Tab>
-          <Tab>{t("parents.heading-father")}</Tab>
+          <Tab _selected={{ bg: "blue.400", color: "white" }}>
+            {t("parents.heading-mother")}
+          </Tab>
+          <Tab _selected={{ bg: "blue.400", color: "white" }}>
+            {t("parents.heading-father")}
+          </Tab>
         </TabList>
 
         <TabPanels>

@@ -124,19 +124,34 @@ export const MotherDataTable: React.FC<MotherDataTableProps> = ({
       <Thead>
         <Tr>
           <Th>
-            <Button onClick={() => requestSort("Name")}>
+            <Button
+              bg="transparent"
+              _hover={{ bg: "transparent" }}
+              _selected={{ bg: "transparent" }}
+              onClick={() => requestSort("Name")}
+            >
               {t("parents.tbl-name")}
               {getClassNamesFor("Name")}
             </Button>
           </Th>
           <Th>
-            <Button onClick={() => requestSort("Surname")}>
+            <Button
+              bg="transparent"
+              _hover={{ bg: "transparent" }}
+              _selected={{ bg: "transparent" }}
+              onClick={() => requestSort("Surname")}
+            >
               {t("parents.tbl-surname")}
               {getClassNamesFor("Surname")}
             </Button>
           </Th>
           <Th>
-            <Button onClick={() => requestSort("createdAt")}>
+            <Button
+              bg="transparent"
+              _hover={{ bg: "transparent" }}
+              _selected={{ bg: "transparent" }}
+              onClick={() => requestSort("createdAt")}
+            >
               {t("parents.tbl-date")}
               {getClassNamesFor("createdAt")}
             </Button>
