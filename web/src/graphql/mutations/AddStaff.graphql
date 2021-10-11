@@ -1,0 +1,10 @@
+mutation AddStaff($role: String!, $userId: Int!) {
+  addStaff(role: $role, userId: $userId) {
+    staff {
+      ...StaffFragment
+    }
+    errors {
+      ...ErrorFragment
+    }
+  }
+}

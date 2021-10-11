@@ -78,6 +78,27 @@ export type ChildDataType = {
       >;
   };
 
+export type OwnerType = {
+  __typename?: "User";
+  Id: number;
+  Name: string;
+  Surname: string;
+  Email: string;
+  createdAt: string;
+  updatedAt: string;
+  staffOf?: {
+    __typename?: "StaffMembers";
+    kindergarden?: {
+      __typename?: "KinderGarden";
+      Id: number;
+      Name: string;
+      City: string;
+      Address: string;
+      Zipcode: number;
+    };
+  }[];
+};
+
 export type ChildrennotinGrouptype = {
   __typename?: "Children";
   Id: number;

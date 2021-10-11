@@ -293,7 +293,6 @@ export class UserResolver {
           Name: options.name,
           Surname: options.surname,
           Email: options.email,
-          Role: options.role,
           Password: hashPassword,
           confirmed: false,
         })

@@ -323,7 +323,10 @@
     "tbl-name": "Ime",
     "tbl-surname": "Prezime",
     "tbl-role": "Uloga",
-    "btn-add": "Dodaj osoblje"
+    "btn-add": "Dodaj osoblje",
+    "result": {
+      "success": "Osoba uspjesno dodana u osoblje"
+    }
   },
   "group": {
     "drawer": {

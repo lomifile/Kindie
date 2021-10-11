@@ -324,7 +324,10 @@
     "tbl-name": "Name",
     "tbl-surname": "Lastname",
     "tbl-role": "Role",
-    "btn-add": "Add staff"
+    "btn-add": "Add staff",
+    "result": {
+      "success": "Staff member added successfully"
+    }
   },
   "group": {
     "drawer": {

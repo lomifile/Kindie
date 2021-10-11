@@ -1,10 +1,9 @@
-import { useMeQuery } from "../generated/graphql";
-import { isServer } from "./isServer";
+import { useFilterStaffQuery } from "../generated/graphql";
 
 export const getUserRole = () => {
-  const [{ data }] = useMeQuery({
-    pause: isServer(),
-  });
+  const [{ data }] = useFilterStaffQuery();
 
-  return data?.me?.Role;
+  return data?.filterStaff?.role === undefined || null
+    ? "Headmaster"
+    : data?.filterStaff?.role;
 };

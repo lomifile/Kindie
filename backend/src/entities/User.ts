@@ -33,10 +33,6 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   Email!: string;
 
-  @Field(() => String)
-  @Column()
-  Role!: string;
-
   @Field(() => [KinderGarden])
   @OneToMany(() => KinderGarden, (kindergarden) => kindergarden.owning, {
     nullable: true,

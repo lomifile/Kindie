@@ -108,4 +108,18 @@ export class StaffMembersResolver {
       },
     });
   }
+
+  @Query(() => StaffMembers)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  async filterStaff(
+    @Ctx() { req }: AppContext
+  ): Promise<StaffMembers | undefined> {
+    return await StaffMembers.findOne({
+      where: {
+        staffId: req.session.userId,
+        kindergardenId: req.session.selectedKindergarden,
+      },
+    });
+  }
 }
