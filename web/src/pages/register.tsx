@@ -102,7 +102,6 @@ const RegisterForm = (
             type="text"
             required
           />
-          <Text mb={"-10px"}>{t("register.form.role")}</Text>
           <InputField
             name="email"
             placeholder={t("register.form.placeholders.email")}

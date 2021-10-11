@@ -141,7 +141,7 @@ const AddStaffBody = (
 
 const Owner = (t: TFunction<"data">, owner: OwnerType) => (
   <Box>
-    <Table>
+    <Table variant="striped">
       <Thead>
         <Tr>
           <Th>{t("staff.tbl-name")}</Th>
@@ -195,9 +195,9 @@ const StaffTable = (
             <Td>{s.staff.Surname}</Td>
             <Td>{translatedRoles(s.role)}</Td>
             <Td>
-              {meData?.me.Name === owner.Name &&
-              meData?.me.Surname === owner.Surname &&
-              meData?.me?.Id === owner.Id ? (
+              {meData?.me.Name === owner?.Name &&
+              meData?.me.Surname === owner?.Surname &&
+              meData?.me?.Id === owner?.Id ? (
                 <IconButton
                   aria-label="Delete from staff"
                   colorScheme="red"

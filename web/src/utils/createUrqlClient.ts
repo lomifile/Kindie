@@ -25,13 +25,13 @@ import {
   DeleteChildrenMutationVariables,
   DeleteKindergardenMutationVariables,
   DeleteGroupMutationVariables,
-  ShowKindergardenstaffDocument,
   AddStaffMutationVariables,
   AddChildToGroupMutationVariables,
   DeleteStaffMutationVariables,
   DeleteFatherMutationVariables,
   DeleteMotherMutationVariables,
   RemoveChildFromGroupMutationVariables,
+  ShowStaffDocument,
 } from "../generated/graphql";
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
@@ -260,7 +260,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
             addStaff: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Query",
-                Id: (args as AddStaffMutationVariables).Id,
+                Id: (args as AddStaffMutationVariables).userId,
               });
             },
 
@@ -443,17 +443,14 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               fieldFilterFather.forEach((fi) => {
                 cache.invalidate("Query", "filterFather", fi.arguments || {});
               });
-              cache.updateQuery(
-                { query: ShowKindergardenstaffDocument },
-                (data) => {
+              cache.updateQuery({ query: ShowStaffDocument }, (data) => {
+                // @ts-ignore
+                data?.showKinderGardenStaff?.staff.push(
                   // @ts-ignore
-                  data?.showKinderGardenStaff?.staff.push(
-                    // @ts-ignore
-                    _result.useKindergarden.kindergarden.Id
-                  );
-                  return data;
-                }
-              );
+                  _result.useKindergarden.kindergarden.Id
+                );
+                return data;
+              });
               updateQuery<UseKindergardenMutation, ShowGroupsQuery>(
                 cache,
                 { query: ShowGroupsDocument },
