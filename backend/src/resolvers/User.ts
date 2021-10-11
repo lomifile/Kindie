@@ -444,7 +444,6 @@ export class UserResolver {
   ): Promise<User[]> {
     if (text == ".") {
       return await getRepository(User).find({
-        relations: ["partof"],
         where: {
           Id: Not(req.session.userId),
         },

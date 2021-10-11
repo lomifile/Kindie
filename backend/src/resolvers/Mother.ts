@@ -37,6 +37,8 @@ class PaginatedMother {
 @Resolver(Mother)
 export class MotherResolver {
   @Query(() => PaginatedMother)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
   async showMother(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null,

@@ -4,8 +4,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -14,6 +12,7 @@ import { Children } from "./Children";
 import { KinderGarden } from "./Kindergarden";
 import { Mother } from "./Mother";
 import { Father } from "./Father";
+import { StaffMembers } from "./SatffMembers";
 
 @ObjectType()
 @Entity()
@@ -45,23 +44,12 @@ export class User extends BaseEntity {
   })
   ownerOf: KinderGarden[];
 
-  @ManyToMany(() => KinderGarden, (kindergarden) => kindergarden.staff, {
+  @Field(() => [StaffMembers], { nullable: true })
+  @OneToMany(() => StaffMembers, (staff) => staff.staff, {
     lazy: true,
     nullable: true,
   })
-  @JoinTable({
-    name: "staff_members",
-    joinColumn: {
-      name: "userId",
-      referencedColumnName: "Id",
-    },
-    inverseJoinColumn: {
-      name: "kindergardenId",
-      referencedColumnName: "Id",
-    },
-  })
-  @Field(() => [KinderGarden], { nullable: true })
-  partof: KinderGarden[];
+  staffOf: StaffMembers[];
 
   @Column()
   Password!: string;
