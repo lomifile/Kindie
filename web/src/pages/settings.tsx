@@ -189,7 +189,6 @@ const ProfileCard = (
             initialValues={{
               name: data.me?.Name,
               surname: data.me?.Surname,
-              role: data.me?.Role,
               email: data.me?.Email,
               password: "",
             }}
@@ -199,7 +198,6 @@ const ProfileCard = (
                   name: values.name,
                   surname: values.surname,
                   email: values.email,
-                  role: values.role,
                   password: values.password,
                 },
               });

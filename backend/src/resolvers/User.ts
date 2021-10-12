@@ -293,7 +293,6 @@ export class UserResolver {
           Name: options.name,
           Surname: options.surname,
           Email: options.email,
-          Role: options.role,
           Password: hashPassword,
           confirmed: false,
         })
@@ -444,7 +443,6 @@ export class UserResolver {
   ): Promise<User[]> {
     if (text == ".") {
       return await getRepository(User).find({
-        relations: ["partof"],
         where: {
           Id: Not(req.session.userId),
         },

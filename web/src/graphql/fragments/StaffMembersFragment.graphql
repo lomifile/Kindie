@@ -1,0 +1,11 @@
+fragment StaffFragment on StaffMembers {
+  staffId
+  kindergardenId
+  staff {
+    ...UserFragment
+  }
+  kindergarden {
+    ...KindergardenFragment
+  }
+  role
+}

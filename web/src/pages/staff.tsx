@@ -19,9 +19,11 @@ import {
   Spinner,
   InputLeftElement,
   InputGroup,
+  Select,
+  Button,
+  useToast,
 } from "@chakra-ui/react";
 import { fetchOwnerOf } from "../utils/fetchOwnerOf";
-import { fetchStaff } from "../utils/fetchStaff";
 import {
   AddIcon,
   ArrowBackIcon,
@@ -33,14 +35,14 @@ import {
   AddStaffMutation,
   DeleteStaffMutation,
   Exact,
-  KinderGarden,
   MeQuery,
   SearchUserQuery,
+  ShowStaffQuery,
   useAddStaffMutation,
   useDeleteStaffMutation,
   useMeQuery,
-  User,
   useSearchUserQuery,
+  useShowStaffQuery,
 } from "../generated/graphql";
 import { ShowUser } from "../components/ShowUser";
 import { useIsAuth } from "../utils/useIsAuth";
@@ -50,6 +52,9 @@ import router from "next/router";
 import { CustomModal } from "../components/CustomModal";
 import { CustomDrawer } from "../components/CustomDrawer";
 import { OperationContext, OperationResult } from "urql";
+import { OwnerType } from "../utils/types";
+import { Form, Formik } from "formik";
+import { toErrormap } from "../utils/toErrorMap";
 
 const AddStaffBody = (
   setText: React.Dispatch<React.SetStateAction<string>>,
@@ -58,19 +63,8 @@ const AddStaffBody = (
   t: TFunction<"data">,
   setShow: React.Dispatch<any>,
   openModal: () => void,
-  addStaff: (
-    variables?: Exact<{
-      Id: number;
-    }>,
-    context?: Partial<OperationContext>
-  ) => Promise<
-    OperationResult<
-      AddStaffMutation,
-      Exact<{
-        Id: number;
-      }>
-    >
-  >
+  addStaffModalOnOpen: () => void,
+  setUserId: React.Dispatch<any>
 ) => (
   <>
     <InputGroup>
@@ -101,7 +95,7 @@ const AddStaffBody = (
         ) : (
           userSearch?.searchUser.map((u) => (
             <Tr>
-              {u.partof.length <= 0 ? (
+              {u.staffOf.length <= 0 ? (
                 <>
                   <Td>{u.Name}</Td>
                   <Td>{u.Surname}</Td>
@@ -115,7 +109,8 @@ const AddStaffBody = (
                         backgroundColor: "#719ABC",
                       }}
                       onClick={() => {
-                        addStaff({ Id: u.Id });
+                        setUserId(u.Id);
+                        addStaffModalOnOpen();
                       }}
                     />
                   </Td>
@@ -144,9 +139,9 @@ const AddStaffBody = (
   </>
 );
 
-const Owner = (t: TFunction<"data">, owner: {}) => (
+const Owner = (t: TFunction<"data">, owner: OwnerType) => (
   <Box>
-    <Table>
+    <Table variant="striped" bg="transparent">
       <Thead>
         <Tr>
           <Th>{t("staff.tbl-name")}</Th>
@@ -155,18 +150,8 @@ const Owner = (t: TFunction<"data">, owner: {}) => (
       </Thead>
       <Tbody>
         <Tr>
-          <Td>
-            {
-              // @ts-ignore
-              owner?.Name
-            }
-          </Td>
-          <Td>
-            {
-              // @ts-ignore
-              owner?.Surname
-            }
-          </Td>
+          <Td>{owner?.Name}</Td>
+          <Td>{owner?.Surname}</Td>
         </Tr>
       </Tbody>
     </Table>
@@ -174,20 +159,7 @@ const Owner = (t: TFunction<"data">, owner: {}) => (
 );
 
 const StaffTable = (
-  staff: ({
-    __typename?: "User";
-  } & {
-    __typename?: "User";
-  } & Pick<
-      User,
-      "Id" | "Name" | "Surname" | "Email" | "Role" | "createdAt" | "updatedAt"
-    > & {
-      partof?: ({
-        __typename?: "KinderGarden";
-      } & {
-        __typename?: "KinderGarden";
-      } & Pick<KinderGarden, "Id" | "Name" | "City" | "Address" | "Zipcode">)[];
-    })[],
+  staff: ShowStaffQuery,
   translatedRoles: (role: String) => string,
   t: TFunction<"data">,
   deleteStaff: (
@@ -204,7 +176,7 @@ const StaffTable = (
     >
   >,
   meData: MeQuery,
-  owner: {}
+  owner: OwnerType
 ) => (
   <Box>
     <Table>
@@ -217,31 +189,26 @@ const StaffTable = (
         </Tr>
       </Thead>
       <Tbody>
-        {staff?.map((s) => (
+        {staff?.showStaff?.map((s) => (
           <Tr>
-            <Td>{s.Name}</Td>
-            <Td>{s.Surname}</Td>
-            <Td>{translatedRoles(s.Role)}</Td>
+            <Td>{s.staff.Name}</Td>
+            <Td>{s.staff.Surname}</Td>
+            <Td>{translatedRoles(s.role)}</Td>
             <Td>
-              {
-                // @ts-ignore
-                meData?.me.Name === owner.Name &&
-                // @ts-ignore
-                meData?.me.Surname === owner.Surname &&
-                // @ts-ignore
-                meData?.me?.Id === owner.Id ? (
-                  <IconButton
-                    aria-label="Delete from staff"
-                    colorScheme="red"
-                    icon={<DeleteIcon />}
-                    onClick={() => {
-                      deleteStaff({
-                        userId: s.Id,
-                      });
-                    }}
-                  />
-                ) : null
-              }
+              {meData?.me?.Name === owner?.Name &&
+              meData?.me?.Surname === owner?.Surname &&
+              meData?.me?.Id === owner?.Id ? (
+                <IconButton
+                  aria-label="Delete from staff"
+                  colorScheme="red"
+                  icon={<DeleteIcon />}
+                  onClick={() => {
+                    deleteStaff({
+                      userId: s.staffId,
+                    });
+                  }}
+                />
+              ) : null}
             </Td>
           </Tr>
         ))}
@@ -249,6 +216,94 @@ const StaffTable = (
     </Table>
   </Box>
 );
+
+const AddStaffForm = (
+  addStaff: (
+    variables?: Exact<{
+      role: string;
+      userId: number;
+    }>,
+    context?: Partial<OperationContext>
+  ) => Promise<
+    OperationResult<
+      AddStaffMutation,
+      Exact<{
+        role: string;
+        userId: number;
+      }>
+    >
+  >,
+  t: TFunction<"data">,
+  userId: any,
+  toast,
+  addStaffModalOnClose: () => void
+) => {
+  const [role, setRole] = useState("");
+  const handleChange = (e) => {
+    setRole(e.target.value);
+  };
+  console.log(role);
+  return (
+    <Formik
+      initialValues={{
+        role: "",
+      }}
+      onSubmit={async (_, { setErrors }) => {
+        const response = await addStaff({
+          userId,
+          role,
+        });
+
+        if (response.data.addStaff.errors) {
+          setErrors(toErrormap(response.data.addStaff.errors));
+        } else if (response.data.addStaff.staff) {
+          addStaffModalOnClose();
+          toast({
+            title: t("staff.result.success"),
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      }}
+    >
+      {({ isSubmitting }) => (
+        <Form>
+          <Flex justifyContent="center" flexDirection="column">
+            <Stack spacing={4}>
+              <Select
+                variant="filled"
+                placeholder={t("register.form.placeholders.role")}
+                onChange={handleChange}
+                borderRadius="24px"
+              >
+                <option value="Headmaster">
+                  {t("staff.roles.headmaster")}
+                </option>
+                <option value="Teacher">{t("staff.roles.teacher")}</option>
+                <option value="Pedagogue">{t("staff.roles.pedagogue")}</option>
+              </Select>
+              <Button
+                bg="blue.400"
+                className="nav-item"
+                colorScheme="navItem"
+                borderRadius="12px"
+                py="4"
+                px="4"
+                lineHeight="1"
+                size="md"
+                isLoading={isSubmitting}
+                type="submit"
+              >
+                {t("staff.btn-add")}
+              </Button>
+            </Stack>
+          </Flex>
+        </Form>
+      )}
+    </Formik>
+  );
+};
 
 const Staff: React.FC<{}> = ({}) => {
   useIsAuth();
@@ -259,8 +314,13 @@ const Staff: React.FC<{}> = ({}) => {
     onOpen: openModal,
     onClose: closeModal,
   } = useDisclosure();
-  const owner = fetchOwnerOf();
-  const staff = fetchStaff();
+  const {
+    isOpen: addStaffModalIsOpen,
+    onOpen: addStaffModalOnOpen,
+    onClose: addStaffModalOnClose,
+  } = useDisclosure();
+  const owner: OwnerType = fetchOwnerOf();
+  const [{ data: staff, fetching: staffFetching }] = useShowStaffQuery();
   const [, addStaff] = useAddStaffMutation();
   const [, deleteStaff] = useDeleteStaffMutation();
   const [text, setText] = useState("");
@@ -270,6 +330,7 @@ const Staff: React.FC<{}> = ({}) => {
       text,
     },
   });
+  const [userId, setUserId] = useState(null);
   const [{ data: meData }] = useMeQuery();
   const translatedRoles = (role: String) => {
     switch (role) {
@@ -283,10 +344,18 @@ const Staff: React.FC<{}> = ({}) => {
         return t("staff.roles.pedagogue");
     }
   };
+  const toast = useToast();
 
   return (
     <Layout variant={"column"} navbarVariant={"user"}>
       <title>{t("staff.main-header")}</title>
+      <CustomModal
+        header={t("staff.btn-add")}
+        isOpen={addStaffModalIsOpen}
+        onClose={addStaffModalOnClose}
+      >
+        {AddStaffForm(addStaff, t, userId, toast, addStaffModalOnClose)}
+      </CustomModal>
       <CustomModal
         header={t("staff.modal.header")}
         isOpen={modalOpen}
@@ -312,6 +381,7 @@ const Staff: React.FC<{}> = ({}) => {
         </Box>
       </CustomModal>
       <CustomDrawer
+        size="md"
         isOpen={isOpen}
         onClose={onClose}
         header={t("staff.drawer.header")}
@@ -323,7 +393,8 @@ const Staff: React.FC<{}> = ({}) => {
           t,
           setShow,
           openModal,
-          addStaff
+          addStaffModalOnOpen,
+          setUserId
         )}
       </CustomDrawer>
       <Stack spacing={8}>
@@ -359,29 +430,24 @@ const Staff: React.FC<{}> = ({}) => {
           mb={2}
         >
           <Heading color="blue.400">{t("staff.staff-heading")}</Heading>
-          {
-            // @ts-ignore
-            meData?.me?.Name === owner.Name &&
-            // @ts-ignore
-            meData?.me?.Surname === owner.Surname &&
-            // @ts-ignore
-            meData?.me?.Id === owner.Id ? (
-              <IconButton
-                ml={5}
-                bg="blue.400"
-                colorScheme="navItem"
-                borderRadius="12px"
-                py="4"
-                px="4"
-                lineHeight="1"
-                size="md"
-                type="submit"
-                onClick={onOpen}
-                icon={<AddIcon />}
-                aria-label={"Add staff"}
-              />
-            ) : null
-          }
+          {meData?.me?.Name === owner?.Name &&
+          meData?.me?.Surname === owner?.Surname &&
+          meData?.me?.Id === owner?.Id ? (
+            <IconButton
+              ml={5}
+              bg="blue.400"
+              colorScheme="navItem"
+              borderRadius="12px"
+              py="4"
+              px="4"
+              lineHeight="1"
+              size="md"
+              type="submit"
+              onClick={onOpen}
+              icon={<AddIcon />}
+              aria-label={"Add staff"}
+            />
+          ) : null}
         </Flex>
         {StaffTable(staff, translatedRoles, t, deleteStaff, meData, owner)}
       </Stack>

@@ -277,6 +277,7 @@
     "btn-add": "Dodaj dijete",
     "tbl-name": "Ime",
     "tbl-surname": "Prezime",
+    "tbl-date": "Datum kreacije",
     "btn-load-more": "Učitaj vise",
     "btn-tooltip": {
       "edit": "Uredi dijete",
@@ -293,7 +294,10 @@
     "btn-add": "Dodaj roditelje",
     "tbl-name": "Ime",
     "btn-load-more": "Učitaj vise",
-    "tbl-surname": "Prezime"
+    "tbl-surname": "Prezime",
+    "tbl-date": "Datum kreacije",
+    "tbl-filter-mother": "Filtriraj majke",
+    "tbl-filter-father": "Filtriraj oceve"
   },
   "staff": {
     "main-header": "Osoblje",
@@ -319,7 +323,10 @@
     "tbl-name": "Ime",
     "tbl-surname": "Prezime",
     "tbl-role": "Uloga",
-    "btn-add": "Dodaj osoblje"
+    "btn-add": "Dodaj osoblje",
+    "result": {
+      "success": "Osoba uspjesno dodana u osoblje"
+    }
   },
   "group": {
     "drawer": {

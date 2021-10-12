@@ -277,6 +277,7 @@
     "btn-add": "Add child",
     "tbl-name": "Name",
     "tbl-surname": "Last name",
+    "tbl-date": "Date created",
     "btn-load-more": "Load more",
     "btn-tooltip": {
       "edit": "Edit child",
@@ -293,7 +294,11 @@
     "btn-add": "Add parents",
     "tbl-name": "Name",
     "btn-load-more": "Load more",
-    "tbl-surname": "Surname"
+    "tbl-surname": "Surname",
+    "tbl-date": "Date created",
+    "tbl-filter-mother": "Filter mother",
+    "tbl-filter-father": "Filter father",
+    "input": "Unesi ime"
   },
   "staff": {
     "main-header": "Staff",
@@ -319,7 +324,10 @@
     "tbl-name": "Name",
     "tbl-surname": "Lastname",
     "tbl-role": "Role",
-    "btn-add": "Add staff"
+    "btn-add": "Add staff",
+    "result": {
+      "success": "Staff member added successfully"
+    }
   },
   "group": {
     "drawer": {

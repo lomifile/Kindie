@@ -68,9 +68,9 @@ export type Father = {
   Name: Scalars['String'];
   Phone: Scalars['Float'];
   Surname: Scalars['String'];
-  createdAt: Scalars['String'];
+  createdAt: Scalars['DateTime'];
   createdBy?: Maybe<User>;
-  updatedAt: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
   updatedBy?: Maybe<User>;
 };
 
@@ -106,7 +106,7 @@ export type KinderGarden = {
   createdAt: Scalars['String'];
   groups?: Maybe<Array<Groups>>;
   owning?: Maybe<User>;
-  staff: Array<User>;
+  staff?: Maybe<Array<StaffMembers>>;
   updatedAt: Scalars['String'];
 };
 
@@ -130,9 +130,9 @@ export type Mother = {
   Name: Scalars['String'];
   Phone: Scalars['Float'];
   Surname: Scalars['String'];
-  createdAt: Scalars['String'];
+  createdAt: Scalars['DateTime'];
   createdBy?: Maybe<User>;
-  updatedAt: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
   updatedBy?: Maybe<User>;
 };
 
@@ -141,7 +141,7 @@ export type Mutation = {
   addChildToGroup?: Maybe<Children>;
   addFather: Father;
   addMother: Mother;
-  addStaff: Scalars['Boolean'];
+  addStaff: StaffResponse;
   changePassword: UserResponse;
   clearGroup: Scalars['Boolean'];
   clearKindergarden: Scalars['Boolean'];
@@ -190,6 +190,7 @@ export type MutationAddMotherArgs = {
 
 
 export type MutationAddStaffArgs = {
+  role: Scalars['String'];
   userId: Scalars['Int'];
 };
 
@@ -355,6 +356,7 @@ export type Query = {
   __typename?: 'Query';
   filterFather: Array<Father>;
   filterMother: Array<Mother>;
+  filterStaff: StaffMembers;
   findChild?: Maybe<Children>;
   findFather: Father;
   findMother: Mother;
@@ -369,10 +371,10 @@ export type Query = {
   showChildrenFilterNotInGroup: PaginatedChildren;
   showFather: PaginatedFather;
   showGroups: Array<Groups>;
-  showKinderGardenStaff: KinderGarden;
   showKindergarden: Array<KinderGarden>;
   showMother: PaginatedMother;
   showSelectedGroup?: Maybe<Groups>;
+  showStaff: Array<StaffMembers>;
   staffOf: Array<User>;
 };
 
@@ -440,6 +442,21 @@ export type QueryShowMotherArgs = {
   limit: Scalars['Int'];
 };
 
+export type StaffMembers = {
+  __typename?: 'StaffMembers';
+  kindergarden?: Maybe<KinderGarden>;
+  kindergardenId: Scalars['Float'];
+  role: Scalars['String'];
+  staff?: Maybe<User>;
+  staffId: Scalars['Float'];
+};
+
+export type StaffResponse = {
+  __typename?: 'StaffResponse';
+  errors?: Maybe<Array<FieldError>>;
+  staff?: Maybe<StaffMembers>;
+};
+
 export type UpdatePassword = {
   password: Scalars['String'];
   repeatPassword: Scalars['String'];
@@ -449,7 +466,6 @@ export type UpdateUserInput = {
   email: Scalars['String'];
   name: Scalars['String'];
   password: Scalars['String'];
-  role: Scalars['String'];
   surname: Scalars['String'];
 };
 
@@ -458,14 +474,13 @@ export type User = {
   Email: Scalars['String'];
   Id: Scalars['Float'];
   Name: Scalars['String'];
-  Role: Scalars['String'];
   Surname: Scalars['String'];
   createdAt: Scalars['String'];
   createdChildren?: Maybe<Array<Children>>;
   createdFather?: Maybe<Array<Father>>;
   createdMother?: Maybe<Array<Mother>>;
   ownerOf: Array<KinderGarden>;
-  partof?: Maybe<Array<KinderGarden>>;
+  staffOf?: Maybe<Array<StaffMembers>>;
   updatedAt: Scalars['String'];
   updatedChildren?: Maybe<Array<Children>>;
   updatedFather?: Maybe<Array<Father>>;
@@ -483,51 +498,53 @@ export type UsernamePasswordInput = {
   name: Scalars['String'];
   password: Scalars['String'];
   repeatPassword: Scalars['String'];
-  role: Scalars['String'];
   surname: Scalars['String'];
 };
 
-export type ChildrenFragmentFragment = { __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> };
+export type ChildrenFragmentFragment = { __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> };
 
 export type ErrorFragmentFragment = { __typename?: 'FieldError', field: string, message: string };
 
-export type FatherFragmentFragment = { __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> };
+export type FatherFragmentFragment = { __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> };
 
 export type GroupFragmentFragment = { __typename?: 'Groups', Id: number, Name: string, createdAt: string, updatedAt: string };
 
 export type KindergardenFragmentFragment = { __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number };
 
-export type MotherFragmentFragment = { __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> };
+export type MotherFragmentFragment = { __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> };
 
-export type UserFragmentFragment = { __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> };
+export type StaffFragmentFragment = { __typename?: 'StaffMembers', staffId: number, kindergardenId: number, role: string, staff?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> };
+
+export type UserFragmentFragment = { __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> };
 
 export type AddChildToGroupMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type AddChildToGroupMutation = { __typename?: 'Mutation', addChildToGroup?: Maybe<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> }> };
+export type AddChildToGroupMutation = { __typename?: 'Mutation', addChildToGroup?: Maybe<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> }> };
 
 export type AddFatherMutationVariables = Exact<{
   options: ParentsInput;
 }>;
 
 
-export type AddFatherMutation = { __typename?: 'Mutation', addFather: { __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> } };
+export type AddFatherMutation = { __typename?: 'Mutation', addFather: { __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> } };
 
 export type AddMotherMutationVariables = Exact<{
   options: ParentsInput;
 }>;
 
 
-export type AddMotherMutation = { __typename?: 'Mutation', addMother: { __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> } };
+export type AddMotherMutation = { __typename?: 'Mutation', addMother: { __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> } };
 
 export type AddStaffMutationVariables = Exact<{
-  Id: Scalars['Int'];
+  role: Scalars['String'];
+  userId: Scalars['Int'];
 }>;
 
 
-export type AddStaffMutation = { __typename?: 'Mutation', addStaff: boolean };
+export type AddStaffMutation = { __typename?: 'Mutation', addStaff: { __typename?: 'StaffResponse', staff?: Maybe<{ __typename?: 'StaffMembers', staffId: number, kindergardenId: number, role: string, staff?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
 export type ChangePasswordMutationVariables = Exact<{
   token: Scalars['String'];
@@ -536,7 +553,7 @@ export type ChangePasswordMutationVariables = Exact<{
 }>;
 
 
-export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> } };
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> } };
 
 export type ClearGroupMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -553,7 +570,7 @@ export type CreateChildMutationVariables = Exact<{
 }>;
 
 
-export type CreateChildMutation = { __typename?: 'Mutation', createChild: { __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> } };
+export type CreateChildMutation = { __typename?: 'Mutation', createChild: { __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> } };
 
 export type CreateGroupMutationVariables = Exact<{
   name: Scalars['String'];
@@ -624,7 +641,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -636,14 +653,14 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
 export type RemoveChildFromGroupMutationVariables = Exact<{
   Id: Scalars['Int'];
 }>;
 
 
-export type RemoveChildFromGroupMutation = { __typename?: 'Mutation', removeChildFromGroup?: Maybe<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> }> };
+export type RemoveChildFromGroupMutation = { __typename?: 'Mutation', removeChildFromGroup?: Maybe<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> }> };
 
 export type ResendEmailMutationVariables = Exact<{
   email: Scalars['String'];
@@ -665,7 +682,7 @@ export type UpdateChildMutationVariables = Exact<{
 }>;
 
 
-export type UpdateChildMutation = { __typename?: 'Mutation', updateChild?: Maybe<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> }> };
+export type UpdateChildMutation = { __typename?: 'Mutation', updateChild?: Maybe<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> }> };
 
 export type UpdateChildrenParentsMutationVariables = Exact<{
   childId: Scalars['Int'];
@@ -674,7 +691,7 @@ export type UpdateChildrenParentsMutationVariables = Exact<{
 }>;
 
 
-export type UpdateChildrenParentsMutation = { __typename?: 'Mutation', updateChildernParents: { __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> } };
+export type UpdateChildrenParentsMutation = { __typename?: 'Mutation', updateChildernParents: { __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> } };
 
 export type UpdateFatherMutationVariables = Exact<{
   fatherId: Scalars['Int'];
@@ -682,7 +699,7 @@ export type UpdateFatherMutationVariables = Exact<{
 }>;
 
 
-export type UpdateFatherMutation = { __typename?: 'Mutation', updateFather: { __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> } };
+export type UpdateFatherMutation = { __typename?: 'Mutation', updateFather: { __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> } };
 
 export type UpdateMotherMutationVariables = Exact<{
   motherId: Scalars['Int'];
@@ -690,21 +707,21 @@ export type UpdateMotherMutationVariables = Exact<{
 }>;
 
 
-export type UpdateMotherMutation = { __typename?: 'Mutation', updateMother: { __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> } };
+export type UpdateMotherMutation = { __typename?: 'Mutation', updateMother: { __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> } };
 
 export type UpdatePasswordMutationVariables = Exact<{
   options: UpdatePassword;
 }>;
 
 
-export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
+export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
 export type UpdateUserMutationVariables = Exact<{
   options: UpdateUserInput;
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
 export type UseChildrenMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -730,61 +747,66 @@ export type VerifyAccountMutationVariables = Exact<{
 }>;
 
 
-export type VerifyAccountMutation = { __typename?: 'Mutation', verifyAccount: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
+export type VerifyAccountMutation = { __typename?: 'Mutation', verifyAccount: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
 export type FilterFatherQueryVariables = Exact<{
   text: Scalars['String'];
 }>;
 
 
-export type FilterFatherQuery = { __typename?: 'Query', filterFather: Array<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> };
+export type FilterFatherQuery = { __typename?: 'Query', filterFather: Array<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> };
 
 export type FilterMotherQueryVariables = Exact<{
   text: Scalars['String'];
 }>;
 
 
-export type FilterMotherQuery = { __typename?: 'Query', filterMother: Array<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> };
+export type FilterMotherQuery = { __typename?: 'Query', filterMother: Array<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> };
+
+export type FilterStaffQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FilterStaffQuery = { __typename?: 'Query', filterStaff: { __typename?: 'StaffMembers', staffId: number, kindergardenId: number, role: string, staff?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> } };
 
 export type FindChildQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type FindChildQuery = { __typename?: 'Query', findChild?: Maybe<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> }> };
+export type FindChildQuery = { __typename?: 'Query', findChild?: Maybe<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> }> };
 
 export type FindFatherQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type FindFatherQuery = { __typename?: 'Query', findFather: { __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> } };
+export type FindFatherQuery = { __typename?: 'Query', findFather: { __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> } };
 
 export type FindMotherQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type FindMotherQuery = { __typename?: 'Query', findMother: { __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> } };
+export type FindMotherQuery = { __typename?: 'Query', findMother: { __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, ownerOf: Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> };
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> };
 
 export type SearchUserQueryVariables = Exact<{
   text: Scalars['String'];
 }>;
 
 
-export type SearchUserQuery = { __typename?: 'Query', searchUser: Array<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> };
+export type SearchUserQuery = { __typename?: 'Query', searchUser: Array<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> };
 
 export type ShowChildrenQueryVariables = Exact<{
   text: Scalars['String'];
 }>;
 
 
-export type ShowChildrenQuery = { __typename?: 'Query', showChildren: Array<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> }> };
+export type ShowChildrenQuery = { __typename?: 'Query', showChildren: Array<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> }> };
 
 export type ShowChildrenFilterInGroupQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -792,7 +814,7 @@ export type ShowChildrenFilterInGroupQueryVariables = Exact<{
 }>;
 
 
-export type ShowChildrenFilterInGroupQuery = { __typename?: 'Query', showChildrenFilterInGroup: { __typename?: 'PaginatedChildren', hasMore: boolean, children: Array<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> }> } };
+export type ShowChildrenFilterInGroupQuery = { __typename?: 'Query', showChildrenFilterInGroup: { __typename?: 'PaginatedChildren', hasMore: boolean, children: Array<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> }> } };
 
 export type ShowChildrenNotIngroupQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -800,7 +822,7 @@ export type ShowChildrenNotIngroupQueryVariables = Exact<{
 }>;
 
 
-export type ShowChildrenNotIngroupQuery = { __typename?: 'Query', showChildrenFilterNotInGroup: { __typename?: 'PaginatedChildren', hasMore: boolean, children: Array<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> }> } };
+export type ShowChildrenNotIngroupQuery = { __typename?: 'Query', showChildrenFilterNotInGroup: { __typename?: 'PaginatedChildren', hasMore: boolean, children: Array<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: Maybe<any>, OIB: number, Remarks: string, motherId?: Maybe<number>, fatherId?: Maybe<number>, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, mother?: Maybe<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }>, father?: Maybe<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> }> } };
 
 export type ShowfatherQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -808,7 +830,7 @@ export type ShowfatherQueryVariables = Exact<{
 }>;
 
 
-export type ShowfatherQuery = { __typename?: 'Query', showFather: { __typename?: 'PaginatedFather', hasMore: boolean, father: Array<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> } };
+export type ShowfatherQuery = { __typename?: 'Query', showFather: { __typename?: 'PaginatedFather', hasMore: boolean, father: Array<{ __typename?: 'Father', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> } };
 
 export type ShowGroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -820,18 +842,13 @@ export type ShowKindergardenQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ShowKindergardenQuery = { __typename?: 'Query', showKindergarden: Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> };
 
-export type ShowKindergardenstaffQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ShowKindergardenstaffQuery = { __typename?: 'Query', showKinderGardenStaff: { __typename?: 'KinderGarden', owning?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, staff: Array<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> } };
-
 export type ShowMotherQueryVariables = Exact<{
   limit: Scalars['Int'];
   cursor?: Maybe<Scalars['String']>;
 }>;
 
 
-export type ShowMotherQuery = { __typename?: 'Query', showMother: { __typename?: 'PaginatedMother', hasMore: boolean, mother: Array<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: string, updatedAt: string, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, Role: string, createdAt: string, updatedAt: string, partof?: Maybe<Array<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }>> }> }> } };
+export type ShowMotherQuery = { __typename?: 'Query', showMother: { __typename?: 'PaginatedMother', hasMore: boolean, mother: Array<{ __typename?: 'Mother', Id: number, Name: string, Surname: string, Email: string, Phone: number, createdAt: any, updatedAt: any, createdBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, updatedBy?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> } };
 
 export type ShowSelectedGroupQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -841,7 +858,12 @@ export type ShowSelectedGroupQuery = { __typename?: 'Query', showSelectedGroup?:
 export type ShowSelectedKindergardenQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ShowSelectedKindergardenQuery = { __typename?: 'Query', selectedKindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> };
+export type ShowSelectedKindergardenQuery = { __typename?: 'Query', selectedKindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number, owning?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }> };
+
+export type ShowStaffQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ShowStaffQuery = { __typename?: 'Query', showStaff: Array<{ __typename?: 'StaffMembers', staffId: number, kindergardenId: number, role: string, staff?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }> };
 
 export const KindergardenFragmentFragmentDoc = gql`
     fragment KindergardenFragment on KinderGarden {
@@ -858,9 +880,10 @@ export const UserFragmentFragmentDoc = gql`
   Name
   Surname
   Email
-  Role
-  partof {
-    ...KindergardenFragment
+  staffOf {
+    kindergarden {
+      ...KindergardenFragment
+    }
   }
   createdAt
   updatedAt
@@ -943,6 +966,20 @@ export const GroupFragmentFragmentDoc = gql`
   updatedAt
 }
     `;
+export const StaffFragmentFragmentDoc = gql`
+    fragment StaffFragment on StaffMembers {
+  staffId
+  kindergardenId
+  staff {
+    ...UserFragment
+  }
+  kindergarden {
+    ...KindergardenFragment
+  }
+  role
+}
+    ${UserFragmentFragmentDoc}
+${KindergardenFragmentFragmentDoc}`;
 export const AddChildToGroupDocument = gql`
     mutation AddChildToGroup($id: Int!) {
   addChildToGroup(id: $id) {
@@ -977,10 +1014,18 @@ export function useAddMotherMutation() {
   return Urql.useMutation<AddMotherMutation, AddMotherMutationVariables>(AddMotherDocument);
 };
 export const AddStaffDocument = gql`
-    mutation AddStaff($Id: Int!) {
-  addStaff(userId: $Id)
+    mutation AddStaff($role: String!, $userId: Int!) {
+  addStaff(role: $role, userId: $userId) {
+    staff {
+      ...StaffFragment
+    }
+    errors {
+      ...ErrorFragment
+    }
+  }
 }
-    `;
+    ${StaffFragmentFragmentDoc}
+${ErrorFragmentFragmentDoc}`;
 
 export function useAddStaffMutation() {
   return Urql.useMutation<AddStaffMutation, AddStaffMutationVariables>(AddStaffDocument);
@@ -1379,6 +1424,17 @@ export const FilterMotherDocument = gql`
 export function useFilterMotherQuery(options: Omit<Urql.UseQueryArgs<FilterMotherQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<FilterMotherQuery>({ query: FilterMotherDocument, ...options });
 };
+export const FilterStaffDocument = gql`
+    query FilterStaff {
+  filterStaff {
+    ...StaffFragment
+  }
+}
+    ${StaffFragmentFragmentDoc}`;
+
+export function useFilterStaffQuery(options: Omit<Urql.UseQueryArgs<FilterStaffQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<FilterStaffQuery>({ query: FilterStaffDocument, ...options });
+};
 export const FindChildDocument = gql`
     query FindChild($id: Int!) {
   findChild(id: $id) {
@@ -1416,16 +1472,9 @@ export const MeDocument = gql`
     query Me {
   me {
     ...UserFragment
-    ownerOf {
-      ...KindergardenFragment
-    }
-    partof {
-      ...KindergardenFragment
-    }
   }
 }
-    ${UserFragmentFragmentDoc}
-${KindergardenFragmentFragmentDoc}`;
+    ${UserFragmentFragmentDoc}`;
 
 export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
@@ -1516,22 +1565,6 @@ export const ShowKindergardenDocument = gql`
 export function useShowKindergardenQuery(options: Omit<Urql.UseQueryArgs<ShowKindergardenQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<ShowKindergardenQuery>({ query: ShowKindergardenDocument, ...options });
 };
-export const ShowKindergardenstaffDocument = gql`
-    query ShowKindergardenstaff {
-  showKinderGardenStaff {
-    owning {
-      ...UserFragment
-    }
-    staff {
-      ...UserFragment
-    }
-  }
-}
-    ${UserFragmentFragmentDoc}`;
-
-export function useShowKindergardenstaffQuery(options: Omit<Urql.UseQueryArgs<ShowKindergardenstaffQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<ShowKindergardenstaffQuery>({ query: ShowKindergardenstaffDocument, ...options });
-};
 export const ShowMotherDocument = gql`
     query ShowMother($limit: Int!, $cursor: String) {
   showMother(limit: $limit, cursor: $cursor) {
@@ -1561,10 +1594,25 @@ export const ShowSelectedKindergardenDocument = gql`
     query ShowSelectedKindergarden {
   selectedKindergarden {
     ...KindergardenFragment
+    owning {
+      ...UserFragment
+    }
   }
 }
-    ${KindergardenFragmentFragmentDoc}`;
+    ${KindergardenFragmentFragmentDoc}
+${UserFragmentFragmentDoc}`;
 
 export function useShowSelectedKindergardenQuery(options: Omit<Urql.UseQueryArgs<ShowSelectedKindergardenQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<ShowSelectedKindergardenQuery>({ query: ShowSelectedKindergardenDocument, ...options });
+};
+export const ShowStaffDocument = gql`
+    query ShowStaff {
+  showStaff {
+    ...StaffFragment
+  }
+}
+    ${StaffFragmentFragmentDoc}`;
+
+export function useShowStaffQuery(options: Omit<Urql.UseQueryArgs<ShowStaffQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<ShowStaffQuery>({ query: ShowStaffDocument, ...options });
 };

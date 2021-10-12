@@ -37,6 +37,8 @@ class PaginatedMother {
 @Resolver(Mother)
 export class MotherResolver {
   @Query(() => PaginatedMother)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
   async showMother(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null,
@@ -49,7 +51,7 @@ export class MotherResolver {
     replacements.push(req.session.selectedKindergarden);
 
     if (cursor) {
-      replacements.push(new Date(parseInt(cursor)));
+      replacements.push(cursor);
     }
 
     const mom = await getConnection().query(

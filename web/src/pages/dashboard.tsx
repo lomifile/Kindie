@@ -26,6 +26,7 @@ import {
   ShowKindergardenQuery,
   useCreateKindergardenMutation,
   useShowKindergardenQuery,
+  useShowStaffQuery,
 } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { fetchPartOf } from "../utils/fetchPartof";
@@ -154,16 +155,17 @@ const OwnedKindergardenCards = (data: ShowKindergardenQuery) => (
 );
 
 const PartOfKindergardenCards = (
-  notMine: ({
-    __typename?: "KinderGarden";
-  } & {
-    __typename?: "KinderGarden";
-  } & Pick<KinderGarden, "Id" | "Name" | "City" | "Address" | "Zipcode">)[] &
-    ({
+  partOf: {
+    __typename?: "StaffMembers";
+    kindergarden?: {
       __typename?: "KinderGarden";
-    } & {
-      __typename?: "KinderGarden";
-    } & Pick<KinderGarden, "Id" | "Name" | "City" | "Address" | "Zipcode">)[]
+      Id: number;
+      Name: string;
+      City: string;
+      Address: string;
+      Zipcode: number;
+    };
+  }[]
 ) => (
   <Box
     w={["100%", "100%", "100%", "400px", "400px"]}
@@ -177,8 +179,8 @@ const PartOfKindergardenCards = (
     }}
   >
     <HStack spacing={8} p="2">
-      {notMine.map((owning) => (
-        <KindergardenCard owning={owning} />
+      {partOf.map((owning) => (
+        <KindergardenCard owning={owning.kindergarden} />
       ))}
     </HStack>
   </Box>
@@ -191,8 +193,7 @@ const Dashboard = ({}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [{ data, fetching }] = useShowKindergardenQuery();
   const [, createKindergarden] = useCreateKindergardenMutation();
-  const notMine = fetchPartOf();
-  const role = getUserRole();
+  const partOf = fetchPartOf();
 
   if (fetching && !data?.showKindergarden) {
     return <CustomSpinner />;
@@ -217,22 +218,20 @@ const Dashboard = ({}) => {
       </CustomModal>
       <Flex mt={["10px", "10px", "10px", "0", "0"]} justify={"center"}>
         <Heading color="blue.400">{t("dashboard.main-header")}</Heading>
-        {role === "Headmaster" ? (
-          <IconButton
-            aria-label="Add"
-            icon={<AddIcon />}
-            bg="blue.400"
-            colorScheme="navItem"
-            borderRadius="12px"
-            py="4"
-            px="4"
-            lineHeight="1"
-            size="md"
-            type="submit"
-            onClick={onOpen}
-            ml={"2rem"}
-          />
-        ) : null}
+        <IconButton
+          aria-label="Add"
+          icon={<AddIcon />}
+          bg="blue.400"
+          colorScheme="navItem"
+          borderRadius="12px"
+          py="4"
+          px="4"
+          lineHeight="1"
+          size="md"
+          type="submit"
+          onClick={onOpen}
+          ml={"2rem"}
+        />
       </Flex>
       <Divider mt={5} />
       {data?.showKindergarden.length > 0 ? (
@@ -247,7 +246,7 @@ const Dashboard = ({}) => {
           </Flex>
         </Stack>
       ) : null}
-      {notMine.length > 0 ? (
+      {partOf.length > 0 ? (
         <Stack spacing={10} mt={10} p="5">
           <Flex justify={["center", "center", "center", "center", "center"]}>
             <Heading ml={["0", "0", "0", "10px", "10px"]} color="blue.400">
@@ -255,7 +254,7 @@ const Dashboard = ({}) => {
             </Heading>
           </Flex>
           <Flex align="center" justify="left" mb={5}>
-            {PartOfKindergardenCards(notMine)}
+            {PartOfKindergardenCards(partOf)}
           </Flex>
         </Stack>
       ) : null}
