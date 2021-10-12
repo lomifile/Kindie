@@ -443,6 +443,22 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               fieldFilterFather.forEach((fi) => {
                 cache.invalidate("Query", "filterFather", fi.arguments || {});
               });
+
+              updateQuery<
+                UseKindergardenMutation,
+                ShowSelectedKindergardenQuery
+              >(
+                cache,
+                { query: ShowSelectedKindergardenDocument },
+                _result,
+                (_, data) => {
+                  return {
+                    selectedKindergarden: data.selectedKindergarden,
+                    __typename: "Query",
+                  };
+                }
+              );
+
               cache.updateQuery({ query: ShowStaffDocument }, (data) => {
                 // @ts-ignore
                 data?.showKinderGardenStaff?.staff.push(

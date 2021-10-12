@@ -118,7 +118,6 @@ export type ChildrennotinGrouptype = {
     Name: string;
     Surname: string;
     Email: string;
-    Role: string;
     createdAt: string;
     updatedAt: string;
     partof?: {
@@ -136,7 +135,6 @@ export type ChildrennotinGrouptype = {
     Name: string;
     Surname: string;
     Email: string;
-    Role: string;
     createdAt: string;
     updatedAt: string;
     partof?: {
@@ -163,7 +161,6 @@ export type ChildrennotinGrouptype = {
       Name: string;
       Surname: string;
       Email: string;
-      Role: string;
       createdAt: string;
       updatedAt: string;
       partof?: {
@@ -181,7 +178,6 @@ export type ChildrennotinGrouptype = {
       Name: string;
       Surname: string;
       Email: string;
-      Role: string;
       createdAt: string;
       updatedAt: string;
       partof?: {
@@ -209,7 +205,6 @@ export type ChildrennotinGrouptype = {
       Name: string;
       Surname: string;
       Email: string;
-      Role: string;
       createdAt: string;
       updatedAt: string;
       partof?: {
@@ -227,7 +222,6 @@ export type ChildrennotinGrouptype = {
       Name: string;
       Surname: string;
       Email: string;
-      Role: string;
       createdAt: string;
       updatedAt: string;
       partof?: {

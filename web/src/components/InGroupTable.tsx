@@ -30,6 +30,7 @@ import {
   RemoveChildFromGroupMutation,
 } from "../generated/graphql";
 import NextLink from "next/link";
+import { checkRole } from "../utils/checkRole";
 
 interface InGroupTableProps {
   data: ShowChildrenFilterInGroupQuery;
@@ -193,7 +194,7 @@ export const InGroupTable: React.FC<InGroupTableProps> = ({
                 <Tr>
                   <Td>{child.Name}</Td>
                   <Td ml={"2rem"}>{child.Surname}</Td>
-                  {role == "Teacher" ? (
+                  {checkRole(role, "Teacher") ? (
                     <Td>
                       <IconButton
                         aria-label="View user"
@@ -212,7 +213,8 @@ export const InGroupTable: React.FC<InGroupTableProps> = ({
                   ) : null}
                   <Td>{moment(child.createdAt).format("DD-MM-yyyy")}</Td>
                   <Td>
-                    {role == "Pedagogue" || role == "Headmaster" ? (
+                    {checkRole(role, "Pedagouge") ||
+                    checkRole(role, "Headmaster") ? (
                       <NextLink
                         href={"/edit-child/[id]"}
                         as={`/edit-child/${child.Id}`}
@@ -233,7 +235,8 @@ export const InGroupTable: React.FC<InGroupTableProps> = ({
                     ) : null}
                   </Td>
                   <Td>
-                    {role == "Pedagogue" || role == "Headmaster" ? (
+                    {checkRole(role, "Pedagouge") ||
+                    checkRole(role, "Headmaster") ? (
                       <IconButton
                         aria-label="Remove from group"
                         icon={<MinusIcon />}
@@ -251,7 +254,8 @@ export const InGroupTable: React.FC<InGroupTableProps> = ({
                     ) : null}
                   </Td>
                   <Td>
-                    {role == "Pedagogue" || role == "Headmaster" ? (
+                    {checkRole(role, "Pedagouge") ||
+                    checkRole(role, "Headmaster") ? (
                       <IconButton
                         aria-label="Delete"
                         icon={<DeleteIcon />}
@@ -267,7 +271,8 @@ export const InGroupTable: React.FC<InGroupTableProps> = ({
                       />
                     ) : null}
                   </Td>
-                  {role == "Pedagogue" || role == "Headmaster" ? (
+                  {checkRole(role, "Pedagouge") ||
+                  checkRole(role, "Headmaster") ? (
                     <Td>
                       {!child.fatherId || !child.motherId ? (
                         <Tooltip label={t("children.tooltip.warning")}>
@@ -289,7 +294,8 @@ export const InGroupTable: React.FC<InGroupTableProps> = ({
               <Tr>
                 <Td>{child.Name}</Td>
                 <Td ml={"2rem"}>{child.Surname}</Td>
-                {role == "Teacher" ? (
+                <Td>{moment(child.createdAt).format("DD-MM-yyyy")}</Td>
+                {checkRole(role, "Teacher") ? (
                   <Td>
                     <IconButton
                       aria-label="View user"
@@ -307,7 +313,8 @@ export const InGroupTable: React.FC<InGroupTableProps> = ({
                   </Td>
                 ) : null}
                 <Td>
-                  {role == "Pedagogue" || role == "Headmaster" ? (
+                  {checkRole(role, "Pedagouge") ||
+                  checkRole(role, "Headmaster") ? (
                     <NextLink
                       href={"/edit-child/[id]"}
                       as={`/edit-child/${child.Id}`}
@@ -328,7 +335,27 @@ export const InGroupTable: React.FC<InGroupTableProps> = ({
                   ) : null}
                 </Td>
                 <Td>
-                  {role == "Pedagogue" || role == "Headmaster" ? (
+                  {checkRole(role, "Pedagouge") ||
+                  checkRole(role, "Headmaster") ? (
+                    <IconButton
+                      aria-label="Remove from group"
+                      icon={<MinusIcon />}
+                      colorScheme="yellow"
+                      borderRadius="12px"
+                      lineHeight="1"
+                      color="white"
+                      size="md"
+                      onClick={() => {
+                        removeFromGroup({
+                          Id: child.Id,
+                        });
+                      }}
+                    />
+                  ) : null}
+                </Td>
+                <Td>
+                  {checkRole(role, "Pedagouge") ||
+                  checkRole(role, "Headmaster") ? (
                     <IconButton
                       aria-label="Delete"
                       icon={<DeleteIcon />}
@@ -344,7 +371,8 @@ export const InGroupTable: React.FC<InGroupTableProps> = ({
                     />
                   ) : null}
                 </Td>
-                {role == "Pedagogue" || role == "Headmaster" ? (
+                {checkRole(role, "Pedagouge") ||
+                checkRole(role, "Headmaster") ? (
                   <Td>
                     {!child.fatherId || !child.motherId ? (
                       <Tooltip label={t("children.tooltip.warning")}>
