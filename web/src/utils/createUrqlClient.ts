@@ -32,6 +32,7 @@ import {
   DeleteMotherMutationVariables,
   RemoveChildFromGroupMutationVariables,
   ShowStaffDocument,
+  ShowStaffQuery,
 } from "../generated/graphql";
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
@@ -418,6 +419,14 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
             useKindergarden: (_result, _args, cache, _info) => {
               const allFields = cache.inspectFields("Query");
 
+              const fieldInfosStaff = allFields.filter(
+                (info) => info.fieldName === "showStaff"
+              );
+
+              fieldInfosStaff.forEach((fi) => {
+                cache.invalidate("Query", "showStaff", fi.arguments || {});
+              });
+
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "showMother"
               );
@@ -451,22 +460,30 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 cache,
                 { query: ShowSelectedKindergardenDocument },
                 _result,
-                (_, data) => {
+                (result, _) => {
                   return {
-                    selectedKindergarden: data.selectedKindergarden,
+                    selectedKindergarden: result.useKindergarden.kindergarden,
                     __typename: "Query",
                   };
                 }
               );
 
-              cache.updateQuery({ query: ShowStaffDocument }, (data) => {
+              updateQuery<UseKindergardenMutation, ShowStaffQuery>(
+                cache,
+                { query: ShowStaffDocument },
+                _result,
                 // @ts-ignore
-                data?.showKinderGardenStaff?.staff.push(
-                  // @ts-ignore
-                  _result.useKindergarden.kindergarden.Id
-                );
-                return data;
-              });
+                (result, query) => {
+                  return {
+                    showStaff: query?.showStaff?.push(
+                      // @ts-ignore
+                      result.useKindergarden.kindergarden.Id
+                    ),
+                    __typename: "Query",
+                  };
+                }
+              );
+
               updateQuery<UseKindergardenMutation, ShowGroupsQuery>(
                 cache,
                 { query: ShowGroupsDocument },
