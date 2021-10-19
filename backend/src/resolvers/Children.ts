@@ -71,7 +71,7 @@ export class ChildrenResolver {
     replacements.push(req.session.selectedKindergarden);
 
     if (cursor) {
-      replacements.push(new Date(parseInt(cursor)));
+      replacements.push(cursor);
     }
 
     const child = await getConnection().query(

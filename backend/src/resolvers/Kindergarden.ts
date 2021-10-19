@@ -15,7 +15,6 @@ import { AppContext } from "../Types";
 import { getConnection } from "typeorm";
 import { KinderGardenInput } from "../utils/inputs/KindergardenInput";
 import { FieldError } from "../utils/Errors";
-import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
 
 @ObjectType()
 class KindergardenResponse {
@@ -58,7 +57,7 @@ export class KindergardenResolver {
         `select * from kinder_garden 
         left join staff_members 
         on kinder_garden."Id" = staff_members."kindergardenId" 
-        and staff_members."userId" = $1 where "kindergardenId"=$2`,
+        and staff_members."staffId" = $1 where "kindergardenId"=$2`,
         replacements
       );
       kindergarden = result[0];
@@ -67,19 +66,6 @@ export class KindergardenResolver {
     }
 
     return { kindergarden };
-  }
-
-  @Query(() => KinderGarden)
-  @UseMiddleware(isAuth)
-  @UseMiddleware(isKinderGardenSelected)
-  async showKinderGardenStaff(
-    @Ctx() { req }: AppContext
-  ): Promise<KinderGarden | undefined> {
-    return await KinderGarden.findOne({
-      where: {
-        Id: req.session.selectedKindergarden,
-      },
-    });
   }
 
   @Query(() => [KinderGarden])

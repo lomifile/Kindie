@@ -25,20 +25,20 @@ import {
   DeleteChildrenMutationVariables,
   DeleteKindergardenMutationVariables,
   DeleteGroupMutationVariables,
-  ShowKindergardenstaffDocument,
   AddStaffMutationVariables,
   AddChildToGroupMutationVariables,
   DeleteStaffMutationVariables,
   DeleteFatherMutationVariables,
   DeleteMotherMutationVariables,
   RemoveChildFromGroupMutationVariables,
+  ShowStaffDocument,
+  ShowStaffQuery,
 } from "../generated/graphql";
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
 import { updateQuery } from "./updateQuery";
 import { isServer } from "./isServer";
 import Router, { NextRouter } from "next/router";
-import isElectron from "is-electron";
 
 const errorExchange: Exchange = ({ forward }) => {
   const router: NextRouter = Router;
@@ -85,7 +85,7 @@ const cursorPaginationFather = (): Resolver => {
     return {
       __typename: "PaginatedFather",
       hasMore,
-      mother: results,
+      father: results,
     };
   };
 };
@@ -261,7 +261,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
             addStaff: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Query",
-                Id: (args as AddStaffMutationVariables).Id,
+                Id: (args as AddStaffMutationVariables).userId,
               });
             },
 
@@ -419,6 +419,14 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
             useKindergarden: (_result, _args, cache, _info) => {
               const allFields = cache.inspectFields("Query");
 
+              const fieldInfosStaff = allFields.filter(
+                (info) => info.fieldName === "showStaff"
+              );
+
+              fieldInfosStaff.forEach((fi) => {
+                cache.invalidate("Query", "showStaff", fi.arguments || {});
+              });
+
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "showMother"
               );
@@ -444,17 +452,38 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               fieldFilterFather.forEach((fi) => {
                 cache.invalidate("Query", "filterFather", fi.arguments || {});
               });
-              cache.updateQuery(
-                { query: ShowKindergardenstaffDocument },
-                (data) => {
-                  // @ts-ignore
-                  data?.showKinderGardenStaff?.staff.push(
-                    // @ts-ignore
-                    _result.useKindergarden.kindergarden.Id
-                  );
-                  return data;
+
+              updateQuery<
+                UseKindergardenMutation,
+                ShowSelectedKindergardenQuery
+              >(
+                cache,
+                { query: ShowSelectedKindergardenDocument },
+                _result,
+                (result, _) => {
+                  return {
+                    selectedKindergarden: result.useKindergarden.kindergarden,
+                    __typename: "Query",
+                  };
                 }
               );
+
+              updateQuery<UseKindergardenMutation, ShowStaffQuery>(
+                cache,
+                { query: ShowStaffDocument },
+                _result,
+                // @ts-ignore
+                (result, query) => {
+                  return {
+                    showStaff: query?.showStaff?.push(
+                      // @ts-ignore
+                      result.useKindergarden.kindergarden.Id
+                    ),
+                    __typename: "Query",
+                  };
+                }
+              );
+
               updateQuery<UseKindergardenMutation, ShowGroupsQuery>(
                 cache,
                 { query: ShowGroupsDocument },

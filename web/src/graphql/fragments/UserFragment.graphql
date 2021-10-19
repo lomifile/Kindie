@@ -3,9 +3,10 @@ fragment UserFragment on User {
   Name
   Surname
   Email
-  Role
-  partof {
-    ...KindergardenFragment
+  staffOf {
+    kindergarden {
+      ...KindergardenFragment
+    }
   }
   createdAt
   updatedAt

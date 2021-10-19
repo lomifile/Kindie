@@ -9,6 +9,13 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useTranslation, TFunction } from "react-i18next";
 import GoogleAds from "../components/AdBanner";
+import {
+  faCalendar,
+  faCogs,
+  faDatabase,
+  faHandHoldingHeart,
+  faServer,
+} from "@fortawesome/free-solid-svg-icons";
 
 const MainText = (t: TFunction<"data">) => (
   <Stack
@@ -93,14 +100,17 @@ const Cards = (t: TFunction<"data">) => (
         direction={{ base: "column-reverse", md: "row" }}
       >
         <Feature
+          icon={faServer}
           title={t("index.features.feature-1.title").toString()}
           desc={t("index.features.feature-1.desc")}
         />
         <Feature
+          icon={faCalendar}
           title={t("index.features.feature-2.title")}
           desc={t("index.features.feature-2.desc")}
         />
         <Feature
+          icon={faDatabase}
           title={t("index.features.feature-3.title")}
           desc={t("index.features.feature-3.desc")}
         />
@@ -116,10 +126,12 @@ const Cards = (t: TFunction<"data">) => (
         direction={{ base: "column-reverse", md: "row" }}
       >
         <Feature
+          icon={faCogs}
           title={t("index.features.feature-4.title")}
           desc={t("index.features.feature-4.desc")}
         />
         <Feature
+          icon={faHandHoldingHeart}
           title={t("index.features.feature-5.title")}
           desc={t("index.features.feature-5.desc")}
         />

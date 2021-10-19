@@ -1,5 +1,5 @@
 import { User } from "../entities/User";
-import { AppContext } from "src/Types";
+import { AppContext, VerifyEmailTemplate } from "../Types";
 import {
   UpdatePassword,
   UpdateUserInput,
@@ -293,7 +293,6 @@ export class UserResolver {
           Name: options.name,
           Surname: options.surname,
           Email: options.email,
-          Role: options.role,
           Password: hashPassword,
           confirmed: false,
         })
@@ -313,7 +312,7 @@ export class UserResolver {
       await sendMail(
         options.email,
         "Verify account",
-        `<a href="${process.env.CORS_ORIGIN}/verify-account/${token}">Verify account</a>`
+        VerifyEmailTemplate(token)
       ).catch(console.error);
     } catch (err) {
       // console.log(err);
@@ -362,11 +361,9 @@ export class UserResolver {
       1000 * 60 * 60 * 24 * 3
     );
 
-    await sendMail(
-      email,
-      "Verify account",
-      `<a href="${process.env.CORS_ORIGIN}/verify-account/${token}">Verify account</a>`
-    ).catch(console.error);
+    await sendMail(email, "Verify account", VerifyEmailTemplate(token)).catch(
+      console.error
+    );
 
     return {
       user,
@@ -444,7 +441,6 @@ export class UserResolver {
   ): Promise<User[]> {
     if (text == ".") {
       return await getRepository(User).find({
-        relations: ["partof"],
         where: {
           Id: Not(req.session.userId),
         },

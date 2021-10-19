@@ -1,15 +1,13 @@
 import nodemailer from "nodemailer";
 
 export async function sendMail(to: string, subject: string, text: string) {
-  // let testAccount = await nodemailer.createTestAccount(); // testing
-
   let transporter = nodemailer.createTransport({
     host: "smtp.zoho.eu",
     port: 465,
     secure: true,
     auth: {
-      user: "ivanusecfilip@zohomail.eu",
-      pass: "cgCNJCbJJuKC",
+      user: process.env.NODEMAILER_EMAIL,
+      pass: process.env.NODEMAILER_PASSWORD,
     },
   });
 
@@ -27,6 +25,4 @@ export async function sendMail(to: string, subject: string, text: string) {
     text,
     html: text,
   });
-
-  // console.log("Message sent: %s", info.messageId);
 }

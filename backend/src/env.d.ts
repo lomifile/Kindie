@@ -5,5 +5,8 @@ declare namespace NodeJS {
     CORS_ORIGIN: string;
     SESSION_SECRET: string;
     REDIS_PORT: string;
+    NODE_ENV: string;
+    NODEMAILER_EMAIL: string;
+    NODEMAILER_PASSWORD: string;
   }
 }

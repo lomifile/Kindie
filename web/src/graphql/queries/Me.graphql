@@ -1,11 +1,5 @@
 query Me {
   me {
     ...UserFragment
-    ownerOf {
-      ...KindergardenFragment
-    }
-    partof {
-      ...KindergardenFragment
-    }
   }
 }

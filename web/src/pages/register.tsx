@@ -6,7 +6,6 @@ import {
   Button,
   Divider,
   Text,
-  Select,
   Checkbox,
   useToast,
   InputGroup,
@@ -34,11 +33,9 @@ import { ViewIcon } from "@chakra-ui/icons";
 import { OperationContext, OperationResult } from "urql";
 
 const RegisterForm = (
-  role: string,
   toast: (options?: UseToastOptions) => string | number,
   router: NextRouter,
   t: TFunction<"data">,
-  handleChange: (e: any) => void,
   handleClick: () => void,
   show: boolean,
   privacy: boolean,
@@ -64,7 +61,6 @@ const RegisterForm = (
       email: "",
       password: "",
       repeatPassword: "",
-      role: "",
     }}
     onSubmit={async (values, { setErrors }) => {
       const response = await register({
@@ -72,7 +68,6 @@ const RegisterForm = (
           name: values.name,
           surname: values.surname,
           email: values.email,
-          role: role,
           password: values.password,
           repeatPassword: values.repeatPassword,
         },
@@ -107,22 +102,6 @@ const RegisterForm = (
             type="text"
             required
           />
-          <Text mb={"-10px"}>{t("register.form.role")}</Text>
-          <Select
-            name="role"
-            style={{ borderRadius: "12px" }}
-            placeholder={t("register.form.placeholders.role")}
-            onChange={handleChange}
-            required
-          >
-            <option value="Teacher">{t("register.selector.teacher")}</option>
-            <option value="Headmaster">
-              {t("register.selector.headmaster")}
-            </option>
-            <option value="Pedagogue">
-              {t("register.selector.pedagouge")}
-            </option>
-          </Select>
           <InputField
             name="email"
             placeholder={t("register.form.placeholders.email")}
@@ -191,11 +170,6 @@ const Register: React.FC<{}> = ({}) => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
-  const [role, setRole] = useState("");
-  const handleChange = (e) => {
-    setRole(e.target.value);
-  };
-
   const router = useRouter();
   const toast = useToast();
 
@@ -236,11 +210,9 @@ const Register: React.FC<{}> = ({}) => {
           {t("register.main-header")}
         </Heading>
         {RegisterForm(
-          role,
           toast,
           router,
           t,
-          handleChange,
           handleClick,
           show,
           privacy,

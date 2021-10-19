@@ -77,3 +77,161 @@ export type ChildDataType = {
         | "Phone"
       >;
   };
+
+export type OwnerType = {
+  __typename?: "User";
+  Id: number;
+  Name: string;
+  Surname: string;
+  Email: string;
+  createdAt: string;
+  updatedAt: string;
+  staffOf?: {
+    __typename?: "StaffMembers";
+    kindergarden?: {
+      __typename?: "KinderGarden";
+      Id: number;
+      Name: string;
+      City: string;
+      Address: string;
+      Zipcode: number;
+    };
+  }[];
+};
+
+export type ChildrennotinGrouptype = {
+  __typename?: "Children";
+  Id: number;
+  Name: string;
+  Surname: string;
+  Gender: string;
+  BirthDate?: any;
+  OIB: number;
+  Remarks: string;
+  motherId?: number;
+  fatherId?: number;
+  createdAt: any;
+  updatedAt: any;
+  createdBy?: {
+    __typename?: "User";
+    Id: number;
+    Name: string;
+    Surname: string;
+    Email: string;
+    createdAt: string;
+    updatedAt: string;
+    partof?: {
+      __typename?: "KinderGarden";
+      Id: number;
+      Name: string;
+      City: string;
+      Address: string;
+      Zipcode: number;
+    }[];
+  };
+  updatedBy?: {
+    __typename?: "User";
+    Id: number;
+    Name: string;
+    Surname: string;
+    Email: string;
+    createdAt: string;
+    updatedAt: string;
+    partof?: {
+      __typename?: "KinderGarden";
+      Id: number;
+      Name: string;
+      City: string;
+      Address: string;
+      Zipcode: number;
+    }[];
+  };
+  mother?: {
+    __typename?: "Mother";
+    Id: number;
+    Name: string;
+    Surname: string;
+    Email: string;
+    Phone: number;
+    createdAt: string;
+    updatedAt: string;
+    createdBy?: {
+      __typename?: "User";
+      Id: number;
+      Name: string;
+      Surname: string;
+      Email: string;
+      createdAt: string;
+      updatedAt: string;
+      partof?: {
+        __typename?: "KinderGarden";
+        Id: number;
+        Name: string;
+        City: string;
+        Address: string;
+        Zipcode: number;
+      }[];
+    };
+    updatedBy?: {
+      __typename?: "User";
+      Id: number;
+      Name: string;
+      Surname: string;
+      Email: string;
+      createdAt: string;
+      updatedAt: string;
+      partof?: {
+        __typename?: "KinderGarden";
+        Id: number;
+        Name: string;
+        City: string;
+        Address: string;
+        Zipcode: number;
+      }[];
+    };
+  };
+  father?: {
+    __typename?: "Father";
+    Id: number;
+    Name: string;
+    Surname: string;
+    Email: string;
+    Phone: number;
+    createdAt: string;
+    updatedAt: string;
+    createdBy?: {
+      __typename?: "User";
+      Id: number;
+      Name: string;
+      Surname: string;
+      Email: string;
+      createdAt: string;
+      updatedAt: string;
+      partof?: {
+        __typename?: "KinderGarden";
+        Id: number;
+        Name: string;
+        City: string;
+        Address: string;
+        Zipcode: number;
+      }[];
+    };
+    updatedBy?: {
+      __typename?: "User";
+      Id: number;
+      Name: string;
+      Surname: string;
+      Email: string;
+      createdAt: string;
+      updatedAt: string;
+      partof?: {
+        __typename?: "KinderGarden";
+        Id: number;
+        Name: string;
+        City: string;
+        Address: string;
+        Zipcode: number;
+      }[];
+    };
+  };
+}[];

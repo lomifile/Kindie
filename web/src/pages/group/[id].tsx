@@ -13,32 +13,21 @@ import {
   Table,
   Tbody,
   Td,
-  Th,
-  Thead,
   Tr,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
   IconButton,
   Input,
   InputGroup,
   InputLeftElement,
   Spinner,
   useDisclosure,
-  Tooltip,
   Link,
   Divider,
+  InputLeftAddon,
 } from "@chakra-ui/react";
 import {
   AddChildToGroupMutation,
   ClearGroupMutation,
-  DeleteChildrenMutation,
   Exact,
-  RemoveChildFromGroupDocument,
-  RemoveChildFromGroupMutation,
   ShowChildrenFilterInGroupQuery,
   ShowChildrenQuery,
   useAddChildToGroupMutation,
@@ -51,17 +40,7 @@ import {
 import { fetchGroup } from "../../utils/fetchGroup";
 import { useIsAuth } from "../../utils/useIsAuth";
 import NextLink from "next/link";
-import {
-  SearchIcon,
-  AddIcon,
-  WarningIcon,
-  CheckCircleIcon,
-  EditIcon,
-  DeleteIcon,
-  HamburgerIcon,
-  ViewIcon,
-  MinusIcon,
-} from "@chakra-ui/icons";
+import { SearchIcon, AddIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { TFunction, useTranslation } from "react-i18next";
 import { getUserRole } from "../../utils/getUserRole";
 import { ChildrenModal } from "../../components/ChildrenModal";
@@ -69,149 +48,8 @@ import isElectron from "is-electron";
 import { NextRouter } from "next/router";
 import { OperationContext, OperationResult } from "@urql/core";
 import { CustomDrawer } from "../../components/CustomDrawer";
-
-const DataTable = (
-  data: ShowChildrenFilterInGroupQuery,
-  role: string,
-  setChild: (value: any) => void,
-  teacherChildViewOnOpen: () => void,
-  deleteChildren: (
-    variables?: Exact<{
-      id: number;
-    }>,
-    context?: Partial<OperationContext>
-  ) => Promise<
-    OperationResult<
-      DeleteChildrenMutation,
-      Exact<{
-        id: number;
-      }>
-    >
-  >,
-  removeFromGroup: (
-    variables?: Exact<{
-      Id: number;
-    }>,
-    context?: Partial<OperationContext>
-  ) => Promise<
-    OperationResult<
-      RemoveChildFromGroupMutation,
-      Exact<{
-        Id: number;
-      }>
-    >
-  >,
-  t: TFunction<"data">
-) => (
-  <Table mt={"2rem"}>
-    {data!.showChildrenFilterInGroup.children.length > 0 ? (
-      <Thead>
-        <Tr>
-          <Th>{t("group.tbl-name")}</Th>
-          <Th>{t("group.tbl-surname")}</Th>
-          <Th></Th>
-          <Th></Th>
-          <Th></Th>
-          <Th></Th>
-        </Tr>
-      </Thead>
-    ) : null}
-    <Tbody>
-      {data!.showChildrenFilterInGroup.children.map((child) =>
-        !child ? null : (
-          <Tr key={child.Id}>
-            <Td>{child.Name}</Td>
-            <Td ml={"2rem"}>{child.Surname}</Td>
-            <Td>
-              {role == "Pedagogue" || role == "Headmaster" ? (
-                <NextLink
-                  href={"/edit-child/[id]"}
-                  as={`/edit-child/${child.Id}`}
-                >
-                  <IconButton
-                    aria-label="Edit"
-                    icon={<EditIcon />}
-                    bg="blue.400"
-                    colorScheme="navItem"
-                    borderRadius="12px"
-                    py="4"
-                    px="4"
-                    lineHeight="1"
-                    size="md"
-                    ml={"2rem"}
-                  />
-                </NextLink>
-              ) : null}
-            </Td>
-            {role == "Teacher" ? (
-              <Td>
-                <IconButton
-                  aria-label="View user"
-                  icon={<ViewIcon />}
-                  color="white"
-                  bg="blue.400"
-                  _hover={{
-                    backgroundColor: "#719ABC",
-                  }}
-                  onClick={() => {
-                    setChild(child);
-                    teacherChildViewOnOpen();
-                  }}
-                />
-              </Td>
-            ) : null}
-            <Td>
-              {role == "Pedagogue" || role == "Headmaster" ? (
-                <IconButton
-                  aria-label="Remove from group"
-                  icon={<MinusIcon />}
-                  color="white"
-                  colorScheme="yellow"
-                  borderRadius="12px"
-                  lineHeight="1"
-                  size="md"
-                  onClick={() => {
-                    removeFromGroup({
-                      Id: child.Id,
-                    });
-                  }}
-                />
-              ) : null}
-            </Td>
-            <Td>
-              {role == "Pedagogue" || role == "Headmaster" ? (
-                <IconButton
-                  aria-label="Delete"
-                  icon={<DeleteIcon />}
-                  colorScheme="red"
-                  borderRadius="12px"
-                  lineHeight="1"
-                  size="md"
-                  onClick={() => {
-                    deleteChildren({
-                      id: child.Id,
-                    });
-                  }}
-                />
-              ) : null}
-            </Td>
-            <Td>
-              {!child.fatherId || !child.motherId ? (
-                <Tooltip label="Some data is missing!">
-                  <WarningIcon color={"yellow.400"} />
-                </Tooltip>
-              ) : (
-                <Tooltip label="All data is here!">
-                  <CheckCircleIcon color={"green.400"} />
-                </Tooltip>
-              )}
-            </Td>
-          </Tr>
-        )
-      )}
-    </Tbody>
-  </Table>
-);
+import { InGroupTable } from "../../components/InGroupTable";
+import { checkRole } from "../../utils/checkRole";
 
 const MenuDrawer = (
   isOpenMenu: boolean,
@@ -308,6 +146,7 @@ const AddGroupDrawer = (
     isOpen={isOpen}
     onClose={onClose}
     header={t("group.drawer.header")}
+    size="md"
   >
     <InputGroup>
       <InputLeftElement
@@ -386,7 +225,7 @@ const Menu = (
     case false:
       return (
         <>
-          {role == "Pedagogue" || role == "Headmaster" ? (
+          {checkRole(role, "Headmaster") || checkRole(role, "Pedagouge") ? (
             <Button
               bg="blue.400"
               className="nav-item"
@@ -407,7 +246,7 @@ const Menu = (
     case true:
       return (
         <>
-          {role == "Pedagogue" || role == "Headmaster" ? (
+          {checkRole(role, "Headmaster") || checkRole(role, "Pedagouge") ? (
             <Button
               bg="blue.400"
               className="nav-item"
@@ -526,17 +365,18 @@ const Group = ({}) => {
   } = useDisclosure();
   const [child, setChild] = useState(null);
   const role = getUserRole();
+  const [childrenFilter, setChildrenFilter] = useState("");
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{groupName}</title>
-      {role == "Teacher" ? (
+      {checkRole(role, "Teacher") ? (
         <ChildrenModal
           onClose={teacherChildViewOnClose}
           isOpen={teacherChildViewIsOpen}
           child={child}
         />
       ) : null}
-      {role == "Headmaster" || role == "Pedagouge" ? (
+      {checkRole(role, "Headmaster") || checkRole(role, "Pedagouge") ? (
         <>
           {AddGroupDrawer(
             setText,
@@ -588,15 +428,32 @@ const Group = ({}) => {
             <SkeletonText mt="4" noOfLines={4} spacing="4" />
           </Box>
         ) : (
-          DataTable(
-            data,
-            role,
-            setChild,
-            teacherChildViewOnOpen,
-            deleteChildren,
-            removeFromGroup,
-            t
-          )
+          <>
+            <Flex mt="5">
+              <InputGroup mt="2" flex="1" justifySelf="center">
+                <InputLeftAddon borderRadius="48px" children="Filter child" />
+                <Input
+                  borderRadius="48px"
+                  name="search"
+                  id="search"
+                  type="text"
+                  placeholder="Input name..."
+                  onChange={(e) => {
+                    setChildrenFilter(e.currentTarget.value);
+                  }}
+                />
+              </InputGroup>
+            </Flex>
+            <InGroupTable
+              removeFromGroup={removeFromGroup}
+              childrenFilter={childrenFilter}
+              data={data}
+              deleteChildren={deleteChildren}
+              onOpen={teacherChildViewOnOpen}
+              role={role}
+              setChild={setChild}
+            />
+          </>
         )}
         {data && data.showChildrenFilterInGroup.hasMore
           ? HasMoreBtn(setVariables, variables, data, fetchingChildren, t)

@@ -4,7 +4,6 @@ import { Box, Flex, Link, Divider, Text } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import React from "react";
 import {
-  KinderGarden,
   useDeleteKindergardenMutation,
   useUseKindergardenMutation,
 } from "../generated/graphql";
@@ -14,9 +13,12 @@ import { useTranslation } from "react-i18next";
 interface KindergardenCardProps {
   owning: {
     __typename?: "KinderGarden";
-  } & {
-    __typename?: "KinderGarden";
-  } & Pick<KinderGarden, "Id" | "Name" | "City" | "Address" | "Zipcode">;
+    Id: number;
+    Name: string;
+    City: string;
+    Address: string;
+    Zipcode: number;
+  };
 }
 
 export const KindergardenCard: React.FC<KindergardenCardProps> = ({

@@ -1,7 +1,7 @@
-import { testConn } from "../src/helpers/testConn";
+import { testConn } from "../../src/helpers/testConn";
 import { Connection } from "typeorm";
-import { gCall } from "../src/helpers/gCall";
-import { User } from "../src/entities/User";
+import { gCall } from "../../src/helpers/gCall";
+import { User } from "../../src/entities/User";
 import faker from "faker";
 
 let conn: Connection;
@@ -21,7 +21,6 @@ const user = {
   email: faker.internet.email(),
   password: password,
   repeatPassword: password,
-  role: faker.company.companyName(),
 };
 
 const MeQuery = `
@@ -31,7 +30,6 @@ query Me {
     Name
     Surname
     Email
-    Role
     ownerOf {
         Id
         Name
@@ -39,12 +37,11 @@ query Me {
         Address
         Zipcode
     }
-    partof {
+    staffOf{
+      kindergarden{
         Id
         Name
-        City
-        Address
-        Zipcode
+      }
     }
   }
 }
@@ -58,7 +55,6 @@ mutation Register($data:UsernamePasswordInput!){
       Name
       Surname
       Email
-      Role
       createdAt
       updatedAt
     }
@@ -78,7 +74,6 @@ mutation Login($email: String!, $password: String!) {
       Name
       Surname
       Email
-      Role
       createdAt
       updatedAt
     }
@@ -106,7 +101,6 @@ describe("Register mutation", () => {
             Name: user.name,
             Surname: user.surname,
             Email: user.email,
-            Role: user.role,
           },
           errors: null,
         },
@@ -188,7 +182,6 @@ describe("Login passed", () => {
             Name: user.name,
             Surname: user.surname,
             Email: user.email,
-            Role: user.role,
           },
           errors: null,
         },
@@ -211,7 +204,6 @@ describe("Me query passed", () => {
           Name: user.name,
           Surname: user.surname,
           Email: user.email,
-          Role: user.role,
         },
       },
     });

@@ -4,7 +4,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -14,6 +13,7 @@ import { Children } from "./Children";
 import { Father } from "./Father";
 import { Groups } from "./Groups";
 import { Mother } from "./Mother";
+import { StaffMembers } from "./SatffMembers";
 import { User } from "./User";
 
 @ObjectType()
@@ -71,9 +71,12 @@ export class KinderGarden extends BaseEntity {
   })
   Father: Father[];
 
-  @Field(() => [User])
-  @ManyToMany(() => User, (user) => user.partof, { lazy: true })
-  staff: User[];
+  @Field(() => [StaffMembers], { nullable: true })
+  @OneToMany(() => StaffMembers, (staff) => staff.kindergarden, {
+    lazy: true,
+    nullable: true,
+  })
+  staff: StaffMembers[];
 
   @Field(() => String)
   @CreateDateColumn()

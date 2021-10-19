@@ -12,8 +12,6 @@ export class UsernamePasswordInput {
   repeatPassword: string;
   @Field()
   password: string;
-  @Field()
-  role: string;
 }
 
 @InputType()
@@ -24,8 +22,6 @@ export class UpdateUserInput {
   surname: string;
   @Field()
   email: string;
-  @Field()
-  role: string;
   @Field()
   password: string;
 }

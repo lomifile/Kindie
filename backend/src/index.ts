@@ -34,7 +34,6 @@ import { FatherResolver } from "./resolvers/Father";
 import { MotherResolver } from "./resolvers/Mother";
 
 const main = async () => {
-  // @ts-ignore
   const connection = await createConnection({
     type: "postgres",
     url: process.env.DATABASE_URL,

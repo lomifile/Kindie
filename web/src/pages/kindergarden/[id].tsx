@@ -9,6 +9,7 @@ import {
   useCreateGroupMutation,
   useDeleteGroupMutation,
   useShowGroupsQuery,
+  useShowStaffQuery,
   useUseChildrenMutation,
   useUseGroupMutation,
 } from "../../generated/graphql";
@@ -324,6 +325,7 @@ const Kindergarden = ({}) => {
   const [, useChildren] = useUseChildrenMutation();
   const [, deleteGroup] = useDeleteGroupMutation();
   const role = getUserRole();
+  console.log(role);
 
   if (fetching) {
     return <CustomSpinner />;
