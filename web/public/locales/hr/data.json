@@ -534,5 +534,6 @@
       "btn-settings": "Postavke",
       "btn-logout": "Odjava"
     }
-  }
+  },
+  "problem": "Prilikom učitavanja osoblja događa se greška u kojoj se osoblje ne učitava odmah sve što je potrebno napraviti je osvježiti stranicu osoblja i sve će vam se prikazati kao što bi trebaslo biti. Bez brige, radimo naporno na otklanjanju te greške u što kraćem roku!"
 }

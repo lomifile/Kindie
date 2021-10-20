@@ -206,6 +206,7 @@ const Dashboard = ({}) => {
       />
     );
   }
+  alert(t("problem"));
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{t("dashboard.main-header")}</title>
