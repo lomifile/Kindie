@@ -11,6 +11,8 @@ import {
   Divider,
   IconButton,
   UseToastOptions,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { withUrqlClient } from "next-urql";
@@ -206,10 +208,13 @@ const Dashboard = ({}) => {
       />
     );
   }
-  alert(t("problem"));
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{t("dashboard.main-header")}</title>
+      <Alert status="warning" mb="5">
+        <AlertIcon />
+        {t("problem.desc")}
+      </Alert>
       <CustomModal
         onClose={onClose}
         isOpen={isOpen}
