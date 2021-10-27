@@ -33,6 +33,10 @@ import {
   RemoveChildFromGroupMutationVariables,
   ShowStaffDocument,
   ShowStaffQuery,
+  OwnerQuery,
+  OwnerDocument,
+  FilterStaffQuery,
+  FilterStaffDocument,
 } from "../generated/graphql";
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
@@ -418,15 +422,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
 
             useKindergarden: (_result, _args, cache, _info) => {
               const allFields = cache.inspectFields("Query");
-
-              const fieldInfosStaff = allFields.filter(
-                (info) => info.fieldName === "showStaff"
-              );
-
-              fieldInfosStaff.forEach((fi) => {
-                cache.invalidate("Query", "showStaff", fi.arguments || {});
-              });
-
               const fieldInfos = allFields.filter(
                 (info) => info.fieldName === "showMother"
               );
@@ -439,7 +434,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               filedsFilterMother.forEach((fi) => {
                 cache.invalidate("Query", "filterMother", fi.arguments || {});
               });
-
               const fieldInfosFather = allFields.filter(
                 (info) => info.fieldName === "showFather"
               );
@@ -460,9 +454,12 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 cache,
                 { query: ShowSelectedKindergardenDocument },
                 _result,
-                (result, _) => {
+                (result, query) => {
                   return {
-                    selectedKindergarden: result.useKindergarden.kindergarden,
+                    selectedKindergarden:
+                      query.selectedKindergarden === null
+                        ? query.selectedKindergarden
+                        : result.useKindergarden.kindergarden,
                     __typename: "Query",
                   };
                 }
@@ -481,6 +478,23 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                     ),
                     __typename: "Query",
                   };
+                }
+              );
+
+              updateQuery<UseKindergardenMutation, OwnerQuery>(
+                cache,
+                { query: OwnerDocument },
+                _result,
+                // @ts-expect-error
+                (result, query) => {
+                  if (result.useKindergarden.errors) {
+                    return query;
+                  } else {
+                    return {
+                      owner: result.useKindergarden.kindergarden.owning,
+                      __typename: "Query",
+                    };
+                  }
                 }
               );
 

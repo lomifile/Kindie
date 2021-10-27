@@ -9,7 +9,6 @@ import {
   useCreateGroupMutation,
   useDeleteGroupMutation,
   useShowGroupsQuery,
-  useShowStaffQuery,
   useUseChildrenMutation,
   useUseGroupMutation,
 } from "../../generated/graphql";
@@ -35,12 +34,13 @@ import { useTranslation, TFunction } from "react-i18next";
 import { useIsAuth } from "../../utils/useIsAuth";
 import { CustomSpinner } from "../../components/Spinner";
 import { CustomAlert } from "../../components/Alerts";
-import { getUserRole } from "../../utils/getUserRole";
 import isElectron from "is-electron";
 import { OperationContext, OperationResult } from "urql";
 import { GroupCard } from "../../components/GroupCard";
 import { CustomModal } from "../../components/CustomModal";
 import { CustomDrawer } from "../../components/CustomDrawer";
+import { fetchPartOf } from "../../utils/fetchPartof";
+import { useRouter } from "next/router";
 
 const DrawerMenu = (
   t: TFunction<"data">,
@@ -313,6 +313,7 @@ const Kindergarden = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
   const toast = useToast();
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: drawerIsOpen,
@@ -324,8 +325,7 @@ const Kindergarden = ({}) => {
   const [, useGroup] = useUseGroupMutation();
   const [, useChildren] = useUseChildrenMutation();
   const [, deleteGroup] = useDeleteGroupMutation();
-  const role = getUserRole();
-  console.log(role);
+  const partOf = fetchPartOf();
 
   if (fetching) {
     return <CustomSpinner />;
@@ -338,6 +338,16 @@ const Kindergarden = ({}) => {
       />
     );
   }
+  console.log(partOf);
+  const kindergardenId =
+    typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
+  const extractRole = (): string => {
+    for (let i = 0; i < partOf.length; i++) {
+      if (partOf[i].kindergarden.Id === kindergardenId) return partOf[i].role;
+    }
+    return "Headmaster";
+  };
+
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{t("kindergarden.main-header")}</title>
@@ -359,13 +369,13 @@ const Kindergarden = ({}) => {
       </CustomModal>
       <Stack spacing={8}>
         <Flex align="center" justify="center" mt={5} p={5}>
-          {MainMenu(role, onOpen, t, drawerOnOpen, useChildren)}
+          {MainMenu(extractRole(), onOpen, t, drawerOnOpen, useChildren)}
         </Flex>
         {data?.showGroups.length > 0 ? (
           <GroupCard
             data={data}
             deleteGroup={deleteGroup}
-            role={role}
+            role={extractRole()}
             useGroup={useGroup}
           />
         ) : null}

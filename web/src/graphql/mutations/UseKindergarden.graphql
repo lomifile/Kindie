@@ -2,6 +2,9 @@ mutation UseKindergarden($kindergardenID: Float!) {
   useKindergarden(kindergadenID: $kindergardenID) {
     kindergarden {
       ...KindergardenFragment
+      owning {
+        ...UserFragment
+      }
     }
     errors {
       ...ErrorFragment

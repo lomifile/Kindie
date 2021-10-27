@@ -150,7 +150,7 @@ const OwnedKindergardenCards = (data: ShowKindergardenQuery) => (
   >
     <HStack spacing={8} padding="2">
       {data?.showKindergarden?.map((owning) => (
-        <KindergardenCard owning={owning} />
+        <KindergardenCard owning={owning} key={owning.Id} />
       ))}
     </HStack>
   </Box>
@@ -182,7 +182,11 @@ const PartOfKindergardenCards = (
   >
     <HStack spacing={8} p="2">
       {partOf.map((owning) => (
-        <KindergardenCard owning={owning.kindergarden} />
+        <KindergardenCard
+          partof={true}
+          key={owning.kindergarden.Id}
+          owning={owning.kindergarden}
+        />
       ))}
     </HStack>
   </Box>
@@ -268,4 +272,4 @@ const Dashboard = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Dashboard);
+export default withUrqlClient(createUrqlClient)(Dashboard);

@@ -24,9 +24,7 @@
     "skipLibCheck": true
   },
   "typeAcquisition": {
-    "include": [
-      "jest"
-    ]
+    "include": ["jest"]
   },
   "exclude": ["node_modules", "src/__tests__"],
   "include": ["./src/**/*.ts"]
