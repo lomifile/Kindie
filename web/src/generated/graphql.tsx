@@ -741,7 +741,7 @@ export type UseKindergardenMutationVariables = Exact<{
 }>;
 
 
-export type UseKindergardenMutation = { __typename?: 'Mutation', useKindergarden: { __typename?: 'KindergardenResponse', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number, owning?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', role: string, kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
+export type UseKindergardenMutation = { __typename?: 'Mutation', useKindergarden: { __typename?: 'KindergardenResponse', kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number, owning?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', role: string, kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, groups?: Maybe<Array<{ __typename?: 'Groups', Id: number, Name: string, createdAt: string, updatedAt: string }>>, staff?: Maybe<Array<{ __typename?: 'StaffMembers', staffId: number, kindergardenId: number, role: string, staff?: Maybe<{ __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string, staffOf?: Maybe<Array<{ __typename?: 'StaffMembers', role: string, kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, kindergarden?: Maybe<{ __typename?: 'KinderGarden', Id: number, Name: string, City: string, Address: string, Zipcode: number }> }>> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
 export type VerifyAccountMutationVariables = Exact<{
   token: Scalars['String'];
@@ -1383,6 +1383,12 @@ export const UseKindergardenDocument = gql`
       owning {
         ...UserFragment
       }
+      groups {
+        ...GroupFragment
+      }
+      staff {
+        ...StaffFragment
+      }
     }
     errors {
       ...ErrorFragment
@@ -1391,6 +1397,8 @@ export const UseKindergardenDocument = gql`
 }
     ${KindergardenFragmentFragmentDoc}
 ${UserFragmentFragmentDoc}
+${GroupFragmentFragmentDoc}
+${StaffFragmentFragmentDoc}
 ${ErrorFragmentFragmentDoc}`;
 
 export function useUseKindergardenMutation() {

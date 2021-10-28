@@ -407,7 +407,7 @@ const Staff: React.FC<{}> = ({}) => {
           mb={2}
         >
           <Heading color="blue.400">{t("staff.staff-heading")}</Heading>
-          {meData?.me?.Id === owner?.owner?.owning.Id ? (
+          {meData?.me?.Id === owner?.owner?.owning?.Id ? (
             <IconButton
               ml={5}
               bg="blue.400"

@@ -24,7 +24,6 @@ import {
 import React from "react";
 import NextLink from "next/link";
 import {
-  ClearKindergardenMutation,
   Exact,
   LogoutMutation,
   MeQuery,
@@ -177,19 +176,6 @@ const DashMenu = (
         [key: string]: never;
       }>
     >
-  >,
-  clearKindergarden: (
-    variables?: Exact<{
-      [key: string]: never;
-    }>,
-    context?: Partial<OperationContext>
-  ) => Promise<
-    OperationResult<
-      ClearKindergardenMutation,
-      Exact<{
-        [key: string]: never;
-      }>
-    >
   >
 ) => (
   <Stack direction={["column", "row"]}>
@@ -206,7 +192,6 @@ const DashMenu = (
               borderRadius: "12px",
             }}
             onClick={() => {
-              clearKindergarden();
               router.push("/dashboard");
             }}
           >
@@ -499,7 +484,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
   } else if (variant === "normal" && data?.me) {
     body = DashNav(t);
   } else if (variant === "user" && data?.me && !isElectron()) {
-    body = DashMenu(data, router, t, i18n, logout, clearKindergarden);
+    body = DashMenu(data, router, t, i18n, logout);
   }
 
   return (

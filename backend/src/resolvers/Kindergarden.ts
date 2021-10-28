@@ -69,8 +69,7 @@ export class KindergardenResolver {
         replacements
       );
       kindergarden = result[0];
-      // @ts-ignore
-      req.session.selectedKindergarden = kindergarden.Id;
+      req.session.selectedKindergarden = kindergarden?.Id;
     }
 
     return { kindergarden };

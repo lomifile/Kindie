@@ -5,6 +5,12 @@ mutation UseKindergarden($kindergardenID: Float!) {
       owning {
         ...UserFragment
       }
+      groups {
+        ...GroupFragment
+      }
+      staff{
+        ...StaffFragment
+      }
     }
     errors {
       ...ErrorFragment
