@@ -1,0 +1,7 @@
+query Owner {
+  owner {
+    owning {
+      ...UserFragment
+    }
+  }
+}

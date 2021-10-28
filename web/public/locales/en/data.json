@@ -530,5 +530,9 @@
       "btn-settings": "Settings",
       "btn-logout": "Log out"
     }
+  },
+  "problem": {
+    "warning": "Warning",
+    "desc": "There is an error during loading of the staff, so no need to panic just refresh staff page and everything should be. We are aware that this error exists and we are working hard to fix it as soon as possible"
   }
 }

@@ -11,6 +11,7 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { isAuth } from "../middleware/isAuth";
+import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
 import { AppContext } from "../Types";
 import { getConnection } from "typeorm";
 import { KinderGardenInput } from "../utils/inputs/KindergardenInput";
@@ -27,6 +28,13 @@ class KindergardenResponse {
 
 @Resolver(KinderGarden)
 export class KindergardenResolver {
+  @Query(() => KinderGarden)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  owner(@Ctx() { req }: AppContext) {
+    return KinderGarden.findOne(req.session.selectedKindergarden);
+  }
+
   @Query(() => KinderGarden, { nullable: true })
   @UseMiddleware(isAuth)
   selectedKindergarden(@Ctx() { req }: AppContext) {
@@ -61,8 +69,7 @@ export class KindergardenResolver {
         replacements
       );
       kindergarden = result[0];
-      // @ts-ignore
-      req.session.selectedKindergarden = kindergarden.Id;
+      req.session.selectedKindergarden = kindergarden?.Id;
     }
 
     return { kindergarden };

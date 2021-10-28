@@ -1,6 +1,7 @@
 import { useShowSelectedGroupQuery } from "../generated/graphql";
+import { isServer } from "./isServer";
 
 export const fetchGroup = () => {
-  const [{ data, fetching }] = useShowSelectedGroupQuery();
+  const [{ data }] = useShowSelectedGroupQuery();
   return data?.showSelectedGroup?.Name ? data?.showSelectedGroup.Name : "";
 };

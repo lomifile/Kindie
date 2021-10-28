@@ -11,6 +11,8 @@ import {
   Divider,
   IconButton,
   UseToastOptions,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { withUrqlClient } from "next-urql";
@@ -148,7 +150,7 @@ const OwnedKindergardenCards = (data: ShowKindergardenQuery) => (
   >
     <HStack spacing={8} padding="2">
       {data?.showKindergarden?.map((owning) => (
-        <KindergardenCard owning={owning} />
+        <KindergardenCard owning={owning} key={owning.Id} />
       ))}
     </HStack>
   </Box>
@@ -180,7 +182,11 @@ const PartOfKindergardenCards = (
   >
     <HStack spacing={8} p="2">
       {partOf.map((owning) => (
-        <KindergardenCard owning={owning.kindergarden} />
+        <KindergardenCard
+          partof={true}
+          key={owning.kindergarden.Id}
+          owning={owning.kindergarden}
+        />
       ))}
     </HStack>
   </Box>
@@ -209,6 +215,10 @@ const Dashboard = ({}) => {
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{t("dashboard.main-header")}</title>
+      <Alert status="warning" mb="5">
+        <AlertIcon />
+        {t("problem.desc")}
+      </Alert>
       <CustomModal
         onClose={onClose}
         isOpen={isOpen}
@@ -262,4 +272,4 @@ const Dashboard = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Dashboard);
+export default withUrqlClient(createUrqlClient)(Dashboard);

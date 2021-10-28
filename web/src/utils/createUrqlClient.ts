@@ -16,7 +16,6 @@ import {
   UseKindergardenMutation,
   ShowSelectedKindergardenDocument,
   ShowSelectedKindergardenQuery,
-  ClearKindergardenMutation,
   UseGroupMutation,
   ShowSelectedGroupQuery,
   ShowSelectedGroupDocument,
@@ -32,6 +31,11 @@ import {
   DeleteMotherMutationVariables,
   RemoveChildFromGroupMutationVariables,
   ShowStaffDocument,
+  ShowStaffQuery,
+  OwnerQuery,
+  OwnerDocument,
+  FilterStaffQuery,
+  FilterStaffDocument,
 } from "../generated/graphql";
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
@@ -401,7 +405,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 cache,
                 { query: MeDocument },
                 _result,
-                //@ts-ignore
                 (result, query) => {
                   if (result.updateUser.errors) {
                     return query;
@@ -416,84 +419,50 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
             },
 
             useKindergarden: (_result, _args, cache, _info) => {
-              const allFields = cache.inspectFields("Query");
-
-              const fieldInfos = allFields.filter(
-                (info) => info.fieldName === "showMother"
-              );
-              const filedsFilterMother = allFields.filter(
-                (info) => info.fieldName === "filterMother"
-              );
-              fieldInfos.forEach((fi) => {
-                cache.invalidate("Query", "showMother", fi.arguments || {});
-              });
-              filedsFilterMother.forEach((fi) => {
-                cache.invalidate("Query", "filterMother", fi.arguments || {});
-              });
-
-              const fieldInfosFather = allFields.filter(
-                (info) => info.fieldName === "showFather"
-              );
-              const fieldFilterFather = allFields.filter(
-                (info) => info.fieldName === "filterFather"
-              );
-              fieldInfosFather.forEach((fi) => {
-                cache.invalidate("Query", "showFather", fi.arguments || {});
-              });
-              fieldFilterFather.forEach((fi) => {
-                cache.invalidate("Query", "filterFather", fi.arguments || {});
-              });
-
-              updateQuery<
-                UseKindergardenMutation,
-                ShowSelectedKindergardenQuery
-              >(
-                cache,
-                { query: ShowSelectedKindergardenDocument },
-                _result,
-                (_, data) => {
-                  return {
-                    selectedKindergarden: data.selectedKindergarden,
-                    __typename: "Query",
-                  };
-                }
-              );
-
-              cache.updateQuery({ query: ShowStaffDocument }, (data) => {
-                // @ts-ignore
-                data?.showKinderGardenStaff?.staff.push(
-                  // @ts-ignore
-                  _result.useKindergarden.kindergarden.Id
+                updateQuery<UseKindergardenMutation, ShowSelectedKindergardenQuery>(
+                    cache,
+                    {query: ShowSelectedKindergardenDocument},
+                    _result,
+                    (result, query) => {
+                       if(result.useKindergarden.errors) {
+                           return query;
+                       } else {
+                            return {
+                                selectedKindergarden: result.useKindergarden.kindergarden,
+                                __typename:"Query"
+                            }
+                       }
+                    }
+                )
+                updateQuery<UseKindergardenMutation, ShowGroupsQuery>(
+                    cache,
+                    {query:ShowGroupsDocument},
+                    _result,
+                    (result, query) => {
+                        if(result.useKindergarden.errors) {
+                            return query;
+                        }
+                        return {
+                            showGroups: result.useKindergarden.kindergarden.groups === null ? [] : result.useKindergarden.kindergarden.groups,
+                            __typename:"Query"
+                        }
+                    }
+                )
+                updateQuery<UseKindergardenMutation, ShowStaffQuery>(
+                    cache,
+                    {query:ShowStaffDocument},
+                    _result,
+                    (result, query) => {
+                     if(result.useKindergarden.errors) {
+                        return query;
+                     }
+                        console.log(result);
+                        return {
+                            showStaff: result.useKindergarden.kindergarden.staff === null ? [] : result.useKindergarden.kindergarden.staff,
+                            __typename:"Query"
+                        }
+                    }
                 );
-                return data;
-              });
-              updateQuery<UseKindergardenMutation, ShowGroupsQuery>(
-                cache,
-                { query: ShowGroupsDocument },
-                _result,
-                //@ts-ignore
-                (result, query) => {
-                  return {
-                    showGroups: query?.showGroups?.push(
-                      //@ts-ignore
-                      result.useKindergarden.kindergarden.Id
-                    ),
-                    __typename: "Query",
-                  };
-                }
-              );
-            },
-
-            clearKindergarden: (_result, _args, cache, _info) => {
-              updateQuery<
-                ClearKindergardenMutation,
-                ShowSelectedKindergardenQuery
-              >(
-                cache,
-                { query: ShowSelectedKindergardenDocument },
-                _result,
-                () => ({ selectedKindergarden: null })
-              );
             },
 
             useGroup: (_result, _args, cache, _info) => {

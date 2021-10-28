@@ -7,6 +7,7 @@ fragment UserFragment on User {
     kindergarden {
       ...KindergardenFragment
     }
+    role
   }
   createdAt
   updatedAt
