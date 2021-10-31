@@ -36,6 +36,9 @@ import {
   OwnerDocument,
   FilterStaffQuery,
   FilterStaffDocument,
+  ShowKindergardenQuery,
+  CreateGroupMutation,
+  CreateKindergardenMutation,
 } from "../generated/graphql";
 import { pipe, tap } from "wonka";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
@@ -324,22 +327,39 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
             },
 
             createGroup: (_result, _args, cache, _info) => {
-              cache.updateQuery({ query: ShowGroupsDocument }, (data) => {
-                //@ts-ignore
-                data.showGroups.push(_result.createGroup.groups);
-                return data;
-              });
+              updateQuery<CreateGroupMutation, ShowGroupsQuery>(
+                cache,
+                { query: ShowGroupsDocument },
+                _result,
+                // @ts-expect-error
+                (result, query) => {
+                  if (result.createGroup.errors) return query;
+                  return {
+                    showGroups: query.showGroups.push(
+                      result.createGroup.groups
+                    ),
+                    __typename: "Query",
+                  };
+                }
+              );
             },
 
             createKindergarden: (_result, _args, cache, _info) => {
-              cache.updateQuery({ query: ShowKindergardenDocument }, (data) => {
-                //@ts-ignore
-                data.showKindergarden.push(
-                  //@ts-ignore
-                  _result.createKindergarden.kindergarden
-                );
-                return data;
-              });
+              updateQuery<CreateKindergardenMutation, ShowKindergardenQuery>(
+                cache,
+                { query: ShowKindergardenDocument },
+                _result,
+                // @ts-expect-error
+                (result, query) => {
+                  if (result.createKindergarden.errors) return query;
+                  return {
+                    showKindergarden: query.showKindergarden.push(
+                      result.createKindergarden.kindergarden
+                    ),
+                    __typename: "Query",
+                  };
+                }
+              );
             },
 
             deleteKindergarden: (_result, args, cache, _info) => {
@@ -359,24 +379,34 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
             },
 
             login: (_result, _args, cache, _info) => {
-              cache.updateQuery({ query: ShowKindergardenDocument }, (data) => {
-                // @ts-ignore
-                data?.showKindergarden.push(_result.login.user.Id);
-                return data;
-              });
               updateQuery<LoginMutation, MeQuery>(
                 cache,
                 { query: MeDocument },
                 _result,
-                //@ts-ignore
                 (result, query) => {
                   if (result.login.errors) {
                     return query;
-                  } else {
-                    return {
-                      me: result.login.user,
-                    };
                   }
+                  return {
+                    me: result.login.user,
+                  };
+                }
+              );
+              updateQuery<LoginMutation, ShowKindergardenQuery>(
+                cache,
+                { query: ShowKindergardenDocument },
+                _result,
+                (result, query) => {
+                  if (result.login.errors) {
+                    return query;
+                  }
+                  return {
+                    showKindergarden:
+                      result.login.user.ownerOf === null
+                        ? []
+                        : result.login.user.ownerOf,
+                    __typename: "Query",
+                  };
                 }
               );
             },
@@ -386,16 +416,14 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 cache,
                 { query: MeDocument },
                 _result,
-                //@ts-ignore
                 (result, query) => {
                   if (result.register.errors) {
                     return query;
-                  } else {
-                    return {
-                      me: result.register.user,
-                      __typename: "Query",
-                    };
                   }
+                  return {
+                    me: result.register.user,
+                    __typename: "Query",
+                  };
                 }
               );
             },
@@ -408,61 +436,110 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 (result, query) => {
                   if (result.updateUser.errors) {
                     return query;
-                  } else {
-                    return {
-                      me: result.updateUser.user,
-                      __typename: "Query",
-                    };
                   }
+                  return {
+                    me: result.updateUser.user,
+                    __typename: "Query",
+                  };
                 }
               );
             },
 
             useKindergarden: (_result, _args, cache, _info) => {
-                updateQuery<UseKindergardenMutation, ShowSelectedKindergardenQuery>(
-                    cache,
-                    {query: ShowSelectedKindergardenDocument},
-                    _result,
-                    (result, query) => {
-                       if(result.useKindergarden.errors) {
-                           return query;
-                       } else {
-                            return {
-                                selectedKindergarden: result.useKindergarden.kindergarden,
-                                __typename:"Query"
-                            }
-                       }
-                    }
-                )
-                updateQuery<UseKindergardenMutation, ShowGroupsQuery>(
-                    cache,
-                    {query:ShowGroupsDocument},
-                    _result,
-                    (result, query) => {
-                        if(result.useKindergarden.errors) {
-                            return query;
-                        }
-                        return {
-                            showGroups: result.useKindergarden.kindergarden.groups === null ? [] : result.useKindergarden.kindergarden.groups,
-                            __typename:"Query"
-                        }
-                    }
-                )
-                updateQuery<UseKindergardenMutation, ShowStaffQuery>(
-                    cache,
-                    {query:ShowStaffDocument},
-                    _result,
-                    (result, query) => {
-                     if(result.useKindergarden.errors) {
-                        return query;
-                     }
-                        console.log(result);
-                        return {
-                            showStaff: result.useKindergarden.kindergarden.staff === null ? [] : result.useKindergarden.kindergarden.staff,
-                            __typename:"Query"
-                        }
-                    }
-                );
+              updateQuery<
+                UseKindergardenMutation,
+                ShowSelectedKindergardenQuery
+              >(
+                cache,
+                { query: ShowSelectedKindergardenDocument },
+                _result,
+                (result, query) => {
+                  if (result.useKindergarden.errors) {
+                    return query;
+                  }
+                  return {
+                    selectedKindergarden: result.useKindergarden.kindergarden,
+                    __typename: "Query",
+                  };
+                }
+              );
+              updateQuery<UseKindergardenMutation, ShowGroupsQuery>(
+                cache,
+                { query: ShowGroupsDocument },
+                _result,
+                (result, query) => {
+                  if (result.useKindergarden.errors) {
+                    return query;
+                  }
+                  return {
+                    showGroups:
+                      result.useKindergarden.kindergarden.groups === null
+                        ? []
+                        : result.useKindergarden.kindergarden.groups,
+                    __typename: "Query",
+                  };
+                }
+              );
+              updateQuery<UseKindergardenMutation, ShowStaffQuery>(
+                cache,
+                { query: ShowStaffDocument },
+                _result,
+                (result, query) => {
+                  if (result.useKindergarden.errors) {
+                    return query;
+                  }
+                  return {
+                    showStaff:
+                      result.useKindergarden.kindergarden.staff === null
+                        ? []
+                        : result.useKindergarden.kindergarden.staff,
+                    __typename: "Query",
+                  };
+                }
+              );
+              updateQuery<UseKindergardenMutation, OwnerQuery>(
+                cache,
+                { query: OwnerDocument },
+                _result,
+                (result, query) => {
+                  if (result.useKindergarden.errors) return query;
+                  return {
+                    owner: result.useKindergarden.kindergarden,
+                    __typename: "Query",
+                  };
+                }
+              );
+              const allFields = cache.inspectFields("Query");
+              const fieldInfosMother = allFields.filter(
+                (info) => info.fieldName === "showMother"
+              );
+              fieldInfosMother.forEach((fi) => {
+                cache.invalidate("Query", "showMother", fi.arguments || {});
+              });
+              const fieldInfosFilterMother = allFields.filter(
+                (info) => info.fieldName === "filterMother"
+              );
+              fieldInfosFilterMother.forEach((fi) => {
+                cache.invalidate("Query", "filterMother", fi.arguments || {});
+              });
+              const fieldInfosFather = allFields.filter(
+                (info) => info.fieldName === "showFather"
+              );
+              fieldInfosFather.forEach((fi) => {
+                cache.invalidate("Query", "showFather", fi.arguments || {});
+              });
+              const fieldInfosFilterFather = allFields.filter(
+                (info) => info.fieldName === "filterFather"
+              );
+              fieldInfosFilterFather.forEach((fi) => {
+                cache.invalidate("Query", "filterFather", fi.arguments || {});
+              });
+              const fieldInfosSearchUser = allFields.filter(
+                (info) => info.fieldName === "searchUser"
+              );
+              fieldInfosSearchUser.forEach((fi) => {
+                cache.invalidate("Query", "searchUser", fi.arguments || {});
+              });
             },
 
             useGroup: (_result, _args, cache, _info) => {

@@ -4,7 +4,6 @@ import {
   Stack,
   Box,
   Link,
-  Heading,
   Menu,
   MenuButton,
   MenuDivider,
@@ -27,7 +26,6 @@ import {
   Exact,
   LogoutMutation,
   MeQuery,
-  useClearKindergardenMutation,
   useLogoutMutation,
   useMeQuery,
 } from "../generated/graphql";
@@ -261,7 +259,7 @@ const DashMenu = (
               h={"50px"}
               w={"50px"}
               bg="transparent"
-              onClick={(e) => {
+              onClick={() => {
                 i18n.changeLanguage("en");
               }}
             >
@@ -316,7 +314,7 @@ const DrawerNav = (
                 h={"50px"}
                 w={"50px"}
                 bg="transparent"
-                onClick={(e) => {
+                onClick={() => {
                   i18n.changeLanguage("en");
                 }}
               >
@@ -443,7 +441,7 @@ const BrowserNav = (i18n: i18n, variant: NavbarVariant) => (
           h={"50px"}
           w={"50px"}
           bg="transparent"
-          onClick={(e) => {
+          onClick={() => {
             i18n.changeLanguage("en");
           }}
         >
@@ -463,11 +461,10 @@ interface NavProps {
 export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
   const router = useRouter();
   const { t, i18n } = useTranslation("data", { useSuspense: false });
-  const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
+  const [, logout] = useLogoutMutation();
   const [{ data, fetching }] = useMeQuery({
     pause: isServer(),
   });
-  const [, clearKindergarden] = useClearKindergardenMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: drawerIsOpen,

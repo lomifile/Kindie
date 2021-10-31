@@ -8,7 +8,7 @@ mutation UseKindergarden($kindergardenID: Float!) {
       groups {
         ...GroupFragment
       }
-      staff{
+      staff {
         ...StaffFragment
       }
     }
