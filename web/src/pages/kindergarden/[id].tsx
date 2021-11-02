@@ -338,7 +338,7 @@ const Kindergarden = ({}) => {
       />
     );
   }
-  console.log(partOf);
+
   const kindergardenId =
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
   const extractRole = (): string => {

@@ -17,6 +17,7 @@ import { Layout } from "../components/Layout";
 import {
   useDeleteChildrenMutation,
   useShowChildrenNotIngroupQuery,
+  useShowSelectedKindergardenQuery,
 } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useIsAuth } from "../utils/useIsAuth";
@@ -29,6 +30,7 @@ import { ChildrenModal } from "../components/ChildrenModal";
 import isElectron from "is-electron";
 import router, { NextRouter } from "next/router";
 import { ChildrenDataTable } from "../components/ChildrenDataTable";
+import { fetchPartOf } from "../utils/fetchPartof";
 
 const MainHeader = (role: string, t: TFunction<"data">, router: NextRouter) => (
   <Flex justify={["center", "center", "center", "center", "center"]}>
@@ -77,7 +79,6 @@ const MainHeader = (role: string, t: TFunction<"data">, router: NextRouter) => (
 const Children: React.FC<{}> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
-
   const [variables, setVariables] = useState({
     limit: 10,
     cursor: null as null | string,
@@ -86,14 +87,23 @@ const Children: React.FC<{}> = ({}) => {
   const [{ data, fetching }] = useShowChildrenNotIngroupQuery({
     variables,
   });
-
   const role = getUserRole();
-
   const [, deleteChildren] = useDeleteChildrenMutation();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const [child, setChild] = useState(null);
+  const partOf = fetchPartOf();
+  const [{ data: selectedKindergarden }] = useShowSelectedKindergardenQuery();
+
+  const extractRole = (): string => {
+    for (let i = 0; i < partOf.length; i++) {
+      if (
+        partOf[i].kindergarden.Id ===
+        selectedKindergarden.selectedKindergarden.Id
+      )
+        return partOf[i].role;
+    }
+    return "Headmaster";
+  };
 
   if (!fetching && !data) {
     return (
@@ -111,7 +121,7 @@ const Children: React.FC<{}> = ({}) => {
       {role == "Teacher" ? (
         <ChildrenModal onClose={onClose} isOpen={isOpen} child={child} />
       ) : null}
-      {MainHeader(role, t, router)}
+      {MainHeader(extractRole(), t, router)}
       <Flex justify={"center"}>
         <Box
           w={["100%", "100%", "100%", "80%", "100%"]}
@@ -143,7 +153,7 @@ const Children: React.FC<{}> = ({}) => {
               childrenFilter={childrenFilter}
               deleteChildren={deleteChildren}
               onOpen={onOpen}
-              role={role}
+              role={extractRole()}
               setChild={setChild}
             />
           )}

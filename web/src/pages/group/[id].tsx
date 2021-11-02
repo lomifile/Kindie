@@ -36,6 +36,7 @@ import {
   useRemoveChildFromGroupMutation,
   useShowChildrenFilterInGroupQuery,
   useShowChildrenQuery,
+  useShowSelectedKindergardenQuery,
 } from "../../generated/graphql";
 import { fetchGroup } from "../../utils/fetchGroup";
 import { useIsAuth } from "../../utils/useIsAuth";
@@ -50,6 +51,7 @@ import { OperationContext, OperationResult } from "@urql/core";
 import { CustomDrawer } from "../../components/CustomDrawer";
 import { InGroupTable } from "../../components/InGroupTable";
 import { checkRole } from "../../utils/checkRole";
+import { fetchPartOf } from "../../utils/fetchPartof";
 
 const MenuDrawer = (
   isOpenMenu: boolean,
@@ -364,19 +366,31 @@ const Group = ({}) => {
     onClose: teacherChildViewOnClose,
   } = useDisclosure();
   const [child, setChild] = useState(null);
-  const role = getUserRole();
+  const [{ data: selectedKindergarden }] = useShowSelectedKindergardenQuery();
+  const partOf = fetchPartOf();
+  const extractRole = (): string => {
+    for (let i = 0; i < partOf.length; i++) {
+      if (
+        partOf[i].kindergarden.Id ===
+        selectedKindergarden.selectedKindergarden.Id
+      )
+        return partOf[i].role;
+    }
+    return "Headmaster";
+  };
   const [childrenFilter, setChildrenFilter] = useState("");
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{groupName}</title>
-      {checkRole(role, "Teacher") ? (
+      {checkRole(extractRole(), "Teacher") ? (
         <ChildrenModal
           onClose={teacherChildViewOnClose}
           isOpen={teacherChildViewIsOpen}
           child={child}
         />
       ) : null}
-      {checkRole(role, "Headmaster") || checkRole(role, "Pedagouge") ? (
+      {checkRole(extractRole(), "Headmaster") ||
+      checkRole(extractRole(), "Pedagouge") ? (
         <>
           {AddGroupDrawer(
             setText,
@@ -400,7 +414,7 @@ const Group = ({}) => {
       <Stack spacing={5}>
         <Flex align="center" justify="center" mt={5} p={3}>
           <HStack p={2} spacing={4}>
-            {Menu(role, onOpen, t, router, clearGroup, isElectron())}
+            {Menu(extractRole(), onOpen, t, router, clearGroup, isElectron())}
             {!isElectron() ? (
               <IconButton
                 display={["flex", "flex", "flex", "none"]}
@@ -450,7 +464,7 @@ const Group = ({}) => {
               data={data}
               deleteChildren={deleteChildren}
               onOpen={teacherChildViewOnOpen}
-              role={role}
+              role={extractRole()}
               setChild={setChild}
             />
           </>

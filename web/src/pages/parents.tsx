@@ -32,6 +32,7 @@ import {
   useShowMotherQuery,
   useDeleteMotherMutation,
   useDeleteFatherMutation,
+  useShowSelectedKindergardenQuery,
 } from "../generated/graphql";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
@@ -42,11 +43,12 @@ import isElectron from "is-electron";
 import router from "next/router";
 import { MotherDataTable } from "../components/MotherDataTable";
 import { FatherDataTable } from "../components/FatherDataTable";
+import { fetchPartOf } from "../utils/fetchPartof";
+import { checkRole } from "../utils/checkRole";
 
 const Parents: React.FC<{}> = ({}) => {
   useIsAuth();
   const { t } = useTranslation("data", { useSuspense: false });
-  const role = getUserRole();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [parent, setParent] = useState(null);
 
@@ -70,6 +72,19 @@ const Parents: React.FC<{}> = ({}) => {
 
   const [motherFilter, setMotherFilter] = useState("");
   const [fatherFilter, setFatherFilter] = useState("");
+
+  const [{ data: selectedKindergarden }] = useShowSelectedKindergardenQuery();
+  const partOf = fetchPartOf();
+  const extractRole = (): string => {
+    for (let i = 0; i < partOf.length; i++) {
+      if (
+        partOf[i].kindergarden.Id ===
+        selectedKindergarden.selectedKindergarden.Id
+      )
+        return partOf[i].role;
+    }
+    return "Headmaster";
+  };
 
   return (
     <Layout navbarVariant="user" variant="column">
@@ -101,7 +116,8 @@ const Parents: React.FC<{}> = ({}) => {
             <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
               {t("parents.main-header")}
             </Heading>
-            {role == "Headmaster" || role == "Pedagogue" ? (
+            {checkRole(extractRole(), "Headmaster") ||
+            checkRole(extractRole(), "Pedagouge") ? (
               <>
                 <Menu>
                   <MenuButton
@@ -204,7 +220,7 @@ const Parents: React.FC<{}> = ({}) => {
                       deleteMother={deleteMother}
                       mother={mother}
                       onOpen={onOpen}
-                      role={role}
+                      role={extractRole()}
                       setParent={setParent}
                       motherFilter={motherFilter}
                     />
@@ -290,7 +306,7 @@ const Parents: React.FC<{}> = ({}) => {
                       deleteFather={deleteFather}
                       father={father}
                       onOpen={onOpen}
-                      role={role}
+                      role={extractRole()}
                       setParent={setParent}
                       fatherFilter={fatherFilter}
                     />

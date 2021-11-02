@@ -215,10 +215,6 @@ const Dashboard = ({}) => {
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{t("dashboard.main-header")}</title>
-      <Alert status="warning" mb="5">
-        <AlertIcon />
-        {t("problem.desc")}
-      </Alert>
       <CustomModal
         onClose={onClose}
         isOpen={isOpen}

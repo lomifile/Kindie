@@ -23,7 +23,6 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/react";
-import { fetchOwnerOf } from "../utils/fetchOwnerOf";
 import {
   AddIcon,
   ArrowBackIcon,
@@ -322,8 +321,6 @@ const Staff: React.FC<{}> = ({}) => {
     }
   };
   const toast = useToast();
-  console.log("Owner", owner);
-  console.log("ME", meData);
 
   return (
     <Layout variant={"column"} navbarVariant={"user"}>
