@@ -29,7 +29,7 @@ export const KindergardenCard: React.FC<KindergardenCardProps> = ({
   const [, useKindergarden] = useUseKindergardenMutation();
   const [, deleteKindergarden] = useDeleteKindergardenMutation();
   const toast = useToast();
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   return (
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" shadow="xl">
       <Flex justify="right">

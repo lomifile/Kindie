@@ -92,7 +92,7 @@ export const FatherDataTable: React.FC<FatherDataTableProps> = ({
   deleteFather,
   fatherFilter,
 }) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
 
   const { items, requestSort, sortConfig } = useSortableData(
     father!.showFather.father

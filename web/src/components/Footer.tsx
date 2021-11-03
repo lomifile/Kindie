@@ -18,7 +18,7 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ variant = "regular" }) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const year = new Date().getFullYear();
   let body;
   if (variant == "small") {

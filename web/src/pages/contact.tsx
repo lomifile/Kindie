@@ -26,7 +26,7 @@ import { CustomHeader } from "../components/CustomHeader";
 
 const ContactForm = (
   toast: (options?: UseToastOptions) => string | number,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   sendEmail: (
     variables?: Exact<{
       input: ContactInput;
@@ -102,7 +102,7 @@ const ContactForm = (
 );
 
 const Contact: React.FC<{}> = ({}) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const [, sendEmail] = useSendEmailMutation();
   const toast = useToast();
   return (

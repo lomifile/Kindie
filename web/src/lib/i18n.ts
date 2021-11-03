@@ -9,14 +9,9 @@ const DETECTION_OPTIONS = {
 
 export const init_i18n = () => {
   i18n
-    // import & load translations from -> /public/locales
     .use(Backend)
-    // https://github.com/i18next/i18next-browser-languageDetector
     .use(LanguageDetector)
-    // pass the i18n instance to react-i18next.
     .use(initReactI18next)
-    // init i18next
-    // see opts @ https://www.i18next.com/overview/configuration-options
     .init({
       detection: DETECTION_OPTIONS,
       fallbackLng: "en",
@@ -24,7 +19,7 @@ export const init_i18n = () => {
         escapeValue: false,
       },
       react: {
-        useSuspense: false, // fixes 'no fallback UI was specified' in react i18next when using hooks
+        useSuspense: true,
       },
     });
 };

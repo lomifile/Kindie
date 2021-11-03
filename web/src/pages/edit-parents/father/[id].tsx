@@ -59,7 +59,7 @@ const EditFatherForm = (
   >,
   toast: (options?: UseToastOptions) => string | number,
   router: NextRouter,
-  t: TFunction<"data">
+  t: TFunction<"translation">
 ) => (
   <Formik
     initialValues={{
@@ -185,7 +185,7 @@ const EditFatherForm = (
 );
 
 const EditFather = ({}) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const router = useRouter();
   useIsAuth();
   const id = useGetId();

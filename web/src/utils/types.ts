@@ -235,3 +235,16 @@ export type ChildrennotinGrouptype = {
     };
   };
 }[];
+
+export type partOfType = {
+  __typename?: "StaffMembers";
+  role: string;
+  kindergarden?: {
+    __typename?: "KinderGarden";
+    Id: number;
+    Name: string;
+    City: string;
+    Address: string;
+    Zipcode: number;
+  };
+}[];

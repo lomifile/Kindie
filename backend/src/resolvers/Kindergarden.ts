@@ -135,14 +135,6 @@ export class KindergardenResolver {
   }
 
   @Mutation(() => Boolean)
-  clearKindergarden(@Ctx() { req }: AppContext) {
-    if (req.session.selectedKindergarden) {
-      req.session.selectedKindergarden = NaN;
-    }
-    return true;
-  }
-
-  @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async deleteKindergarden(@Arg("id", () => Int) id: number): Promise<Boolean> {
     await KinderGarden.delete({ Id: id });

@@ -27,7 +27,7 @@ import { OperationContext, OperationResult } from "urql";
 const VerifyAccountForm = (
   router: NextRouter,
   toast: (options?: UseToastOptions) => string | number,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   verifyAccount: (
     variables?: Exact<{
       token: string;
@@ -109,7 +109,7 @@ const VerifyAccountForm = (
 };
 
 const VerifyAccount: NextPage = ({}) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const [, verifyAccount] = useVerifyAccountMutation();
   const router = useRouter();
   const toast = useToast();

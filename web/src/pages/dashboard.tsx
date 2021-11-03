@@ -11,8 +11,6 @@ import {
   Divider,
   IconButton,
   UseToastOptions,
-  Alert,
-  AlertIcon,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { withUrqlClient } from "next-urql";
@@ -23,12 +21,10 @@ import { Layout } from "../components/Layout";
 import {
   CreateKindergardenMutation,
   Exact,
-  KinderGarden,
   KinderGardenInput,
   ShowKindergardenQuery,
   useCreateKindergardenMutation,
   useShowKindergardenQuery,
-  useShowStaffQuery,
 } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { fetchPartOf } from "../utils/fetchPartof";
@@ -36,14 +32,13 @@ import { toErrormap } from "../utils/toErrorMap";
 import { useIsAuth } from "../utils/useIsAuth";
 import { CustomAlert } from "../components/Alerts";
 import { CustomSpinner } from "../components/Spinner";
-import { getUserRole } from "../utils/getUserRole";
 import { OperationContext, OperationResult } from "urql";
 import { CustomModal } from "../components/CustomModal";
 import { KindergardenCard } from "../components/KindergardenCard";
 
 const CreateKindergardenForm = (
   toast: (options?: UseToastOptions) => string | number,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   onClose: () => void,
   createKindergarden: (
     variables?: Exact<{
@@ -194,7 +189,7 @@ const PartOfKindergardenCards = (
 
 const Dashboard = ({}) => {
   useIsAuth();
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [{ data, fetching }] = useShowKindergardenQuery();

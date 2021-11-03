@@ -116,7 +116,7 @@ export const InGroupTable: React.FC<InGroupTableProps> = ({
   childrenFilter,
   removeFromGroup,
 }) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
 
   const { items, requestSort, sortConfig } = useSortableData(
     data!.showChildrenFilterInGroup?.children

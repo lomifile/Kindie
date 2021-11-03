@@ -9,6 +9,7 @@ import {
   useCreateGroupMutation,
   useDeleteGroupMutation,
   useShowGroupsQuery,
+  useShowSelectedKindergardenQuery,
   useUseChildrenMutation,
   useUseGroupMutation,
 } from "../../generated/graphql";
@@ -41,9 +42,10 @@ import { CustomModal } from "../../components/CustomModal";
 import { CustomDrawer } from "../../components/CustomDrawer";
 import { fetchPartOf } from "../../utils/fetchPartof";
 import { useRouter } from "next/router";
+import { extractRole } from "../../utils/extractRole";
 
 const DrawerMenu = (
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   useChildren: (
     variables?: Exact<{
       [key: string]: never;
@@ -126,7 +128,7 @@ const DrawerMenuHeader = () => (
 
 const CreateGroupForm = (
   toast: (options?: UseToastOptions) => string | number,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   onClose: () => void,
   createGroup: (
     variables?: Exact<{
@@ -196,7 +198,7 @@ const CreateGroupForm = (
 const MainMenu = (
   role: string,
   onOpen: () => void,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   drawerOnOpen: () => void,
   useChildren: (
     variables?: Exact<{
@@ -311,7 +313,7 @@ const MainMenu = (
 
 const Kindergarden = ({}) => {
   useIsAuth();
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const toast = useToast();
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -326,7 +328,7 @@ const Kindergarden = ({}) => {
   const [, useChildren] = useUseChildrenMutation();
   const [, deleteGroup] = useDeleteGroupMutation();
   const partOf = fetchPartOf();
-
+  const [{ data: selectedKindergarden }] = useShowSelectedKindergardenQuery();
   if (fetching) {
     return <CustomSpinner />;
   } else if (!fetching && !data?.showGroups) {
@@ -338,16 +340,6 @@ const Kindergarden = ({}) => {
       />
     );
   }
-
-  const kindergardenId =
-    typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
-  const extractRole = (): string => {
-    for (let i = 0; i < partOf.length; i++) {
-      if (partOf[i].kindergarden.Id === kindergardenId) return partOf[i].role;
-    }
-    return "Headmaster";
-  };
-
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{t("kindergarden.main-header")}</title>
@@ -369,13 +361,19 @@ const Kindergarden = ({}) => {
       </CustomModal>
       <Stack spacing={8}>
         <Flex align="center" justify="center" mt={5} p={5}>
-          {MainMenu(extractRole(), onOpen, t, drawerOnOpen, useChildren)}
+          {MainMenu(
+            extractRole(partOf, selectedKindergarden),
+            onOpen,
+            t,
+            drawerOnOpen,
+            useChildren
+          )}
         </Flex>
         {data?.showGroups.length > 0 ? (
           <GroupCard
             data={data}
             deleteGroup={deleteGroup}
-            role={extractRole()}
+            role={extractRole(partOf, selectedKindergarden)}
             useGroup={useGroup}
           />
         ) : null}

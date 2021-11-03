@@ -39,7 +39,7 @@ const ChangePasswordForm = (
   setTokenError: (value: React.SetStateAction<string>) => void,
   setComplete: (value: React.SetStateAction<boolean>) => void,
   complete: boolean,
-  t: TFunction<"data">
+  t: TFunction<"translation">
 ) => (
   <Formik
     initialValues={{ newPassword: "", repeatNewPassword: "" }}
@@ -109,7 +109,7 @@ const ChangePasswordForm = (
 );
 
 const ChangePassword: NextPage = ({}) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const router = useRouter();
   const [, changePassword] = useChangePasswordMutation();
   const [tokenError, setTokenError] = useState("");

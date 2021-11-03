@@ -144,7 +144,6 @@ export type Mutation = {
   addStaff: StaffResponse;
   changePassword: UserResponse;
   clearGroup: Scalars['Boolean'];
-  clearKindergarden: Scalars['Boolean'];
   createChild: Children;
   createGroup: GroupsResponse;
   createKindergarden: KindergardenResponse;
@@ -560,11 +559,6 @@ export type ClearGroupMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ClearGroupMutation = { __typename?: 'Mutation', clearGroup: boolean };
-
-export type ClearKindergardenMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ClearKindergardenMutation = { __typename?: 'Mutation', clearKindergarden: boolean };
 
 export type CreateChildMutationVariables = Exact<{
   options: ChildrenInput;
@@ -1066,15 +1060,6 @@ export const ClearGroupDocument = gql`
 
 export function useClearGroupMutation() {
   return Urql.useMutation<ClearGroupMutation, ClearGroupMutationVariables>(ClearGroupDocument);
-};
-export const ClearKindergardenDocument = gql`
-    mutation ClearKindergarden {
-  clearKindergarden
-}
-    `;
-
-export function useClearKindergardenMutation() {
-  return Urql.useMutation<ClearKindergardenMutation, ClearKindergardenMutationVariables>(ClearKindergardenDocument);
 };
 export const CreateChildDocument = gql`
     mutation CreateChild($options: ChildrenInput!) {

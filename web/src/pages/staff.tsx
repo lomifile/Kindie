@@ -60,7 +60,7 @@ const AddStaffBody = (
   setText: React.Dispatch<React.SetStateAction<string>>,
   userSearch: SearchUserQuery,
   fetching: boolean,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   setShow: React.Dispatch<any>,
   openModal: () => void,
   addStaffModalOnOpen: () => void,
@@ -142,7 +142,7 @@ const AddStaffBody = (
 const StaffTable = (
   staff: ShowStaffQuery,
   translatedRoles: (role: String) => string,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   deleteStaff: (
     variables?: Exact<{
       userId: number;
@@ -212,7 +212,7 @@ const AddStaffForm = (
       }>
     >
   >,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   userId: any,
   toast,
   addStaffModalOnClose: () => void
@@ -282,7 +282,7 @@ const AddStaffForm = (
 
 const Staff: React.FC<{}> = ({}) => {
   useIsAuth();
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: modalOpen,

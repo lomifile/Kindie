@@ -100,7 +100,7 @@ export const ChildrenDataTable: React.FC<ChildrenDataTableProps> = ({
   deleteChildren,
   childrenFilter,
 }) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
 
   const { items, requestSort, sortConfig } = useSortableData(
     data!.showChildrenFilterNotInGroup?.children

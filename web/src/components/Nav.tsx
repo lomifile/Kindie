@@ -41,7 +41,7 @@ import { CustomSpinner } from "./Spinner";
 import Image from "next/image";
 import logo from "../../public/img/logo.png";
 
-const DashNav = (t: TFunction<"data">) => (
+const DashNav = (t: TFunction<"translation">) => (
   <>
     <NextLink href="/">
       <Button
@@ -92,7 +92,7 @@ const DashNav = (t: TFunction<"data">) => (
   </>
 );
 
-const SignInNav = (t: TFunction<"data">) => (
+const SignInNav = (t: TFunction<"translation">) => (
   <>
     <NextLink href="/">
       <Button
@@ -160,7 +160,7 @@ const SignInNav = (t: TFunction<"data">) => (
 const DashMenu = (
   data: MeQuery,
   router: NextRouter,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   i18n: i18n,
   logout: (
     variables?: Exact<{
@@ -332,7 +332,7 @@ const ElectronMenu = (
   drawerOnClose: () => void,
   drawerIsOpen: boolean,
   drawerOnOpen: () => void,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   router: NextRouter,
   logout: (
     variables?: Exact<{
@@ -460,7 +460,7 @@ interface NavProps {
 
 export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
   const router = useRouter();
-  const { t, i18n } = useTranslation("data", { useSuspense: false });
+  const { t, i18n } = useTranslation();
   const [, logout] = useLogoutMutation();
   const [{ data, fetching }] = useMeQuery({
     pause: isServer(),
