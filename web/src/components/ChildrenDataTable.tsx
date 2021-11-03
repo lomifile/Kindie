@@ -174,7 +174,7 @@ export const ChildrenDataTable: React.FC<ChildrenDataTableProps> = ({
         {!childrenFilter
           ? items.map((child) =>
               !child ? null : (
-                <Tr>
+                <Tr key={child.Id}>
                   <Td>{child.Name}</Td>
                   <Td ml={"2rem"}>{child.Surname}</Td>
                   {role == "Teacher" ? (

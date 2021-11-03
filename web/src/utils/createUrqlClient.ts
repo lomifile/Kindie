@@ -34,8 +34,6 @@ import {
   ShowStaffQuery,
   OwnerQuery,
   OwnerDocument,
-  // FilterStaffQuery,
-  // FilterStaffDocument,
   ShowKindergardenQuery,
   CreateGroupMutation,
   CreateKindergardenMutation,
@@ -191,6 +189,13 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
           PaginatedChildren: () => null,
           PaginatedMother: () => null,
           PaginatedFather: () => null,
+          Children: () => null,
+          User: () => null,
+          StaffMembers: () => null,
+          Groups: () => null,
+          KinderGarden: () => null,
+          Mother: () => null,
+          Father: () => null,
         },
         resolvers: {
           Query: {

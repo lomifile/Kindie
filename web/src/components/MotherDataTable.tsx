@@ -229,7 +229,7 @@ export const MotherDataTable: React.FC<MotherDataTableProps> = ({
           : null}
         {motherFilter
           ? findMother(mother, motherFilter).map((mom) => (
-              <Tr>
+              <Tr key={mom.Id}>
                 <Td>{mom.Name}</Td>
                 <Td ml={"2rem"}>{mom.Surname}</Td>
                 {role == "Teacher" ? (
