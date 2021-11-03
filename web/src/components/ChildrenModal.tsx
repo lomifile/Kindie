@@ -28,7 +28,7 @@ export const ChildrenModal: React.FC<ChildrenModalProps> = ({
   isOpen,
   child,
 }) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
 
   return (
     <Modal onClose={onClose} size={"xl"} isOpen={isOpen}>

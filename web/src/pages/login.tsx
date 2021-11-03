@@ -37,7 +37,7 @@ const LoginForm = (
   setVerified: React.Dispatch<React.SetStateAction<boolean>>,
   setResendEmail: React.Dispatch<React.SetStateAction<string>>,
   show: boolean,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   handleClick: () => void,
   login: (
     variables?: Exact<{
@@ -132,7 +132,7 @@ const LoginForm = (
 );
 
 const LoginAlertForm = (
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   remail: string,
   resendEmail: (
     variables?: Exact<{
@@ -165,7 +165,7 @@ const LoginAlertForm = (
 );
 
 const Login: React.FC<{}> = ({}) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const [, login] = useLoginMutation();
   const [, resendEmail] = useResendEmailMutation();
 

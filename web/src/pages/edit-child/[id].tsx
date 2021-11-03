@@ -78,7 +78,7 @@ const UpdateChildForm = (
   toast: (options?: UseToastOptions) => string | number,
   router: NextRouter,
   id: number,
-  t: TFunction<"data">
+  t: TFunction<"translation">
 ) => (
   <Formik
     initialValues={{
@@ -228,7 +228,7 @@ const MotherDataTable = (
   data: FindChildQuery,
   motherFetching: boolean,
   mother: FilterMotherQuery,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   updateParents: (
     variables?: Exact<{
       childId: number;
@@ -295,7 +295,7 @@ const FatherDataTable = (
   data: FindChildQuery,
   fatherFetching: boolean,
   father: FilterFatherQuery,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   updateParents: (
     variables?: Exact<{
       childId: number;
@@ -361,7 +361,7 @@ const FatherDataTable = (
 const AddParentsDrawer = (
   isOpen: boolean,
   onClose: () => void,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   data: FindChildQuery,
   mother: FilterMotherQuery,
   motherFetching: boolean,
@@ -420,7 +420,7 @@ const AddParentsDrawer = (
 );
 
 const EditChild = ({}) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const id = useGetId();
   const toast = useToast();
   const router = useRouter();

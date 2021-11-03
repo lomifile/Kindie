@@ -92,7 +92,7 @@ export const FatherDataTable: React.FC<FatherDataTableProps> = ({
   deleteFather,
   fatherFilter,
 }) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
 
   const { items, requestSort, sortConfig } = useSortableData(
     father!.showFather.father
@@ -163,7 +163,7 @@ export const FatherDataTable: React.FC<FatherDataTableProps> = ({
         {!fatherFilter
           ? father.showFather.father.map((father) =>
               !father ? null : (
-                <Tr>
+                <Tr key={father.Id}>
                   <Td>{father.Name}</Td>
                   <Td ml={"2rem"}>{father.Surname}</Td>
                   <Td>{moment(father.createdAt).format("DD-MM-yyyy")}</Td>

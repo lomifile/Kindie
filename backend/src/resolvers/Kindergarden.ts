@@ -11,10 +11,12 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { isAuth } from "../middleware/isAuth";
+import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
 import { AppContext } from "../Types";
 import { getConnection } from "typeorm";
 import { KinderGardenInput } from "../utils/inputs/KindergardenInput";
 import { FieldError } from "../utils/Errors";
+import { StaffMembers } from "../entities/SatffMembers";
 
 @ObjectType()
 class KindergardenResponse {
@@ -27,6 +29,13 @@ class KindergardenResponse {
 
 @Resolver(KinderGarden)
 export class KindergardenResolver {
+  @Query(() => KinderGarden)
+  @UseMiddleware(isAuth)
+  @UseMiddleware(isKinderGardenSelected)
+  owner(@Ctx() { req }: AppContext) {
+    return KinderGarden.findOne(req.session.selectedKindergarden);
+  }
+
   @Query(() => KinderGarden, { nullable: true })
   @UseMiddleware(isAuth)
   selectedKindergarden(@Ctx() { req }: AppContext) {
@@ -50,19 +59,31 @@ export class KindergardenResolver {
     if (kindergarden) {
       req.session.selectedKindergarden = kindergarden.Id;
     } else if (!kindergarden) {
-      const replacements: any = [];
-      replacements.push(req.session.userId);
-      replacements.push(kindergardenId);
-      const result = await getConnection().query(
-        `select * from kinder_garden 
-        left join staff_members 
-        on kinder_garden."Id" = staff_members."kindergardenId" 
-        and staff_members."staffId" = $1 where "kindergardenId"=$2`,
-        replacements
-      );
-      kindergarden = result[0];
-      // @ts-ignore
-      req.session.selectedKindergarden = kindergarden.Id;
+      const result = await getConnection()
+        .createQueryBuilder(KinderGarden, "kindergarden")
+        .leftJoin(
+          StaffMembers,
+          "staff_members",
+          `kindergarden."Id" = staff_members."kindergardenId" and staff_members."staffId" = :id`,
+          { id: req.session.userId }
+        )
+        .where(`"kindergardenId" = :ID`, {
+          ID: kindergardenId,
+        })
+        .getOne();
+
+      if (!result || result === undefined)
+        return {
+          errors: [
+            {
+              field: "kindergardenID",
+              message: "Kindergarden does not exist",
+            },
+          ],
+        };
+
+      kindergarden = result;
+      req.session.selectedKindergarden = kindergarden?.Id;
     }
 
     return { kindergarden };
@@ -111,14 +132,6 @@ export class KindergardenResolver {
       };
     }
     return { kindergarden };
-  }
-
-  @Mutation(() => Boolean)
-  clearKindergarden(@Ctx() { req }: AppContext) {
-    if (req.session.selectedKindergarden) {
-      req.session.selectedKindergarden = NaN;
-    }
-    return true;
   }
 
   @Mutation(() => Boolean)

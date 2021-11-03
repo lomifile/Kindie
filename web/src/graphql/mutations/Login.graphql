@@ -2,6 +2,9 @@ mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
     user {
       ...UserFragment
+      ownerOf {
+        ...KindergardenFragment
+      }
     }
     errors {
       ...ErrorFragment

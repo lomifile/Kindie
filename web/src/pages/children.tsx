@@ -17,6 +17,7 @@ import { Layout } from "../components/Layout";
 import {
   useDeleteChildrenMutation,
   useShowChildrenNotIngroupQuery,
+  useShowSelectedKindergardenQuery,
 } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useIsAuth } from "../utils/useIsAuth";
@@ -24,13 +25,19 @@ import NextLink from "next/link";
 import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import { useTranslation, TFunction } from "react-i18next";
 import { CustomAlert } from "../components/Alerts";
-import { getUserRole } from "../utils/getUserRole";
 import { ChildrenModal } from "../components/ChildrenModal";
 import isElectron from "is-electron";
 import router, { NextRouter } from "next/router";
 import { ChildrenDataTable } from "../components/ChildrenDataTable";
+import { fetchPartOf } from "../utils/fetchPartof";
+import { checkRole } from "../utils/checkRole";
+import { extractRole } from "../utils/extractRole";
 
-const MainHeader = (role: string, t: TFunction<"data">, router: NextRouter) => (
+const MainHeader = (
+  role: string,
+  t: TFunction<"translation">,
+  router: NextRouter
+) => (
   <Flex justify={["center", "center", "center", "center", "center"]}>
     <HStack spacing={5}>
       {isElectron() ? (
@@ -76,8 +83,7 @@ const MainHeader = (role: string, t: TFunction<"data">, router: NextRouter) => (
 
 const Children: React.FC<{}> = ({}) => {
   useIsAuth();
-  const { t } = useTranslation("data", { useSuspense: false });
-
+  const { t } = useTranslation();
   const [variables, setVariables] = useState({
     limit: 10,
     cursor: null as null | string,
@@ -86,14 +92,11 @@ const Children: React.FC<{}> = ({}) => {
   const [{ data, fetching }] = useShowChildrenNotIngroupQuery({
     variables,
   });
-
-  const role = getUserRole();
-
   const [, deleteChildren] = useDeleteChildrenMutation();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const [child, setChild] = useState(null);
+  const partOf = fetchPartOf();
+  const [{ data: selectedKindergarden }] = useShowSelectedKindergardenQuery();
 
   if (!fetching && !data) {
     return (
@@ -108,10 +111,10 @@ const Children: React.FC<{}> = ({}) => {
   return (
     <Layout navbarVariant="user" variant="column">
       <title>{t("children.main-header")}</title>
-      {role == "Teacher" ? (
+      {checkRole(extractRole(partOf, selectedKindergarden), "Teacher") ? (
         <ChildrenModal onClose={onClose} isOpen={isOpen} child={child} />
       ) : null}
-      {MainHeader(role, t, router)}
+      {MainHeader(extractRole(partOf, selectedKindergarden), t, router)}
       <Flex justify={"center"}>
         <Box
           w={["100%", "100%", "100%", "80%", "100%"]}
@@ -143,7 +146,7 @@ const Children: React.FC<{}> = ({}) => {
               childrenFilter={childrenFilter}
               deleteChildren={deleteChildren}
               onOpen={onOpen}
-              role={role}
+              role={extractRole(partOf, selectedKindergarden)}
               setChild={setChild}
             />
           )}

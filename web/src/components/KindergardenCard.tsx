@@ -19,44 +19,48 @@ interface KindergardenCardProps {
     Address: string;
     Zipcode: number;
   };
+  partof?: boolean;
 }
 
 export const KindergardenCard: React.FC<KindergardenCardProps> = ({
   owning,
+  partof = false,
 }) => {
   const [, useKindergarden] = useUseKindergardenMutation();
   const [, deleteKindergarden] = useDeleteKindergardenMutation();
   const toast = useToast();
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   return (
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" shadow="xl">
       <Flex justify="right">
-        <IconButton
-          aria-label="Delete kindergarden"
-          icon={<CloseIcon />}
-          variant="ghost"
-          onClick={async () => {
-            const { error } = await deleteKindergarden({
-              id: owning.Id,
-            });
-            if (error) {
-              toast({
-                title: t("dashboard.toast.error.title"),
-                description: t("dashboard.toast.error.desc"),
-                status: "error",
-                duration: 9000,
-                isClosable: true,
+        {!partof ? (
+          <IconButton
+            aria-label="Delete kindergarden"
+            icon={<CloseIcon />}
+            variant="ghost"
+            onClick={async () => {
+              const { error } = await deleteKindergarden({
+                id: owning.Id,
               });
-            } else {
-              toast({
-                title: t("dashboard.toast.delete.title"),
-                status: "success",
-                duration: 9000,
-                isClosable: true,
-              });
-            }
-          }}
-        />
+              if (error) {
+                toast({
+                  title: t("dashboard.toast.error.title"),
+                  description: t("dashboard.toast.error.desc"),
+                  status: "error",
+                  duration: 9000,
+                  isClosable: true,
+                });
+              } else {
+                toast({
+                  title: t("dashboard.toast.delete.title"),
+                  status: "success",
+                  duration: 9000,
+                  isClosable: true,
+                });
+              }
+            }}
+          />
+        ) : null}
       </Flex>
       <Box p="6">
         <Box mt="1" fontWeight="semibold" as="h1" lineHeight="tight">

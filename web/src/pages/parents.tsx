@@ -32,21 +32,23 @@ import {
   useShowMotherQuery,
   useDeleteMotherMutation,
   useDeleteFatherMutation,
+  useShowSelectedKindergardenQuery,
 } from "../generated/graphql";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
 import { AddIcon, ArrowBackIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { getUserRole } from "../utils/getUserRole";
 import { ParentsModal } from "../components/ParentsModal";
 import isElectron from "is-electron";
 import router from "next/router";
 import { MotherDataTable } from "../components/MotherDataTable";
 import { FatherDataTable } from "../components/FatherDataTable";
+import { fetchPartOf } from "../utils/fetchPartof";
+import { checkRole } from "../utils/checkRole";
+import { extractRole } from "../utils/extractRole";
 
 const Parents: React.FC<{}> = ({}) => {
   useIsAuth();
-  const { t } = useTranslation("data", { useSuspense: false });
-  const role = getUserRole();
+  const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [parent, setParent] = useState(null);
 
@@ -71,6 +73,8 @@ const Parents: React.FC<{}> = ({}) => {
   const [motherFilter, setMotherFilter] = useState("");
   const [fatherFilter, setFatherFilter] = useState("");
 
+  const [{ data: selectedKindergarden }] = useShowSelectedKindergardenQuery();
+  const partOf = fetchPartOf();
   return (
     <Layout navbarVariant="user" variant="column">
       <title>{t("parents.main-header")}</title>
@@ -101,7 +105,14 @@ const Parents: React.FC<{}> = ({}) => {
             <Heading ml={["25px", "25px", "0", "0", "0"]} color="blue.400">
               {t("parents.main-header")}
             </Heading>
-            {role == "Headmaster" || role == "Pedagogue" ? (
+            {checkRole(
+              extractRole(partOf, selectedKindergarden),
+              "Headmaster"
+            ) ||
+            checkRole(
+              extractRole(partOf, selectedKindergarden),
+              "Pedagouge"
+            ) ? (
               <>
                 <Menu>
                   <MenuButton
@@ -204,7 +215,7 @@ const Parents: React.FC<{}> = ({}) => {
                       deleteMother={deleteMother}
                       mother={mother}
                       onOpen={onOpen}
-                      role={role}
+                      role={extractRole(partOf, selectedKindergarden)}
                       setParent={setParent}
                       motherFilter={motherFilter}
                     />
@@ -290,7 +301,7 @@ const Parents: React.FC<{}> = ({}) => {
                       deleteFather={deleteFather}
                       father={father}
                       onOpen={onOpen}
-                      role={role}
+                      role={extractRole(partOf, selectedKindergarden)}
                       setParent={setParent}
                       fatherFilter={fatherFilter}
                     />

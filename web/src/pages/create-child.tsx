@@ -54,7 +54,7 @@ const MotherDataTable = (
   setMotherObjcet: React.Dispatch<any>,
   motherFetching: boolean,
   mother: FilterMotherQuery,
-  t: TFunction<"data">
+  t: TFunction<"translation">
 ) => (
   <>
     <Heading mt={5} color="blue.400">
@@ -103,7 +103,7 @@ const FatherDataTable = (
   setFatherId: React.Dispatch<any>,
   setFatherObject: React.Dispatch<any>,
   father: FilterFatherQuery,
-  t: TFunction<"data">
+  t: TFunction<"translation">
 ) => (
   <>
     <Heading mt={5} color="blue.400">
@@ -160,7 +160,7 @@ const AddParentsDrawer = (
   setFatherObject: React.Dispatch<any>,
   father: FilterFatherQuery,
   setText: React.Dispatch<React.SetStateAction<string>>,
-  t: TFunction<"data">
+  t: TFunction<"translation">
 ) => (
   <Drawer isOpen={isOpen} placement="left" onClose={onClose} size={"md"}>
     <DrawerOverlay>
@@ -227,7 +227,7 @@ const CreateChildForm = (
       }>
     >
   >,
-  t: TFunction<"data">
+  t: TFunction<"translation">
 ) => (
   <Formik
     initialValues={{
@@ -328,7 +328,7 @@ const CreateChildForm = (
 
 const CreateChild: React.FC<{}> = ({}) => {
   useIsAuth();
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const toast = useToast();
   const router = useRouter();
   const [, createChild] = useCreateChildMutation();

@@ -36,13 +36,13 @@ import {
   useRemoveChildFromGroupMutation,
   useShowChildrenFilterInGroupQuery,
   useShowChildrenQuery,
+  useShowSelectedKindergardenQuery,
 } from "../../generated/graphql";
 import { fetchGroup } from "../../utils/fetchGroup";
 import { useIsAuth } from "../../utils/useIsAuth";
 import NextLink from "next/link";
 import { SearchIcon, AddIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { TFunction, useTranslation } from "react-i18next";
-import { getUserRole } from "../../utils/getUserRole";
 import { ChildrenModal } from "../../components/ChildrenModal";
 import isElectron from "is-electron";
 import { NextRouter } from "next/router";
@@ -50,13 +50,15 @@ import { OperationContext, OperationResult } from "@urql/core";
 import { CustomDrawer } from "../../components/CustomDrawer";
 import { InGroupTable } from "../../components/InGroupTable";
 import { checkRole } from "../../utils/checkRole";
+import { fetchPartOf } from "../../utils/fetchPartof";
+import { extractRole } from "../../utils/extractRole";
 
 const MenuDrawer = (
   isOpenMenu: boolean,
   onCloseMenu: () => void,
   onOpen: () => void,
   router: NextRouter,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   clearGroup: (
     variables?: Exact<{
       [key: string]: never;
@@ -127,7 +129,7 @@ const AddGroupDrawer = (
   onClose: () => void,
   children: ShowChildrenQuery,
   fetchingChildren: boolean,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   addChildToGroup: (
     variables?: Exact<{
       id: number;
@@ -204,7 +206,7 @@ const AddGroupDrawer = (
 const Menu = (
   role: string,
   onOpen: () => void,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   router: NextRouter,
   clearGroup: (
     variables?: Exact<{
@@ -301,7 +303,7 @@ const HasMoreBtn = (
   },
   data: ShowChildrenFilterInGroupQuery,
   fetching: boolean,
-  t: TFunction<"data">
+  t: TFunction<"translation">
 ) => (
   <Flex>
     <Button
@@ -332,7 +334,7 @@ const HasMoreBtn = (
 
 const Group = ({}) => {
   useIsAuth();
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenMenu,
@@ -364,19 +366,21 @@ const Group = ({}) => {
     onClose: teacherChildViewOnClose,
   } = useDisclosure();
   const [child, setChild] = useState(null);
-  const role = getUserRole();
+  const [{ data: selectedKindergarden }] = useShowSelectedKindergardenQuery();
+  const partOf = fetchPartOf();
   const [childrenFilter, setChildrenFilter] = useState("");
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{groupName}</title>
-      {checkRole(role, "Teacher") ? (
+      {checkRole(extractRole(partOf, selectedKindergarden), "Teacher") ? (
         <ChildrenModal
           onClose={teacherChildViewOnClose}
           isOpen={teacherChildViewIsOpen}
           child={child}
         />
       ) : null}
-      {checkRole(role, "Headmaster") || checkRole(role, "Pedagouge") ? (
+      {checkRole(extractRole(partOf, selectedKindergarden), "Headmaster") ||
+      checkRole(extractRole(partOf, selectedKindergarden), "Pedagouge") ? (
         <>
           {AddGroupDrawer(
             setText,
@@ -400,7 +404,14 @@ const Group = ({}) => {
       <Stack spacing={5}>
         <Flex align="center" justify="center" mt={5} p={3}>
           <HStack p={2} spacing={4}>
-            {Menu(role, onOpen, t, router, clearGroup, isElectron())}
+            {Menu(
+              extractRole(partOf, selectedKindergarden),
+              onOpen,
+              t,
+              router,
+              clearGroup,
+              isElectron()
+            )}
             {!isElectron() ? (
               <IconButton
                 display={["flex", "flex", "flex", "none"]}
@@ -450,7 +461,7 @@ const Group = ({}) => {
               data={data}
               deleteChildren={deleteChildren}
               onOpen={teacherChildViewOnOpen}
-              role={role}
+              role={extractRole(partOf, selectedKindergarden)}
               setChild={setChild}
             />
           </>

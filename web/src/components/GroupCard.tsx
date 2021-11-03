@@ -57,7 +57,7 @@ export const GroupCard: React.FC<GroupCardProps> = ({
   deleteGroup,
   useGroup,
 }) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const toast = useToast();
   return (
     <>

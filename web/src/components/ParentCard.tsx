@@ -21,7 +21,7 @@ export const ParentCard: React.FC<ParentCardProps> = ({
   parent,
   child,
 }) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const [, updateParents] = useUpdateChildrenParentsMutation();
   if (!layout) {
     return (

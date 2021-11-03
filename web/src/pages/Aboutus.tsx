@@ -10,7 +10,7 @@ import devImg from "../../public/img/filipivanusec.png";
 import GoogleAds from "../components/AdBanner";
 
 const Aboutus: React.FC<{}> = ({}) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const text = {
     devs: [
       {

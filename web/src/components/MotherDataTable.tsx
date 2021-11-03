@@ -93,7 +93,7 @@ export const MotherDataTable: React.FC<MotherDataTableProps> = ({
   setParent,
   motherFilter,
 }) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
 
   const { items, requestSort, sortConfig } = useSortableData(
     mother!.showMother?.mother
@@ -229,7 +229,7 @@ export const MotherDataTable: React.FC<MotherDataTableProps> = ({
           : null}
         {motherFilter
           ? findMother(mother, motherFilter).map((mom) => (
-              <Tr>
+              <Tr key={mom.Id}>
                 <Td>{mom.Name}</Td>
                 <Td ml={"2rem"}>{mom.Surname}</Td>
                 {role == "Teacher" ? (

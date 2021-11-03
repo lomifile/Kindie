@@ -9,7 +9,7 @@ import {
   useCreateGroupMutation,
   useDeleteGroupMutation,
   useShowGroupsQuery,
-  useShowStaffQuery,
+  useShowSelectedKindergardenQuery,
   useUseChildrenMutation,
   useUseGroupMutation,
 } from "../../generated/graphql";
@@ -35,15 +35,17 @@ import { useTranslation, TFunction } from "react-i18next";
 import { useIsAuth } from "../../utils/useIsAuth";
 import { CustomSpinner } from "../../components/Spinner";
 import { CustomAlert } from "../../components/Alerts";
-import { getUserRole } from "../../utils/getUserRole";
 import isElectron from "is-electron";
 import { OperationContext, OperationResult } from "urql";
 import { GroupCard } from "../../components/GroupCard";
 import { CustomModal } from "../../components/CustomModal";
 import { CustomDrawer } from "../../components/CustomDrawer";
+import { fetchPartOf } from "../../utils/fetchPartof";
+import { extractRole } from "../../utils/extractRole";
+import { useGetId } from "../../utils/getID";
 
 const DrawerMenu = (
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   useChildren: (
     variables?: Exact<{
       [key: string]: never;
@@ -126,7 +128,7 @@ const DrawerMenuHeader = () => (
 
 const CreateGroupForm = (
   toast: (options?: UseToastOptions) => string | number,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   onClose: () => void,
   createGroup: (
     variables?: Exact<{
@@ -196,7 +198,7 @@ const CreateGroupForm = (
 const MainMenu = (
   role: string,
   onOpen: () => void,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   drawerOnOpen: () => void,
   useChildren: (
     variables?: Exact<{
@@ -311,7 +313,7 @@ const MainMenu = (
 
 const Kindergarden = ({}) => {
   useIsAuth();
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -324,9 +326,8 @@ const Kindergarden = ({}) => {
   const [, useGroup] = useUseGroupMutation();
   const [, useChildren] = useUseChildrenMutation();
   const [, deleteGroup] = useDeleteGroupMutation();
-  const role = getUserRole();
-  console.log(role);
-
+  const partOf = fetchPartOf();
+  const id = useGetId();
   if (fetching) {
     return <CustomSpinner />;
   } else if (!fetching && !data?.showGroups) {
@@ -359,13 +360,19 @@ const Kindergarden = ({}) => {
       </CustomModal>
       <Stack spacing={8}>
         <Flex align="center" justify="center" mt={5} p={5}>
-          {MainMenu(role, onOpen, t, drawerOnOpen, useChildren)}
+          {MainMenu(
+            extractRole(partOf, null, id),
+            onOpen,
+            t,
+            drawerOnOpen,
+            useChildren
+          )}
         </Flex>
         {data?.showGroups.length > 0 ? (
           <GroupCard
             data={data}
             deleteGroup={deleteGroup}
-            role={role}
+            role={extractRole(partOf, null, id)}
             useGroup={useGroup}
           />
         ) : null}

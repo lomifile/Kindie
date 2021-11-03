@@ -23,7 +23,6 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/react";
-import { fetchOwnerOf } from "../utils/fetchOwnerOf";
 import {
   AddIcon,
   ArrowBackIcon,
@@ -41,6 +40,7 @@ import {
   useAddStaffMutation,
   useDeleteStaffMutation,
   useMeQuery,
+  useOwnerQuery,
   useSearchUserQuery,
   useShowStaffQuery,
 } from "../generated/graphql";
@@ -60,7 +60,7 @@ const AddStaffBody = (
   setText: React.Dispatch<React.SetStateAction<string>>,
   userSearch: SearchUserQuery,
   fetching: boolean,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   setShow: React.Dispatch<any>,
   openModal: () => void,
   addStaffModalOnOpen: () => void,
@@ -139,29 +139,10 @@ const AddStaffBody = (
   </>
 );
 
-const Owner = (t: TFunction<"data">, owner: OwnerType) => (
-  <Box>
-    <Table variant="striped" bg="transparent">
-      <Thead>
-        <Tr>
-          <Th>{t("staff.tbl-name")}</Th>
-          <Th>{t("staff.tbl-surname")}</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        <Tr>
-          <Td>{owner?.Name}</Td>
-          <Td>{owner?.Surname}</Td>
-        </Tr>
-      </Tbody>
-    </Table>
-  </Box>
-);
-
 const StaffTable = (
   staff: ShowStaffQuery,
   translatedRoles: (role: String) => string,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   deleteStaff: (
     variables?: Exact<{
       userId: number;
@@ -195,9 +176,7 @@ const StaffTable = (
             <Td>{s.staff.Surname}</Td>
             <Td>{translatedRoles(s.role)}</Td>
             <Td>
-              {meData?.me?.Name === owner?.Name &&
-              meData?.me?.Surname === owner?.Surname &&
-              meData?.me?.Id === owner?.Id ? (
+              {meData?.me?.Id === owner?.Id ? (
                 <IconButton
                   aria-label="Delete from staff"
                   colorScheme="red"
@@ -233,7 +212,7 @@ const AddStaffForm = (
       }>
     >
   >,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   userId: any,
   toast,
   addStaffModalOnClose: () => void
@@ -242,7 +221,6 @@ const AddStaffForm = (
   const handleChange = (e) => {
     setRole(e.target.value);
   };
-  console.log(role);
   return (
     <Formik
       initialValues={{
@@ -277,9 +255,6 @@ const AddStaffForm = (
                 onChange={handleChange}
                 borderRadius="24px"
               >
-                <option value="Headmaster">
-                  {t("staff.roles.headmaster")}
-                </option>
                 <option value="Teacher">{t("staff.roles.teacher")}</option>
                 <option value="Pedagogue">{t("staff.roles.pedagogue")}</option>
               </Select>
@@ -307,7 +282,7 @@ const AddStaffForm = (
 
 const Staff: React.FC<{}> = ({}) => {
   useIsAuth();
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: modalOpen,
@@ -319,8 +294,8 @@ const Staff: React.FC<{}> = ({}) => {
     onOpen: addStaffModalOnOpen,
     onClose: addStaffModalOnClose,
   } = useDisclosure();
-  const owner: OwnerType = fetchOwnerOf();
-  const [{ data: staff, fetching: staffFetching }] = useShowStaffQuery();
+  const [{ data: owner }] = useOwnerQuery();
+  const [{ data: staff }] = useShowStaffQuery();
   const [, addStaff] = useAddStaffMutation();
   const [, deleteStaff] = useDeleteStaffMutation();
   const [text, setText] = useState("");
@@ -421,18 +396,14 @@ const Staff: React.FC<{}> = ({}) => {
               mr={5}
             />
           ) : null}
-          <Heading color="blue.400">{t("staff.owner-heading")}</Heading>
         </Flex>
-        {Owner(t, owner)}
         <Flex
           justify={["center", "center", "center", "left", "left"]}
           mt={20}
           mb={2}
         >
           <Heading color="blue.400">{t("staff.staff-heading")}</Heading>
-          {meData?.me?.Name === owner?.Name &&
-          meData?.me?.Surname === owner?.Surname &&
-          meData?.me?.Id === owner?.Id ? (
+          {meData?.me?.Id === owner?.owner?.owning?.Id ? (
             <IconButton
               ml={5}
               bg="blue.400"
@@ -449,10 +420,17 @@ const Staff: React.FC<{}> = ({}) => {
             />
           ) : null}
         </Flex>
-        {StaffTable(staff, translatedRoles, t, deleteStaff, meData, owner)}
+        {StaffTable(
+          staff,
+          translatedRoles,
+          t,
+          deleteStaff,
+          meData,
+          owner?.owner?.owning
+        )}
       </Stack>
     </Layout>
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Staff);
+export default withUrqlClient(createUrqlClient)(Staff);

@@ -22,7 +22,7 @@ export const ParentsModal: React.FC<ParentsModalProps> = ({
   onClose,
   isOpen,
 }) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   return (
     <Modal onClose={onClose} size={"md"} isOpen={isOpen}>
       <ModalOverlay />

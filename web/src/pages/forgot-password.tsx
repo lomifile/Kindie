@@ -27,7 +27,7 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 const ForgotPasswordForm = (
   setComplete: React.Dispatch<React.SetStateAction<boolean>>,
   complete: boolean,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   forgotPassword: (
     variables?: Exact<{
       email: string;
@@ -92,7 +92,7 @@ const ForgotPasswordForm = (
 );
 
 const ForgotPassword: React.FC<{}> = ({}) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const [complete, setComplete] = useState(false);
   const [, forgotPassword] = useForgotPasswordMutation();
 

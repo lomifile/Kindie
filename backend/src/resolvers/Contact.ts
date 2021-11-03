@@ -22,11 +22,7 @@ export class ContactResolver {
             We will respond to you as soon as we can!
         `
       );
-      await sendMail(
-          "fivanusec@gmail.com",
-          input.subject,
-          input.message
-      );
+      await sendMail("fivanusec@gmail.com", input.subject, input.message);
 
       return true;
     }

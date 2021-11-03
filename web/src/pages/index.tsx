@@ -17,7 +17,7 @@ import {
   faServer,
 } from "@fortawesome/free-solid-svg-icons";
 
-const MainText = (t: TFunction<"data">) => (
+const MainText = (t: TFunction<"translation">) => (
   <Stack
     spacing={4}
     w={{ base: "80%", md: "40%" }}
@@ -69,7 +69,7 @@ const MainText = (t: TFunction<"data">) => (
   </Stack>
 );
 
-const Cards = (t: TFunction<"data">) => (
+const Cards = (t: TFunction<"translation">) => (
   <Flex
     p={"2"}
     justify={["center", "center", "center", "center", "center"]}
@@ -141,10 +141,10 @@ const Cards = (t: TFunction<"data">) => (
 );
 
 const Index = () => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   return (
     <Layout navbarVariant={"normal"} variant={"column"} navbar={true}>
-      <title>Kindie [BETA]</title>
+      <title>Kindie: Documentation, easy!</title>
       <Flex
         align="center"
         justify={{ base: "center", md: "center", xl: "space-between" }}

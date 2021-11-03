@@ -4,7 +4,6 @@ import {
   Stack,
   Box,
   Link,
-  Heading,
   Menu,
   MenuButton,
   MenuDivider,
@@ -24,11 +23,9 @@ import {
 import React from "react";
 import NextLink from "next/link";
 import {
-  ClearKindergardenMutation,
   Exact,
   LogoutMutation,
   MeQuery,
-  useClearKindergardenMutation,
   useLogoutMutation,
   useMeQuery,
 } from "../generated/graphql";
@@ -44,7 +41,7 @@ import { CustomSpinner } from "./Spinner";
 import Image from "next/image";
 import logo from "../../public/img/logo.png";
 
-const DashNav = (t: TFunction<"data">) => (
+const DashNav = (t: TFunction<"translation">) => (
   <>
     <NextLink href="/">
       <Button
@@ -95,7 +92,7 @@ const DashNav = (t: TFunction<"data">) => (
   </>
 );
 
-const SignInNav = (t: TFunction<"data">) => (
+const SignInNav = (t: TFunction<"translation">) => (
   <>
     <NextLink href="/">
       <Button
@@ -163,7 +160,7 @@ const SignInNav = (t: TFunction<"data">) => (
 const DashMenu = (
   data: MeQuery,
   router: NextRouter,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   i18n: i18n,
   logout: (
     variables?: Exact<{
@@ -173,19 +170,6 @@ const DashMenu = (
   ) => Promise<
     OperationResult<
       LogoutMutation,
-      Exact<{
-        [key: string]: never;
-      }>
-    >
-  >,
-  clearKindergarden: (
-    variables?: Exact<{
-      [key: string]: never;
-    }>,
-    context?: Partial<OperationContext>
-  ) => Promise<
-    OperationResult<
-      ClearKindergardenMutation,
       Exact<{
         [key: string]: never;
       }>
@@ -206,7 +190,6 @@ const DashMenu = (
               borderRadius: "12px",
             }}
             onClick={() => {
-              clearKindergarden();
               router.push("/dashboard");
             }}
           >
@@ -276,7 +259,7 @@ const DashMenu = (
               h={"50px"}
               w={"50px"}
               bg="transparent"
-              onClick={(e) => {
+              onClick={() => {
                 i18n.changeLanguage("en");
               }}
             >
@@ -331,7 +314,7 @@ const DrawerNav = (
                 h={"50px"}
                 w={"50px"}
                 bg="transparent"
-                onClick={(e) => {
+                onClick={() => {
                   i18n.changeLanguage("en");
                 }}
               >
@@ -349,7 +332,7 @@ const ElectronMenu = (
   drawerOnClose: () => void,
   drawerIsOpen: boolean,
   drawerOnOpen: () => void,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   router: NextRouter,
   logout: (
     variables?: Exact<{
@@ -458,7 +441,7 @@ const BrowserNav = (i18n: i18n, variant: NavbarVariant) => (
           h={"50px"}
           w={"50px"}
           bg="transparent"
-          onClick={(e) => {
+          onClick={() => {
             i18n.changeLanguage("en");
           }}
         >
@@ -477,12 +460,11 @@ interface NavProps {
 
 export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
   const router = useRouter();
-  const { t, i18n } = useTranslation("data", { useSuspense: false });
-  const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
+  const { t, i18n } = useTranslation();
+  const [, logout] = useLogoutMutation();
   const [{ data, fetching }] = useMeQuery({
     pause: isServer(),
   });
-  const [, clearKindergarden] = useClearKindergardenMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: drawerIsOpen,
@@ -499,7 +481,7 @@ export const Nav: React.FC<NavProps> = ({ variant = "normal" }) => {
   } else if (variant === "normal" && data?.me) {
     body = DashNav(t);
   } else if (variant === "user" && data?.me && !isElectron()) {
-    body = DashMenu(data, router, t, i18n, logout, clearKindergarden);
+    body = DashMenu(data, router, t, i18n, logout);
   }
 
   return (

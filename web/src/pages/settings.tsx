@@ -45,7 +45,7 @@ import { OperationContext, OperationResult } from "urql";
 const SelectorBtns = (
   selector: string,
   setSelector: React.Dispatch<React.SetStateAction<string>>,
-  t: TFunction<"data">
+  t: TFunction<"translation">
 ) => (
   <>
     <Button
@@ -101,7 +101,7 @@ const SelectorBtns = (
 const VerticalMenu = (
   selector: string,
   setSelector: React.Dispatch<React.SetStateAction<string>>,
-  t: TFunction<"data">
+  t: TFunction<"translation">
 ) => (
   <HStack spacing={4}>
     <Box
@@ -133,7 +133,7 @@ const VerticalMenu = (
   </HStack>
 );
 
-const ChangeLanguage = (i18n: i18n, t: TFunction<"data">) => (
+const ChangeLanguage = (i18n: i18n, t: TFunction<"translation">) => (
   <Box id="#app" minW={["100%", "100%", "100%", "70%", "800px"]}>
     <Stack spacing={10}>
       <Box
@@ -161,7 +161,7 @@ const ChangeLanguage = (i18n: i18n, t: TFunction<"data">) => (
 const ProfileCard = (
   data: MeQuery,
   toast: (options?: UseToastOptions) => string | number,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   show: boolean,
   handleClick: () => void,
   updateUser: (
@@ -279,7 +279,7 @@ const ProfileCard = (
 const ChangePassword = (
   toast: (options?: UseToastOptions) => string | number,
   show: boolean,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   handleClick: () => void,
   updatePassowrd: (
     variables?: Exact<{
@@ -381,7 +381,7 @@ const ChangePassword = (
 
 const Settings: React.FC<{}> = ({}) => {
   useIsAuth();
-  const { t, i18n } = useTranslation("data", { useSuspense: false });
+  const { t, i18n } = useTranslation();
   let body = null;
   const [redirect, setRedirect] = useState(false);
   const [{ data, fetching }] = useMeQuery();

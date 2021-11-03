@@ -11,8 +11,6 @@ import {
   Divider,
   IconButton,
   UseToastOptions,
-  Alert,
-  AlertIcon,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { withUrqlClient } from "next-urql";
@@ -23,12 +21,10 @@ import { Layout } from "../components/Layout";
 import {
   CreateKindergardenMutation,
   Exact,
-  KinderGarden,
   KinderGardenInput,
   ShowKindergardenQuery,
   useCreateKindergardenMutation,
   useShowKindergardenQuery,
-  useShowStaffQuery,
 } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { fetchPartOf } from "../utils/fetchPartof";
@@ -36,14 +32,13 @@ import { toErrormap } from "../utils/toErrorMap";
 import { useIsAuth } from "../utils/useIsAuth";
 import { CustomAlert } from "../components/Alerts";
 import { CustomSpinner } from "../components/Spinner";
-import { getUserRole } from "../utils/getUserRole";
 import { OperationContext, OperationResult } from "urql";
 import { CustomModal } from "../components/CustomModal";
 import { KindergardenCard } from "../components/KindergardenCard";
 
 const CreateKindergardenForm = (
   toast: (options?: UseToastOptions) => string | number,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   onClose: () => void,
   createKindergarden: (
     variables?: Exact<{
@@ -150,7 +145,7 @@ const OwnedKindergardenCards = (data: ShowKindergardenQuery) => (
   >
     <HStack spacing={8} padding="2">
       {data?.showKindergarden?.map((owning) => (
-        <KindergardenCard owning={owning} />
+        <KindergardenCard owning={owning} key={owning.Id} />
       ))}
     </HStack>
   </Box>
@@ -182,7 +177,11 @@ const PartOfKindergardenCards = (
   >
     <HStack spacing={8} p="2">
       {partOf.map((owning) => (
-        <KindergardenCard owning={owning.kindergarden} />
+        <KindergardenCard
+          partof={true}
+          key={owning.kindergarden.Id}
+          owning={owning.kindergarden}
+        />
       ))}
     </HStack>
   </Box>
@@ -190,7 +189,7 @@ const PartOfKindergardenCards = (
 
 const Dashboard = ({}) => {
   useIsAuth();
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [{ data, fetching }] = useShowKindergardenQuery();
@@ -211,10 +210,6 @@ const Dashboard = ({}) => {
   return (
     <Layout navbarVariant={"user"} variant={"column"}>
       <title>{t("dashboard.main-header")}</title>
-      <Alert status="warning" mb="5">
-        <AlertIcon />
-        {t("problem.desc")}
-      </Alert>
       <CustomModal
         onClose={onClose}
         isOpen={isOpen}
@@ -268,4 +263,4 @@ const Dashboard = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Dashboard);
+export default withUrqlClient(createUrqlClient)(Dashboard);

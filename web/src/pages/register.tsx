@@ -35,7 +35,7 @@ import { OperationContext, OperationResult } from "urql";
 const RegisterForm = (
   toast: (options?: UseToastOptions) => string | number,
   router: NextRouter,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   handleClick: () => void,
   show: boolean,
   privacy: boolean,
@@ -164,7 +164,7 @@ const RegisterForm = (
 );
 
 const Register: React.FC<{}> = ({}) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const [privacy, setPrivacy] = useState(true);
 
   const [show, setShow] = useState(false);

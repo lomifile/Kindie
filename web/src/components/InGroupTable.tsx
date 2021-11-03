@@ -116,7 +116,7 @@ export const InGroupTable: React.FC<InGroupTableProps> = ({
   childrenFilter,
   removeFromGroup,
 }) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
 
   const { items, requestSort, sortConfig } = useSortableData(
     data!.showChildrenFilterInGroup?.children
@@ -191,7 +191,7 @@ export const InGroupTable: React.FC<InGroupTableProps> = ({
         {!childrenFilter
           ? items.map((child) =>
               !child ? null : (
-                <Tr>
+                <Tr key={child.Id}>
                   <Td>{child.Name}</Td>
                   <Td ml={"2rem"}>{child.Surname}</Td>
                   {checkRole(role, "Teacher") ? (

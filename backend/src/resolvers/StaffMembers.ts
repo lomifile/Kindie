@@ -109,13 +109,13 @@ export class StaffMembersResolver {
     });
   }
 
-  @Query(() => StaffMembers)
+  @Query(() => StaffMembers, { nullable: true })
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  async filterStaff(
+  filterStaff(
     @Ctx() { req }: AppContext
   ): Promise<StaffMembers | undefined> {
-    return await StaffMembers.findOne({
+    return StaffMembers.findOne({
       where: {
         staffId: req.session.userId,
         kindergardenId: req.session.selectedKindergarden,

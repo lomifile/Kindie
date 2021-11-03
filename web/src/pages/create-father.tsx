@@ -30,7 +30,7 @@ import { useIsAuth } from "../utils/useIsAuth";
 
 const CreateFatherForm = (
   toast: (options?: UseToastOptions) => string | number,
-  t: TFunction<"data">,
+  t: TFunction<"translation">,
   addFather: (
     variables?: Exact<{
       options: ParentsInput;
@@ -124,7 +124,7 @@ const CreateFatherForm = (
 );
 
 const CreateFather: React.FC<{}> = ({}) => {
-  const { t } = useTranslation("data", { useSuspense: false });
+  const { t } = useTranslation();
   const [, addFather] = useAddFatherMutation();
   const toast = useToast();
   const router = useRouter();
