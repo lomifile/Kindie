@@ -3,13 +3,21 @@ import { partOfType } from "./types";
 
 export const extractRole = (
   partOf: partOfType,
-  selectedKindergarden: ShowSelectedKindergardenQuery
+  selectedKindergarden?: ShowSelectedKindergardenQuery,
+  kindergardenId?: number
 ): string => {
-  for (let i = 0; i < partOf.length; i++) {
-    if (
-      partOf[i].kindergarden.Id === selectedKindergarden.selectedKindergarden.Id
-    )
-      return partOf[i].role;
+  if (!selectedKindergarden) {
+    for (let i = 0; i < partOf.length; i++) {
+      if (partOf[i].kindergarden.Id === kindergardenId) return partOf[i].role;
+    }
+  } else {
+    for (let i = 0; i < partOf.length; i++) {
+      if (
+        partOf[i].kindergarden.Id ===
+        selectedKindergarden.selectedKindergarden.Id
+      )
+        return partOf[i].role;
+    }
   }
   return "Headmaster";
 };

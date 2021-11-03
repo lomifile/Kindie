@@ -144,7 +144,7 @@ const Index = () => {
   const { t } = useTranslation();
   return (
     <Layout navbarVariant={"normal"} variant={"column"} navbar={true}>
-      <title>Kindie [BETA]</title>
+      <title>Kindie: Documentation, easy!</title>
       <Flex
         align="center"
         justify={{ base: "center", md: "center", xl: "space-between" }}

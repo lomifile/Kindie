@@ -295,7 +295,6 @@ const Staff: React.FC<{}> = ({}) => {
     onClose: addStaffModalOnClose,
   } = useDisclosure();
   const [{ data: owner }] = useOwnerQuery();
-  console.log(owner);
   const [{ data: staff }] = useShowStaffQuery();
   const [, addStaff] = useAddStaffMutation();
   const [, deleteStaff] = useDeleteStaffMutation();

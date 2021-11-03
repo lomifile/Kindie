@@ -41,8 +41,8 @@ import { GroupCard } from "../../components/GroupCard";
 import { CustomModal } from "../../components/CustomModal";
 import { CustomDrawer } from "../../components/CustomDrawer";
 import { fetchPartOf } from "../../utils/fetchPartof";
-import { useRouter } from "next/router";
 import { extractRole } from "../../utils/extractRole";
+import { useGetId } from "../../utils/getID";
 
 const DrawerMenu = (
   t: TFunction<"translation">,
@@ -315,7 +315,6 @@ const Kindergarden = ({}) => {
   useIsAuth();
   const { t } = useTranslation();
   const toast = useToast();
-  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: drawerIsOpen,
@@ -328,7 +327,7 @@ const Kindergarden = ({}) => {
   const [, useChildren] = useUseChildrenMutation();
   const [, deleteGroup] = useDeleteGroupMutation();
   const partOf = fetchPartOf();
-  const [{ data: selectedKindergarden }] = useShowSelectedKindergardenQuery();
+  const id = useGetId();
   if (fetching) {
     return <CustomSpinner />;
   } else if (!fetching && !data?.showGroups) {
@@ -362,7 +361,7 @@ const Kindergarden = ({}) => {
       <Stack spacing={8}>
         <Flex align="center" justify="center" mt={5} p={5}>
           {MainMenu(
-            extractRole(partOf, selectedKindergarden),
+            extractRole(partOf, null, id),
             onOpen,
             t,
             drawerOnOpen,
@@ -373,7 +372,7 @@ const Kindergarden = ({}) => {
           <GroupCard
             data={data}
             deleteGroup={deleteGroup}
-            role={extractRole(partOf, selectedKindergarden)}
+            role={extractRole(partOf, null, id)}
             useGroup={useGroup}
           />
         ) : null}

@@ -473,7 +473,8 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                   }
                   return {
                     showGroups:
-                      result.useKindergarden.kindergarden.groups === null
+                      result.useKindergarden.kindergarden.groups === null ||
+                      undefined
                         ? []
                         : result.useKindergarden.kindergarden.groups,
                     __typename: "Query",
@@ -490,7 +491,8 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                   }
                   return {
                     showStaff:
-                      result.useKindergarden.kindergarden.staff === null
+                      result.useKindergarden.kindergarden.staff === null ||
+                      undefined
                         ? []
                         : result.useKindergarden.kindergarden.staff,
                     __typename: "Query",
