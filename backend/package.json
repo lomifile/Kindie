@@ -11,7 +11,7 @@
     "gen:migrations": "typeorm migration:generate -n kindie",
     "run:migrations": "typeorm migration:run",
     "setup:db": "ts-node ./src/helpers/setup.ts",
-    "test": "npm run setup:db && jest",
+    "test": "npm run setup:db && jest --verbose",
     "prettier": "prettier --write ."
   },
   "engines": {

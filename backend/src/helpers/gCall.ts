@@ -38,7 +38,7 @@ export const gCall = async ({
         },
       },
       res: {
-        clearCookie: jest.fn(),
+        clearCookie: () => {},
       },
     },
   });

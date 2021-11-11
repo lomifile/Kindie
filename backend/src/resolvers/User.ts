@@ -362,7 +362,9 @@ export class UserResolver {
     );
 
     await sendMail(email, "Verify account", VerifyEmailTemplate(token)).catch(
-      console.error
+      (err) => {
+        console.error(err);
+      }
     );
 
     return {

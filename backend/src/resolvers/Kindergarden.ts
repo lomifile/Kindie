@@ -67,7 +67,7 @@ export class KindergardenResolver {
           `kindergarden."Id" = staff_members."kindergardenId" and staff_members."staffId" = :id`,
           { id: req.session.userId }
         )
-        .where(`"kindergardenId" = :ID`, {
+        .where(`"kindergardenId" = :ID `, {
           ID: kindergardenId,
         })
         .getOne();
@@ -137,7 +137,10 @@ export class KindergardenResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async deleteKindergarden(@Arg("id", () => Int) id: number): Promise<Boolean> {
-    await KinderGarden.delete({ Id: id });
-    return true;
+    return (await (
+      await KinderGarden.delete({ Id: id })
+    ).affected)
+      ? true
+      : false;
   }
 }

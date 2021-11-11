@@ -144,6 +144,34 @@ describe("Use kindergarden mutation", () => {
       },
     });
   });
+
+  it("Uses kindergarden of his staff member fail", async () => {
+    const user = await createUser();
+    const KindergardenData = await KinderGarden.findOne({
+      where: { Name: kindergarden.name },
+    });
+    await KinderGarden.update({ Name: kindergarden.name }, { owningId: 1 });
+    const response = await gCall({
+      source: useKindergarden,
+      variableValues: {
+        kindergardenID: KindergardenData?.Id,
+      },
+      userId: user?.Id,
+    });
+    expect(response).toMatchObject({
+      data: {
+        useKindergarden: {
+          kindergarden: null,
+          errors: [
+            {
+              field: "kindergardenID",
+              message: "Kindergarden does not exist",
+            },
+          ],
+        },
+      },
+    });
+  });
 });
 
 const selectedKindergarden = `
@@ -190,6 +218,96 @@ describe("Selected kindergarden query", () => {
           City: kindergarden.city,
           Zipcode: kindergarden.Zipcode,
         },
+      },
+    });
+  });
+});
+
+const showKindergarden = `
+query ShowKindergarden {
+    showKindergarden {
+        Name
+        City
+        Address
+        Zipcode
+    }
+  }
+`;
+
+describe("Show kindergarden query", () => {
+  it("Show kinergarden query fail", async () => {
+    const response = await gCall({
+      source: showKindergarden,
+    });
+    expect(response).toMatchObject({
+      data: null,
+    });
+  });
+
+  it("Show kindergarden query pass", async () => {
+    const user = await createUser();
+    await KinderGarden.update({ Name: kindergarden.name }, { owningId: 2 });
+    const kindergardenData = await KinderGarden.findOne({
+      where: { Name: kindergarden.name },
+    });
+    const response = await gCall({
+      source: showKindergarden,
+      userId: user?.Id,
+      selectedKindergarden: kindergardenData?.Id,
+    });
+    expect(response).toMatchObject({
+      data: {
+        showKindergarden: [
+          {
+            Name: kindergarden.name,
+            Address: kindergarden.address,
+            City: kindergarden.city,
+            Zipcode: kindergarden.Zipcode,
+          },
+        ],
+      },
+    });
+  });
+});
+
+const deleteKindergarden = `
+mutation DeleteKindergarden($id: Int!) {
+  deleteKindergarden(id: $id)
+}
+`;
+
+describe("Delete kindergarden mutatiton", () => {
+  it("Delete kindergarden mutation fail", async () => {
+    const user = await createUser();
+    const response = await gCall({
+      source: deleteKindergarden,
+      variableValues: {
+        id: 7,
+      },
+      userId: user?.Id,
+    });
+    expect(response).toMatchObject({
+      data: {
+        deleteKindergarden: false,
+      },
+    });
+  });
+
+  it("Delete kindergarden mutation pass", async () => {
+    const KindergardenData = await KinderGarden.findOne({
+      where: { Name: kindergarden.name },
+    });
+    const user = await createUser();
+    const response = await gCall({
+      source: deleteKindergarden,
+      variableValues: {
+        id: KindergardenData?.Id,
+      },
+      userId: user?.Id,
+    });
+    expect(response).toMatchObject({
+      data: {
+        deleteKindergarden: true,
       },
     });
   });

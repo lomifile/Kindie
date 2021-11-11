@@ -3,7 +3,7 @@ import connectRedis from "connect-redis";
 import express from "express";
 import session from "express-session";
 import { createConnection } from "typeorm";
-import Redis from "redis";
+import Redis from "ioredis";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { COOKIE_NAME, __prod__ } from "./Constants";
@@ -55,7 +55,7 @@ const main = async () => {
 
   const app = express();
   const RedisStore = connectRedis(session);
-  const redisClient = Redis.createClient(process.env.REDIS_URL);
+  const redis = new Redis(process.env.REDIS_URL);
   app.use(
     cors({
       origin: process.env.CORS_ORIGIN,
@@ -68,7 +68,8 @@ const main = async () => {
     session({
       name: COOKIE_NAME,
       store: new RedisStore({
-        client: redisClient,
+        // @ts-expect-error
+        client: redis,
         disableTouch: true,
       }),
       cookie: {
@@ -100,7 +101,7 @@ const main = async () => {
       validate: false,
     }),
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
-    context: ({ req, res }) => ({ req, res, redisClient }),
+    context: ({ req, res }) => ({ req, res, redis }),
   });
 
   await apolloServer.start();
