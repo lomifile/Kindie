@@ -86,7 +86,7 @@ mutation Login($email: String!, $password: String!) {
 `;
 
 describe("Register mutation", () => {
-  it("create user", async () => {
+  it("Register user", async () => {
     const response = await gCall({
       source: registerMutation,
       variableValues: {
