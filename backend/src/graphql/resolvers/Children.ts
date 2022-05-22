@@ -10,13 +10,12 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { isAuth } from "../middleware/isAuth";
-import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
-import { isGroupSelected } from "../middleware/isGroupSelected";
+import { isAuth } from "../../middleware/isAuth";
+import { isKinderGardenSelected } from "../../middleware/isKindergardenSelected";
+import { isGroupSelected } from "../../middleware/isGroupSelected";
 import { getConnection } from "typeorm";
-import { ChildrenInput } from "../utils/inputs/ChildrenInput";
-import { AppContext } from "../Types";
-import { FieldError } from "../utils/Errors";
+import { ChildrenInput } from "../inputs/ChildrenInput";
+import { FieldError } from "../../utils/Errors";
 
 @ObjectType()
 class ChildrenResponse {

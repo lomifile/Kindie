@@ -1,7 +1,7 @@
 import { testConn } from "../../src/helpers/testConn";
 import { Connection } from "typeorm";
 import { gCall } from "../../src/helpers/gCall";
-import { User } from "../../src/entities/User";
+import { User } from "../graphql/entities/User";
 import faker from "faker";
 
 let conn: Connection;

@@ -1,4 +1,3 @@
-import { AppContext } from "../Types";
 import { MiddlewareFn } from "type-graphql";
 
 export const isGroupSelected: MiddlewareFn<AppContext> = (

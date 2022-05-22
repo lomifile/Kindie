@@ -1,11 +1,10 @@
 import { User } from "../entities/User";
-import { AppContext, VerifyEmailTemplate } from "../Types";
 import {
   UpdatePassword,
   UpdateUserInput,
   UsernamePasswordInput,
-} from "../utils/inputs/UserInput";
-import { ValidateRegister } from "../utils/ValidateRegister";
+} from "../inputs/UserInput";
+import { ValidateRegister } from "../validators";
 import {
   Arg,
   Ctx,
@@ -22,11 +21,11 @@ import {
   ACCOUNT_VERIFICATION_PREFIX,
   COOKIE_NAME,
   FORGET_PASSWORD_PREFIX,
-} from "../Constants";
-import { sendMail } from "../utils/SendEmail";
+} from "../../constants";
+import { sendMail, VerifyEmailTemplate } from "../../utils/sendEmail";
 import { v4 } from "uuid";
-import { isAuth } from "../middleware/isAuth";
-import { FieldError } from "../utils/Errors";
+import { isAuth } from "../../middleware/isAuth";
+import { FieldError } from "../../utils/Errors";
 
 @ObjectType()
 class UserResponse {

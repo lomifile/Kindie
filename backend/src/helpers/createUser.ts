@@ -1,5 +1,5 @@
 import faker from "faker";
-import { User } from "../entities/User";
+import { User } from "../graphql/entities/User";
 import { gCall } from "./gCall";
 
 let password = faker.internet.password();

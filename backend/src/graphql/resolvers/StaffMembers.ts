@@ -1,6 +1,5 @@
-import { isAuth } from "../middleware/isAuth";
-import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
-import { AppContext } from "../Types";
+import { isAuth } from "../../middleware/isAuth";
+import { isKinderGardenSelected } from "../../middleware/isKindergardenSelected";
 import {
   Arg,
   Ctx,
@@ -13,7 +12,7 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { StaffMembers } from "../entities/SatffMembers";
-import { FieldError } from "../utils/Errors";
+import { FieldError } from "../../utils/Errors";
 import { getConnection } from "typeorm";
 
 @ObjectType()
@@ -112,9 +111,7 @@ export class StaffMembersResolver {
   @Query(() => StaffMembers, { nullable: true })
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  filterStaff(
-    @Ctx() { req }: AppContext
-  ): Promise<StaffMembers | undefined> {
+  filterStaff(@Ctx() { req }: AppContext): Promise<StaffMembers | undefined> {
     return StaffMembers.findOne({
       where: {
         staffId: req.session.userId,

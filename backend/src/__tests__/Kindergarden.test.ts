@@ -3,7 +3,7 @@ import { Connection } from "typeorm";
 import faker from "faker";
 import { gCall } from "../helpers/gCall";
 import { createUser } from "../helpers/createUser";
-import { KinderGarden } from "../entities/Kindergarden";
+import { KinderGarden } from "../graphql/entities/Kindergarden";
 
 let conn: Connection;
 

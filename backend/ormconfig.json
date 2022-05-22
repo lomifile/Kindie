@@ -1,9 +1,9 @@
 {
   "type": "postgres",
-  "url": "postgresql://postgres:postgres@localhost:5432/dv_organizator",
+  "url": "postgresql://postgres:postgres@localhost:5432/kindie",
   "logging": true,
-  "entities": ["dist/entities/*.js"],
-  "migrations": ["dist/migrations/*.js"],
+  "entities": ["dist/graphql/entities/*.js"],
+  "migrations": ["dist/graphql/migrations/*.js"],
   "cli": {
     "migrationsDir": "./src/migrations"
   }

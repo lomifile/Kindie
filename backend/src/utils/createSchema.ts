@@ -1,19 +1,17 @@
 import { buildSchema } from "type-graphql";
 
-import { ChildrenResolver } from "../resolvers/Children";
-import { ContactResolver } from "../resolvers/Contact";
-import { FatherResolver } from "../resolvers/Father";
-import { GroupsResolver } from "../resolvers/Groups";
-import { HelloResolver } from "../resolvers/Hello";
-import { KindergardenResolver } from "../resolvers/Kindergarden";
-import { MotherResolver } from "../resolvers/Mother";
-import { StaffMembersResolver } from "../resolvers/StaffMembers";
-import { UserResolver } from "../resolvers/User";
+import { ChildrenResolver } from "../graphql/resolvers/Children";
+import { ContactResolver } from "../graphql/resolvers/Contact";
+import { FatherResolver } from "../graphql/resolvers/Father";
+import { GroupsResolver } from "../graphql/resolvers/Groups";
+import { KindergardenResolver } from "../graphql/resolvers/Kindergarden";
+import { MotherResolver } from "../graphql/resolvers/Mother";
+import { StaffMembersResolver } from "../graphql/resolvers/StaffMembers";
+import { UserResolver } from "../graphql/resolvers/User";
 
 export const createSchema = () =>
   buildSchema({
     resolvers: [
-      HelloResolver,
       UserResolver,
       KindergardenResolver,
       GroupsResolver,

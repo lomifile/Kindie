@@ -10,11 +10,10 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { isAuth } from "../middleware/isAuth";
-import { AppContext } from "../Types";
+import { isAuth } from "../../middleware/isAuth";
 import { getConnection } from "typeorm";
-import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
-import { FieldError } from "../utils/Errors";
+import { isKinderGardenSelected } from "../../middleware/isKindergardenSelected";
+import { FieldError } from "../../utils/Errors";
 
 @ObjectType()
 class GroupsResponse {
