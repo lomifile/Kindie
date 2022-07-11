@@ -3,7 +3,8 @@ import type { ColumnsType, TableProps } from "antd/lib/table";
 import React, { useState } from "react";
 
 /**
- * TODO: Check if type is definied from data that is pulled from API
+ * TODO:
+ * Check if type is definied from data that is pulled from API
  * and should be added to Columns type and instead of DataType use real types.
  */
 
