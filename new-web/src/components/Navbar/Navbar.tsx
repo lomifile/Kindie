@@ -26,6 +26,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
       style={{
         padding: "25px 35px",
         position: "fixed",
+        zIndex: 99,
         top: 0,
         width: "100%",
       }}

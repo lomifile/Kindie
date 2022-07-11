@@ -12,7 +12,13 @@ export const PageLayout: React.FC<PageLayoutProps> = ({ navbar, children }) => {
   return (
     <Layout>
       <Navbar />
-      <Content>{children}</Content>
+      <Content
+        style={{
+          padding: "7rem 0",
+        }}
+      >
+        {children}
+      </Content>
       <Footer style={{ textAlign: "center" }}>
         Ant Design ©2018 Created by Ant UED
       </Footer>
