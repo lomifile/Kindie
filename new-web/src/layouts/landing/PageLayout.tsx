@@ -14,7 +14,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({ navbar, children }) => {
       <Navbar />
       <Content
         style={{
-          padding: "7rem 0",
+          padding: "7rem 2rem",
         }}
       >
         {children}
