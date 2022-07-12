@@ -1,8 +1,12 @@
 import React from "react";
-import { PageLayout } from "./layouts/landing/PageLayout";
+import { Routes } from "./routes";
 
 const App: React.FC = () => {
-  return <PageLayout></PageLayout>;
+  return (
+    <div>
+      <Routes />
+    </div>
+  );
 };
 
 export default App;

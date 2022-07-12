@@ -1,5 +1,5 @@
 import { Header } from "antd/lib/layout/layout";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LeftSide } from "./LeftSide";
 import logo from "../../img/logo.png";
 import { Switch } from "antd";
@@ -10,7 +10,8 @@ import { useThemeSwitcher } from "react-css-theme-switcher";
 interface NavbarProps {}
 
 export const Navbar: React.FC<NavbarProps> = () => {
-  const [isDarkMode, setIsDarkMode] = React.useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [color, setColor] = useState<string>("#9CB4CC");
   const { switcher, currentTheme, status, themes } = useThemeSwitcher();
 
   const toggleTheme = (isChecked: React.SetStateAction<boolean>) => {
@@ -18,17 +19,37 @@ export const Navbar: React.FC<NavbarProps> = () => {
     switcher({ theme: isChecked ? themes.dark : themes.light });
   };
 
+  useEffect(() => {
+    const handleChange = () => {
+      if (window.scrollY === 0) {
+        setColor("#9CB4CC");
+      } else if (window.scrollY > 0) {
+        setColor("white");
+      }
+    };
+    window.addEventListener("scroll", handleChange);
+    return () => {
+      window.removeEventListener("scroll", handleChange);
+    };
+  }, []);
+
   if (status === "loading") {
     return null;
   }
+
+  console.log(color);
+
   return (
     <Header
       style={{
-        padding: "25px 35px",
+        padding: "35px 75px",
         position: "fixed",
         zIndex: 99,
         top: 0,
         width: "100%",
+        height: "8rem",
+        background: color,
+        transition: "all 0.5s ease-in-out",
       }}
     >
       <div
@@ -36,8 +57,8 @@ export const Navbar: React.FC<NavbarProps> = () => {
           float: "left",
           width: "100px",
           height: "10px",
-          padding: "0 35px",
           margin: "-15px 24px 16px 0",
+          background: color,
         }}
       >
         <img width={300} height={100} src={logo} alt="Logo" />
@@ -47,7 +68,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
           margin: "auto",
         }}
       >
-        <LeftSide />
+        <LeftSide color={color} />
       </div>
       <div
         style={{

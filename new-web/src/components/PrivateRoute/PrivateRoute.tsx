@@ -1,25 +1,25 @@
 import React from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Route, Redirect, RouteProps } from "react-router-dom";
 import { isAuth } from "../../utils/isAuth";
 
-interface PrivateRouteProps {
+type PrivateRouteProps = {
   children?: React.ReactNode;
-}
+} & RouteProps;
 
 export const PrivateRoute: React.FC<PrivateRouteProps> = ({
   children,
-  ...rest
+  ...props
 }) => {
   return (
     <Route
-      {...rest}
+      {...props}
       render={() =>
         isAuth() ? (
           children
         ) : (
           <Redirect
             to={{
-              pathname: "/home",
+              pathname: "/",
             }}
           />
         )
