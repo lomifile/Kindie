@@ -19,7 +19,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-
+      - name: Install deps
+        working-directory: kindie-visual
+        run: yarn
       - name: Build kindie-visual
         working-directory: kindie-visual
         run: yarn rollup
