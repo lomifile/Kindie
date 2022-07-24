@@ -1,17 +1,19 @@
 import { Header } from "antd/lib/layout/layout";
 import React, { useEffect, useState } from "react";
 import { LeftSide } from "./LeftSide";
-import logo from "../../img/logo.png";
 import { Switch } from "antd";
 import { MoonIcon } from "../../icons/Moon";
 import { SunIcon } from "../../icons/Sun";
 import { useThemeSwitcher } from "react-css-theme-switcher";
+import LogoLight from "../../img/logoLight.png";
+import LogoDark from "../../img/logoDark.png";
+import LogoScroll from "../../img/kindieScroll.png";
 
 interface NavbarProps {}
 
 export const Navbar: React.FC<NavbarProps> = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-  const [color, setColor] = useState<string>("#9CB4CC");
+  const [color, setColor] = useState<string>("#68A7AD");
   const { switcher, currentTheme, status, themes } = useThemeSwitcher();
 
   const toggleTheme = (isChecked: React.SetStateAction<boolean>) => {
@@ -22,29 +24,29 @@ export const Navbar: React.FC<NavbarProps> = () => {
   useEffect(() => {
     const handleChange = () => {
       if (window.scrollY === 0) {
-        setColor("#9CB4CC");
+        setColor(currentTheme === "light" ? "#68A7AD" : "#303030");
       } else if (window.scrollY > 0) {
-        setColor("white");
+        setColor(currentTheme === "light" ? "white" : "#68A7AD");
       }
     };
     window.addEventListener("scroll", handleChange);
     return () => {
       window.removeEventListener("scroll", handleChange);
     };
-  }, []);
+  });
 
   if (status === "loading") {
     return null;
   }
 
-  console.log(color);
+  console.log(color, currentTheme);
 
   return (
     <Header
       style={{
         padding: "35px 75px",
         position: "fixed",
-        zIndex: 99,
+        zIndex: 100,
         top: 0,
         width: "100%",
         height: "8rem",
@@ -56,12 +58,22 @@ export const Navbar: React.FC<NavbarProps> = () => {
         style={{
           float: "left",
           width: "100px",
-          height: "10px",
+          height: "30px",
           margin: "-15px 24px 16px 0",
           background: color,
         }}
       >
-        <img width={300} height={100} src={logo} alt="Logo" />
+        {currentTheme === "light" ? (
+          window.scrollY > 0 ? (
+            <img src={LogoLight} alt="Logo" />
+          ) : (
+            <img src={LogoScroll} alt="Logo" />
+          )
+        ) : window.scrollY > 0 ? (
+          <img src={LogoDark} alt="Logo" />
+        ) : (
+          <img src={LogoScroll} alt="Logo" />
+        )}
       </div>
       <div
         style={{

@@ -28,12 +28,15 @@ jobs:
       - name: Install backend dependencies
         working-directory: backend
         run: yarn
-      - name: Run tests backend
+      - name: Run tests on backend
         working-directory: backend
         run: yarn test
-      - name: Install frontend dependencies
-        working-directory: web
+      - name: Install dependencies on kindie-visual
+        working-directory: kindie-visual
         run: yarn
-      - name: Build frontend
-        working-directory: web
-        run: yarn build
+      - name: Run tests on kindie-visual
+        working-directory: kindie-visual
+        run: yarn test
+      - name: Build kindie-visual
+        working-directory: kindie-visual
+        run: yarn rollup
