@@ -25,12 +25,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install backend dependencies
-        working-directory: backend
-        run: yarn
-      - name: Run tests on backend
-        working-directory: backend
-        run: yarn test
+      # TODO :Setup proper CI/CD for both FE and BE
+      # - name: Install backend dependencies
+      #   working-directory: backend
+      #   run: yarn
+      # - name: Run tests on backend
+      #   working-directory: backend
+      #   run: yarn test
       - name: Install dependencies on kindie-visual
         working-directory: kindie-visual
         run: yarn
