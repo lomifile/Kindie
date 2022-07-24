@@ -264,37 +264,3 @@ $grays: (
   "800": $gray-800,
   "900": $gray-900,
 ) !default;
-
-$input-btn-padding-x: 0.75rem !default;
-$input-padding-x: $input-btn-padding-x !default;
-$border-width: 1px !default;
-$input-btn-border-width: $border-width !default;
-$input-border-width: $input-btn-border-width !default;
-$input-height-border: $input-border-width * 2 !default;
-$form-floating-height: add(3.5rem, $input-height-border) !default;
-$form-floating-line-height: 1.25 !default;
-$form-floating-padding-x: $input-padding-x !default;
-$form-floating-padding-y: 1rem !default;
-$form-floating-input-padding-t: 1.625rem !default;
-$form-floating-input-padding-b: 0.625rem !default;
-$form-floating-label-opacity: 0.65 !default;
-$form-floating-label-transform: scale(0.85) translateY(-0.5rem)
-  translateX(0.15rem) !default;
-$form-floating-transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out !default;
-
-$enable-caret: true !default;
-$enable-rounded: true !default;
-$enable-shadows: false !default;
-$enable-gradients: false !default;
-$enable-transitions: true !default;
-$enable-reduced-motion: true !default;
-$enable-smooth-scroll: true !default;
-$enable-grid-classes: true !default;
-$enable-container-classes: true !default;
-$enable-cssgrid: false !default;
-$enable-button-pointers: true !default;
-$enable-rfs: true !default;
-$enable-validation-icons: true !default;
-$enable-negative-margins: false !default;
-$enable-deprecation-messages: true !default;
-$enable-important-utilities: true !default;
