@@ -1,0 +1,25 @@
+on:
+  push:
+    branches: [master, new-web]
+  pull_request:
+    branches: [prod]
+
+jobs:
+  build:
+    runs-on: ${{matrix.os}}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Build kindie-visual
+        working-directory: kindie-visual
+        run: yarn rollup
