@@ -36,12 +36,6 @@ jobs:
       - name: Install backend dependencies
         working-directory: backend
         run: yarn
-      - name: Generate migrations
-        working-directory: backend
-        run: yarn gen:migrations
-      - name: Apply migrations
-        working-directory: backend
-        run: yarn run:migrations
       - name: Build backend
         working-directory: backend
         run: yarn build
