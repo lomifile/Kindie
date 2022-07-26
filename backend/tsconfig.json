@@ -21,11 +21,11 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
   "typeAcquisition": {
     "include": ["@types/jest"]
   },
-  "exclude": ["node_modules", "../__tests__/*.test.ts",],
+  "exclude": ["node_modules", "./__tests__/*.test.ts"],
   "include": ["./src/**/*.ts"]
 }

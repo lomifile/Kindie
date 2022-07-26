@@ -1,15 +1,16 @@
 import nodemailer, { createTestAccount } from "nodemailer";
 import { __prod__ } from "../constants";
 
+// TODO: Rewrite email handling
 export async function sendMail(to: string, subject: string, text: string) {
   let acc = await createTestAccount();
   let transporter = nodemailer.createTransport({
-    host: !__prod__ ? "smtp.ethereal.com" : "smtp.zoho.eu",
-    port: 465,
-    secure: __prod__ ? false : true,
+    host: __prod__ ? "smtp.zoho.eu" : acc.smtp.host,
+    port: __prod__ ? 465 : acc.smtp.port,
+    secure: __prod__,
     auth: {
-      user: !__prod__ ? acc.user : process.env.NODEMAILER_EMAIL,
-      pass: !__prod__ ? acc.pass : process.env.NODEMAILER_PASSWORD,
+      user: __prod__ ? process.env.NODEMAILER_EMAIL : acc.user,
+      pass: __prod__ ? process.env.NODEMAILER_PASSWORD : acc.pass,
     },
   });
 

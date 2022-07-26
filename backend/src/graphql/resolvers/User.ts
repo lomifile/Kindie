@@ -43,7 +43,7 @@ export class UserResolver {
   async staffOf(@Ctx() { req }: AppContext): Promise<User[]> {
     return await User.find({
       where: { Id: req.session.userId },
-      relations: ["partof"],
+      relations: ["staffOf"],
     });
   }
 
@@ -74,6 +74,17 @@ export class UserResolver {
       .returning("*")
       .execute();
 
+    if (!result.raw[0]) {
+      return {
+        errors: [
+          {
+            field: "user",
+            message: "User does not exist in database",
+          },
+        ],
+      };
+    }
+
     req.session.userId = result.raw[0].id;
     return {
       user: result.raw[0],
@@ -97,8 +108,8 @@ export class UserResolver {
         ],
       };
     }
-    //@ts-ignore
-    let hashedPassword = argon2.hash(options.password);
+    // @ts-ignore
+    let hashedPassword = await argon2.hash(options.password);
     try {
       const result = await getConnection()
         .createQueryBuilder()
@@ -197,7 +208,7 @@ export class UserResolver {
   ) {
     const user = await User.findOne({ where: { Email: email } });
     if (!user) {
-      return true;
+      return false;
     }
 
     const token = v4();
@@ -297,7 +308,6 @@ export class UserResolver {
         })
         .returning("*")
         .execute();
-      // console.log(result);
       user = result.raw[0];
 
       const token = v4();
@@ -314,7 +324,6 @@ export class UserResolver {
         VerifyEmailTemplate(token)
       ).catch(console.error);
     } catch (err) {
-      // console.log(err);
       if (err.code === "23505") {
         return {
           errors: [
@@ -435,6 +444,7 @@ export class UserResolver {
     );
   }
 
+  // TODO: Rewrite user search
   @Query(() => [User])
   async searchUser(
     @Arg("text") text: string,

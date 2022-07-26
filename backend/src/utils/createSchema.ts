@@ -9,8 +9,8 @@ import { MotherResolver } from "../graphql/resolvers/Mother";
 import { StaffMembersResolver } from "../graphql/resolvers/StaffMembers";
 import { UserResolver } from "../graphql/resolvers/User";
 
-export const createSchema = () =>
-  buildSchema({
+export const createSchema = async () =>
+  await buildSchema({
     resolvers: [
       UserResolver,
       KindergardenResolver,
