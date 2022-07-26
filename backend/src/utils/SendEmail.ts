@@ -1,5 +1,5 @@
 import nodemailer, { createTestAccount } from "nodemailer";
-import { __prod__ } from "../constants";
+import { __prod__ } from "../Constants";
 
 // TODO: Rewrite email handling
 export async function sendMail(to: string, subject: string, text: string) {

@@ -21,8 +21,8 @@ import {
   ACCOUNT_VERIFICATION_PREFIX,
   COOKIE_NAME,
   FORGET_PASSWORD_PREFIX,
-} from "../../constants";
-import { sendMail, VerifyEmailTemplate } from "../../utils/sendEmail";
+} from "../../Constants";
+import { sendMail, VerifyEmailTemplate } from "../../utils/SendEmail";
 import { v4 } from "uuid";
 import { isAuth } from "../../middleware/isAuth";
 import { FieldError } from "../../utils/Errors";

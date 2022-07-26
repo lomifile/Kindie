@@ -1,7 +1,7 @@
 import { Contact } from "../entities/Contact";
 import { Arg, Mutation, Resolver } from "type-graphql";
 import { ContactInput } from "../inputs/ContactInput";
-import { sendMail } from "../../utils/sendEmail";
+import { sendMail } from "../../utils/SendEmail";
 
 @Resolver(Contact)
 export class ContactResolver {

@@ -3,7 +3,7 @@ import connectRedis from "connect-redis";
 import express from "express";
 import session from "express-session";
 import Redis from "ioredis";
-import { COOKIE_NAME, __prod__ } from "./constants";
+import { COOKIE_NAME, __prod__ } from "./Constants";
 import cors from "cors";
 import "dotenv-safe/config";
 import { createSchema } from "./graphql";
