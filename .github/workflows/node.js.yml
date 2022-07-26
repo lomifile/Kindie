@@ -25,12 +25,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install backend dependencies
-        working-directory: backend
-        run: yarn
-      - name: Run tests backend
-        working-directory: backend
-        run: yarn test
       - name: Install frontend dependencies
         working-directory: web
         run: yarn
