@@ -11,7 +11,7 @@
     "gen:migrations": "typeorm migration:generate -n kindie",
     "run:migrations": "typeorm migration:run",
     "setup:db": "ts-node ./src/helpers/setup.ts",
-    "test": "npm run setup:db && jest --verbose",
+    "test": "npm run setup:db && jest --verbose --detectOpenHandles",
     "prettier": "prettier --write ."
   },
   "engines": {
@@ -30,6 +30,11 @@
     "@types/nodemailer": "^6.4.4",
     "@types/redis": "^2.8.32",
     "@types/uuid": "^8.3.1",
+    "@types/faker": "^5.5.9",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
+    "@typescript-eslint/parser": "^5.30.7",
+    "eslint": "^8.20.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "jest": "^27.3.1",
     "nodemon": "^2.0.14",
     "prettier": "^2.4.1",
@@ -38,7 +43,6 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "@types/faker": "^5.5.9",
     "apollo-server-express": "^3.4.0",
     "argon2": "^0.28.2",
     "bigint-typescript-definitions": "^5.5.3-0",
@@ -51,8 +55,8 @@
     "faker": "^5.5.3",
     "graphql": "^15.3.0",
     "graphql-bigint": "^1.0.0",
-    "nodemailer": "^6.7.0",
     "ioredis": "^4.28.5",
+    "nodemailer": "^6.7.0",
     "pg": "^8.7.1",
     "redis": "^3.1.2",
     "reflect-metadata": "^0.1.13",

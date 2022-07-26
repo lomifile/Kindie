@@ -33,12 +33,12 @@ export const gCall = async ({
       req: {
         session: {
           userId,
-          selectedKindergarden,
           selectedGroup,
-        },
+          selectedKindergarden,
+        } as SessionType,
       },
       res: {
-        clearCookie: () => {},
+        clearCookie: jest.fn(),
       },
     },
   });

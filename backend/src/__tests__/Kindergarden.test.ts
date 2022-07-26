@@ -4,6 +4,9 @@ import faker from "faker";
 import { gCall } from "../helpers/gCall";
 import { createUser } from "../helpers/createUser";
 import { KinderGarden } from "../graphql/entities/Kindergarden";
+import { KindergardenResolver } from "../graphql/resolvers/Kindergarden";
+
+// TODO: Full rewrite Kindergarden tests
 
 let conn: Connection;
 
@@ -242,6 +245,15 @@ describe("Show kindergarden query", () => {
     expect(response).toMatchObject({
       data: null,
     });
+  });
+
+  const kindergardenResolver = new KindergardenResolver();
+
+  test("Should show kindergarden", async () => {
+    let ctx: AppContext = { req: { session: { userId: 1 } } } as AppContext;
+
+    console.log(await kindergardenResolver.showKindergarden(ctx));
+    expect(kindergardenResolver.showKindergarden(ctx));
   });
 
   it("Show kindergarden query pass", async () => {
