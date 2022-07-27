@@ -1,4 +1,4 @@
-import { isAuth } from "../../middleware/isAuth";
+import { isAuth } from "../../middleware";
 import { isKinderGardenSelected } from "../../middleware/isKindergardenSelected";
 import {
   Arg,
@@ -11,7 +11,7 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { StaffMembers } from "../entities/SatffMembers";
+import { StaffMembers } from "../entities";
 import { FieldError } from "../../utils/Errors";
 import { getConnection } from "typeorm";
 

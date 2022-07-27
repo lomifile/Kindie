@@ -1,6 +1,6 @@
-import { Contact } from "../entities/Contact";
+import { Contact } from "../entities";
 import { Arg, Mutation, Resolver } from "type-graphql";
-import { ContactInput } from "../inputs/ContactInput";
+import { ContactInput } from "../inputs";
 import { sendMail } from "../../utils/SendEmail";
 
 @Resolver(Contact)

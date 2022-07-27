@@ -12,7 +12,7 @@ import { Children } from "./Children";
 import { KinderGarden } from "./Kindergarden";
 import { Mother } from "./Mother";
 import { Father } from "./Father";
-import { StaffMembers } from "./SatffMembers";
+import { StaffMembers } from "./StaffMembers";
 
 @ObjectType()
 @Entity()

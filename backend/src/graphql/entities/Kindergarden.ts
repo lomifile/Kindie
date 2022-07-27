@@ -13,7 +13,7 @@ import { Children } from "./Children";
 import { Father } from "./Father";
 import { Groups } from "./Groups";
 import { Mother } from "./Mother";
-import { StaffMembers } from "./SatffMembers";
+import { StaffMembers } from "./StaffMembers";
 import { User } from "./User";
 
 @ObjectType()

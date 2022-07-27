@@ -11,10 +11,6 @@ import Redis from "ioredis";
 import { v4 } from "uuid";
 import { ACCOUNT_VERIFICATION_PREFIX, __prod__ } from "../Constants";
 
-/**
- * TODO: Full rewrite User tests
- * */
-
 let conn: Connection;
 let redis: Redis.Redis;
 
@@ -274,7 +270,6 @@ describe("Verify account mutation", () => {
       1000 * 60 * 60 * 24 * 3
     );
     const response = await resolver.verifyAccount(token, ctx);
-    console.log(response);
     expect(response).toHaveProperty("user");
   });
 });
@@ -294,7 +289,6 @@ describe("Forgot password mutation", () => {
   test("Should pass", async () => {
     ctx.redis = redis;
     const response = await resolver.forgetPassword(user.email, ctx);
-    console.log(response);
     expect(response).toBeTruthy();
   });
 });

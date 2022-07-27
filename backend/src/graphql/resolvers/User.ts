@@ -1,9 +1,9 @@
-import { User } from "../entities/User";
+import { User } from "../entities";
 import {
   UpdatePassword,
   UpdateUserInput,
   UsernamePasswordInput,
-} from "../inputs/UserInput";
+} from "../inputs";
 import { ValidateRegister } from "../validators";
 import {
   Arg,
@@ -24,7 +24,7 @@ import {
 } from "../../Constants";
 import { sendMail, VerifyEmailTemplate } from "../../utils/SendEmail";
 import { v4 } from "uuid";
-import { isAuth } from "../../middleware/isAuth";
+import { isAuth } from "../../middleware";
 import { FieldError } from "../../utils/Errors";
 
 @ObjectType()

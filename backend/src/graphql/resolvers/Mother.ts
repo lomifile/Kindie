@@ -1,4 +1,4 @@
-import { Mother } from "../entities/Mother";
+import { Mother } from "../entities";
 import {
   Arg,
   Ctx,
@@ -10,9 +10,8 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { isAuth } from "../../middleware/isAuth";
-import { isKinderGardenSelected } from "../../middleware/isKindergardenSelected";
-import { ParentsInput } from "../inputs/ParentsInput";
+import { isKinderGardenSelected, isAuth } from "../../middleware";
+import { ParentsInput } from "../inputs";
 import { getConnection, getRepository } from "typeorm";
 
 // @ObjectType()

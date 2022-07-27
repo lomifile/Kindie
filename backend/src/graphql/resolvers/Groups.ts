@@ -1,4 +1,4 @@
-import { Groups } from "../entities/Groups";
+import { Groups } from "../entities";
 import {
   Arg,
   Ctx,
@@ -10,9 +10,8 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { isAuth } from "../../middleware/isAuth";
 import { getConnection } from "typeorm";
-import { isKinderGardenSelected } from "../../middleware/isKindergardenSelected";
+import { isKinderGardenSelected, isAuth } from "../../middleware";
 import { FieldError } from "../../utils/Errors";
 
 @ObjectType()

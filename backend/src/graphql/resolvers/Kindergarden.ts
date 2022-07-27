@@ -1,4 +1,4 @@
-import { KinderGarden } from "../entities/Kindergarden";
+import { KinderGarden } from "../entities";
 import {
   Arg,
   Ctx,
@@ -10,12 +10,11 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { isAuth } from "../../middleware/isAuth";
-import { isKinderGardenSelected } from "../../middleware/isKindergardenSelected";
+import { isKinderGardenSelected, isAuth } from "../../middleware";
 import { getConnection } from "typeorm";
-import { KinderGardenInput } from "../inputs/KindergardenInput";
+import { KinderGardenInput } from "../inputs";
 import { FieldError } from "../../utils/Errors";
-import { StaffMembers } from "../entities/SatffMembers";
+import { StaffMembers } from "../entities/StaffMembers";
 
 @ObjectType()
 class KindergardenResponse {
