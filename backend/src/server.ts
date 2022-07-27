@@ -1,22 +1,42 @@
 import "reflect-metadata";
 import connectRedis from "connect-redis";
-import express from "express";
+import express, { RequestHandler } from "express";
 import session from "express-session";
 import Redis from "ioredis";
 import { COOKIE_NAME, __prod__ } from "./Constants";
 import cors from "cors";
+import path from "path";
+import fs from "fs";
+import morgan from "morgan";
 import "dotenv-safe/config";
 import { createSchema } from "./graphql";
 
 const app = express();
 const RedisStore = connectRedis(session);
 const redis = new Redis(process.env.REDIS_URL);
+
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true,
   })
 );
+
+try {
+  const accessLogStream = fs.createWriteStream(
+    path.join(__dirname + "/../log/logger.log"),
+    {
+      flags: "a+",
+    }
+  );
+  app.use(
+    morgan("combined", {
+      stream: accessLogStream,
+    }) as unknown as RequestHandler
+  );
+} catch (err) {
+  console.error(err);
+}
 
 app.set("trust proxy", 1);
 app.use(
