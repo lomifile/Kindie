@@ -266,14 +266,15 @@ describe("Verify account mutation", () => {
   test("Should pass", async () => {
     const token = v4();
     const userObj = await User.findOne({ Email: user.email });
+    ctx.redis = redis;
     await redis.set(
       ACCOUNT_VERIFICATION_PREFIX + token,
       userObj!.Id,
       "ex",
       1000 * 60 * 60 * 24 * 3
     );
-    ctx.redis = redis;
     const response = await resolver.verifyAccount(token, ctx);
+    console.log(response);
     expect(response).toHaveProperty("user");
   });
 });
@@ -293,6 +294,7 @@ describe("Forgot password mutation", () => {
   test("Should pass", async () => {
     ctx.redis = redis;
     const response = await resolver.forgetPassword(user.email, ctx);
+    console.log(response);
     expect(response).toBeTruthy();
   });
 });
