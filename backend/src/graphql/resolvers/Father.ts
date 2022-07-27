@@ -1,7 +1,6 @@
-import { Father } from "../entities/Father";
-import { isAuth } from "../../middleware/isAuth";
-import { isKinderGardenSelected } from "../../middleware/isKindergardenSelected";
-import { ParentsInput } from "../inputs/ParentsInput";
+import { Father } from "../entities";
+import { isKinderGardenSelected, isAuth } from "../../middleware";
+import { ParentsInput } from "../inputs";
 import {
   Arg,
   Ctx,

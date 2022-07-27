@@ -1,4 +1,4 @@
-import { Children } from "../entities/Children";
+import { Children } from "../entities";
 import {
   Arg,
   Ctx,
@@ -10,11 +10,13 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { isAuth } from "../../middleware/isAuth";
-import { isKinderGardenSelected } from "../../middleware/isKindergardenSelected";
-import { isGroupSelected } from "../../middleware/isGroupSelected";
+import {
+  isKinderGardenSelected,
+  isAuth,
+  isGroupSelected,
+} from "../../middleware";
 import { getConnection } from "typeorm";
-import { ChildrenInput } from "../inputs/ChildrenInput";
+import { ChildrenInput } from "../inputs";
 import { FieldError } from "../../utils/Errors";
 
 @ObjectType()
