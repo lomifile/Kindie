@@ -12,7 +12,7 @@ const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />;
 
 export const HelloWorld = Template.bind({});
 HelloWorld.args = {
-  variant: "fill" as ButtonTypes,
+  variant: "fill-primary" as ButtonTypes,
   children: "Hello world!",
   isLoading: false,
   disabled: false,
