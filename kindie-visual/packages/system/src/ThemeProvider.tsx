@@ -16,10 +16,15 @@ const ThemeContext = React.createContext<ThemeContextValue>({
   minBreakpoint: DEFAULT_MIN_BREAKPOINT,
 });
 
-export function useKindiePrefix(
-  prefix: string | undefined,
-  defaultPrefix: string
-): string {
+export const useKindiePrefix = <
+  TPrefix,
+  TFirstPrefix extends keyof TPrefix | string
+>(
+  prefix: TPrefix,
+  defaultPrefix: TFirstPrefix
+) => {
   const { prefixes } = React.useContext(ThemeContext);
-  return prefix || prefixes[defaultPrefix] || defaultPrefix;
-}
+  return (prefix ||
+    prefixes[defaultPrefix as string] ||
+    defaultPrefix) as string;
+};

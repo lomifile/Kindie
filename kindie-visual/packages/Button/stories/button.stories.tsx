@@ -4,7 +4,7 @@ import Button from "../src/Button";
 import type { ButtonTypes } from "../src/types";
 
 export default {
-  title: "ReactComponentLibrary/Button",
+  title: "Kindie Visual/Button",
   component: Button,
 } as ComponentMeta<typeof Button>;
 

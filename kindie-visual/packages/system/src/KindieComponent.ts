@@ -48,7 +48,7 @@ export type KindiePrefixComponentClass<
 
 export type TransitionType = boolean | TransitionComponent;
 
-export function getOverlayDirection(placement: string, isRTL?: boolean) {
+export const getOverlayDirection = (placement: string, isRTL?: boolean) => {
   let bsDirection = placement;
   if (placement === "left") {
     bsDirection = isRTL ? "end" : "start";
@@ -56,4 +56,4 @@ export function getOverlayDirection(placement: string, isRTL?: boolean) {
     bsDirection = isRTL ? "start" : "end";
   }
   return bsDirection;
-}
+};

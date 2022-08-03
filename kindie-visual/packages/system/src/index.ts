@@ -1,2 +1,3 @@
-export { default } from "./generateIdentifier";
 export * from "./KindieComponent";
+export * from "./ThemeProvider";
+export * from "./createWithKindiePrefix";
