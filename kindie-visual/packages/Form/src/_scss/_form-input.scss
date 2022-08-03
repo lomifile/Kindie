@@ -1,0 +1,25 @@
+@import "../../../kindie-visual-styles/index.scss";
+@import "../../../kindie-visual-styles/_animations.scss";
+
+.form-input {
+  padding: 12px 12px;
+  border-radius: 5px;
+  border: 1.5px solid $gray-400;
+  width: 200px;
+  transition: all 0.25s ease-in;
+
+  &:focus {
+    border: 2px solid $primary;
+    outline: none;
+  }
+}
+
+.form-input-sm {
+  padding: 10px 10px;
+  width: 100px;
+}
+
+.form-input-lg {
+  width: 250px;
+  min-height: 20px;
+}
