@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Attendance } from "./Attendance";
 import { Children } from "./Children";
 import { KinderGarden } from "./Kindergarden";
 
@@ -46,4 +47,7 @@ export class Groups extends BaseEntity {
     lazy: true,
   })
   children: Children[];
+
+  @ManyToOne(() => Attendance, (attendance) => attendance.Id)
+  attendance: Attendance;
 }

@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Attendance } from "./Attendance";
 import { Children } from "./Children";
 import { Father } from "./Father";
 import { Groups } from "./Groups";
@@ -77,6 +78,9 @@ export class KinderGarden extends BaseEntity {
     nullable: true,
   })
   staff: StaffMembers[];
+
+  @OneToMany(() => Attendance, (attendance) => attendance.Id)
+  attendance?: Attendance;
 
   @Field(() => String)
   @CreateDateColumn()

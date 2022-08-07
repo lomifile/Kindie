@@ -6,3 +6,4 @@ export * from "./Kindergarden";
 export * from "./Mother";
 export * from "./StaffMembers";
 export * from "./User";
+export * from "./Attendance";

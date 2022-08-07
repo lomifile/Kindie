@@ -1,4 +1,5 @@
 import {
+  Attendance,
   Children,
   Contact,
   Father,
@@ -30,6 +31,7 @@ export const testConn = (drop: boolean = false) => {
       Mother,
       StaffMembers,
       User,
+      Attendance,
     ],
   });
 };
