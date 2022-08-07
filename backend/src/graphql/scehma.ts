@@ -4,14 +4,17 @@ import { Redis } from "ioredis";
 import { buildSchema } from "type-graphql";
 import { Express } from "express";
 
-import { UserResolver } from "./resolvers/User";
-import { StaffMembersResolver } from "./resolvers/StaffMembers";
-import { MotherResolver } from "./resolvers/Mother";
-import { KindergardenResolver } from "./resolvers/Kindergarden";
-import { GroupsResolver } from "./resolvers/Groups";
-import { FatherResolver } from "./resolvers/Father";
-import { ContactResolver } from "./resolvers/Contact";
-import { ChildrenResolver } from "./resolvers/Children";
+import {
+  AttendanceResolver,
+  ChildrenResolver,
+  ContactResolver,
+  FatherResolver,
+  GroupsResolver,
+  KindergardenResolver,
+  MotherResolver,
+  StaffMembersResolver,
+  UserResolver,
+} from "./resolvers";
 
 export const createSchema = async (app: Express, redis: Redis) => {
   const apolloServer = new ApolloServer({
@@ -25,6 +28,7 @@ export const createSchema = async (app: Express, redis: Redis) => {
         FatherResolver,
         ContactResolver,
         ChildrenResolver,
+        AttendanceResolver,
       ],
       validate: false,
     }),
