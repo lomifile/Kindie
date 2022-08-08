@@ -8,8 +8,10 @@
     "watch": "tsc -p tsconfig.build.json -w",
     "dev": "nodemon dist/index.js",
     "gen-env": "gen-env-types .env -o src/env.d.ts -e .",
-    "gen:migrations": "typeorm migration:generate -n kindie",
-    "run:migrations": "typeorm migration:run",
+    "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/orm/config/ormconfig.ts",
+    "create:migrations": "npm run typeorm:cli -- migration:create -n kindie",
+    "gen:migrations": "npm run typeorm:cli -- migration:generate -n kindie",
+    "run:migrations": "npm run typeorm:cli -- migration:run",
     "setup:db": "ts-node ./src/helpers/setup.ts",
     "test": "npm run setup:db && jest --verbose --detectOpenHandles",
     "prettier": "prettier --write ."
@@ -50,6 +52,7 @@
     "class-validator": "^0.13.1",
     "connect-redis": "^6.1.3",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv-safe": "^8.2.0",
     "express": "^4.17.2",
     "express-session": "^1.17.2",
@@ -64,7 +67,7 @@
     "redis": "^3.1.2",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
-    "typeorm": "^0.2.38",
+    "typeorm": "^0.2.45",
     "uuid": "^8.3.2"
   }
 }

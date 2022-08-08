@@ -25,7 +25,6 @@ describe("Create test", () => {
       },
     } as AppContext;
     const response = await resolver.createAttendacne(1, ctx);
-
     expect(response).toHaveProperty("errors");
   });
 });

@@ -11,7 +11,7 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { StaffMembers } from "../entities";
+import { StaffMembers } from "../../orm/entities";
 import { FieldError } from "../../utils/Errors";
 import { getConnection } from "typeorm";
 

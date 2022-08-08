@@ -8,7 +8,7 @@ import {
   Mother,
   StaffMembers,
   User,
-} from "../graphql/entities";
+} from "../orm/entities";
 import { createConnection } from "typeorm";
 
 export const testConn = (drop: boolean = false) => {

@@ -1,4 +1,4 @@
-import { Contact } from "../entities";
+import { Contact } from "../../orm/entities";
 import { Arg, Mutation, Resolver } from "type-graphql";
 import { ContactInput } from "../inputs";
 import { sendMail } from "../../utils/SendEmail";

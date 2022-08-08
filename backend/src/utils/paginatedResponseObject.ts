@@ -1,6 +1,6 @@
 import { ClassType, Field, ObjectType } from "type-graphql";
 
-export default function paginatedResponse<TPaginated>(
+export default function PaginatedResponse<TPaginated>(
   TPaginatedObject: ClassType<TPaginated>
 ) {
   @ObjectType({ isAbstract: true })
