@@ -1,4 +1,4 @@
-import { Groups } from "../entities";
+import { Groups } from "../../orm/entities";
 import {
   Arg,
   Ctx,

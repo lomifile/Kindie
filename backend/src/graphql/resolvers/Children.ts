@@ -1,4 +1,4 @@
-import { Children } from "../entities";
+import { Children } from "../../orm/entities";
 import {
   Arg,
   Ctx,

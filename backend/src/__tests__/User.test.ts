@@ -6,7 +6,7 @@ import {
   UpdatePassword,
   UsernamePasswordInput,
 } from "../graphql/inputs/UserInput";
-import { User } from "../graphql/entities/User";
+import { User } from "../orm/entities/User";
 import Redis from "ioredis";
 import { v4 } from "uuid";
 import { ACCOUNT_VERIFICATION_PREFIX, __prod__ } from "../Constants";

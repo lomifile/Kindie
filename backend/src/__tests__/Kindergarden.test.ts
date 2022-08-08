@@ -3,7 +3,7 @@ import { Connection } from "typeorm";
 import faker from "faker";
 import { gCall } from "../helpers/gCall";
 import { createUser } from "../helpers/createUser";
-import { KinderGarden } from "../graphql/entities/Kindergarden";
+import { KinderGarden } from "../orm/entities/Kindergarden";
 import { KindergardenResolver } from "../graphql/resolvers/Kindergarden";
 
 // TODO: Full rewrite Kindergarden tests

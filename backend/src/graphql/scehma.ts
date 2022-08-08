@@ -3,7 +3,6 @@ import { ApolloServer } from "apollo-server-express";
 import { Redis } from "ioredis";
 import { buildSchema } from "type-graphql";
 import { Express } from "express";
-
 import {
   AttendanceResolver,
   ChildrenResolver,

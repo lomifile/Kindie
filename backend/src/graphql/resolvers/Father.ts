@@ -1,4 +1,4 @@
-import { Father } from "../entities";
+import { Father } from "../../orm/entities";
 import { isKinderGardenSelected, isAuth } from "../../middleware";
 import { ParentsInput } from "../inputs";
 import {

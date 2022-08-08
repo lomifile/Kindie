@@ -1,4 +1,4 @@
-import { KinderGarden } from "../entities";
+import { KinderGarden } from "../../orm/entities";
 import {
   Arg,
   Ctx,
@@ -14,7 +14,7 @@ import { isKinderGardenSelected, isAuth } from "../../middleware";
 import { getConnection } from "typeorm";
 import { KinderGardenInput } from "../inputs";
 import { FieldError } from "../../utils/Errors";
-import { StaffMembers } from "../entities/StaffMembers";
+import { StaffMembers } from "../../orm/entities/StaffMembers";
 
 @ObjectType()
 class KindergardenResponse {

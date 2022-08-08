@@ -9,20 +9,20 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { Attendance, Children } from "../entities";
+import { Attendance, Children } from "../../orm/entities";
 import {
   isAuth,
   isGroupSelected,
   isKinderGardenSelected,
 } from "../../middleware";
-import paginatedResponse from "../../utils/paginatedResponseObject";
+import PaginatedResponse from "../../utils/paginatedResponseObject";
 import { getConnection } from "typeorm";
 
 @ObjectType()
 class AttedanceResponse extends Response<Attendance>(Attendance) {}
 
 @ObjectType()
-class PaginatedAttendacne extends paginatedResponse<Attendance>(Attendance) {}
+class PaginatedAttendacne extends PaginatedResponse<Attendance>(Attendance) {}
 
 @Resolver(Attendance)
 export class AttendanceResolver {
