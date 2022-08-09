@@ -80,13 +80,13 @@ export class KinderGarden extends BaseEntity {
   staff: StaffMembers[];
 
   @OneToMany(() => Attendance, (attendance) => attendance.Id)
-  attendance?: Attendance;
+  attendance?: Attendance[];
 
   @Field(() => String)
   @CreateDateColumn()
-  createdAt = Date;
+  createdAt: Date;
 
   @Field(() => String)
   @UpdateDateColumn()
-  updatedAt = Date;
+  updatedAt: Date;
 }
