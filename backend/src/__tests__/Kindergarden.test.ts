@@ -1,14 +1,18 @@
 import { testConn } from "../helpers/testConn";
 import { Connection } from "typeorm";
 import faker from "faker";
-import { gCall } from "../helpers/gCall";
-import { createUser } from "../helpers/createUser";
-import { KinderGarden } from "../orm/entities/Kindergarden";
+// import { KinderGarden } from "../orm/entities/Kindergarden";
 import { KindergardenResolver } from "../graphql/resolvers/Kindergarden";
+import { KinderGardenInput } from "../graphql/inputs";
 
 // TODO: Full rewrite Kindergarden tests
 
 let conn: Connection;
+const resolvers = new KindergardenResolver();
+const ctx = {
+  req: { session: { userId: 1, selectedKindergarden: undefined } },
+  res: {},
+} as AppContext;
 
 beforeAll(async () => {
   conn = await testConn();
@@ -25,302 +29,78 @@ const kindergarden = {
   Zipcode: parseInt(faker.address.zipCode()),
 };
 
-const CreateKindergarden = `
-  mutation CreateKindergarden($options: KinderGardenInput!) {
-    createKindergarden(options: $options) {
-      kindergarden {
-        Id
-        Name
-        City
-        Address
-        Zipcode
-      }
-      errors {
-        field
-        message
-      }
-    }
-  }
-`;
+describe("Create kindergarden test", () => {
+  test("Should fail user Id is null", async () => {
+    ctx.req.session.userId = undefined;
+    const response = await resolvers.createKindergarden(kindergarden, ctx);
+    expect(response).toHaveProperty("errors");
+    expect(response.errors![0].field).toBe("QueryFailedError");
+  });
 
-describe("Create Kindergarden", () => {
-  it("Create kindergarden fail: Not authenicated", async () => {
-    const response = await gCall({
-      source: CreateKindergarden,
-      variableValues: {
-        options: kindergarden,
-      },
-    });
+  test("Should fail options is null", async () => {
+    const response = await resolvers.createKindergarden(
+      {} as KinderGardenInput,
+      ctx
+    );
+    expect(response).toHaveProperty("errors");
+    expect(response.errors![0].field).toBe("QueryFailedError");
+  });
+
+  test("Should pass", async () => {
+    const response = await resolvers.createKindergarden(kindergarden, {
+      req: { session: { userId: 1 } },
+    } as AppContext);
+    expect(response).toHaveProperty("kindergarden");
+    expect(response.kindergarden).toHaveProperty("Id");
+  });
+});
+
+describe("Use kindergarden tests", () => {
+  test("Should fail kindergarden doesn't exist", async () => {
+    const response = await resolvers.useKindergarden(14, ctx);
+    expect(response).toHaveProperty("errors");
+    expect(response.errors![0].field).toBe("kindergardenID");
+  });
+
+  test("Should fail user is not in session", async () => {
+    const response = await resolvers.useKindergarden(1, {
+      req: { session: { userId: undefined } },
+    } as AppContext);
     expect(response).toHaveProperty("errors");
   });
 
-  it("Logs in user and creates kindergaden successfully", async () => {
-    const user = await createUser();
-    const response = await gCall({
-      source: CreateKindergarden,
-      variableValues: {
-        options: kindergarden,
-      },
-      userId: user?.Id,
-    });
-    expect(response).toMatchObject({
-      data: {
-        createKindergarden: {
-          kindergarden: {
-            Name: kindergarden.name,
-            City: kindergarden.city,
-            Address: kindergarden.address,
-            Zipcode: kindergarden.Zipcode,
-          },
-          errors: null,
-        },
-      },
-    });
+  test("Should pass", async () => {
+    const response = await resolvers.useKindergarden(3, {
+      req: { session: { userId: 1 } },
+    } as AppContext);
+    expect(response).toHaveProperty("kindergarden");
+    expect(response.kindergarden!.Id).toBe(3);
   });
 });
 
-const useKindergarden = `
-mutation UseKindergarden($kindergardenID: Float!) {
-    useKindergarden(kindergadenID: $kindergardenID) {
-      kindergarden {
-        Name
-        City
-        Address
-        Zipcode
-      }
-      errors {
-        field
-        message
-      }
-    }
-  }
-`;
-
-describe("Use kindergarden mutation", () => {
-  it("Use kindergarden mutation fails because id is not in database", async () => {
-    const user = await createUser();
-    const response = await gCall({
-      source: useKindergarden,
-      variableValues: {
-        kindergardenID: 4,
-      },
-      userId: user?.Id,
-    });
-    expect(response).toMatchObject({
-      data: {
-        useKindergarden: {
-          kindergarden: null,
-          errors: [
-            {
-              field: "kindergardenID",
-              message: "Kindergarden does not exist",
-            },
-          ],
-        },
-      },
-    });
+describe("Show kindergarden", () => {
+  test("Should fail user is not in session", async () => {
+    const response = await resolvers.showKindergarden({
+      req: { session: { userId: undefined } },
+    } as AppContext);
+    expect(response).toEqual([]);
   });
 
-  it("Use kindergarden mutation pass", async () => {
-    const user = await createUser();
-    const kindergardenData = await KinderGarden.findOne({
-      where: { Name: kindergarden.name },
-    });
-    const response = await gCall({
-      source: useKindergarden,
-      variableValues: {
-        kindergardenID: kindergardenData?.Id,
-      },
-      userId: user?.Id,
-    });
-    expect(response).toMatchObject({
-      data: {
-        useKindergarden: {
-          kindergarden: {
-            Name: kindergarden.name,
-            Address: kindergarden.address,
-            City: kindergarden.city,
-            Zipcode: kindergarden.Zipcode,
-          },
-          errors: null,
-        },
-      },
-    });
-  });
-
-  it("Uses kindergarden of his staff member fail", async () => {
-    const user = await createUser();
-    const KindergardenData = await KinderGarden.findOne({
-      where: { Name: kindergarden.name },
-    });
-    await KinderGarden.update({ Name: kindergarden.name }, { owningId: 1 });
-    const response = await gCall({
-      source: useKindergarden,
-      variableValues: {
-        kindergardenID: KindergardenData?.Id,
-      },
-      userId: user?.Id,
-    });
-    expect(response).toMatchObject({
-      data: {
-        useKindergarden: {
-          kindergarden: null,
-          errors: [
-            {
-              field: "kindergardenID",
-              message: "Kindergarden does not exist",
-            },
-          ],
-        },
-      },
-    });
+  test("Should pass", async () => {
+    const response = await resolvers.showKindergarden({
+      req: { session: { userId: 1 } },
+    } as AppContext);
+    expect(response).toHaveLength(1);
   });
 });
 
-const selectedKindergarden = `
-query ShowSelectedKindergarden {
-    selectedKindergarden {
-        Name
-        City
-        Address
-        Zipcode
-    }
-  }
-`;
-
-describe("Selected kindergarden query", () => {
-  it("Selected kindergarden query fail", async () => {
-    const user = await createUser();
-
-    const response = await gCall({
-      source: selectedKindergarden,
-      userId: user?.Id,
-    });
-    expect(response).toMatchObject({
-      data: {
-        selectedKindergarden: null,
-      },
-    });
+describe("Delete kindergarden", () => {
+  test("Should fail kindergarden doesn't exist", async () => {
+    const response = await resolvers.deleteKindergarden(1);
+    expect(response).toBeFalsy();
   });
-
-  it("Selected kindergarden query pass", async () => {
-    const user = await createUser();
-    const kindergardenData = await KinderGarden.findOne({
-      where: { Name: kindergarden.name },
-    });
-    const response = await gCall({
-      source: selectedKindergarden,
-      userId: user?.Id,
-      selectedKindergarden: kindergardenData?.Id,
-    });
-    expect(response).toMatchObject({
-      data: {
-        selectedKindergarden: {
-          Name: kindergarden.name,
-          Address: kindergarden.address,
-          City: kindergarden.city,
-          Zipcode: kindergarden.Zipcode,
-        },
-      },
-    });
-  });
-});
-
-const showKindergarden = `
-query ShowKindergarden {
-    showKindergarden {
-        Name
-        City
-        Address
-        Zipcode
-    }
-  }
-`;
-
-describe("Show kindergarden query", () => {
-  it("Show kinergarden query fail", async () => {
-    const response = await gCall({
-      source: showKindergarden,
-    });
-    expect(response).toMatchObject({
-      data: null,
-    });
-  });
-
-  const kindergardenResolver = new KindergardenResolver();
-
-  test("Should show kindergarden", async () => {
-    let ctx: AppContext = { req: { session: { userId: 1 } } } as AppContext;
-
-    console.log(await kindergardenResolver.showKindergarden(ctx));
-    expect(kindergardenResolver.showKindergarden(ctx));
-  });
-
-  it("Show kindergarden query pass", async () => {
-    const user = await createUser();
-    await KinderGarden.update({ Name: kindergarden.name }, { owningId: 2 });
-    const kindergardenData = await KinderGarden.findOne({
-      where: { Name: kindergarden.name },
-    });
-    const response = await gCall({
-      source: showKindergarden,
-      userId: user?.Id,
-      selectedKindergarden: kindergardenData?.Id,
-    });
-    expect(response).toMatchObject({
-      data: {
-        showKindergarden: [
-          {
-            Name: kindergarden.name,
-            Address: kindergarden.address,
-            City: kindergarden.city,
-            Zipcode: kindergarden.Zipcode,
-          },
-        ],
-      },
-    });
-  });
-});
-
-const deleteKindergarden = `
-mutation DeleteKindergarden($id: Int!) {
-  deleteKindergarden(id: $id)
-}
-`;
-
-describe("Delete kindergarden mutatiton", () => {
-  it("Delete kindergarden mutation fail", async () => {
-    const user = await createUser();
-    const response = await gCall({
-      source: deleteKindergarden,
-      variableValues: {
-        id: 7,
-      },
-      userId: user?.Id,
-    });
-    expect(response).toMatchObject({
-      data: {
-        deleteKindergarden: false,
-      },
-    });
-  });
-
-  it("Delete kindergarden mutation pass", async () => {
-    const KindergardenData = await KinderGarden.findOne({
-      where: { Name: kindergarden.name },
-    });
-    const user = await createUser();
-    const response = await gCall({
-      source: deleteKindergarden,
-      variableValues: {
-        id: KindergardenData?.Id,
-      },
-      userId: user?.Id,
-    });
-    expect(response).toMatchObject({
-      data: {
-        deleteKindergarden: true,
-      },
-    });
+  test("Should pass", async () => {
+    const response = await resolvers.deleteKindergarden(3);
+    expect(response).toBeTruthy();
   });
 });

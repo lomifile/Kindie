@@ -16,6 +16,8 @@ import { KinderGardenInput } from "../inputs";
 import { FieldError } from "../../utils/Errors";
 import { StaffMembers } from "../../orm/entities/StaffMembers";
 
+// TODO: Refactor Kindergarden resolver
+
 @ObjectType()
 class KindergardenResponse {
   @Field(() => [FieldError], { nullable: true })
@@ -34,6 +36,7 @@ export class KindergardenResolver {
     return KinderGarden.findOne(req.session.selectedKindergarden);
   }
 
+  // TODO: Remove this function
   @Query(() => KinderGarden, { nullable: true })
   @UseMiddleware(isAuth)
   selectedKindergarden(@Ctx() { req }: AppContext) {
@@ -44,6 +47,7 @@ export class KindergardenResolver {
     return KinderGarden.findOne(req.session.selectedKindergarden);
   }
 
+  // TODO: Rewrite this function with better errors
   @Mutation(() => KindergardenResponse)
   @UseMiddleware(isAuth)
   async useKindergarden(
@@ -81,12 +85,13 @@ export class KindergardenResolver {
         };
 
       kindergarden = result;
-      req.session.selectedKindergarden = kindergarden?.Id;
+      req.session.selectedKindergarden = kindergarden!.Id;
     }
 
     return { kindergarden };
   }
 
+  // TODO: Rewrite function as pagination or better retrun type
   @Query(() => [KinderGarden])
   @UseMiddleware(isAuth)
   async showKindergarden(
@@ -123,8 +128,8 @@ export class KindergardenResolver {
       return {
         errors: [
           {
-            field: "Kindergarden",
-            message: "There was an error",
+            field: err.name,
+            message: err.message,
           },
         ],
       };
