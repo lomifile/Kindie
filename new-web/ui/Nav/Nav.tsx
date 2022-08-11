@@ -1,6 +1,6 @@
 import React, { HTMLAttributes } from "react";
 import { BiX } from "react-icons/bi";
-import Button from "../Button";
+import Button from "../Button/Button";
 
 interface NavProps extends HTMLAttributes<HTMLElement> {
   variant?: "menu" | "nav";

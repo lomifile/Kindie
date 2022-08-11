@@ -1,21 +1,26 @@
+import { Form, Formik } from "formik";
 import * as React from "react";
-import { useDisclosure } from "../hooks";
 import Button from "../ui/Button";
-import Nav from "../ui/Nav";
+import { FormInput } from "../ui/Form/FormInput";
 
 const Home: React.FC = () => {
-  const { onOpen, isOpen, onClose } = useDisclosure();
   return (
-    <div>
-      <Button onClick={onOpen}>Open menu</Button>
-      <Nav variant="menu" isOpen={isOpen} onClose={onClose}>
-        <div className="flex flex-row ml-10">Test</div>
-        <ul className="flex flex-row ml-auto mr-10">
-          <li>Test 1</li>
-          <li>Test 2</li>
-          <li>Test 3</li>
-        </ul>
-      </Nav>
+    <div className="w-[50%]">
+      <Formik
+        initialValues={{ home: "" }}
+        onSubmit={(values) => {
+          console.log(values.home);
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <FormInput name="home" type="password" label="Test" />
+            <Button isLoading={isSubmitting} type="submit">
+              Test form
+            </Button>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };

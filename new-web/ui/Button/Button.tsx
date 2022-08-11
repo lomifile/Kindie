@@ -25,7 +25,7 @@ export const Button: React.FC<ButtonProps> = ({
       {isLoading ? (
         <div className="flex">
           Loading
-          <BeatLoader className="ml-2" color="white" />
+          <BeatLoader className="ml-2 mt-1" color="white" />
         </div>
       ) : (
         children
