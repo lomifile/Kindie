@@ -50,8 +50,8 @@ describe("Create kindergarden test", () => {
     const response = await resolvers.createKindergarden(kindergarden, {
       req: { session: { userId: 1 } },
     } as AppContext);
-    expect(response).toHaveProperty("kindergarden");
-    expect(response.kindergarden).toHaveProperty("Id");
+    expect(response).toHaveProperty("data");
+    expect(response.data).toHaveProperty("Id");
   });
 });
 
@@ -59,7 +59,7 @@ describe("Use kindergarden tests", () => {
   test("Should fail kindergarden doesn't exist", async () => {
     const response = await resolvers.useKindergarden(14, ctx);
     expect(response).toHaveProperty("errors");
-    expect(response.errors![0].field).toBe("kindergardenID");
+    expect(response.errors![0].field).toBe("TypeError");
   });
 
   test("Should fail user is not in session", async () => {
@@ -67,30 +67,33 @@ describe("Use kindergarden tests", () => {
       req: { session: { userId: undefined } },
     } as AppContext);
     expect(response).toHaveProperty("errors");
+    expect(response.errors![0].field).toBe("TypeError");
   });
 
   test("Should pass", async () => {
     const response = await resolvers.useKindergarden(3, {
       req: { session: { userId: 1 } },
     } as AppContext);
-    expect(response).toHaveProperty("kindergarden");
-    expect(response.kindergarden!.Id).toBe(3);
+    expect(response).toHaveProperty("data");
+    expect(response.data!.Id).toBe(3);
   });
 });
 
 describe("Show kindergarden", () => {
   test("Should fail user is not in session", async () => {
-    const response = await resolvers.showKindergarden({
+    const response = await resolvers.showKindergarden(10, null, {
       req: { session: { userId: undefined } },
     } as AppContext);
-    expect(response).toEqual([]);
+    expect(response).toHaveProperty("data");
+    expect(response.data).toStrictEqual([]);
   });
 
   test("Should pass", async () => {
-    const response = await resolvers.showKindergarden({
+    const response = await resolvers.showKindergarden(10, null, {
       req: { session: { userId: 1 } },
     } as AppContext);
-    expect(response).toHaveLength(1);
+    expect(response).toHaveProperty("data");
+    expect(response.data).toHaveLength(1);
   });
 });
 
