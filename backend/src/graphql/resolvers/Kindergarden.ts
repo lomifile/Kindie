@@ -2,7 +2,6 @@ import { KinderGarden } from "../../orm/entities";
 import {
   Arg,
   Ctx,
-  Field,
   Int,
   Mutation,
   ObjectType,
@@ -13,19 +12,17 @@ import {
 import { isKinderGardenSelected, isAuth } from "../../middleware";
 import { getConnection } from "typeorm";
 import { KinderGardenInput } from "../inputs";
-import { FieldError } from "../../utils/Errors";
 import { StaffMembers } from "../../orm/entities/StaffMembers";
-
-// TODO: Refactor Kindergarden resolver
+import Response from "../../utils/repsonseObject";
+import PaginatedResponse from "../../utils/paginatedResponseObject";
 
 @ObjectType()
-class KindergardenResponse {
-  @Field(() => [FieldError], { nullable: true })
-  errors?: FieldError[];
+class KindergardenResponse extends Response<KinderGarden>(KinderGarden) {}
 
-  @Field(() => KinderGarden, { nullable: true })
-  kindergarden?: KinderGarden;
-}
+@ObjectType()
+class KindergardenPaginatedResponse extends PaginatedResponse<KinderGarden>(
+  KinderGarden
+) {}
 
 @Resolver(KinderGarden)
 export class KindergardenResolver {
@@ -36,18 +33,8 @@ export class KindergardenResolver {
     return KinderGarden.findOne(req.session.selectedKindergarden);
   }
 
-  // TODO: Remove this function
-  @Query(() => KinderGarden, { nullable: true })
-  @UseMiddleware(isAuth)
-  selectedKindergarden(@Ctx() { req }: AppContext) {
-    if (!req.session.selectedKindergarden) {
-      return null;
-    }
-
-    return KinderGarden.findOne(req.session.selectedKindergarden);
-  }
-
   // TODO: Rewrite this function with better errors
+  // Maybe separete, need to figure out if we need to store Id in session or not
   @Mutation(() => KindergardenResponse)
   @UseMiddleware(isAuth)
   async useKindergarden(
@@ -60,46 +47,80 @@ export class KindergardenResolver {
 
     if (kindergarden) {
       req.session.selectedKindergarden = kindergarden.Id;
-    } else if (!kindergarden) {
-      const result = await getConnection()
-        .createQueryBuilder(KinderGarden, "kindergarden")
-        .leftJoin(
-          StaffMembers,
-          "staff_members",
-          `kindergarden."Id" = staff_members."kindergardenId" and staff_members."staffId" = :id`,
-          { id: req.session.userId }
-        )
-        .where(`"kindergardenId" = :ID `, {
-          ID: kindergardenId,
-        })
-        .getOne();
+    } else {
+      try {
+        const result = await getConnection()
+          .createQueryBuilder(KinderGarden, "kindergarden")
+          .leftJoin(
+            StaffMembers,
+            "staff_members",
+            `kindergarden."Id" = staff_members."kindergardenId" and staff_members."staffId" = :id`,
+            { id: req.session.userId }
+          )
+          .where(`"kindergardenId" = :ID `, {
+            ID: kindergardenId,
+          })
+          .getOne();
 
-      if (!result || result === undefined)
+        kindergarden = result;
+        req.session.selectedKindergarden = kindergarden!.Id;
+      } catch (err) {
         return {
           errors: [
             {
-              field: "kindergardenID",
-              message: "Kindergarden does not exist",
+              field: err.name,
+              message: err.message,
             },
           ],
         };
-
-      kindergarden = result;
-      req.session.selectedKindergarden = kindergarden!.Id;
+      }
     }
 
-    return { kindergarden };
+    return { data: kindergarden };
   }
 
-  // TODO: Rewrite function as pagination or better retrun type
-  @Query(() => [KinderGarden])
+  @Query(() => KindergardenPaginatedResponse)
   @UseMiddleware(isAuth)
   async showKindergarden(
+    @Arg("limit", () => Int) limit: number,
+    @Arg("cursor", () => String, { nullable: true }) cursor: string | null,
     @Ctx() { req }: AppContext
-  ): Promise<KinderGarden[] | null> {
-    return await KinderGarden.find({
-      where: { owningId: req.session.userId },
-    });
+  ): Promise<KindergardenPaginatedResponse> {
+    let data;
+    let realLimit = Math.min(10, limit);
+    let reallimitPlusOne = realLimit + 1;
+
+    try {
+      const replacements: any[] = [reallimitPlusOne];
+      replacements.push(req.session.userId);
+
+      if (cursor) {
+        replacements.push(cursor);
+      }
+
+      const query = await getConnection().query(
+        `
+          select * from kinder_garden k inner join public.user u on k."owningId" = $2 
+          ${cursor ? `where k."createdAt" < $3` : ""} order by k."Name" limit $1
+        `,
+        replacements
+      );
+      data = query;
+    } catch (err) {
+      return {
+        errors: [
+          {
+            field: err.name,
+            message: err.message,
+          },
+        ],
+      };
+    }
+
+    return {
+      data: data.slice(0, realLimit),
+      hasMore: data.length === reallimitPlusOne,
+    };
   }
 
   @Mutation(() => KindergardenResponse)
@@ -134,16 +155,12 @@ export class KindergardenResolver {
         ],
       };
     }
-    return { kindergarden };
+    return { data: kindergarden };
   }
 
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async deleteKindergarden(@Arg("id", () => Int) id: number): Promise<Boolean> {
-    return (await (
-      await KinderGarden.delete({ Id: id })
-    ).affected)
-      ? true
-      : false;
+    return (await KinderGarden.delete({ Id: id })).affected ? true : false;
   }
 }
