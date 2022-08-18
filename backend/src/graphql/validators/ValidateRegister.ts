@@ -1,4 +1,4 @@
-import { UsernamePasswordInput } from "./inputs/UserInput";
+import { UsernamePasswordInput } from "../inputs/UserInput";
 
 export const ValidateRegister = (options: UsernamePasswordInput) => {
   if (!options.email.includes("@")) {
@@ -21,11 +21,11 @@ export const ValidateRegister = (options: UsernamePasswordInput) => {
     ];
   }
 
-  if (options.name.length <= 2) {
+  if (options.name.length === 0) {
     return [
       {
         field: "name",
-        message: "Length must be greater than 2",
+        message: "Name is empty",
       },
     ];
   }
@@ -41,11 +41,11 @@ export const ValidateRegister = (options: UsernamePasswordInput) => {
     ];
   }
 
-  if (options.surname.length <= 2) {
+  if (options.surname.length === 0) {
     return [
       {
         field: "surname",
-        message: "Length must be greater than 2",
+        message: "Last name is empty",
       },
     ];
   }

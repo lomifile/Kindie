@@ -63,7 +63,7 @@
     "meet": "Upoznajte tim",
     "text": {
       "column-one": "Jednostavno rečeno ovo je još jedna aplikacija koja vam pomaze da organizirate. Kroz život smo vidjeli da sva papirologija i briga oko djece u vrtiću je sve veća i fizički nemoguća. Od tuda ideje i od tuda i projekt.",
-      "column-two": "Sto ova aplikacija može napraviti za vas posao? Jednostavno rečeno daje vam mogućnost  da kreirate i spremate sve vase objekte i grupe u jednom kompaktnom mjestu. Svi podaci koje ćete unesti bit će vam prikazani na najjednostavniji način kako se ne bi morali brinuti o ičemu. Samo ispunite registracijsku formu i uživajte u poslagivanju podataka kao sto smo i mi uživali razvijajući aplikaciju.",
+      "column-two": "Sto ova aplikacija može napraviti za vas posao? Jednostavno rečeno daje vam mogućnost  da kreirate i spremate sve vase objekte i grupe u jednom kompaktnom mjestu. Svi podaci koje ćete uvesti bit će vam prikazani na najjednostavniji način kako se ne bi morali brinuti o ičemu. Samo ispunite registracijsku formu i uživajte u poslagivanju podataka kao sto smo i mi uživali razvijajući aplikaciju.",
       "devs": {
         "filip": {
           "name": "Filip Ivanušec",
@@ -252,7 +252,7 @@
       "btn-parents": "Roditelji",
       "btn-staff": "Djelatnici"
     },
-    "groups-heading": "Vase grupe"
+    "groups-heading": "Vaše grupe"
   },
   "children": {
     "modal": {
@@ -284,7 +284,7 @@
       "delete": "Obrisi dijete",
       "add": "Dodaj dijete",
       "view": "Pregledaj dijete",
-      "remove-from-group": "Obrisi iz grupe"
+      "remove-from-group": "Obriši iz grupe"
     }
   },
   "parents": {
@@ -297,7 +297,7 @@
     "tbl-surname": "Prezime",
     "tbl-date": "Datum kreacije",
     "tbl-filter-mother": "Filtriraj majke",
-    "tbl-filter-father": "Filtriraj oceve"
+    "tbl-filter-father": "Filtriraj očeve"
   },
   "staff": {
     "main-header": "Osoblje",
@@ -325,7 +325,7 @@
     "tbl-role": "Uloga",
     "btn-add": "Dodaj osoblje",
     "result": {
-      "success": "Osoba uspjesno dodana u osoblje"
+      "success": "Osoba uspješno dodana u osoblje"
     }
   },
   "group": {
@@ -391,10 +391,10 @@
     },
     "toast": {
       "mother": {
-        "title": "Majka uspjesno dodana"
+        "title": "Majka uspješno dodana"
       },
       "father": {
-        "title": "Otac uspjesno dodan"
+        "title": "Otac uspješno dodan"
       }
     },
     "btn-back": "Povratak"
@@ -427,11 +427,11 @@
         "pin": "OIB",
         "remarks": "Napomene",
         "createdBy": "Kreirao",
-        "editedBy": "Azurirao",
+        "editedBy": "Ažurirao",
         "date": "Datum"
       }
     },
-    "tbl-update-message": "Nema zadnjih azuriranja",
+    "tbl-update-message": "Nema zadnjih ažuriranja",
     "toast": {
       "title": "Dijete uspješno ažurirano"
     },
@@ -534,9 +534,5 @@
       "btn-settings": "Postavke",
       "btn-logout": "Odjava"
     }
-  },
-  "problem": {
-    "warning": "Važna obavjest",
-    "desc": "Prilikom učitavanja osoblja događa se greška u kojoj se osoblje ne učitava odmah sve što je potrebno napraviti je osvježiti stranicu osoblja i sve će vam se prikazati kao što bi trebaslo biti. Bez brige, radimo naporno na otklanjanju te greške u što kraćem roku!"
   }
 }

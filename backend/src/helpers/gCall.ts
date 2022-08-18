@@ -8,11 +8,19 @@ interface Options {
     [key: string]: any;
   }>;
   userId?: number;
+  selectedKindergarden?: number;
+  selectedGroup?: number;
 }
 
 let schema: GraphQLSchema;
 
-export const gCall = async ({ source, variableValues, userId }: Options) => {
+export const gCall = async ({
+  source,
+  variableValues,
+  userId,
+  selectedKindergarden,
+  selectedGroup,
+}: Options) => {
   if (!schema) {
     schema = await createSchema();
   }
@@ -25,7 +33,9 @@ export const gCall = async ({ source, variableValues, userId }: Options) => {
       req: {
         session: {
           userId,
-        },
+          selectedGroup,
+          selectedKindergarden,
+        } as SessionType,
       },
       res: {
         clearCookie: jest.fn(),

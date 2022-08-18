@@ -1,4 +1,4 @@
-import { Children } from "../entities/Children";
+import { Children } from "../../orm/entities";
 import {
   Arg,
   Ctx,
@@ -10,13 +10,14 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { isAuth } from "../middleware/isAuth";
-import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
-import { isGroupSelected } from "../middleware/isGroupSelected";
+import {
+  isKinderGardenSelected,
+  isAuth,
+  isGroupSelected,
+} from "../../middleware";
 import { getConnection } from "typeorm";
-import { ChildrenInput } from "../utils/inputs/ChildrenInput";
-import { AppContext } from "../Types";
-import { FieldError } from "../utils/Errors";
+import { ChildrenInput } from "../inputs";
+import { FieldError } from "../../utils/Errors";
 
 @ObjectType()
 class ChildrenResponse {

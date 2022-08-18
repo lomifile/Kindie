@@ -1,12 +1,15 @@
-import { Children } from "../entities/Children";
-import { Contact } from "../entities/Contact";
-import { Groups } from "../entities/Groups";
-import { KinderGarden } from "../entities/Kindergarden";
-import { StaffMembers } from "../entities/SatffMembers";
-import { User } from "../entities/User";
+import {
+  Attendance,
+  Children,
+  Contact,
+  Father,
+  Groups,
+  KinderGarden,
+  Mother,
+  StaffMembers,
+  User,
+} from "../orm/entities";
 import { createConnection } from "typeorm";
-import { Father } from "../entities/Father";
-import { Mother } from "../entities/Mother";
 
 export const testConn = (drop: boolean = false) => {
   return createConnection({
@@ -28,6 +31,7 @@ export const testConn = (drop: boolean = false) => {
       Mother,
       StaffMembers,
       User,
+      Attendance,
     ],
   });
 };

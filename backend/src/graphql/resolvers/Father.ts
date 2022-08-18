@@ -1,4 +1,6 @@
-import { Mother } from "../entities/Mother";
+import { Father } from "../../orm/entities";
+import { isKinderGardenSelected, isAuth } from "../../middleware";
+import { ParentsInput } from "../inputs";
 import {
   Arg,
   Ctx,
@@ -10,40 +12,36 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { isAuth } from "../middleware/isAuth";
-import { isKinderGardenSelected } from "../middleware/isKindergardenSelected";
-import { ParentsInput } from "../utils/inputs/ParentsInput";
 import { getConnection, getRepository } from "typeorm";
-import { AppContext } from "../Types";
 
 // @ObjectType()
-// class MotherResponse {
+// class FatherResponse {
 //   @Field(() => [FieldError], { nullable: true })
 //   errors?: FieldError[];
 
-//   @Field(() => Mother, { nullable: true })
-//   mother?: Mother;
+//   @Field(() => Father, { nullable: true })
+//   father?: Father;
 // }
 
 @ObjectType()
-class PaginatedMother {
-  @Field(() => [Mother])
-  mother: Mother[];
+class PaginatedFather {
+  @Field(() => [Father])
+  father: Father[];
 
   @Field()
   hasMore: boolean;
 }
 
-@Resolver(Mother)
-export class MotherResolver {
-  @Query(() => PaginatedMother)
+@Resolver(Father)
+export class FatherResolver {
+  @Query(() => PaginatedFather)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  async showMother(
+  async showFather(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null,
     @Ctx() { req }: AppContext
-  ): Promise<PaginatedMother> {
+  ): Promise<PaginatedFather> {
     const realLimit = Math.min(20, limit);
     const realLimitPlusOne = realLimit + 1;
 
@@ -54,44 +52,44 @@ export class MotherResolver {
       replacements.push(cursor);
     }
 
-    const mom = await getConnection().query(
+    const father = await getConnection().query(
       `
-      select m.*
-      from mother m
-      inner join public."kinder_garden" k on k."Id" = m."inKindergardenId"
+      select f.*
+      from father f
+      inner join public."kinder_garden" k on k."Id" = f."inKindergardenId"
       where k."Id" = $2
-      ${cursor ? `and m."createdAt" < $3` : ""}
-      order by m."createdAt" DESC
+      ${cursor ? `and f."createdAt" < $3` : ""}
+      order by f."createdAt" DESC
       limit $1
     `,
       replacements
     );
 
     return {
-      mother: mom.slice(0, realLimit),
-      hasMore: mom.length === realLimitPlusOne,
+      father: father.slice(0, realLimit),
+      hasMore: father.length === realLimitPlusOne,
     };
   }
 
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  async deleteMother(@Arg("motherId", () => Int) motherId: number) {
-    await Mother.delete(motherId);
+  async deleteFather(@Arg("fatherId", () => Int) fatherId: number) {
+    await Father.delete(fatherId);
     return true;
   }
 
-  @Mutation(() => Mother)
+  @Mutation(() => Father)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  async updateMother(
+  async updateFather(
     @Arg("options") options: ParentsInput,
-    @Arg("motherId", () => Int) motherId: number,
+    @Arg("fatherId", () => Int) fatherId: number,
     @Ctx() { req }: AppContext
-  ): Promise<Mother | undefined> {
+  ): Promise<Father | undefined> {
     const result = await getConnection()
       .createQueryBuilder()
-      .update(Mother)
+      .update(Father)
       .set({
         Name: options.name,
         Surname: options.surname,
@@ -99,20 +97,20 @@ export class MotherResolver {
         Phone: options.phone,
         updatedById: req.session.userId,
       })
-      .where("Id=:id", { id: motherId })
+      .where("Id=:id", { id: fatherId })
       .returning("*")
       .execute();
     return result.raw[0];
   }
 
-  @Mutation(() => Mother)
+  @Mutation(() => Father)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  async addMother(
+  async addFather(
     @Arg("options") options: ParentsInput,
     @Ctx() { req }: AppContext
-  ): Promise<Mother> {
-    return Mother.create({
+  ): Promise<Father> {
+    return Father.create({
       Name: options.name,
       Surname: options.surname,
       Email: options.email,
@@ -122,14 +120,14 @@ export class MotherResolver {
     }).save();
   }
 
-  @Query(() => Mother)
+  @Query(() => Father)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  findMother(
+  findFather(
     @Arg("id", () => Int) id: number,
     @Ctx() { req }: AppContext
-  ): Promise<Mother | undefined> {
-    return Mother.findOne({
+  ): Promise<Father | undefined> {
+    return Father.findOne({
       where: {
         Id: id,
         inKindergardenId: req.session.selectedKindergarden,
@@ -137,21 +135,21 @@ export class MotherResolver {
     });
   }
 
-  @Query(() => [Mother])
+  @Query(() => [Father])
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  async filterMother(
+  async filterFather(
     @Arg("text", () => String) text: string,
     @Ctx() { req }: AppContext
-  ): Promise<Mother[] | undefined> {
+  ): Promise<Father[] | undefined> {
     if (text === ".") {
-      return Mother.find({
+      return Father.find({
         where: {
           inKindergardenId: req.session.selectedKindergarden,
         },
       });
     }
-    return await getRepository(Mother)
+    return await getRepository(Father)
       .createQueryBuilder()
       .where(
         `"Name" = :name or "Surname" = :lastName and "inKindergardenId" = :id`,
@@ -164,23 +162,23 @@ export class MotherResolver {
       .getMany();
   }
 
-  @Query(() => [Mother])
+  @Query(() => [Father])
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
   async searchFather(
     @Arg("text", () => String) text: string,
     @Ctx() { req }: AppContext
-  ): Promise<Mother[] | undefined> {
-    return !Mother.find({
+  ): Promise<Father[] | undefined> {
+    return !Father.find({
       where: { Name: text, inKindergardenId: req.session.selectedKindergarden },
     })
-      ? Mother.find({
+      ? Father.find({
           where: {
             Surname: text,
             inKindergardenId: req.session.selectedKindergarden,
           },
         })
-      : Mother.find({
+      : Father.find({
           where: {
             Name: text,
             inKindergardenId: req.session.selectedKindergarden,
