@@ -32,7 +32,7 @@ export class Groups extends BaseEntity {
   @UpdateDateColumn()
   updatedAt = Date;
 
-  @Column({ nullable: true })
+  @Column()
   inKindergardenId: number;
 
   @Field(() => KinderGarden, { nullable: true })
@@ -48,6 +48,6 @@ export class Groups extends BaseEntity {
   })
   children: Children[];
 
-  @ManyToOne(() => Attendance, (attendance) => attendance.Id)
-  attendance: Attendance;
+  @OneToMany(() => Attendance, (attendance) => attendance.Id)
+  attendance: Attendance[];
 }
