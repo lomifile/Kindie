@@ -113,6 +113,7 @@ export class GroupsResolver {
     return true;
   }
 
+  // TODO: Rewrite this function
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
