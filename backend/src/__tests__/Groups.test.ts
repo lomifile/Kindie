@@ -96,3 +96,50 @@ describe("Show selected group", () => {
     expect(response).toHaveProperty("Id");
   });
 });
+
+describe("Use group tests", () => {
+  test("Should fail group doesn't exist", async () => {
+    const response = await resolver.useGroup(2, {
+      req: { session: { userId: 1, selectedKindergarden: 4 } },
+    } as AppContext);
+
+    expect(response).toHaveProperty("errors");
+    expect(response.errors![0].field).toBe("Id");
+  });
+
+  test("Should fail kindergaredn doesn't match", async () => {
+    const response = await resolver.useGroup(3, {
+      req: { session: { userId: 1, selectedKindergarden: 2 } },
+    } as AppContext);
+
+    expect(response).toHaveProperty("errors");
+    expect(response.errors![0].field).toBe("Id");
+  });
+
+  test("Should pass", async () => {
+    const response = await resolver.useGroup(4, {
+      req: { session: { userId: 1, selectedKindergarden: 4 } },
+    } as AppContext);
+
+    expect(response).toHaveProperty("groups");
+    expect(response.groups).toHaveProperty("Id");
+  });
+});
+
+describe("Clear group", () => {
+  test("Should pass", () => {
+    const response = resolver.clearGroup({
+      req: { session: { selectedGroup: 123 } },
+    } as AppContext);
+
+    expect(response).toBeTruthy();
+  });
+});
+
+describe("Delete group", () => {
+  test("Should pass", async () => {
+    const response = await resolver.deleteGroup(2);
+
+    expect(response).toBeTruthy();
+  });
+});
