@@ -6,17 +6,17 @@ import faker from "faker";
 
 let conn: Connection;
 let resolver = new GroupsResolver();
-let kindergarden: any;
+let kindergarden: KinderGarden;
 
 beforeAll(async () => {
   conn = await testConn();
-  kindergarden = await KinderGarden.insert({
+  kindergarden = await KinderGarden.create({
     Name: faker.company.companyName(),
     Address: faker.address.streetAddress(),
     owningId: 1,
     City: faker.address.cityName(),
     Zipcode: parseInt(faker.address.zipCode()),
-  });
+  }).save();
 });
 
 afterAll(async () => {
@@ -53,7 +53,7 @@ describe("Create group test", () => {
 
   test("Should pass", async () => {
     const response = await resolver.createGroup("Name", {
-      req: { session: { userId: 1, selectedKindergarden: 4 } },
+      req: { session: { userId: 1, selectedKindergarden: kindergarden.Id } },
     } as AppContext);
     expect(response).toHaveProperty("groups");
     expect(response.groups).toHaveProperty("Id");
@@ -72,7 +72,7 @@ describe("Show groups test", () => {
   test("Should pass", async () => {
     const response = await resolver.showGroups({
       req: {
-        session: { userId: 1, selectedKindergarden: kindergarden.raw[0].Id },
+        session: { userId: 1, selectedKindergarden: kindergarden.Id },
       },
     } as AppContext);
 
@@ -118,7 +118,7 @@ describe("Use group tests", () => {
 
   test("Should pass", async () => {
     const response = await resolver.useGroup(4, {
-      req: { session: { userId: 1, selectedKindergarden: 4 } },
+      req: { session: { userId: 1, selectedKindergarden: kindergarden.Id } },
     } as AppContext);
 
     expect(response).toHaveProperty("groups");

@@ -35,6 +35,7 @@ export class StaffMembersResolver {
     @Ctx() { req }: AppContext
   ): Promise<StaffResponse> {
     let staff;
+    // TODO: Add if loop to check if given Id is same as session one.
     const user = await StaffMembers.findOne({
       where: {
         staffId: userId,
@@ -108,6 +109,7 @@ export class StaffMembersResolver {
     });
   }
 
+  // TODO: Unify in show staff
   @Query(() => StaffMembers, { nullable: true })
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
