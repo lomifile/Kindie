@@ -2,5 +2,5 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  testSequencer: "./scripts/testSquencer",
+  testSequencer: "./scripts/testSquencer.js",
 };

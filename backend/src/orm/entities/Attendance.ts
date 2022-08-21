@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -25,8 +26,8 @@ export class Attendance extends BaseEntity {
   @OneToMany(() => KinderGarden, (kindergarden) => kindergarden.Id)
   kindergarden: KinderGarden[];
 
-  @OneToMany(() => Groups, (groups) => groups.Id)
-  groups: Groups[];
+  @ManyToOne(() => Groups, (groups) => groups.Id)
+  groups: Groups;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
