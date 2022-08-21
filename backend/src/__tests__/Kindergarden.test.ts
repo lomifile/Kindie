@@ -71,11 +71,11 @@ describe("Use kindergarden tests", () => {
   });
 
   test("Should pass", async () => {
-    const response = await resolvers.useKindergarden(3, {
+    const response = await resolvers.useKindergarden(4, {
       req: { session: { userId: 1 } },
     } as AppContext);
     expect(response).toHaveProperty("data");
-    expect(response.data!.Id).toBe(3);
+    expect(response.data!.Id).toBe(4);
   });
 });
 
@@ -93,17 +93,17 @@ describe("Show kindergarden", () => {
       req: { session: { userId: 1 } },
     } as AppContext);
     expect(response).toHaveProperty("data");
-    expect(response.data).toHaveLength(1);
+    expect(response.data).toHaveLength(4);
   });
 });
 
 describe("Delete kindergarden", () => {
   test("Should fail kindergarden doesn't exist", async () => {
-    const response = await resolvers.deleteKindergarden(1);
+    const response = await resolvers.deleteKindergarden(7654);
     expect(response).toBeFalsy();
   });
   test("Should pass", async () => {
-    const response = await resolvers.deleteKindergarden(3);
+    const response = await resolvers.deleteKindergarden(4);
     expect(response).toBeTruthy();
   });
 });
