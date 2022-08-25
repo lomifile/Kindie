@@ -10,6 +10,10 @@ module.exports = {
       colors: {
         primary: "black",
         secondary: "white",
+        danger: "red",
+        info: "blue",
+        success: "green",
+        warning: "yellow",
       },
     },
   },
