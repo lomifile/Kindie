@@ -1,8 +1,6 @@
 import React, { HTMLAttributes } from "react";
-import { BiX } from "react-icons/bi";
-import Button from "../Button";
 
-interface NavProps extends HTMLAttributes<HTMLElement> {}
+export interface NavProps extends HTMLAttributes<HTMLElement> {}
 
 export const Nav: React.FC<NavProps> = ({ children, ...props }) => {
   return (

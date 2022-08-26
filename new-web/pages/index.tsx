@@ -1,8 +1,9 @@
 import * as React from "react";
+import Landing from "../modules/Landing";
 import Alert from "../ui/Alert/Alert";
 
 const Home: React.FC = () => {
-  return <Alert.Warning>TEST</Alert.Warning>;
+  return <Landing />;
 };
 
 export default Home;
