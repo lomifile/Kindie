@@ -1,17 +1,17 @@
 import React from "react";
 
-export const MenuIcon: React.FC<{}> = ({}) => {
+export const KindieArrow: React.FC<{}> = ({}) => {
   return (
     <svg
-      className="w-6 h-6"
       aria-hidden="true"
+      className="ml-auto w-10 h-10"
       fill="currentColor"
       viewBox="0 0 20 20"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
         fillRule="evenodd"
-        d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+        d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
         clipRule="evenodd"
       ></path>
     </svg>

@@ -1,4 +1,4 @@
-import NextDocument, { Html, Head, Main, NextScript } from "next/document";
+import NextDocument, { Head, Html, Main, NextScript } from "next/document";
 
 export default class Document extends NextDocument {
   render() {
@@ -6,11 +6,6 @@ export default class Document extends NextDocument {
       <Html>
         <Head>
           <link rel="shortcut icon" href="favicon.ico" />
-          <script
-            data-ad-client="ca-pub-7377394476088299"
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-          ></script>
         </Head>
         <body>
           <Main />

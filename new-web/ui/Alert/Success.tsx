@@ -1,16 +1,17 @@
 import React, { HTMLAttributes, useState } from "react";
+
 import { KindieX } from "../Icons";
+import { useDisclosure } from "../../hooks";
 
 interface SuccessProps extends HTMLAttributes<HTMLElement> {}
 
 export const Success: React.FC<SuccessProps> = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true });
+  if (!isOpen) return null;
   return (
     <div
       id="alert-3"
-      className={`flex p-4 mb-4 bg-green-100 rounded-lg dark:bg-green-200 ${
-        !isOpen && "hidden"
-      }`}
+      className="flex p-4 mb-4 bg-green-100 rounded-lg dark:bg-green-2"
       role="alert"
     >
       <svg
@@ -33,7 +34,7 @@ export const Success: React.FC<SuccessProps> = ({ children }) => {
       <button
         type="button"
         className="ml-auto -mx-1.5 -my-1.5 bg-green-100 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex h-8 w-8 dark:bg-green-200 dark:text-green-600 dark:hover:bg-green-300"
-        onClick={() => setIsOpen(false)}
+        onClick={onClose}
       >
         <span className="sr-only">Close</span>
         <KindieX />

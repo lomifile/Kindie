@@ -1,16 +1,13 @@
-import React from "react";
+import { Hero } from "./Hero";
 import NormalLayout from "../../components/Layouts";
+import React from "react";
 
 interface LandingProps {}
 
 export const Landing: React.FC<LandingProps> = ({}) => {
   return (
     <NormalLayout>
-      {[...new Array(50)].map((e, idx) => (
-        <p key={idx} className="p-5 ">
-          Ovo je test
-        </p>
-      ))}
+      <Hero />
     </NormalLayout>
   );
 };

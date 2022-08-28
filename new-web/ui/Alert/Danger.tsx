@@ -1,20 +1,17 @@
 import React, { HTMLAttributes, useState } from "react";
+
+import Button from "../Button";
 import { KindieX } from "../Icons";
+import { useDisclosure } from "../../hooks";
 
 interface DangerProps extends HTMLAttributes<HTMLElement> {}
 
 export const Danger: React.FC<DangerProps> = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true });
+  if (!isOpen) return null;
   return (
-    <div
-      id="alert-danger"
-      className={`flex p-4 mb-4 bg-red-100 rounded-lg dark:bg-red-200 ${
-        !isOpen && "hidden"
-      }`}
-      role="alert"
-    >
+    <div className="flex p-4 mb-4 bg-red-100 rounded-lg dark:bg-red-200">
       <svg
-        aria-hidden="true"
         className="flex-shrink-0 w-5 h-5 text-red-700 dark:text-red-800"
         fill="currentColor"
         viewBox="0 0 20 20"
@@ -26,18 +23,15 @@ export const Danger: React.FC<DangerProps> = ({ children }) => {
           clip-rule="evenodd"
         ></path>
       </svg>
-      <span className="sr-only">Info</span>
       <div className="ml-3 text-sm font-medium text-red-700 dark:text-red-800">
         {children}
       </div>
-      <button
-        type="button"
+      <Button
+        onClick={onClose}
         className="ml-auto -mx-1.5 -my-1.5 bg-red-100 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex h-8 w-8 dark:bg-red-200 dark:text-red-600 dark:hover:bg-red-300"
-        onClick={() => setIsOpen(false)}
       >
-        <span className="sr-only">Close</span>
         <KindieX />
-      </button>
+      </Button>
     </div>
   );
 };

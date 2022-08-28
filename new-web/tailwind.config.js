@@ -3,10 +3,14 @@ module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
+    "./modules/**/*.{js,ts,jsx,tsx}",
     "./ui/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
+      screens: {
+        xs: { max: "640px" },
+      },
       colors: {
         primary: "black",
         secondary: "white",
