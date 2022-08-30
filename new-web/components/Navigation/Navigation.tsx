@@ -15,18 +15,18 @@ export const Navigation: React.FC<NavigationProps> = ({}) => {
   const disclosureProps = getDisclosureprops();
 
   return (
-    <Nav className="bg-white px-2 sm:px-4 py-2.5 w-full top-0 left-0 border-b border-gray-200">
+    <Nav className="bg-white fixed z-20 px-2 sm:px-4 py-2.5 w-full top-0 left-0 border-b border-gray-200">
       <div className="container flex flex-wrap justify-between items-center mx-auto">
         <a href="#" className="flex items-center">
           {/* Dodati sliku!!! */}
-          <span className="self-center text-xl font-semibold whitespace-nowrap text-primary xs:ml-7 ">
+          <span className="self-center text-xl font-semibold whitespace-nowrap text-accent xs:ml-7 ">
             Kindie
           </span>
         </a>
         <div className="flex md:order-2">
           <Button
             type="button"
-            className="text-white bg-primary focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0"
+            className="text-white bg-accent focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0"
           >
             Get started
           </Button>
@@ -39,7 +39,8 @@ export const Navigation: React.FC<NavigationProps> = ({}) => {
           </Button>
         </div>
         <div
-          className="justify-between items-center w-full md:flex md:w-auto md:order-1"
+          className="justify-between items-center w-full md:flex md:w-auto 
+          md:order-1"
           {...disclosureProps}
         >
           <NavMenu />

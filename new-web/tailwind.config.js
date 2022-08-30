@@ -12,8 +12,10 @@ module.exports = {
         xs: { max: "640px" },
       },
       colors: {
-        primary: "black",
+        primary: "#68A7AD",
         secondary: "white",
+        accent: "#3F3D56",
+        cream: "#EEE4AB",
         danger: "red",
         info: "blue",
         success: "green",
