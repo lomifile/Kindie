@@ -1,9 +1,4 @@
-import {
-  FirstCardIcon,
-  FourthCardIcon,
-  SecondCardIcon,
-  ThirdCardIcon,
-} from "../../ui/Icons";
+import { FirstCardIcon, SecondCardIcon, ThirdCardIcon } from "../../ui/Icons";
 
 import Card from "../../ui/Card";
 import React from "react";

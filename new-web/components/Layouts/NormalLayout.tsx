@@ -1,7 +1,7 @@
 import React, { HTMLAttributes } from "react";
 
 import Footer from "../Footer";
-import Navigation from "../Navigation";
+import { Navigation } from "../Navigation";
 
 interface NormalLayoutProps extends HTMLAttributes<HTMLElement> {}
 

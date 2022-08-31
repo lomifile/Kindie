@@ -1,9 +1,10 @@
 import React, { HTMLAttributes } from "react";
+
 import { BiX } from "react-icons/bi";
 import Button from "../Button";
 
 interface MenuProps extends HTMLAttributes<HTMLElement> {
-  variant?: "static" | "closable";
+  variant?: "static" | "closable" | "nav";
   title?: string;
   isOpen?: boolean;
   onClose?: () => void;
@@ -61,6 +62,8 @@ export const Menu: React.FC<MenuProps> = ({
       );
     case "static":
       return <div className="w-64">{children}</div>;
+    case "nav":
+      return <nav></nav>;
     default:
       return <div></div>;
   }
