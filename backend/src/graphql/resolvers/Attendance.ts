@@ -45,10 +45,21 @@ export class AttendanceResolver {
 
     const attendance = await getConnection().query(
       `
-      select * from attendance a inner join public."kinder_garden" k on k."Id" = a."kindergardenId" 
-      inner join public.groups g on g."inKindergardenId" = k."Id" ${
-        cursor ? `where a."createdAt < $2"` : ""
-      } order by a."createdAt" limit $1
+      select 
+        a."Id"
+        , a."childId"
+        , a."groupId"
+        , a."kindergardenId"
+        , a.attendance
+        , a."createdAt"
+        , a."updatedAt"
+        , a."groupsId" 
+      from
+        attendance a 
+      left join "kinder_garden" k on k."Id" = a."kindergardenId"
+      left join groups g on g."inKindergardenId" = k."Id"
+      ${cursor ? `where a."createdAt" < $2` : ""}
+      order by a."createdAt" limit $1
     `,
       replacements
     );
@@ -132,8 +143,8 @@ export class AttendanceResolver {
       return {
         errors: [
           {
-            field: "error",
-            message: err,
+            field: err.field,
+            message: err.message,
           },
         ],
       };

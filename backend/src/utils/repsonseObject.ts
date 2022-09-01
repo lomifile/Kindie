@@ -1,4 +1,5 @@
 import { ClassType, Field, ObjectType } from "type-graphql";
+
 import { FieldError } from "./Errors";
 
 export default function Response<TEntity>(
@@ -10,7 +11,7 @@ export default function Response<TEntity>(
     errors?: FieldError[];
 
     @Field(() => TEntityObj, { nullable: true })
-    data?: TEntity;
+    data?: TEntity | TEntity[];
   }
 
   return ResponseObject;

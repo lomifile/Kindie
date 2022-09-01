@@ -9,7 +9,7 @@
     "dev": "nodemon dist/index.js",
     "gen-env": "gen-env-types .env -o src/env.d.ts -e .",
     "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/orm/config/ormconfig.ts",
-    "create:migrations": "npm run typeorm:cli -- migration:create -n kindie",
+    "create:migrations": "npm run typeorm:cli -- migration:create -n $1",
     "gen:migrations": "npm run typeorm:cli -- migration:generate -n kindie",
     "run:migrations": "npm run typeorm:cli -- migration:run",
     "setup:db": "ts-node ./src/helpers/setup.ts",

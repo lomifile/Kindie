@@ -1,13 +1,15 @@
-import { Field, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Field, ObjectType } from "type-graphql";
+
 import { Attendance } from "./Attendance";
 import { Father } from "./Father";
 import { Groups } from "./Groups";
@@ -63,7 +65,7 @@ export class Children extends BaseEntity {
   fatherId: number;
 
   @Column({ nullable: true })
-  inGroupId: number;
+  inGroupId: number | null;
 
   @Column({ nullable: true })
   inKindergardenId: number;
@@ -120,6 +122,9 @@ export class Children extends BaseEntity {
   })
   updatedBy: User;
 
-  @ManyToOne(() => Attendance, (attendance) => attendance.Id, { lazy: true })
-  attendance: Attendance;
+  @OneToMany(() => Attendance, (attendance) => attendance.Id, { lazy: true })
+  attendance: Attendance[];
+
+  @Column("tsvector", { select: false })
+  document_with_weights: any;
 }

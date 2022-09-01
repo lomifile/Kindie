@@ -1,14 +1,14 @@
-import { Field, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Field, ObjectType } from "type-graphql";
+
 import { Children } from "./Children";
 import { Groups } from "./Groups";
 import { KinderGarden } from "./Kindergarden";
@@ -20,11 +20,11 @@ export class Attendance extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id!: number;
 
-  @OneToMany(() => Children, (children) => children.Id)
-  child: Children[];
+  @ManyToOne(() => Children, (children) => children.Id)
+  child: Children;
 
-  @OneToMany(() => KinderGarden, (kindergarden) => kindergarden.Id)
-  kindergarden: KinderGarden[];
+  @ManyToOne(() => KinderGarden, (kindergarden) => kindergarden.Id)
+  kindergarden: KinderGarden;
 
   @ManyToOne(() => Groups, (groups) => groups.Id)
   groups: Groups;
