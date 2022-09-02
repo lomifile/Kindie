@@ -11,7 +11,7 @@ export default function Response<TEntity>(
     errors?: FieldError[];
 
     @Field(() => TEntityObj, { nullable: true })
-    data?: TEntity | TEntity[];
+    data?: TEntity;
   }
 
   return ResponseObject;
