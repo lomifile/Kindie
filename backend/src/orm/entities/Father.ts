@@ -1,4 +1,3 @@
-import { Field, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -9,6 +8,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Field, ObjectType } from "type-graphql";
+
 import { Children } from "./Children";
 import { KinderGarden } from "./Kindergarden";
 import { User } from "./User";
@@ -76,4 +77,11 @@ export class Father extends BaseEntity {
 
   @Column({ nullable: true })
   inKindergardenId: number;
+
+  @Column("tsvector", { select: false })
+  document_with_weights: any;
+
+  @Field(() => Date)
+  @Column()
+  archived?: Date;
 }

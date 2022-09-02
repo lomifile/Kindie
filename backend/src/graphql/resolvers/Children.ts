@@ -105,7 +105,6 @@ export class ChildrenResolver {
         "DESC"
       )
       .getMany();
-    console.log(query);
     return query;
   }
 

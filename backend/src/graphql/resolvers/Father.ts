@@ -4,7 +4,6 @@ import { ParentsInput } from "../inputs";
 import {
   Arg,
   Ctx,
-  Field,
   Int,
   Mutation,
   ObjectType,
@@ -12,25 +11,13 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { getConnection, getRepository } from "typeorm";
-
-// @ObjectType()
-// class FatherResponse {
-//   @Field(() => [FieldError], { nullable: true })
-//   errors?: FieldError[];
-
-//   @Field(() => Father, { nullable: true })
-//   father?: Father;
-// }
+import { getConnection } from "typeorm";
+import PaginatedResponse from "../../utils/paginatedResponseObject";
+import Response from "../../utils/repsonseObject";
 
 @ObjectType()
-class PaginatedFather {
-  @Field(() => [Father])
-  father: Father[];
-
-  @Field()
-  hasMore: boolean;
-}
+class PaginatedFather extends PaginatedResponse<Father>(Father) {}
+class FatherResponse extends Response<Father>(Father) {}
 
 @Resolver(Father)
 export class FatherResolver {
@@ -54,7 +41,17 @@ export class FatherResolver {
 
     const father = await getConnection().query(
       `
-      select f.*
+      select 
+        f."Id",
+        f."Name",
+        f."Surname",
+        f."Email", 
+        f."Phone", 
+        f."createdById", 
+        f."updatedById", 
+        f."createdAt", 
+        f."updatedAt", 
+        f."inKindergardenId"
       from father f
       inner join public."kinder_garden" k on k."Id" = f."inKindergardenId"
       where k."Id" = $2
@@ -66,17 +63,9 @@ export class FatherResolver {
     );
 
     return {
-      father: father.slice(0, realLimit),
+      data: father.slice(0, realLimit),
       hasMore: father.length === realLimitPlusOne,
     };
-  }
-
-  @Mutation(() => Boolean)
-  @UseMiddleware(isAuth)
-  @UseMiddleware(isKinderGardenSelected)
-  async deleteFather(@Arg("fatherId", () => Int) fatherId: number) {
-    await Father.delete(fatherId);
-    return true;
   }
 
   @Mutation(() => Father)
@@ -120,69 +109,54 @@ export class FatherResolver {
     }).save();
   }
 
-  @Query(() => Father)
-  @UseMiddleware(isAuth)
-  @UseMiddleware(isKinderGardenSelected)
-  findFather(
-    @Arg("id", () => Int) id: number,
-    @Ctx() { req }: AppContext
-  ): Promise<Father | undefined> {
-    return Father.findOne({
-      where: {
-        Id: id,
-        inKindergardenId: req.session.selectedKindergarden,
-      },
-    });
-  }
-
   @Query(() => [Father])
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
   async filterFather(
     @Arg("text", () => String) text: string,
     @Ctx() { req }: AppContext
-  ): Promise<Father[] | undefined> {
-    if (text === ".") {
-      return Father.find({
-        where: {
-          inKindergardenId: req.session.selectedKindergarden,
-        },
-      });
-    }
-    return await getRepository(Father)
-      .createQueryBuilder()
+  ): Promise<Father[]> {
+    const query = await getConnection()
+      .createQueryBuilder(Father, "f")
+      .select()
       .where(
-        `"Name" = :name or "Surname" = :lastName and "inKindergardenId" = :id`,
-        {
-          name: text,
-          lastName: text,
-          id: req.session.selectedKindergarden,
-        }
+        `document_with_weights @@ to_tsquery(concat(:query::text,':*')) and f."inKindergardenId" = :id`,
+        { query: text, id: req.session.selectedKindergarden }
+      )
+      .orderBy(
+        "ts_rank(document_with_weights, to_tsquery(concat(:query::text,':*')))",
+        "DESC"
       )
       .getMany();
+    return query;
   }
 
-  @Query(() => [Father])
+  @Mutation(() => FatherResponse)
   @UseMiddleware(isAuth)
   @UseMiddleware(isKinderGardenSelected)
-  async searchFather(
-    @Arg("text", () => String) text: string,
-    @Ctx() { req }: AppContext
-  ): Promise<Father[] | undefined> {
-    return !Father.find({
-      where: { Name: text, inKindergardenId: req.session.selectedKindergarden },
-    })
-      ? Father.find({
-          where: {
-            Surname: text,
-            inKindergardenId: req.session.selectedKindergarden,
-          },
+  async archiveFather(
+    @Arg("Id", () => Int!) Id: number
+  ): Promise<FatherResponse> {
+    try {
+      const data = await getConnection()
+        .createQueryBuilder(Father, "f")
+        .update()
+        .set({
+          archived: new Date(),
         })
-      : Father.find({
-          where: {
-            Name: text,
-            inKindergardenId: req.session.selectedKindergarden,
+        .where("Id = :id", { id: Id })
+        .returning("*")
+        .execute();
+      return { data: data.raw[0] };
+    } catch (err) {
+      return {
+        errors: [
+          {
+            field: err.field,
+            message: err.message,
           },
-        });
+        ],
+      };
+    }
   }
 }
