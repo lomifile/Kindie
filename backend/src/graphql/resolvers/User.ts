@@ -215,7 +215,7 @@ export class UserResolver {
         await redis.set(
             FORGET_PASSWORD_PREFIX + token,
             user.Id,
-            "ex",
+            "EX",
             1000 * 60 * 60 * 24 * 3
         );
 
@@ -315,7 +315,7 @@ export class UserResolver {
             await redis.set(
                 ACCOUNT_VERIFICATION_PREFIX + token,
                 user.Id,
-                "ex",
+                "EX",
                 1000 * 60 * 60 * 24 * 3
             );
 
@@ -366,7 +366,7 @@ export class UserResolver {
         await redis.set(
             ACCOUNT_VERIFICATION_PREFIX + token,
             user.Id,
-            "ex",
+            "EX",
             1000 * 60 * 60 * 24 * 3
         );
 
