@@ -59,7 +59,7 @@ describe("Use kindergarden tests", () => {
     test("Should fail kindergarden doesn't exist", async () => {
         const response = await resolvers.useKindergarden(14, ctx);
         expect(response).toHaveProperty("errors");
-        expect(response.errors![0].field).toBe("TypeError");
+        expect(response.errors![0].field).toBe("Error");
     });
 
     test("Should fail user is not in session", async () => {
@@ -67,7 +67,7 @@ describe("Use kindergarden tests", () => {
             req: { session: { userId: undefined } }
         } as AppContext);
         expect(response).toHaveProperty("errors");
-        expect(response.errors![0].field).toBe("TypeError");
+        expect(response.errors![0].field).toBe("Error");
     });
 
     test("Should pass", async () => {

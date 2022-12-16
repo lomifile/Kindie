@@ -12,7 +12,6 @@ import {
 import { isKinderGardenSelected, isAuth } from "../../middleware";
 import { getConnection } from "typeorm";
 import { KinderGardenInput } from "../inputs";
-import { StaffMembers } from "../../orm/entities/StaffMembers";
 import Response from "../../utils/repsonseObject";
 import PaginatedResponse from "../../utils/paginatedResponseObject";
 
@@ -33,8 +32,6 @@ export class KindergardenResolver {
         return KinderGarden.findOne(req.session.selectedKindergarden);
     }
 
-    // TODO: Rewrite this function with better errors
-    // Maybe separete, need to figure out if we need to store Id in session or not
     @Mutation(() => KindergardenResponse)
     @UseMiddleware(isAuth)
     async useKindergarden(
@@ -49,20 +46,22 @@ export class KindergardenResolver {
             req.session.selectedKindergarden = kindergarden.Id;
         } else {
             try {
-                const result = await getConnection()
-                    .createQueryBuilder(KinderGarden, "kindergarden")
-                    .leftJoin(
-                        StaffMembers,
-                        "staff_members",
-                        `kindergarden."Id" = staff_members."kindergardenId" and staff_members."staffId" = :id`,
-                        { id: req.session.userId }
-                    )
-                    .where(`"kindergardenId" = :ID `, {
-                        ID: kindergardenId
-                    })
-                    .getOne();
-
-                kindergarden = result;
+                kindergarden = await getConnection().query(
+                    `
+                        select 
+                        from kinder_garden k
+                        left join 
+                            staff_members sm
+                        on 
+                            k."Id" = sm."kindergardenId"
+                        and
+                            sm."staffId" = $1
+                        where sm."kindergardenId" = $2
+                        limit 1
+                    `,
+                    [req.session.userId, kindergardenId]
+                );
+                if (kindergarden) throw new Error("Kindergarden deosn't exist");
                 req.session.selectedKindergarden = kindergarden!.Id;
             } catch (err) {
                 return {
@@ -100,8 +99,21 @@ export class KindergardenResolver {
 
             const query = await getConnection().query(
                 `
-          select * from kinder_garden k inner join public.user u on k."owningId" = $2 
-          ${cursor ? `where k."createdAt" < $3` : ""} order by k."Name" limit $1
+                select 
+                    k."Id"
+                    , k."Name"
+                    , k."Address"
+                    , k."City"
+                    , k."Zipcode"
+                    , k."owningId" 
+                from 
+                    kinder_garden 
+                k 
+                inner join 
+                    public.user u 
+                on 
+                    k."owningId" = $2 
+                ${cursor ? `where k."createdAt" < $3` : ""} order by 2 limit $1
         `,
                 replacements
             );
@@ -162,7 +174,29 @@ export class KindergardenResolver {
     @UseMiddleware(isAuth)
     async deleteKindergarden(
         @Arg("id", () => Int) id: number
-    ): Promise<Boolean> {
-        return (await KinderGarden.delete({ Id: id })).affected ? true : false;
+    ): Promise<Boolean | KindergardenResponse> {
+        try {
+            const result = await getConnection()
+                .createQueryBuilder()
+                .softDelete()
+                .from(KinderGarden, "k")
+                .where({
+                    Id: id
+                })
+                .execute();
+            if (result.affected! > 0) {
+                return true;
+            }
+        } catch (err) {
+            return {
+                errors: [
+                    {
+                        field: err.name,
+                        message: err.message
+                    }
+                ]
+            };
+        }
+        return false;
     }
 }
