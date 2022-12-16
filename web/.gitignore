@@ -35,3 +35,5 @@ yarn-error.log*
 
 src/pages/alert-test.tsx
 .env.production
+package-lock.json
+yarn.lock
