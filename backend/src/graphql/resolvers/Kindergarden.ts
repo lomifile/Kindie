@@ -100,8 +100,21 @@ export class KindergardenResolver {
 
             const query = await getConnection().query(
                 `
-          select * from kinder_garden k inner join public.user u on k."owningId" = $2 
-          ${cursor ? `where k."createdAt" < $3` : ""} order by k."Name" limit $1
+                select 
+                    k."Id"
+                    , k."Name"
+                    , k."Address"
+                    , k."City"
+                    , k."Zipcode"
+                    , k."owningId" 
+                from 
+                    kinder_garden 
+                k 
+                inner join 
+                    public.user u 
+                on 
+                    k."owningId" = $2 
+                ${cursor ? `where k."createdAt" < $3` : ""} order by 2 limit $1
         `,
                 replacements
             );
@@ -162,7 +175,29 @@ export class KindergardenResolver {
     @UseMiddleware(isAuth)
     async deleteKindergarden(
         @Arg("id", () => Int) id: number
-    ): Promise<Boolean> {
-        return (await KinderGarden.delete({ Id: id })).affected ? true : false;
+    ): Promise<Boolean | KindergardenResponse> {
+        try {
+            const result = await getConnection()
+                .createQueryBuilder()
+                .softDelete()
+                .from(KinderGarden, "k")
+                .where({
+                    Id: id
+                })
+                .execute();
+            if (result.affected! > 0) {
+                return true;
+            }
+        } catch (err) {
+            return {
+                errors: [
+                    {
+                        field: err.name,
+                        message: err.message
+                    }
+                ]
+            };
+        }
+        return false;
     }
 }

@@ -3,6 +3,7 @@ import {
     BaseEntity,
     Column,
     CreateDateColumn,
+    DeleteDateColumn,
     Entity,
     ManyToOne,
     OneToMany,
@@ -85,6 +86,10 @@ export class KinderGarden extends BaseEntity {
     @Field(() => String)
     @CreateDateColumn()
     createdAt: Date;
+
+    @Field(() => String)
+    @DeleteDateColumn()
+    deletedAt: Date;
 
     @Field(() => String)
     @UpdateDateColumn()
