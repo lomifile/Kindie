@@ -12,7 +12,7 @@ import { v4 } from "uuid";
 import { ACCOUNT_VERIFICATION_PREFIX, __prod__ } from "../constants";
 
 let conn: Connection;
-let redis: Redis.Redis;
+let redis: Redis;
 
 beforeAll(async () => {
     conn = await testConn();
@@ -270,7 +270,7 @@ describe("Verify account mutation", () => {
         await redis.set(
             ACCOUNT_VERIFICATION_PREFIX + token,
             userObj!.Id,
-            "ex",
+            "EX",
             1000 * 60 * 60 * 24 * 3
         );
         const response = await resolver.verifyAccount(token, ctx);
