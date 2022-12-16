@@ -12,7 +12,6 @@ import {
 import { isKinderGardenSelected, isAuth } from "../../middleware";
 import { getConnection } from "typeorm";
 import { KinderGardenInput } from "../inputs";
-import { StaffMembers } from "../../orm/entities/StaffMembers";
 import Response from "../../utils/repsonseObject";
 import PaginatedResponse from "../../utils/paginatedResponseObject";
 
@@ -33,8 +32,6 @@ export class KindergardenResolver {
         return KinderGarden.findOne(req.session.selectedKindergarden);
     }
 
-    // TODO: Rewrite this function with better errors
-    // Maybe separete, need to figure out if we need to store Id in session or not
     @Mutation(() => KindergardenResponse)
     @UseMiddleware(isAuth)
     async useKindergarden(
@@ -49,20 +46,35 @@ export class KindergardenResolver {
             req.session.selectedKindergarden = kindergarden.Id;
         } else {
             try {
-                const result = await getConnection()
-                    .createQueryBuilder(KinderGarden, "kindergarden")
-                    .leftJoin(
-                        StaffMembers,
-                        "staff_members",
-                        `kindergarden."Id" = staff_members."kindergardenId" and staff_members."staffId" = :id`,
-                        { id: req.session.userId }
-                    )
-                    .where(`"kindergardenId" = :ID `, {
-                        ID: kindergardenId
-                    })
-                    .getOne();
+                // const result = await getConnection()
+                //     .createQueryBuilder(KinderGarden, "kindergarden")
+                //     .leftJoin(
+                //         StaffMembers,
+                //         "staff_members",
+                //         `kindergarden."Id" = staff_members."kindergardenId" and staff_members."staffId" = :id`,
+                //         { id: req.session.userId }
+                //     )
+                //     .where(`"kindergardenId" = :ID `, {
+                //         ID: kindergardenId
+                //     })
+                //     .getOne();
 
-                kindergarden = result;
+                kindergarden = await getConnection().query(
+                    `
+                        select 
+                        from kinder_garden k
+                        left join 
+                            staff_members sm
+                        on 
+                            k."Id" = sm."kindergardenId"
+                        and
+                            sm."staffId" = $1
+                        where sm."kindergardenId" = $2
+                        limit 1
+                    `,
+                    [req.session.userId, kindergardenId]
+                );
+                if (kindergarden) throw new Error("Kindergarden deosn't exist");
                 req.session.selectedKindergarden = kindergarden!.Id;
             } catch (err) {
                 return {
