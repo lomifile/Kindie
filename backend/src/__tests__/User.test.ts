@@ -1,211 +1,433 @@
 import { testConn } from "../../src/helpers/testConn";
 import { Connection } from "typeorm";
-import { gCall } from "../../src/helpers/gCall";
-import { User } from "../../src/entities/User";
 import faker from "faker";
+import { UserResolver } from "../graphql/resolvers/User";
+import {
+    UpdatePassword,
+    UsernamePasswordInput
+} from "../graphql/inputs/UserInput";
+import { User } from "../orm/entities/User";
+import Redis from "ioredis";
+import { v4 } from "uuid";
+import { ACCOUNT_VERIFICATION_PREFIX, __prod__ } from "../constants";
 
 let conn: Connection;
+let redis: Redis.Redis;
 
 beforeAll(async () => {
-  conn = await testConn();
+    conn = await testConn();
+    redis = new Redis("127.0.0.1:6379");
 });
 
 afterAll(async () => {
-  await conn.close();
+    await conn.close();
+    redis.quit();
 });
 
 let password = faker.internet.password();
+
 const user = {
-  name: faker.name.firstName(),
-  surname: faker.name.lastName(),
-  email: faker.internet.email(),
-  password: password,
-  repeatPassword: password,
+    name: faker.name.firstName(),
+    surname: faker.name.lastName(),
+    email: faker.internet.email(),
+    password: password,
+    repeatPassword: password
 };
 
-const MeQuery = `
-query Me {
-  me {
-    Id
-    Name
-    Surname
-    Email
-    ownerOf {
-        Id
-        Name
-        City
-        Address
-        Zipcode
-    }
-    staffOf{
-      kindergarden{
-        Id
-        Name
-      }
-    }
-  }
-}
-`;
+const errorObject = (field: string, message: string) => ({
+    errors: [
+        {
+            field,
+            message
+        }
+    ]
+});
+const resolver = new UserResolver();
 
-const registerMutation = `
-mutation Register($data:UsernamePasswordInput!){
-  register(options: $data){
-    user{
-      Id
-      Name
-      Surname
-      Email
-      createdAt
-      updatedAt
-    }
-    errors{
-      field
-      message
-    }
-  }
-}
-`;
+describe("User registration tests", () => {
+    test("Should fail registration because email is not correct", async () => {
+        const options = {
+            name: faker.name.firstName(),
+            surname: faker.name.lastName(),
+            email: "iauysgduyajsd",
+            password: password,
+            repeatPassword: password
+        } as UsernamePasswordInput;
 
-const LoginMutation = `
-mutation Login($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    user {
-      Id
-      Name
-      Surname
-      Email
-      createdAt
-      updatedAt
-    }
-    errors {
-      field
-      message
-    }
-  }
-}
-`;
+        const ctx = {} as AppContext;
 
-describe("Register mutation", () => {
-  it("create user", async () => {
-    const response = await gCall({
-      source: registerMutation,
-      variableValues: {
-        data: user,
-      },
+        const response = await resolver.register(options, ctx);
+
+        expect(response).toHaveProperty("errors");
+        expect(response).toMatchObject(errorObject("email", "Invalid email"));
     });
 
-    expect(response).toMatchObject({
-      data: {
-        register: {
-          user: {
-            Name: user.name,
-            Surname: user.surname,
-            Email: user.email,
-          },
-          errors: null,
-        },
-      },
+    test("Should fail registration because passwords do not match", async () => {
+        const options = {
+            name: faker.name.firstName(),
+            surname: faker.name.lastName(),
+            email: faker.internet.email(),
+            password: password,
+            repeatPassword: "17263871"
+        } as UsernamePasswordInput;
+
+        const ctx = {} as AppContext;
+
+        const response = await resolver.register(options, ctx);
+
+        expect(response).toHaveProperty("errors");
+        expect(response).toMatchObject(
+            errorObject("repeatPassword", "Passwords don't match")
+        );
     });
 
-    const dbUser = await User.findOne({ where: { Email: user.email } });
-    expect(dbUser).toBeDefined();
-    expect(dbUser!.confirmed).toBeFalsy();
-    expect(dbUser!.Name).toBe(user.name);
-  });
+    test("Should fail registration because password is short", async () => {
+        const options = {
+            name: faker.name.firstName(),
+            surname: faker.name.lastName(),
+            email: faker.internet.email(),
+            password: "12345",
+            repeatPassword: "12345"
+        } as UsernamePasswordInput;
+
+        const ctx = {} as AppContext;
+
+        const response = await resolver.register(options, ctx);
+
+        expect(response).toHaveProperty("errors");
+        expect(response).toMatchObject(
+            errorObject("password", "Length must be greater than 8")
+        );
+    });
+
+    test("Should fail registration beacuse name is empty", async () => {
+        const options = {
+            name: "",
+            surname: "",
+            email: faker.internet.email(),
+            password: "12345",
+            repeatPassword: "12345"
+        } as UsernamePasswordInput;
+
+        const ctx = {} as AppContext;
+
+        const response = await resolver.register(options, ctx);
+
+        expect(response).toHaveProperty("errors");
+        expect(response).toMatchObject(errorObject("name", "Name is empty"));
+    });
+
+    test("Should fail registration beacuse last name is empty", async () => {
+        const options = {
+            name: faker.name.firstName(),
+            surname: "",
+            email: faker.internet.email(),
+            password: "12345",
+            repeatPassword: "12345"
+        } as UsernamePasswordInput;
+
+        const ctx = {} as AppContext;
+
+        const response = await resolver.register(options, ctx);
+
+        expect(response).toHaveProperty("errors");
+        expect(response).toMatchObject(
+            errorObject("surname", "Last name is empty")
+        );
+    });
+
+    test("Should pass registration", async () => {
+        const ctx = {} as AppContext;
+
+        const response = await resolver.register(user, ctx);
+
+        expect(response).toHaveProperty("user");
+    });
+});
+
+describe("Login function tests", () => {
+    test("Should fail beacuse user is not confirmed", async () => {
+        const ctx = {} as AppContext;
+
+        const response = await resolver.login(user.email, user.password, ctx);
+
+        expect(response).toHaveProperty("errors");
+        expect(response).toMatchObject(
+            errorObject(
+                "confirmation",
+                "Your account need verification! Please check your email for verification!"
+            )
+        );
+    });
+
+    test("Should fail because email does not exist", async () => {
+        const ctx = {} as AppContext;
+
+        const response = await resolver.login(
+            "email@email.com",
+            user.password,
+            ctx
+        );
+
+        expect(response).toHaveProperty("errors");
+        expect(response).toMatchObject(
+            errorObject("email", "Email doesn't exist")
+        );
+    });
+
+    test("Should fail because passwords don't match", async () => {
+        const ctx = {} as AppContext;
+
+        await User.update({ Email: user.email }, { confirmed: true });
+        const response = await resolver.login(user.email, "123456", ctx);
+
+        expect(response).toHaveProperty("errors");
+        expect(response).toMatchObject(
+            errorObject(
+                "password",
+                "Password you entered is not matching one in database"
+            )
+        );
+    });
+
+    test("Should pass", async () => {
+        const ctx = { req: { session: { userId: undefined } } } as AppContext;
+
+        const response = await resolver.login(user.email, user.password, ctx);
+
+        expect(response).toHaveProperty("user");
+        expect(ctx.req).toHaveProperty("session");
+        expect(typeof ctx.req.session.userId === "number").toBeTruthy();
+    });
 });
 
 describe("Me query", () => {
-  it("Me query failed", async () => {
-    const response = await gCall({
-      source: MeQuery,
+    test("Should fail because user is not logged in", async () => {
+        const response = await resolver.me({
+            req: { session: {} }
+        } as AppContext);
+        expect(response).toBeNull();
     });
 
-    expect(response).toMatchObject({
-      data: {
-        me: null,
-      },
+    test("Should fail because user doesn't exist in database", async () => {
+        const response = await resolver.me({
+            req: { session: { userId: 7 } }
+        } as AppContext);
+
+        expect(response).toBeUndefined();
     });
-  });
+
+    test("Should pass", async () => {
+        const response = await resolver.me({
+            req: { session: { userId: 1 } }
+        } as AppContext);
+
+        expect(response).toHaveProperty("Name");
+        expect(response).toHaveProperty("Surname");
+    });
 });
 
-describe("Login mutation", () => {
-  it("Login confirmation failed", async () => {
-    const response = await gCall({
-      source: LoginMutation,
-      variableValues: {
-        email: user.email,
-        password: user.password,
-      },
-    });
-
-    expect(response).toMatchObject({
-      data: {
-        login: {
-          user: null,
-          errors: [
-            {
-              field: "confirmation",
-              message:
-                "Your account need verification! Please check your email for verification!",
+describe("Logout query test", () => {
+    test("Should pass because it should destroy whole session", async () => {
+        const ctx = {
+            req: {
+                session: {
+                    userId: undefined,
+                    destroy: jest.fn().mockImplementation((fn) => fn(false))
+                }
             },
-          ],
-        },
-      },
+            res: { clearCookie: jest.fn() }
+        } as unknown as AppContext;
+        const response = await resolver.logout(ctx);
+        expect(response).toBeTruthy();
     });
-  });
 });
 
-describe("Login passed", () => {
-  it("Login user passing", async () => {
-    await User.update(
-      {
-        Email: user.email,
-      },
-      { confirmed: true }
-    );
+describe("Verify account mutation", () => {
+    let ctx: AppContext;
 
-    const fetchUser = await User.findOne({ where: { Email: user.email } });
-
-    const response = await gCall({
-      source: LoginMutation,
-      variableValues: {
-        email: user.email,
-        password: user.password,
-      },
-      userId: fetchUser?.Id,
+    beforeAll(async () => {
+        ctx = {
+            req: { session: { userId: undefined } },
+            redis: { get: jest.fn() as unknown }
+        } as AppContext;
     });
 
-    expect(response).toMatchObject({
-      data: {
-        login: {
-          user: {
-            Name: user.name,
-            Surname: user.surname,
-            Email: user.email,
-          },
-          errors: null,
-        },
-      },
+    test("Should fail no token", async () => {
+        const response = await resolver.verifyAccount("", ctx);
+        expect(response).toHaveProperty("errors");
     });
-  });
+
+    test("Should fail wrong token", async () => {
+        const response = await resolver.verifyAccount("74783g1be", ctx);
+        expect(response).toHaveProperty("errors");
+    });
+
+    test("Should pass", async () => {
+        const token = v4();
+        const userObj = await User.findOne({ Email: user.email });
+        ctx.redis = redis;
+        await redis.set(
+            ACCOUNT_VERIFICATION_PREFIX + token,
+            userObj!.Id,
+            "ex",
+            1000 * 60 * 60 * 24 * 3
+        );
+        const response = await resolver.verifyAccount(token, ctx);
+        expect(response).toHaveProperty("user");
+    });
 });
 
-describe("Me query passed", () => {
-  it("Me query has user", async () => {
-    const fetchUser = await User.findOne({ where: { Email: user.email } });
-    const response = await gCall({
-      source: MeQuery,
-      userId: fetchUser?.Id,
+describe("Forgot password mutation", () => {
+    let ctx: AppContext;
+
+    beforeAll(async () => {
+        ctx = { redis: { get: jest.fn() as unknown } } as AppContext;
     });
 
-    expect(response).toMatchObject({
-      data: {
-        me: {
-          Name: user.name,
-          Surname: user.surname,
-          Email: user.email,
-        },
-      },
+    test("Should fail wrong email", async () => {
+        const response = await resolver.forgetPassword("email@email.com", ctx);
+        expect(response).toBeFalsy();
     });
-  });
+
+    test("Should pass", async () => {
+        ctx.redis = redis;
+        const response = await resolver.forgetPassword(user.email, ctx);
+        expect(response).toBeTruthy();
+    });
+});
+
+describe("Staff of Query", () => {
+    let ctx: AppContext;
+
+    beforeAll(() => {
+        ctx = { req: { session: { userId: undefined } } } as AppContext;
+    });
+
+    test("Should fail user is not authenticated", async () => {
+        const response = await resolver.staffOf(ctx);
+        expect(response).toMatchObject([]);
+    });
+
+    test("Should fail user in session does not exist in database", async () => {
+        ctx.req.session.userId = 5;
+        const response = await resolver.staffOf(ctx);
+        expect(response).toMatchObject([]);
+    });
+
+    test("Should pass", async () => {
+        ctx.req.session.userId = 1;
+        const response = await resolver.staffOf(ctx);
+        expect(response.at(0)).toHaveProperty("Id");
+    });
+});
+
+describe("Update user mutation", () => {
+    let ctx: AppContext;
+
+    beforeAll(() => {
+        ctx = { req: { session: { userId: undefined } } } as AppContext;
+    });
+
+    test("Should fail because password is not provided", async () => {
+        const response = await resolver.updateUser(
+            {
+                name: user.name,
+                surname: user.surname,
+                email: user.email,
+                password: ""
+            },
+            ctx
+        );
+        expect(response).toHaveProperty("errors");
+    });
+
+    test("Should fail because user is not authenticated", async () => {
+        const response = await resolver.updateUser(
+            {
+                name: user.name,
+                surname: user.surname,
+                email: user.email,
+                password: user.password
+            },
+            ctx
+        );
+        expect(response).toMatchObject({ user: undefined });
+    });
+
+    test("Should Pass", async () => {
+        ctx.req.session.userId = 1;
+        user.email = "email@email.com";
+        const response = await resolver.updateUser(
+            {
+                name: user.name,
+                surname: user.surname,
+                email: user.email,
+                password: user.password
+            },
+            ctx
+        );
+        expect(response).toHaveProperty("user");
+    });
+});
+
+describe("Resend email", () => {
+    let ctx: AppContext;
+
+    beforeAll(() => {
+        ctx = { redis: redis } as AppContext;
+    });
+
+    test("Should fail email doesn't exist in database", async () => {
+        const response = await resolver.resendEmail("email1@email.com", ctx);
+        expect(response).toHaveProperty("errors");
+    });
+
+    test("Should pass", async () => {
+        const response = await resolver.resendEmail(user.email, ctx);
+        expect(response).toHaveProperty("user");
+    });
+});
+
+describe("Update password", () => {
+    let ctx: AppContext;
+
+    beforeAll(() => {
+        ctx = { req: { session: { userId: undefined } } } as AppContext;
+    });
+
+    test("Should fail passwords are not matcing", async () => {
+        const response = await resolver.updatePassword(
+            {
+                password: "1231",
+                repeatPassword: "12"
+            } as UpdatePassword,
+            ctx
+        );
+        expect(response).toHaveProperty("errors");
+    });
+
+    test("Should fail user is not in session", async () => {
+        const response = await resolver.updatePassword(
+            {
+                password: "1231",
+                repeatPassword: "1231"
+            },
+            ctx
+        );
+        expect(response).toHaveProperty("errors");
+        expect(response.user).toBe(undefined);
+    });
+
+    test("Should pass", async () => {
+        ctx.req.session.userId = 1;
+        const response = await resolver.updatePassword(
+            {
+                password: "1231",
+                repeatPassword: "1231"
+            },
+            ctx
+        );
+        expect(response.user).toHaveProperty("Id");
+    });
 });
