@@ -7,3 +7,5 @@ node_modules
 .jest
 log
 migrations/
+package-lock.json
+yarn.lock
