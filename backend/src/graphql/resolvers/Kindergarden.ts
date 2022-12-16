@@ -46,19 +46,6 @@ export class KindergardenResolver {
             req.session.selectedKindergarden = kindergarden.Id;
         } else {
             try {
-                // const result = await getConnection()
-                //     .createQueryBuilder(KinderGarden, "kindergarden")
-                //     .leftJoin(
-                //         StaffMembers,
-                //         "staff_members",
-                //         `kindergarden."Id" = staff_members."kindergardenId" and staff_members."staffId" = :id`,
-                //         { id: req.session.userId }
-                //     )
-                //     .where(`"kindergardenId" = :ID `, {
-                //         ID: kindergardenId
-                //     })
-                //     .getOne();
-
                 kindergarden = await getConnection().query(
                     `
                         select 
