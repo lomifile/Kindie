@@ -4,11 +4,11 @@ import { gCall } from "./gCall";
 
 let password = faker.internet.password();
 const user = {
-    name: faker.name.firstName(),
-    surname: faker.name.lastName(),
-    email: faker.internet.email(),
-    password: password,
-    repeatPassword: password
+	name: faker.name.firstName(),
+	surname: faker.name.lastName(),
+	email: faker.internet.email(),
+	password: password,
+	repeatPassword: password
 };
 
 const registerMutation = `
@@ -50,24 +50,24 @@ mutation Login($email: String!, $password: String!) {
 `;
 
 export const createUser = async (): Promise<User | undefined> => {
-    // @ts-expect-error
-    const response = await gCall({
-        source: registerMutation,
-        variableValues: {
-            data: user
-        }
-    });
+	// @ts-expect-error
+	const response = await gCall({
+		source: registerMutation,
+		variableValues: {
+			data: user
+		}
+	});
 
-    await User.update({ Email: user.email }, { confirmed: true });
+	await User.update({ Email: user.email }, { confirmed: true });
 
-    // @ts-expect-error
-    const loginUser = await gCall({
-        source: LoginMutation,
-        variableValues: {
-            email: user.email,
-            password: password
-        }
-    });
+	// @ts-expect-error
+	const loginUser = await gCall({
+		source: LoginMutation,
+		variableValues: {
+			email: user.email,
+			password: password
+		}
+	});
 
-    return await User.findOne({ where: { Email: user.email } });
+	return await User.findOne({ where: { Email: user.email } });
 };
