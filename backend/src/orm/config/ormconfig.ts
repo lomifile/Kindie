@@ -5,8 +5,8 @@ const config: ConnectionOptions = {
 	name: "default",
 	url: "postgresql://postgres:postgres@localhost:5432/kindie",
 	logging: true,
-	entities: ["dist/orm/entities/*.js"],
-	migrations: ["dist/orm/migrations/*.js"],
+	entities: ["src/orm/entities/*.ts"],
+	migrations: ["src/orm/migrations/*.ts"],
 	cli: {
 		migrationsDir: "src/orm/migrations",
 		entitiesDir: "src/orm/entities"
