@@ -33,7 +33,7 @@ describe("Mark attendance test", () => {
 	test("Mark attendance test", async () => {
 		const response = await resolver.markAttendance(174);
 		expect(response).toHaveProperty("errors");
-		expect(response.errors![0].message).toBe(
+		expect(response.errors?.[0].message).toBe(
 			"There is no attendance by this Id"
 		);
 	});

@@ -2,7 +2,7 @@ import { testConn } from "../helpers/testConn";
 import { KinderGarden, User } from "../orm/entities";
 import { Connection } from "typeorm";
 import { StaffMembersResolver } from "../graphql/resolvers";
-import faker from "faker";
+import { faker } from "@faker-js/faker";
 import argon2 from "argon2";
 
 let conn: Connection;
@@ -13,7 +13,7 @@ const resolver = new StaffMembersResolver();
 beforeAll(async () => {
 	conn = await testConn();
 	kindergarden = await KinderGarden.create({
-		Name: faker.company.companyName(),
+		Name: faker.company.name(),
 		Address: faker.address.streetAddress(),
 		owningId: 1,
 		City: faker.address.cityName(),
@@ -39,7 +39,7 @@ describe("Add staff member test", () => {
 			req: { session: { selectedKindergarden: 79 } }
 		} as AppContext);
 		expect(response).toHaveProperty("errors");
-		expect(response.errors![0].field).toBe("StaffMembers insert");
+		expect(response.errors?.[0].field).toBe("StaffMembers insert");
 	});
 
 	test("Should pass", async () => {
@@ -56,7 +56,7 @@ describe("Add staff member test", () => {
 		} as AppContext);
 
 		expect(response).toHaveProperty("errors");
-		expect(response.errors![0].field).toBe("user id");
+		expect(response.errors?.[0].field).toBe("user id");
 	});
 });
 
