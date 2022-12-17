@@ -18,47 +18,47 @@ const RedisStore = connectRedis(session);
 const redis = new Redis(process.env.REDIS_URL as string);
 
 app.use(
-    cors({
-        origin: process.env.CORS_ORIGIN,
-        credentials: true
-    })
+	cors({
+		origin: process.env.CORS_ORIGIN,
+		credentials: true
+	})
 );
 
 try {
-    const accessLogStream = fs.createWriteStream(
-        path.join(__dirname + "/../log/logger.log"),
-        {
-            flags: "a+"
-        }
-    );
-    app.use(
-        morgan("combined", {
-            stream: accessLogStream
-        }) as unknown as RequestHandler
-    );
+	const accessLogStream = fs.createWriteStream(
+		path.join(__dirname + "/../log/logger.log"),
+		{
+			flags: "a+"
+		}
+	);
+	app.use(
+		morgan("combined", {
+			stream: accessLogStream
+		}) as unknown as RequestHandler
+	);
 } catch (err) {
-    console.error(err);
+	console.error(err);
 }
 
 app.set("trust proxy", 1);
 app.use(
-    session({
-        name: COOKIE_NAME,
-        store: new RedisStore({
-            client: redis,
-            disableTouch: true
-        }),
-        cookie: {
-            maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
-            httpOnly: true,
-            sameSite: "lax",
-            secure: __prod__,
-            domain: __prod__ ? ".kindieapi.xyz" : undefined
-        },
-        saveUninitialized: false,
-        secret: process.env.SESSION_SECRET as string,
-        resave: false
-    })
+	session({
+		name: COOKIE_NAME,
+		store: new RedisStore({
+			client: redis,
+			disableTouch: true
+		}),
+		cookie: {
+			maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
+			httpOnly: true,
+			sameSite: "lax",
+			secure: __prod__,
+			domain: __prod__ ? ".kindieapi.xyz" : undefined
+		},
+		saveUninitialized: false,
+		secret: process.env.SESSION_SECRET as string,
+		resave: false
+	})
 );
 
 createSchema(app, redis);

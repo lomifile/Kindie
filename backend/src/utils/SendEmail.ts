@@ -3,35 +3,35 @@ import { __prod__ } from "../constants";
 
 // TODO: Rewrite email handling
 export async function sendMail(to: string, subject: string, text: string) {
-    let acc = await createTestAccount();
-    let transporter = nodemailer.createTransport({
-        host: __prod__ ? "smtp.zoho.eu" : acc.smtp.host,
-        port: __prod__ ? 465 : acc.smtp.port,
-        secure: __prod__,
-        auth: {
-            user: __prod__ ? process.env.NODEMAILER_EMAIL : acc.user,
-            pass: __prod__ ? process.env.NODEMAILER_PASSWORD : acc.pass
-        }
-    });
+	let acc = await createTestAccount();
+	let transporter = nodemailer.createTransport({
+		host: __prod__ ? "smtp.zoho.eu" : acc.smtp.host,
+		port: __prod__ ? 465 : acc.smtp.port,
+		secure: __prod__,
+		auth: {
+			user: __prod__ ? process.env.NODEMAILER_EMAIL : acc.user,
+			pass: __prod__ ? process.env.NODEMAILER_PASSWORD : acc.pass
+		}
+	});
 
-    transporter.verify((err) => {
-        if (err) {
-            console.log(err);
-        }
-    });
+	transporter.verify((err) => {
+		if (err) {
+			console.log(err);
+		}
+	});
 
-    // @ts-ignore
-    let info = await transporter.sendMail({
-        from: "Filip at Kindie!<ivanusecfilip@zohomail.eu>",
-        to: to,
-        subject: subject,
-        text,
-        html: text
-    });
+	// @ts-ignore
+	let info = await transporter.sendMail({
+		from: "Filip at Kindie!<ivanusecfilip@zohomail.eu>",
+		to: to,
+		subject: subject,
+		text,
+		html: text
+	});
 }
 
 export const VerifyEmailTemplate = (token: string): string => {
-    return `
+	return `
   <!doctype html>
   <html ⚡4email data-css-strict>
   
