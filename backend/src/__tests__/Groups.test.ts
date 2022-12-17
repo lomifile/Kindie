@@ -2,16 +2,16 @@ import { testConn } from "../helpers/testConn";
 import { Connection } from "typeorm";
 import { GroupsResolver } from "../graphql/resolvers";
 import { KinderGarden } from "../orm/entities";
-import faker from "faker";
+import { faker } from "@faker-js/faker";
 
 let conn: Connection;
-let resolver = new GroupsResolver();
+const resolver = new GroupsResolver();
 let kindergarden: KinderGarden;
 
 beforeAll(async () => {
 	conn = await testConn();
 	kindergarden = await KinderGarden.create({
-		Name: faker.company.companyName(),
+		Name: faker.company.name(),
 		Address: faker.address.streetAddress(),
 		owningId: 1,
 		City: faker.address.cityName(),
@@ -30,7 +30,7 @@ describe("Create group test", () => {
 		} as AppContext);
 
 		expect(response).toHaveProperty("errors");
-		expect(response.errors![0].field).toBe("Groups");
+		expect(response.errors?.[0].field).toBe("Groups");
 	});
 
 	test("Should fail selected kindergarden is undefined", async () => {
@@ -39,7 +39,7 @@ describe("Create group test", () => {
 		} as AppContext);
 
 		expect(response).toHaveProperty("errors");
-		expect(response.errors![0].field).toBe("Groups");
+		expect(response.errors?.[0].field).toBe("Groups");
 	});
 
 	test("Should fail name is empty", async () => {
@@ -48,7 +48,7 @@ describe("Create group test", () => {
 		} as AppContext);
 
 		expect(response).toHaveProperty("errors");
-		expect(response.errors![0].field).toBe("Groups");
+		expect(response.errors?.[0].field).toBe("Groups");
 	});
 
 	test("Should pass", async () => {
@@ -108,7 +108,7 @@ describe("Use group tests", () => {
 		} as AppContext);
 
 		expect(response).toHaveProperty("errors");
-		expect(response.errors![0].field).toBe("Id");
+		expect(response.errors?.[0].field).toBe("Id");
 	});
 
 	test("Should fail kindergaredn doesn't match", async () => {
@@ -117,7 +117,7 @@ describe("Use group tests", () => {
 		} as AppContext);
 
 		expect(response).toHaveProperty("errors");
-		expect(response.errors![0].field).toBe("Id");
+		expect(response.errors?.[0].field).toBe("Id");
 	});
 
 	test("Should pass", async () => {
