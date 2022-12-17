@@ -10,18 +10,18 @@ import { StaffMembersResolver } from "../graphql/resolvers/StaffMembers";
 import { UserResolver } from "../graphql/resolvers/User";
 
 export const createSchema = async () =>
-    await buildSchema({
-        resolvers: [
-            UserResolver,
-            KindergardenResolver,
-            GroupsResolver,
-            ChildrenResolver,
-            StaffMembersResolver,
-            FatherResolver,
-            MotherResolver,
-            ContactResolver
-        ],
-        authChecker: ({ context: { req } }) => {
-            return !!req.session.userId;
-        }
-    });
+	await buildSchema({
+		resolvers: [
+			UserResolver,
+			KindergardenResolver,
+			GroupsResolver,
+			ChildrenResolver,
+			StaffMembersResolver,
+			FatherResolver,
+			MotherResolver,
+			ContactResolver
+		],
+		authChecker: ({ context: { req } }) => {
+			return !!req.session.userId;
+		}
+	});
