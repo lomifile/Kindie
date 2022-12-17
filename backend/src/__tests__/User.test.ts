@@ -1,6 +1,6 @@
 import { testConn } from "../../src/helpers/testConn";
 import { Connection } from "typeorm";
-import faker from "faker";
+import { faker } from "@faker-js/faker";
 import { UserResolver } from "../graphql/resolvers/User";
 import {
 	UpdatePassword,
@@ -9,10 +9,10 @@ import {
 import { User } from "../orm/entities/User";
 import Redis from "ioredis";
 import { v4 } from "uuid";
-import { ACCOUNT_VERIFICATION_PREFIX, __prod__ } from "../constants";
+import { ACCOUNT_VERIFICATION_PREFIX } from "../constants";
 
 let conn: Connection;
-let redis: Redis;
+let redis: Redis.Redis;
 
 beforeAll(async () => {
 	conn = await testConn();
@@ -24,7 +24,7 @@ afterAll(async () => {
 	redis.quit();
 });
 
-let password = faker.internet.password();
+const password = faker.internet.password();
 
 const user = {
 	name: faker.name.firstName(),
@@ -267,9 +267,9 @@ describe("Verify account mutation", () => {
 		const token = v4();
 		const userObj = await User.findOne({ Email: user.email });
 		ctx.redis = redis;
-		await redis.set(
+		redis.set(
 			ACCOUNT_VERIFICATION_PREFIX + token,
-			userObj!.Id,
+			userObj?.Id as number,
 			"EX",
 			1000 * 60 * 60 * 24 * 3
 		);
