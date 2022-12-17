@@ -15,7 +15,7 @@ dotenv.config({ path: ".env" });
 
 const app = express();
 const RedisStore = connectRedis(session);
-const redis = new Redis(process.env.REDIS_URL);
+const redis = new Redis(process.env.REDIS_URL as string);
 
 app.use(
     cors({
