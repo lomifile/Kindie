@@ -2,6 +2,7 @@ import {
 	BaseEntity,
 	Column,
 	CreateDateColumn,
+	DeleteDateColumn,
 	Entity,
 	ManyToOne,
 	OneToMany,
@@ -55,6 +56,10 @@ export class Children extends BaseEntity {
 	@Field(() => Date)
 	@UpdateDateColumn()
 	updatedAt: Date;
+
+	@Field(() => Date)
+	@DeleteDateColumn()
+	deletedAt: Date;
 
 	@Field({ nullable: true })
 	@Column({ nullable: true })
@@ -125,6 +130,6 @@ export class Children extends BaseEntity {
 	@OneToMany(() => Attendance, (attendance) => attendance.Id, { lazy: true })
 	attendance: Attendance[];
 
-	@Column("tsvector", { select: false })
-	document_with_weights: any;
+	@Column("tsvector", { select: false, nullable: true })
+	document_with_weights: unknown;
 }
