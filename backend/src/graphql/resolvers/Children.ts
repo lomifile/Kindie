@@ -20,7 +20,7 @@ import Response from "../../utils/repsonseObject";
 import PaginatedResponse from "../../utils/paginatedResponseObject";
 
 @ObjectType()
-class ChildrenResponse extends Response<Children | Children[]>(Children) {}
+class ChildrenResponse extends Response<Children>(Children) {}
 
 @ObjectType()
 class PaginatedChildren extends PaginatedResponse<Children>(Children) {}
@@ -39,7 +39,7 @@ export class ChildrenResolver {
 		const realLimit = Math.min(20, limit);
 		const realLimitPlusOne = realLimit + 1;
 
-		const replacements: unknown[] = [realLimitPlusOne];
+		const replacements: any[] = [realLimitPlusOne];
 		replacements.push(req.session.selectedKindergarden);
 
 		if (inGroup) {
@@ -52,31 +52,31 @@ export class ChildrenResolver {
 
 		const child = await getConnection().query(
 			`
-				select 
-				c."Id"
-				, c."Name"
-				, c."Surname"
-				, c."Gender"
-				, c."BirthDate"
-				, c."OIB"
-				, c."Remarks"
-				, c."createdAt"
-				, c."updatedAt"
-				, c."motherId"
-				, c."fatherId"
-				, c."inGroupId"
-				, c."inKindergardenId"
-				, c."createdById"
-				, c."updatedById"
-				from children c
-				inner join public."kinder_garden" k 
-				on k."Id" = c."inKindergardenId" where k."Id" = $2 and c."inGroupId" ${
-					inGroup ? " = $3" : "is null"
-				}
-				${cursor ? `and c."createdAt" < $4` : ""}
-				order by c."createdAt" DESC
-				limit $1
-			`,
+        select 
+        c."Id"
+        , c."Name"
+        , c."Surname"
+        , c."Gender"
+        , c."BirthDate"
+        , c."OIB"
+        , c."Remarks"
+        , c."createdAt"
+        , c."updatedAt"
+        , c."motherId"
+        , c."fatherId"
+        , c."inGroupId"
+        , c."inKindergardenId"
+        , c."createdById"
+        , c."updatedById"
+        from children c
+        inner join public."kinder_garden" k 
+        on k."Id" = c."inKindergardenId" where k."Id" = $2 and c."inGroupId" ${
+			inGroup ? " = $3" : "is null"
+		}
+        ${cursor ? `and c."createdAt" < $4` : ""}
+        order by c."createdAt" DESC
+        limit $1
+      `,
 			replacements
 		);
 
@@ -92,33 +92,20 @@ export class ChildrenResolver {
 	async filterChildren(
 		@Arg("text") text: string,
 		@Ctx() { req }: AppContext
-	): Promise<ChildrenResponse> {
-		try {
-			const query = await getConnection()
-				.createQueryBuilder(Children, "c")
-				.select()
-				.where(
-					`document_with_weights @@ to_tsquery(concat(:query::text,':*')) and c."inKindergardenId" = :id`,
-					{ query: text, id: req.session.selectedKindergarden }
-				)
-				.orderBy(
-					"ts_rank(document_with_weights, to_tsquery(concat(:query::text,':*')))",
-					"DESC"
-				)
-				.getMany();
-			return {
-				data: query
-			};
-		} catch (err) {
-			return {
-				errors: [
-					{
-						field: err.name,
-						message: err.message
-					}
-				]
-			};
-		}
+	): Promise<Children[]> {
+		const query = await getConnection()
+			.createQueryBuilder(Children, "c")
+			.select()
+			.where(
+				`document_with_weights @@ to_tsquery(concat(:query::text,':*')) and c."inKindergardenId" = :id`,
+				{ query: text, id: req.session.selectedKindergarden }
+			)
+			.orderBy(
+				"ts_rank(document_with_weights, to_tsquery(concat(:query::text,':*')))",
+				"DESC"
+			)
+			.getMany();
+		return query;
 	}
 
 	@Mutation(() => ChildrenResponse, { nullable: true })
@@ -195,30 +182,9 @@ export class ChildrenResolver {
 	@Mutation(() => Boolean)
 	@UseMiddleware(isAuth)
 	@UseMiddleware(isKinderGardenSelected)
-	async deleteChildren(
-		@Arg("id", () => Int) id: number
-	): Promise<boolean | ChildrenResponse> {
-		try {
-			const response = await getConnection()
-				.createQueryBuilder(Children, "c")
-				.softDelete()
-				.where(`Id = :id`, { id: id })
-				.execute();
-
-			if ((response.affected as number) > 0) {
-				return true;
-			}
-		} catch (err) {
-			return {
-				errors: [
-					{
-						field: err.name,
-						message: err.message
-					}
-				]
-			};
-		}
-		return false;
+	async deleteChildren(@Arg("id", () => Int) id: number): Promise<Boolean> {
+		await Children.delete({ Id: id });
+		return true;
 	}
 
 	@Mutation(() => ChildrenResponse)
@@ -262,47 +228,25 @@ export class ChildrenResolver {
 		return Children.findOne({ Id: id });
 	}
 
-	@Mutation(() => ChildrenResponse)
+	@Mutation(() => Children)
 	@UseMiddleware(isAuth)
 	@UseMiddleware(isKinderGardenSelected)
 	async createChild(
 		@Arg("options") options: ChildrenInput,
 		@Ctx() { req }: AppContext
-	): Promise<ChildrenResponse> {
-		let data;
-		try {
-			const response = await getConnection()
-				.createQueryBuilder()
-				.insert()
-				.into(Children)
-				.values({
-					Name: options.Name,
-					Surname: options.Surname,
-					BirthDate: options.BirthDate,
-					createdById: req.session.userId,
-					inKindergardenId: req.session.selectedKindergarden,
-					Gender: options.Gender,
-					OIB: options.OIB,
-					Remarks: options.Remarks,
-					motherId: options.mother,
-					fatherId: options.father
-				})
-				.returning("*")
-				.execute();
-			data = response.raw[0];
-		} catch (err) {
-			return {
-				errors: [
-					{
-						field: err.name,
-						message: err.message
-					}
-				]
-			};
-		}
-		return {
-			data
-		};
+	): Promise<Children> {
+		return Children.create({
+			Name: options.Name,
+			Surname: options.Surname,
+			BirthDate: options.BirthDate,
+			OIB: options.OIB,
+			Remarks: options.Remarks,
+			Gender: options.Gender,
+			motherId: options.mother,
+			fatherId: options.father,
+			inKindergardenId: req.session.selectedChildren,
+			createdById: req.session.userId
+		}).save();
 	}
 
 	@Mutation(() => Children, { nullable: true })
@@ -311,29 +255,16 @@ export class ChildrenResolver {
 	@UseMiddleware(isGroupSelected)
 	async removeChildFromGroup(
 		@Arg("Id", () => Int) Id: number
-	): Promise<ChildrenResponse> {
-		try {
-			const result = await getConnection()
-				.createQueryBuilder()
-				.update(Children)
-				.set({
-					inGroupId: null
-				})
-				.where("Id=:id", { id: Id })
-				.returning("*")
-				.execute();
-			return {
-				data: result.raw[0]
-			};
-		} catch (err) {
-			return {
-				errors: [
-					{
-						field: err.name,
-						message: err.message
-					}
-				]
-			};
-		}
+	): Promise<Children | undefined> {
+		const result = await getConnection()
+			.createQueryBuilder()
+			.update(Children)
+			.set({
+				inGroupId: null
+			})
+			.where("Id=:id", { id: Id })
+			.returning("*")
+			.execute();
+		return result.raw[0];
 	}
 }

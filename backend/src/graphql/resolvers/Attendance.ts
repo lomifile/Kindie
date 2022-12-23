@@ -37,7 +37,7 @@ export class AttendanceResolver {
 		const realLimit = Math.min(20, limit);
 		const realLimitPlusOne = realLimit + 1;
 
-		const replacements: unknown[] = [realLimitPlusOne];
+		const replacements: any[] = [realLimitPlusOne];
 
 		if (cursor) {
 			replacements.push(cursor);
