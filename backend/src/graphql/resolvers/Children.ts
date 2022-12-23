@@ -262,7 +262,7 @@ export class ChildrenResolver {
 		return Children.findOne({ Id: id });
 	}
 
-	@Mutation(() => Children)
+	@Mutation(() => ChildrenResponse)
 	@UseMiddleware(isAuth)
 	@UseMiddleware(isKinderGardenSelected)
 	async createChild(
@@ -278,7 +278,7 @@ export class ChildrenResolver {
 				.values({
 					Name: options.Name,
 					Surname: options.Surname,
-					BirthDate: options.Surname,
+					BirthDate: options.BirthDate,
 					createdById: req.session.userId,
 					inKindergardenId: req.session.selectedKindergarden,
 					Gender: options.Gender,
