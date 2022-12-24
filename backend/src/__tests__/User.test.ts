@@ -10,6 +10,7 @@ import { User } from "../orm/entities/User";
 import Redis from "ioredis";
 import { v4 } from "uuid";
 import { ACCOUNT_VERIFICATION_PREFIX } from "../constants";
+import { gCall } from "../helpers/gCall";
 
 let conn: Connection;
 let redis: Redis.Redis;
@@ -240,6 +241,19 @@ describe("Logout query test", () => {
 		} as unknown as AppContext;
 		const response = await resolver.logout(ctx);
 		expect(response).toBeTruthy();
+	});
+
+	test("[gCall] -> Logout scheme test", async () => {
+		const response = await gCall({
+			source: `
+			mutation Logout {
+				logout
+			  }
+			`,
+			userId: 1
+		});
+
+		expect(response.data?.logout).toBeTruthy();
 	});
 });
 
