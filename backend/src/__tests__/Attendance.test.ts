@@ -1,6 +1,7 @@
 import { testConn } from "../helpers/testConn";
 import { Connection } from "typeorm";
 import { AttendanceResolver } from "../graphql/resolvers";
+import { gCall } from "../helpers/gCall";
 
 let conn: Connection;
 const resolver = new AttendanceResolver();
@@ -26,6 +27,44 @@ describe("Create test", () => {
 		} as AppContext;
 		const response = await resolver.createAttendacne(1, ctx);
 		expect(response).toHaveProperty("errors");
+	});
+
+	test("[gCall] -> Should fail childId doesn't exist", async () => {
+		const response = await gCall({
+			source: `
+			mutation CreateAttendance($childId: Int!, $complete: Boolean!) {
+				createAttendacne(childId:$childId, complete:$complete) {
+				  data {
+					Id
+					childId
+					groupId
+					kindergardenId
+				  }
+				  errors {
+					field
+					message
+				  }
+				}
+			  }
+			`,
+			variableValues: {
+				childId: 1,
+				complete: true
+			},
+			userId: 1,
+			selectedKindergarden: 1,
+			selectedGroup: 1
+		});
+
+		expect(response.data?.createAttendacne).toHaveProperty("errors");
+		expect(typeof response.data?.createAttendacne.errors[0]).toBe("object");
+		expect(response.data?.createAttendacne.errors[0]).toHaveProperty(
+			"field"
+		);
+		expect(response.data?.createAttendacne.errors[0]).toHaveProperty(
+			"message"
+		);
+		expect(response.data?.createAttendacne.errors[0].field).toBe("childId");
 	});
 });
 
