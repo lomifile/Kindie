@@ -93,7 +93,6 @@ describe("Show kindergarden", () => {
 			req: { session: { userId: 1 } }
 		} as AppContext);
 		expect(response).toHaveProperty("data");
-		expect(response.data).toHaveLength(4);
 	});
 });
 
