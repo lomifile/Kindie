@@ -23,6 +23,7 @@ export const createSchema = async () =>
 			ContactResolver,
 			AttendanceResolver
 		],
+		validate: false,
 		authChecker: ({ context: { req } }) => {
 			return !!req.session.userId;
 		}

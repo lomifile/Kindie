@@ -1,5 +1,6 @@
 import { UsernamePasswordInput } from "../inputs/UserInput";
 
+// TODO: Rewrite this validation middleware
 export const ValidateRegister = (options: UsernamePasswordInput) => {
 	if (!options.email.includes("@")) {
 		return [

@@ -7,17 +7,17 @@ import {
 	UsernamePasswordInput
 } from "../graphql/inputs/UserInput";
 import { User } from "../orm/entities/User";
-import Redis from "ioredis";
 import { v4 } from "uuid";
 import { ACCOUNT_VERIFICATION_PREFIX } from "../constants";
 import { gCall } from "../helpers/gCall";
+import Redis from "ioredis";
 
 let conn: Connection;
 let redis: Redis.Redis;
 
 beforeAll(async () => {
 	conn = await testConn();
-	redis = new Redis("127.0.0.1:6379");
+	redis = new Redis("127.0.0.1");
 });
 
 afterAll(async () => {
@@ -43,6 +43,14 @@ const errorObject = (field: string, message: string) => ({
 		}
 	]
 });
+
+const gErrorObject = (field: string, message: string) => [
+	{
+		field,
+		message
+	}
+];
+
 const resolver = new UserResolver();
 
 describe("User registration tests", () => {
@@ -144,6 +152,157 @@ describe("User registration tests", () => {
 
 		expect(response).toHaveProperty("user");
 	});
+
+	test("[gCall] -> Should fail email is not correct", async () => {
+		const data = {
+			name: faker.name.firstName(),
+			surname: faker.name.lastName(),
+			email: "iauysgduyajsd",
+			password: password,
+			repeatPassword: password
+		} as UsernamePasswordInput;
+		const response = await gCall({
+			source: `
+			mutation Register ($data: UsernamePasswordInput!) {
+				register(options: $data) {
+					user {
+					  Id
+					  Name
+					  Surname
+					  Email
+					  createdAt
+					  updatedAt
+					}
+					errors {
+					  field
+					  message
+					}
+				  }
+			  }
+			`,
+			variableValues: {
+				data
+			}
+		});
+
+		expect(typeof response.data?.register.errors).toBe("object");
+		expect(response.data?.register.user).toBeNull();
+	});
+
+	test("[gCall] -> Should fail passwords don't match", async () => {
+		const data = {
+			name: faker.name.firstName(),
+			surname: faker.name.lastName(),
+			email: faker.internet.email(),
+			password: password,
+			repeatPassword: "test"
+		} as UsernamePasswordInput;
+		const response = await gCall({
+			source: `
+			mutation Register ($data: UsernamePasswordInput!) {
+				register(options: $data) {
+					user {
+					  Id
+					  Name
+					  Surname
+					  Email
+					  createdAt
+					  updatedAt
+					}
+					errors {
+					  field
+					  message
+					}
+				  }
+			  }
+			`,
+			variableValues: {
+				data
+			}
+		});
+
+		expect(typeof response.data?.register.errors).toBe("object");
+		expect(response.data?.register.user).toBeNull();
+		expect(response.data?.register.errors).toMatchObject(
+			gErrorObject("repeatPassword", "Passwords don't match")
+		);
+	});
+
+	test("[gCall] -> Should fail passwords are to short", async () => {
+		const data = {
+			name: faker.name.firstName(),
+			surname: faker.name.lastName(),
+			email: faker.internet.email(),
+			password: "test",
+			repeatPassword: "test"
+		} as UsernamePasswordInput;
+		const response = await gCall({
+			source: `
+			mutation Register ($data: UsernamePasswordInput!) {
+				register(options: $data) {
+					user {
+					  Id
+					  Name
+					  Surname
+					  Email
+					  createdAt
+					  updatedAt
+					}
+					errors {
+					  field
+					  message
+					}
+				  }
+			  }
+			`,
+			variableValues: {
+				data
+			}
+		});
+
+		expect(typeof response.data?.register.errors).toBe("object");
+		expect(response.data?.register.user).toBeNull();
+		expect(response.data?.register.errors).toMatchObject(
+			gErrorObject("password", "Length must be greater than 8")
+		);
+	});
+
+	test("[gCall] -> Should pass", async () => {
+		const data = {
+			name: faker.name.firstName(),
+			surname: faker.name.lastName(),
+			email: faker.internet.email(),
+			password: password,
+			repeatPassword: password
+		} as UsernamePasswordInput;
+		const response = await gCall({
+			source: `
+			mutation Register ($data: UsernamePasswordInput!) {
+				register(options: $data) {
+					user {
+					  Id
+					  Name
+					  Surname
+					  Email
+					  createdAt
+					  updatedAt
+					}
+					errors {
+					  field
+					  message
+					}
+				  }
+			  }
+			`,
+			variableValues: {
+				data
+			}
+		});
+
+		expect(typeof response.data?.register.user).toBe("object");
+		expect(response.data?.register.errors).toBeNull();
+		expect(response.data?.register.user).toHaveProperty("Id");
+	});
 });
 
 describe("Login function tests", () => {
@@ -199,6 +358,105 @@ describe("Login function tests", () => {
 		expect(response).toHaveProperty("user");
 		expect(ctx.req).toHaveProperty("session");
 		expect(typeof ctx.req.session.userId === "number").toBeTruthy();
+		await User.update({ Email: user.email }, { confirmed: false });
+	});
+
+	test("[gCall] -> Should fail email is not correct", async () => {
+		const response = await gCall({
+			source: `
+			mutation Login($email: String!, $password: String!) {
+				login(email: $email, password: $password) {
+					user {
+						Id
+						Name
+						Surname
+						Email
+						createdAt
+						updatedAt
+					}
+					errors {
+						field
+						message
+					}
+				}
+			}
+			`,
+			variableValues: {
+				email: "678687asdasd",
+				password: user.password
+			}
+		});
+
+		expect(response.data?.login.user).toBeNull();
+		expect(typeof response.data?.login.errors).toBe("object");
+	});
+
+	test("[gCall] -> Should fail user is not confirmed", async () => {
+		const response = await gCall({
+			source: `
+			mutation Login($email: String!, $password: String!) {
+				login(email: $email, password: $password) {
+					user {
+						Id
+						Name
+						Surname
+						Email
+						createdAt
+						updatedAt
+					}
+					errors {
+						field
+						message
+					}
+				}
+			}
+			`,
+			variableValues: {
+				email: user.email,
+				password: user.password
+			}
+		});
+
+		expect(response.data?.login.user).toBeNull();
+		expect(typeof response.data?.login.errors).toBe("object");
+		expect(response.data?.login.errors).toMatchObject(
+			gErrorObject(
+				"confirmation",
+				"Your account need verification! Please check your email for verification!"
+			)
+		);
+		await User.update({ Email: user.email }, { confirmed: true });
+	});
+
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: `
+			mutation Login($email: String!, $password: String!) {
+				login(email: $email, password: $password) {
+					user {
+						Id
+						Name
+						Surname
+						Email
+						createdAt
+						updatedAt
+					}
+					errors {
+						field
+						message
+					}
+				}
+			}
+			`,
+			variableValues: {
+				email: user.email,
+				password: user.password
+			}
+		});
+
+		expect(response.data?.login.errors).toBeNull();
+		expect(typeof response.data?.login.user).toBe("object");
+		expect(response.data?.login.user).toHaveProperty("Id");
 	});
 });
 
@@ -225,6 +483,45 @@ describe("Me query", () => {
 
 		expect(response).toHaveProperty("Name");
 		expect(response).toHaveProperty("Surname");
+	});
+
+	test("[gCall] -> Should fail user is not in session", async () => {
+		const response = await gCall({
+			source: `
+			query Me {
+				me {
+					Id
+					Name
+					Surname
+					Email
+					createdAt
+					updatedAt 
+				}
+			  }
+			`
+		});
+
+		expect(response.data?.me).toBeNull();
+	});
+
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: `
+			query Me {
+				me {
+					Id
+					Name
+					Surname
+					Email
+					createdAt
+					updatedAt 
+				}
+			  }
+			`,
+			userId: 1
+		});
+
+		expect(response.data?.me).toHaveProperty("Id");
 	});
 });
 
@@ -289,6 +586,60 @@ describe("Verify account mutation", () => {
 		);
 		const response = await resolver.verifyAccount(token, ctx);
 		expect(response).toHaveProperty("user");
+	});
+
+	test("[gCall] -> Should fail no token", async () => {
+		const response = await gCall({
+			source: `
+			mutation VerifyAccount($token: String!) {
+				verifyAccount(token: $token) {
+				  user {
+					Id
+					Name
+					Surname
+				  }
+				  errors {
+					field
+					message
+				  }
+				}
+			  }
+			`,
+			variableValues: {
+				token: ""
+			}
+		});
+		expect(typeof response.data?.verifyAccount.errors).toBe("object");
+		expect(response.data?.verifyAccount.errors).toMatchObject(
+			gErrorObject("token", "Token expired")
+		);
+	});
+
+	test("[gCall] -> Should fail wrong token", async () => {
+		const response = await gCall({
+			source: `
+			mutation VerifyAccount($token: String!) {
+				verifyAccount(token: $token) {
+				  user {
+					Id
+					Name
+					Surname
+				  }
+				  errors {
+					field
+					message
+				  }
+				}
+			  }
+			`,
+			variableValues: {
+				token: "bnasyhdkua"
+			}
+		});
+		expect(typeof response.data?.verifyAccount.errors).toBe("object");
+		expect(response.data?.verifyAccount.errors).toMatchObject(
+			gErrorObject("token", "Token expired")
+		);
 	});
 });
 
