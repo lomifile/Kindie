@@ -4,6 +4,7 @@ import { faker } from "@faker-js/faker";
 // import { KinderGarden } from "../orm/entities/Kindergarden";
 import { KindergardenResolver } from "../graphql/resolvers/Kindergarden";
 import { KinderGardenInput } from "../graphql/inputs";
+import { gCall } from "../helpers/gCall";
 
 // TODO: Full rewrite Kindergarden tests
 
@@ -30,11 +31,42 @@ const kindergarden = {
 };
 
 describe("Create kindergarden test", () => {
+	const createKindergardenMutation = `
+	mutation CreateKindergarden($options: KinderGardenInput!) {
+		createKindergarden(options: $options) {
+		  data {
+			Id
+			Name
+			Address
+			City
+			Zipcode
+		  }
+		  errors {
+			field
+			message
+		  }
+		}
+	  }
+	`;
+
 	test("Should fail user Id is null", async () => {
 		ctx.req.session.userId = undefined;
 		const response = await resolvers.createKindergarden(kindergarden, ctx);
 		expect(response).toHaveProperty("errors");
 		expect(response.errors?.[0].field).toBe("QueryFailedError");
+	});
+
+	test("[gCall] -> Should fail user Id is null", async () => {
+		const response = await gCall({
+			source: createKindergardenMutation,
+			variableValues: {
+				options: kindergarden
+			}
+		});
+
+		expect(typeof response.errors).toBe("object");
+		expect(response.errors?.[0].message).toContain("Not authenticated");
+		expect(response.data).toBeNull();
 	});
 
 	test("Should fail options is null", async () => {
