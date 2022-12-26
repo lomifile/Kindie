@@ -62,6 +62,23 @@ describe("Add staff member test", () => {
 		expect(response.errors?.[0].message).toContain("Not authenticated");
 	});
 
+	test("[gCall] -> Should fail kindergarden is not selected", async () => {
+		const response = await gCall({
+			source: addStaffMutation,
+			variableValues: {
+				role: "Test",
+				id: 2
+			},
+			userId: 1
+		});
+
+		expect(response.data).toBeNull();
+		expect(typeof response.errors).toBe("object");
+		expect(response.errors?.[0].message).toContain(
+			"Kindergraden not selected"
+		);
+	});
+
 	test("[gCall] -> Should fail userId is not in db", async () => {
 		const response = await gCall({
 			source: addStaffMutation,
