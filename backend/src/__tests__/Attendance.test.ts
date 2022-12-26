@@ -14,7 +14,31 @@ afterAll(async () => {
 	await conn.close();
 });
 
+const gErrorObject = (field: string, message: string) => [
+	{
+		field,
+		message
+	}
+];
+
 describe("Create test", () => {
+	const createAttendacneMutation = `
+	mutation CreateAttendance($childId: Int!, $complete: Boolean!) {
+		createAttendacne(childId:$childId, complete:$complete) {
+		  data {
+			Id
+			childId
+			groupId
+			kindergardenId
+		  }
+		  errors {
+			field
+			message
+		  }
+		}
+	  }
+	`;
+
 	test("Should fail child doesn't exist by this id", async () => {
 		const ctx = {
 			req: {
@@ -31,22 +55,7 @@ describe("Create test", () => {
 
 	test("[gCall] -> Should fail childId doesn't exist", async () => {
 		const response = await gCall({
-			source: `
-			mutation CreateAttendance($childId: Int!, $complete: Boolean!) {
-				createAttendacne(childId:$childId, complete:$complete) {
-				  data {
-					Id
-					childId
-					groupId
-					kindergardenId
-				  }
-				  errors {
-					field
-					message
-				  }
-				}
-			  }
-			`,
+			source: createAttendacneMutation,
 			variableValues: {
 				childId: 1,
 				complete: true
@@ -58,11 +67,8 @@ describe("Create test", () => {
 
 		expect(response.data?.createAttendacne).toHaveProperty("errors");
 		expect(typeof response.data?.createAttendacne.errors[0]).toBe("object");
-		expect(response.data?.createAttendacne.errors[0]).toHaveProperty(
-			"field"
-		);
-		expect(response.data?.createAttendacne.errors[0]).toHaveProperty(
-			"message"
+		expect(response.data?.createAttendacne.errors).toMatchObject(
+			gErrorObject("childId", "Child doesn't exist by this id")
 		);
 		expect(response.data?.createAttendacne.errors[0].field).toBe("childId");
 	});
