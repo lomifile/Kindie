@@ -61,7 +61,7 @@ export class KindergardenResolver {
                     `,
 					[req.session.userId, kindergardenId]
 				);
-				if (kindergarden) throw new Error("Kindergarden deosn't exist");
+				if (kindergarden) throw new Error("Kindergarden doesn't exist");
 				req.session.selectedKindergarden = kindergarden!.Id;
 			} catch (err) {
 				return {
