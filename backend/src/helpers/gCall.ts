@@ -42,7 +42,8 @@ export const gCall = async ({
 				clearCookie: jest.fn()
 			},
 			redis: {
-				get: jest.fn()
+				get: jest.fn(),
+				set: jest.fn()
 			}
 		}
 	});
