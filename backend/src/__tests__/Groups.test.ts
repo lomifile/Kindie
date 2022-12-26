@@ -1,12 +1,18 @@
 import { testConn } from "../helpers/testConn";
 import { Connection } from "typeorm";
-import { GroupsResolver } from "../graphql/resolvers";
 import { KinderGarden } from "../orm/entities";
 import { faker } from "@faker-js/faker";
+import { gCall } from "../helpers/gCall";
 
 let conn: Connection;
-const resolver = new GroupsResolver();
 let kindergarden: KinderGarden;
+
+const gErrorObject = (field: string, message: string) => [
+	{
+		field,
+		message
+	}
+];
 
 beforeAll(async () => {
 	conn = await testConn();
@@ -24,128 +30,256 @@ afterAll(async () => {
 });
 
 describe("Create group test", () => {
-	test("Should fail user is not in session", async () => {
-		const response = await resolver.createGroup("Name", {
-			req: { session: { userId: undefined, selectedKindergarden: 3 } }
-		} as AppContext);
+	const createGroupMutation = `
+	mutation CreateGroup($name: String!){
+		createGroup(name:$name) {
+		  groups {
+			Id
+			Name
+		  }
+		  errors{
+			field
+			message
+		  }
+		}
+	  }
+	`;
 
-		expect(response).toHaveProperty("errors");
-		expect(response.errors?.[0].field).toBe("Groups");
-	});
-
-	test("Should fail selected kindergarden is undefined", async () => {
-		const response = await resolver.createGroup("Name", {
-			req: { session: { userId: 1, selectedKindergarden: undefined } }
-		} as AppContext);
-
-		expect(response).toHaveProperty("errors");
-		expect(response.errors?.[0].field).toBe("Groups");
-	});
-
-	test("Should fail name is empty", async () => {
-		const response = await resolver.createGroup("", {
-			req: { session: { userId: 1, selectedKindergarden: 3 } }
-		} as AppContext);
-
-		expect(response).toHaveProperty("errors");
-		expect(response.errors?.[0].field).toBe("Groups");
-	});
-
-	test("Should pass", async () => {
-		const response = await resolver.createGroup("Name", {
-			req: {
-				session: { userId: 1, selectedKindergarden: kindergarden.Id }
+	test("[gCall] -> Should fail user is not in session", async () => {
+		const response = await gCall({
+			source: createGroupMutation,
+			variableValues: {
+				name: "Testing"
 			}
-		} as AppContext);
-		expect(response).toHaveProperty("groups");
-		expect(response.groups).toHaveProperty("Id");
+		});
+
+		expect(typeof response.errors).toBe("object");
+		expect(response.errors?.[0].message).toContain("Not authenticated");
+		expect(response.data).toBeNull();
+	});
+
+	test("[gCall] -> Should fail selected kindergarden is undefined", async () => {
+		const response = await gCall({
+			source: createGroupMutation,
+			variableValues: {
+				name: "Testing"
+			},
+			userId: 1
+		});
+
+		expect(response.data).toBeNull();
+		expect(typeof response.errors).toBe("object");
+		expect(response.errors?.[0].message).toContain(
+			"Kindergraden not selected"
+		);
+	});
+
+	// test("[gCall] -> Should fail name is empty", async () => {
+	// 	const response = await gCall({
+	// 		source: createGroupMutation,
+	// 		variableValues: {
+	// 			name: ""
+	// 		},
+	// 		userId: 1,
+	// 		selectedKindergarden: kindergarden.Id
+	// 	});
+
+	// 	console.log(response);
+	// 	expect(response.data).toBeNull();
+	// 	expect(typeof response.errors).toBe("object");
+	// });
+
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: createGroupMutation,
+			variableValues: {
+				name: "Testing"
+			},
+			userId: 1,
+			selectedKindergarden: kindergarden.Id
+		});
+
+		expect(response.data?.createGroup.errors).toBeNull();
+		expect(typeof response.data?.createGroup.groups).toBe("object");
+		expect(response.data?.createGroup.groups).toHaveProperty("Id");
 	});
 });
 
 describe("Show groups test", () => {
-	test("Should fail no kindergarden", async () => {
-		const response = await resolver.showGroups({
-			req: {
-				session: { userId: undefined, selectedKindergarden: undefined }
-			}
-		} as AppContext);
+	const showGroupsQuery = `
+	query ShowGroups {
+		showGroups {
+		  Id
+		  Name
+		}
+	  }
+	`;
 
-		expect(response).toStrictEqual([]);
+	test("[gCall] -> Should fail user is not in session", async () => {
+		const response = await gCall({
+			source: showGroupsQuery
+		});
+
+		expect(typeof response.errors).toBe("object");
+		expect(response.errors?.[0].message).toContain("Not authenticated");
+		expect(response.data).toBeNull();
 	});
 
-	test("Should pass", async () => {
-		const response = await resolver.showGroups({
-			req: {
-				session: { userId: 1, selectedKindergarden: kindergarden.Id }
-			}
-		} as AppContext);
+	test("[gCall] -> Should fail selected kindergarden is undefined", async () => {
+		const response = await gCall({
+			source: showGroupsQuery,
+			userId: 1
+		});
 
-		expect(response).toHaveLength(1);
+		expect(response.data).toBeNull();
+		expect(typeof response.errors).toBe("object");
+		expect(response.errors?.[0].message).toContain(
+			"Kindergraden not selected"
+		);
+	});
+
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: showGroupsQuery,
+			userId: 1,
+			selectedKindergarden: kindergarden.Id
+		});
+
+		expect(typeof response.data?.showGroups).toBe("object");
+		expect(Array.isArray(response.data?.showGroups)).toBeTruthy();
+		expect(response.data?.showGroups[0]).toHaveProperty("Id");
 	});
 });
 
 describe("Show selected group", () => {
-	test("Should fail because group is not set in session", async () => {
-		const response = await resolver.showSelectedGroup({
-			req: { session: { selectedGroup: undefined } }
-		} as AppContext);
+	const showSelectedGroupQuery = `
+	query ShowSelectedGroup {
+		showSelectedGroup {
+		  Id
+		  Name
+		}
+	  }
+	`;
 
-		expect(response).toBeNull();
+	test("[gCall] -> Should fail because group is not set in session", async () => {
+		const response = await gCall({
+			source: showSelectedGroupQuery,
+			userId: 1,
+			selectedKindergarden: kindergarden.Id
+		});
+
+		expect(response.data?.showSelectedGroup).toBeNull();
 	});
 
-	test("Should pass", async () => {
-		const response = await resolver.showSelectedGroup({
-			req: { session: { selectedGroup: 4 } }
-		} as AppContext);
-		expect(response).toHaveProperty("Id");
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: showSelectedGroupQuery,
+			userId: 1,
+			selectedKindergarden: kindergarden.Id,
+			selectedGroup: 1
+		});
+
+		expect(typeof response.data?.showSelectedGroup).toBe("object");
+		expect(response.data?.showSelectedGroup).toHaveProperty("Id");
 	});
 });
 
 describe("Use group tests", () => {
-	test("Should fail group doesn't exist", async () => {
-		const response = await resolver.useGroup(2, {
-			req: { session: { userId: 1, selectedKindergarden: 4 } }
-		} as AppContext);
+	const useGroupMutation = `
+	mutation UseGroup($id: Float!) {
+		useGroup(groupId: $id) {
+		  groups {
+			Id
+			Name
+		  }
+		  errors {
+			field
+			message
+		  }
+		}
+	  }
+	`;
 
-		expect(response).toHaveProperty("errors");
-		expect(response.errors?.[0].field).toBe("Id");
-	});
-
-	test("Should fail kindergaredn doesn't match", async () => {
-		const response = await resolver.useGroup(3, {
-			req: { session: { userId: 1, selectedKindergarden: 2 } }
-		} as AppContext);
-
-		expect(response).toHaveProperty("errors");
-		expect(response.errors?.[0].field).toBe("Id");
-	});
-
-	test("Should pass", async () => {
-		const response = await resolver.useGroup(4, {
-			req: {
-				session: { userId: 1, selectedKindergarden: kindergarden.Id }
+	test("[gCall] -> Should fail group doesn't exist", async () => {
+		const response = await gCall({
+			source: useGroupMutation,
+			userId: 1,
+			selectedKindergarden: kindergarden.Id,
+			variableValues: {
+				id: 32
 			}
-		} as AppContext);
+		});
 
-		expect(response).toHaveProperty("groups");
-		expect(response.groups).toHaveProperty("Id");
+		expect(response.data?.useGroup.groups).toBeNull();
+		expect(typeof response.data?.useGroup.errors).toBe("object");
+		expect(response.data?.useGroup.errors).toMatchObject(
+			gErrorObject("Id", "There is no group by this ID")
+		);
+	});
+
+	test("[gCall] -> Should fail kindergaredn doesn't match", async () => {
+		const response = await gCall({
+			source: useGroupMutation,
+			variableValues: {
+				id: 1
+			},
+			userId: 1,
+			selectedKindergarden: 1
+		});
+
+		expect(response.data?.useGroup.groups).toBeNull();
+		expect(typeof response.data?.useGroup.errors).toBe("object");
+		expect(response.data?.useGroup.errors).toMatchObject(
+			gErrorObject("Id", "There is no group by this ID")
+		);
+	});
+
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: useGroupMutation,
+			variableValues: {
+				id: 1
+			},
+			userId: 1,
+			selectedKindergarden: kindergarden.Id
+		});
+		expect(response.data?.useGroup.errors).toBeNull();
+		expect(response.data?.useGroup.groups).toHaveProperty("Id");
 	});
 });
 
 describe("Clear group", () => {
-	test("Should pass", () => {
-		const response = resolver.clearGroup({
-			req: { session: { selectedGroup: 123 } }
-		} as AppContext);
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: `
+				mutation ClearGroup {
+					clearGroup
+				}
+			`,
+			userId: 1,
+			selectedKindergarden: kindergarden.Id,
+			selectedGroup: 1
+		});
 
-		expect(response).toBeTruthy();
+		expect(response.data?.clearGroup).toBeTruthy();
 	});
 });
 
 describe("Delete group", () => {
-	test("Should pass", async () => {
-		const response = await resolver.deleteGroup(2);
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: `
+			mutation DeleteGroup($id: Int!) {
+				deleteGroup(id: $id)
+			  }
+			`,
+			userId: 1,
+			selectedKindergarden: kindergarden.Id,
+			variableValues: {
+				id: 1
+			}
+		});
 
-		expect(response).toBeTruthy();
+		expect(response.data?.deleteGroup).toBeTruthy();
 	});
 });
