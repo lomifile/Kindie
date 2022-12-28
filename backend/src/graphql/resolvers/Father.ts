@@ -13,11 +13,11 @@ import {
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import PaginatedResponse from "../../utils/paginatedResponseObject";
-// import Response from "../../utils/repsonseObject";
+import Response from "../../utils/repsonseObject";
 
 @ObjectType()
 class PaginatedFather extends PaginatedResponse<Father>(Father) {}
-// class FatherResponse extends Response<Father>(Father) {}
+class FatherResponse extends Response<Father>(Father) {}
 
 @Resolver(Father)
 export class FatherResolver {
@@ -134,32 +134,32 @@ export class FatherResolver {
 		return query;
 	}
 
-	// @Mutation(() => FatherResponse)
-	// @UseMiddleware(isAuth)
-	// @UseMiddleware(isKinderGardenSelected)
-	// async archiveFather(
-	//   @Arg("Id", () => Int!) Id: number
-	// ): Promise<FatherResponse> {
-	//   try {
-	//     const data = await getConnection()
-	//       .createQueryBuilder(Father, "f")
-	//       .update()
-	//       .set({
-	//         archived: new Date(),
-	//       })
-	//       .where("Id = :id", { id: Id })
-	//       .returning("*")
-	//       .execute();
-	//     return { data: data.raw[0] };
-	//   } catch (err) {
-	//     return {
-	//       errors: [
-	//         {
-	//           field: err.field,
-	//           message: err.message,
-	//         },
-	//       ],
-	//     };
-	//   }
-	// }
+	@Mutation(() => Boolean)
+	@UseMiddleware(isAuth)
+	@UseMiddleware(isKinderGardenSelected)
+	async deleteFather(
+		@Arg("Id", () => Int!) Id: number
+	): Promise<FatherResponse | boolean> {
+		try {
+			const response = await getConnection()
+				.createQueryBuilder(Father, "f")
+				.softDelete()
+				.where(`Id = :id`, { id: Id })
+				.execute();
+
+			if ((response.affected as number) > 0) {
+				return true;
+			}
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
+		return false;
+	}
 }
