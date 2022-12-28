@@ -135,6 +135,7 @@ export class MotherResolver {
 		});
 	}
 
+	// TODO: Rewrite this function fully
 	@Query(() => [Mother])
 	@UseMiddleware(isAuth)
 	@UseMiddleware(isKinderGardenSelected)
