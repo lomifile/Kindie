@@ -2,6 +2,7 @@ import {
 	BaseEntity,
 	Column,
 	CreateDateColumn,
+	DeleteDateColumn,
 	Entity,
 	ManyToOne,
 	OneToMany,
@@ -78,10 +79,10 @@ export class Mother extends BaseEntity {
 	@Column({ nullable: true })
 	inKindergardenId: number;
 
-	@Column("tsvector", { select: false })
+	@Column("tsvector", { select: false, nullable: true })
 	document_with_weights: any;
 
 	@Field(() => Date)
-	@Column()
-	archived?: Date;
+	@DeleteDateColumn()
+	archived: Date;
 }
