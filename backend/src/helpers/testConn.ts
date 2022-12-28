@@ -22,6 +22,7 @@ export const testConn = (drop: boolean = false) => {
 		database: "kindietestdb",
 		synchronize: drop,
 		dropSchema: drop,
+		migrations: ["../orm/migrations"],
 		entities: [
 			Children,
 			Contact,
