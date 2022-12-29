@@ -1,4 +1,4 @@
-import { Mother } from "../../orm/entities";
+import { Mother } from "@orm/entities";
 import {
 	Arg,
 	Ctx,
@@ -10,11 +10,11 @@ import {
 	Resolver,
 	UseMiddleware
 } from "type-graphql";
-import { isKinderGardenSelected, isAuth } from "../../middleware";
-import { ParentsInput } from "../inputs";
+import { isKinderGardenSelected, isAuth } from "@middleware/index";
+import { ParentsInput } from "@graphql/inputs";
 import { getConnection, getRepository } from "typeorm";
-import { validateMotherFather } from "../validators";
-import { FieldError } from "../../utils/Errors";
+import { validateMotherFather } from "@graphql/validators";
+import { FieldError } from "@utils/Errors";
 
 @ObjectType()
 class MotherResponse {

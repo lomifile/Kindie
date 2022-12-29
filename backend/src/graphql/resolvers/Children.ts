@@ -1,4 +1,4 @@
-import { Children } from "../../orm/entities";
+import { Children } from "@orm/entities";
 import {
 	Arg,
 	Ctx,
@@ -13,11 +13,11 @@ import {
 	isKinderGardenSelected,
 	isAuth,
 	isGroupSelected
-} from "../../middleware";
+} from "@middleware/index";
 import { getConnection } from "typeorm";
-import { ChildrenInput } from "../inputs";
-import Response from "../../utils/repsonseObject";
-import PaginatedResponse from "../../utils/paginatedResponseObject";
+import { ChildrenInput } from "@graphql/inputs";
+import Response from "@utils/repsonseObject";
+import PaginatedResponse from "@utils/paginatedResponseObject";
 
 @ObjectType()
 class ChildrenResponse extends Response<Children | Children[]>(Children) {}

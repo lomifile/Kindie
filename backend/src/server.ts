@@ -3,14 +3,14 @@ import connectRedis from "connect-redis";
 import express, { RequestHandler } from "express";
 import session from "express-session";
 
-import { COOKIE_NAME, __prod__ } from "./constants";
+import { COOKIE_NAME, __prod__ } from "@root/constants";
 import cors from "cors";
 import path from "path";
 import fs from "fs";
 import morgan from "morgan";
 import dotenv from "dotenv";
-import { createSchema } from "./graphql";
-import { redis } from "./libs/redis";
+import { createSchema } from "@graphql/scehma";
+import { redis } from "@libs/redis";
 
 dotenv.config({ path: ".env" });
 
