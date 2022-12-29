@@ -14,9 +14,12 @@ import {
 import { getConnection } from "typeorm";
 import PaginatedResponse from "../../utils/paginatedResponseObject";
 import Response from "../../utils/repsonseObject";
+import { validateMotherFather } from "../validators";
 
 @ObjectType()
 class PaginatedFather extends PaginatedResponse<Father>(Father) {}
+
+@ObjectType()
 class FatherResponse extends Response<Father>(Father) {}
 
 @Resolver(Father)
@@ -68,45 +71,69 @@ export class FatherResolver {
 		};
 	}
 
-	@Mutation(() => Father)
+	@Mutation(() => FatherResponse)
 	@UseMiddleware(isAuth)
 	@UseMiddleware(isKinderGardenSelected)
 	async updateFather(
 		@Arg("options") options: ParentsInput,
 		@Arg("fatherId", () => Int) fatherId: number,
 		@Ctx() { req }: AppContext
-	): Promise<Father | undefined> {
-		const result = await getConnection()
-			.createQueryBuilder()
-			.update(Father)
-			.set({
-				Name: options.name,
-				Surname: options.surname,
-				Email: options.email,
-				Phone: options.phone,
-				updatedById: req.session.userId
-			})
-			.where("Id=:id", { id: fatherId })
-			.returning("*")
-			.execute();
-		return result.raw[0];
+	): Promise<FatherResponse> {
+		let data;
+		try {
+			const errors = validateMotherFather(options);
+			if (errors) return { errors };
+			const result = await getConnection()
+				.createQueryBuilder()
+				.update(Father)
+				.set({
+					Name: options.name,
+					Surname: options.surname,
+					Email: options.email,
+					Phone: options.phone,
+					updatedById: req.session.userId
+				})
+				.where("Id=:id", { id: fatherId })
+				.returning("*")
+				.execute();
+			data = result.raw[0];
+		} catch (err) {
+			return {
+				errors: [{ field: err.name, message: err.message }]
+			};
+		}
+		return {
+			data
+		};
 	}
 
-	@Mutation(() => Father)
+	@Mutation(() => FatherResponse)
 	@UseMiddleware(isAuth)
 	@UseMiddleware(isKinderGardenSelected)
 	async addFather(
 		@Arg("options") options: ParentsInput,
 		@Ctx() { req }: AppContext
-	): Promise<Father> {
-		return Father.create({
-			Name: options.name,
-			Surname: options.surname,
-			Email: options.email,
-			Phone: options.phone,
-			inKindergardenId: req.session.selectedKindergarden,
-			createdById: req.session.userId
-		}).save();
+	): Promise<FatherResponse> {
+		let data;
+		try {
+			const errors = validateMotherFather(options);
+			if (errors) return { errors };
+			data = await Father.create({
+				Name: options.name,
+				Surname: options.surname,
+				Email: options.email,
+				Phone: options.phone,
+				inKindergardenId: req.session.selectedKindergarden,
+				createdById: req.session.userId
+			}).save();
+		} catch (err) {
+			return {
+				errors: [{ field: err.name, message: err.message }]
+			};
+		}
+		return {
+			data
+		};
 	}
 
 	@Query(() => [Father])
