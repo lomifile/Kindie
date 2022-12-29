@@ -13,15 +13,17 @@ import {
 import { isKinderGardenSelected, isAuth } from "../../middleware";
 import { ParentsInput } from "../inputs";
 import { getConnection, getRepository } from "typeorm";
+import { validateMotherFather } from "../validators";
+import { FieldError } from "../../utils/Errors";
 
-// @ObjectType()
-// class MotherResponse {
-//   @Field(() => [FieldError], { nullable: true })
-//   errors?: FieldError[];
+@ObjectType()
+class MotherResponse {
+	@Field(() => [FieldError], { nullable: true })
+	errors?: FieldError[];
 
-//   @Field(() => Mother, { nullable: true })
-//   mother?: Mother;
-// }
+	@Field(() => Mother, { nullable: true })
+	mother?: Mother;
+}
 
 @ObjectType()
 class PaginatedMother {
@@ -79,45 +81,82 @@ export class MotherResolver {
 		return true;
 	}
 
-	@Mutation(() => Mother)
+	@Mutation(() => MotherResponse)
 	@UseMiddleware(isAuth)
 	@UseMiddleware(isKinderGardenSelected)
 	async updateMother(
 		@Arg("options") options: ParentsInput,
 		@Arg("motherId", () => Int) motherId: number,
 		@Ctx() { req }: AppContext
-	): Promise<Mother | undefined> {
-		const result = await getConnection()
-			.createQueryBuilder()
-			.update(Mother)
-			.set({
-				Name: options.name,
-				Surname: options.surname,
-				Email: options.email,
-				Phone: options.phone,
-				updatedById: req.session.userId
-			})
-			.where("Id=:id", { id: motherId })
-			.returning("*")
-			.execute();
-		return result.raw[0];
+	): Promise<MotherResponse> {
+		let mother;
+		try {
+			const errors = validateMotherFather(options);
+			if (errors) return { errors };
+			const result = await getConnection()
+				.createQueryBuilder()
+				.update(Mother)
+				.set({
+					Name: options.name,
+					Surname: options.surname,
+					Email: options.email,
+					Phone: options.phone,
+					updatedById: req.session.userId
+				})
+				.where("Id = :id", { id: motherId })
+				.returning("*")
+				.execute();
+			mother = result.raw[0];
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
+		return {
+			mother
+		};
 	}
 
-	@Mutation(() => Mother)
+	@Mutation(() => MotherResponse)
 	@UseMiddleware(isAuth)
 	@UseMiddleware(isKinderGardenSelected)
 	async addMother(
 		@Arg("options") options: ParentsInput,
 		@Ctx() { req }: AppContext
-	): Promise<Mother> {
-		return Mother.create({
-			Name: options.name,
-			Surname: options.surname,
-			Email: options.email,
-			Phone: options.phone,
-			inKindergardenId: req.session.selectedKindergarden,
-			createdById: req.session.userId
-		}).save();
+	): Promise<MotherResponse> {
+		let mother;
+		try {
+			const errors = validateMotherFather(options);
+			if (errors) {
+				return { errors };
+			}
+
+			mother = await Mother.create({
+				Name: options.name,
+				Surname: options.surname,
+				Email: options.email,
+				Phone: options.phone,
+				inKindergardenId: req.session.selectedKindergarden,
+				createdById: req.session.userId
+			}).save();
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
+		return {
+			mother
+		};
 	}
 
 	@Query(() => Mother)
