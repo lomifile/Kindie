@@ -25,14 +25,21 @@ describe("Create Father test", () => {
 	const addFatherMutation = `
     mutation CreateFather($options: ParentsInput!) {
         addFather(options: $options) {
-          Id
-          Name
-          Surname
-          Email
-          Phone
+			data {
+          		Id
+          		Name
+          		Surname
+          		Email
+          		Phone
+			}
+			errors {
+				field
+				message
+			}
         }
       }
     `;
+
 	test("[gCall] -> Should fail kindergarden is not selected", async () => {
 		const response = await gCall({
 			source: addFatherMutation,
@@ -68,28 +75,38 @@ describe("Create Father test", () => {
 			}
 		});
 
-		expect(response.data).toBeNull();
-		expect(response.errors?.[0].message).toContain(
-			"insert or update on table"
+		expect(response.data?.addFather.data).toBeNull();
+		expect(response.data?.addFather.errors[0].message).toContain(
+			"Email is not correct"
 		);
+		expect(response.data?.addFather.errors[0].field).toContain("email");
+		expect(typeof response.data?.addFather.errors).toBe("object");
 	});
 
 	test("[gCall] -> Should pass", async () => {
+		const options: ParentsInput = {
+			name: faker.name.firstName(),
+			surname: faker.name.lastName(),
+			email: faker.internet.email(),
+			phone: 12321313
+		};
 		const response = await gCall({
 			source: addFatherMutation,
 			userId: 1,
 			selectedKindergarden: 1,
 			variableValues: {
-				options: {
-					name: faker.name.firstName(),
-					surname: faker.name.lastName(),
-					email: faker.internet.email(),
-					phone: 12321313
-				} as ParentsInput
+				options
 			}
 		});
 
-		expect(response.data?.addFather).toHaveProperty("Id");
+		expect(response.data?.addFather.errors).toBeNull();
+		expect(response.data?.addFather.data).toHaveProperty("Id");
+		expect(response.data?.addFather.data).toMatchObject({
+			Name: options.name,
+			Surname: options.surname,
+			Email: options.email,
+			Phone: options.phone
+		});
 	});
 });
 
@@ -97,12 +114,18 @@ describe("Update Father test", () => {
 	const updateFatherMutation = `
     mutation UpdateFather($id: Int!, $options: ParentsInput!) {
         updateFather(fatherId:$id, options:$options) {
-          Id
-          Name
-          Surname
-          Email
-          Phone
-        }
+			data {
+          		Id
+          		Name
+          		Surname
+          		Email
+          		Phone
+			}
+			errors {
+				field
+				message
+			}
+		}
       }
     `;
 	test("[gCall] -> Should fail data is not correct", async () => {
@@ -142,10 +165,11 @@ describe("Update Father test", () => {
 			}
 		});
 
-		expect(response.data).toBeNull();
-		expect(response.errors?.[0].message).toContain(
-			"Cannot return null for non-nullable field"
+		expect(response.data?.updateFather.data).toBeNull();
+		expect(response.data?.updateFather.errors[0].message).toContain(
+			"Email is not correct"
 		);
+		expect(response.data?.updateFather.errors[0].field).toContain("email");
 	});
 
 	test("[gCall] -> Should pass", async () => {
@@ -160,14 +184,15 @@ describe("Update Father test", () => {
 			userId: 1,
 			selectedKindergarden: 1,
 			variableValues: {
-				id: 2,
+				id: 1,
 				options
 			}
 		});
 
-		expect(response.data?.updateFather).toHaveProperty("Id");
-		expect(response.data?.updateFather).toMatchObject({
-			Id: 2,
+		expect(response.data?.updateFather.errors).toBeNull();
+		expect(response.data?.updateFather.data).toHaveProperty("Id");
+		expect(response.data?.updateFather.data).toMatchObject({
+			Id: 1,
 			Name: options.name,
 			Surname: options.surname,
 			Email: options.email,
@@ -252,7 +277,7 @@ describe("Delete Father test", () => {
 			userId: 1,
 			selectedKindergarden: 1,
 			variableValues: {
-				id: 2
+				id: 1
 			}
 		});
 
