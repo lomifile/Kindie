@@ -1,4 +1,11 @@
 {
+	"ts-node": {
+		"files": true,
+		"require": ["tsconfig-paths/register"],
+		"compilerOptions": {
+			"rootDir": "."
+		}
+	},
 	"compilerOptions": {
 		"target": "es2017",
 		"module": "commonjs",
@@ -22,7 +29,17 @@
 		"resolveJsonModule": true,
 		"baseUrl": ".",
 		"skipLibCheck": true,
-		"typeRoots": ["./node_modules/@types", "src/types"]
+		"typeRoots": ["./node_modules/@types", "src/types"],
+		"paths": {
+			"@root/*": ["./src/*"],
+			"@graphql/*": ["./src/graphql/*"],
+			"@helpers/*": ["src/helpers/*"],
+			"@libs/*": ["./src/libs/*"],
+			"@middleware/*": ["./src/middleware/*"],
+			"@orm/*": ["./src/orm/*"],
+			"@types/*": ["./src/types/*"],
+			"@utils/*": ["./src/utils/*"]
+		}
 	},
 
 	"typeAcquisition": {

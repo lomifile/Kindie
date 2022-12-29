@@ -1,5 +1,6 @@
-import { createDbConnection } from "./orm/createConnection";
-import app from "./server";
+import "tsconfig-paths/register";
+import { createDbConnection } from "@orm/createConnection";
+import app from "@root/server";
 
 (async () => {
 	try {

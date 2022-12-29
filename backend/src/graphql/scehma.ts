@@ -1,5 +1,5 @@
-import app from "../server";
-import { apolloServer } from "../libs/apollo";
+import app from "@root/server";
+import { apolloServer } from "@libs/apollo";
 
 export const createSchema = async () => {
 	await apolloServer.start();

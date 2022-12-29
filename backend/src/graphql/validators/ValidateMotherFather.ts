@@ -1,4 +1,4 @@
-import { ParentsInput } from "../inputs";
+import { ParentsInput } from "@graphql/inputs";
 
 export const validateMotherFather = (data: ParentsInput) => {
 	const errors = [];
