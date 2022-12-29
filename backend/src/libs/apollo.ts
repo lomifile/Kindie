@@ -10,9 +10,9 @@ import {
 	ContactResolver,
 	ChildrenResolver,
 	AttendanceResolver
-} from "../graphql/resolvers";
+} from "@graphql/resolvers";
 import { buildSchemaSync } from "type-graphql";
-import { redis } from "./redis";
+import { redis } from "@libs/redis";
 
 export const apolloServer = new ApolloServer({
 	schema: buildSchemaSync({

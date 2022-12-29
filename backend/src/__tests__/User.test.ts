@@ -1,4 +1,4 @@
-import { testConn } from "../../src/helpers/testConn";
+import { testConn } from "../helpers/testConn";
 import { Connection } from "typeorm";
 import { faker } from "@faker-js/faker";
 import { UsernamePasswordInput } from "../graphql/inputs/UserInput";

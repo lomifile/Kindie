@@ -1,6 +1,6 @@
-import { Father } from "../../orm/entities";
-import { isKinderGardenSelected, isAuth } from "../../middleware";
-import { ParentsInput } from "../inputs";
+import { Father } from "@orm/entities";
+import { isKinderGardenSelected, isAuth } from "@middleware/index";
+import { ParentsInput } from "@graphql/inputs";
 import {
 	Arg,
 	Ctx,
@@ -12,9 +12,9 @@ import {
 	UseMiddleware
 } from "type-graphql";
 import { getConnection } from "typeorm";
-import PaginatedResponse from "../../utils/paginatedResponseObject";
-import Response from "../../utils/repsonseObject";
-import { validateMotherFather } from "../validators";
+import PaginatedResponse from "@utils/paginatedResponseObject";
+import Response from "@utils/repsonseObject";
+import { validateMotherFather } from "@graphql/validators";
 
 @ObjectType()
 class PaginatedFather extends PaginatedResponse<Father>(Father) {}

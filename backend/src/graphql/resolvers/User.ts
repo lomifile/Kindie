@@ -1,10 +1,10 @@
-import { User } from "../../orm/entities";
+import { User } from "@orm/entities";
 import {
 	UpdatePassword,
 	UpdateUserInput,
 	UsernamePasswordInput
-} from "../inputs";
-import { ValidateRegister } from "../validators";
+} from "@graphql/inputs";
+import { ValidateRegister } from "@graphql/validators";
 import {
 	Arg,
 	Ctx,
@@ -21,11 +21,11 @@ import {
 	ACCOUNT_VERIFICATION_PREFIX,
 	COOKIE_NAME,
 	FORGET_PASSWORD_PREFIX
-} from "../../constants";
-import { sendMail, VerifyEmailTemplate } from "../../utils/SendEmail";
+} from "@root/constants";
+import { sendMail, VerifyEmailTemplate } from "@utils/SendEmail";
 import { v4 } from "uuid";
-import { isAuth } from "../../middleware";
-import { FieldError } from "../../utils/Errors";
+import { isAuth } from "@middleware/index";
+import { FieldError } from "@utils/Errors";
 
 @ObjectType()
 class UserResponse {
