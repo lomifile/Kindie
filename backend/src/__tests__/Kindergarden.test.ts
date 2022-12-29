@@ -1,18 +1,16 @@
 import { testConn } from "../helpers/testConn";
 import { Connection } from "typeorm";
 import { faker } from "@faker-js/faker";
-// import { KinderGarden } from "../orm/entities/Kindergarden";
-import { KindergardenResolver } from "../graphql/resolvers/Kindergarden";
-import { KinderGardenInput } from "../graphql/inputs";
-
-// TODO: Full rewrite Kindergarden tests
+import { gCall } from "../helpers/gCall";
 
 let conn: Connection;
-const resolvers = new KindergardenResolver();
-const ctx = {
-	req: { session: { userId: 1, selectedKindergarden: undefined } },
-	res: {}
-} as AppContext;
+
+const gErrorObject = (field: string, message: string) => [
+	{
+		field,
+		message
+	}
+];
 
 beforeAll(async () => {
 	conn = await testConn();
@@ -30,80 +28,215 @@ const kindergarden = {
 };
 
 describe("Create kindergarden test", () => {
-	test("Should fail user Id is null", async () => {
-		ctx.req.session.userId = undefined;
-		const response = await resolvers.createKindergarden(kindergarden, ctx);
-		expect(response).toHaveProperty("errors");
-		expect(response.errors?.[0].field).toBe("QueryFailedError");
+	const createKindergardenMutation = `
+	mutation CreateKindergarden($options: KinderGardenInput!) {
+		createKindergarden(options: $options) {
+		  data {
+			Id
+			Name
+			Address
+			City
+			Zipcode
+		  }
+		  errors {
+			field
+			message
+		  }
+		}
+	  }
+	`;
+
+	test("[gCall] -> Should fail user Id is null", async () => {
+		const response = await gCall({
+			source: createKindergardenMutation,
+			variableValues: {
+				options: kindergarden
+			}
+		});
+
+		expect(typeof response.errors).toBe("object");
+		expect(response.errors?.[0].message).toContain("Not authenticated");
+		expect(response.data).toBeNull();
 	});
 
-	test("Should fail options is null", async () => {
-		const response = await resolvers.createKindergarden(
-			{} as KinderGardenInput,
-			ctx
-		);
+	test("[gCall] -> Should fail options is empty", async () => {
+		const response = await gCall({
+			source: createKindergardenMutation,
+			userId: 1,
+			variableValues: {
+				options: {}
+			}
+		});
+
 		expect(response).toHaveProperty("errors");
-		expect(response.errors?.[0].field).toBe("QueryFailedError");
+		expect(response.errors).not.toBeNull();
 	});
 
-	test("Should pass", async () => {
-		const response = await resolvers.createKindergarden(kindergarden, {
-			req: { session: { userId: 1 } }
-		} as AppContext);
-		expect(response).toHaveProperty("data");
-		expect(response.data).toHaveProperty("Id");
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: createKindergardenMutation,
+			userId: 1,
+			variableValues: {
+				options: kindergarden
+			}
+		});
+
+		expect(response.data?.createKindergarden.errors).toBeNull();
+		expect(response.data?.createKindergarden.data).toHaveProperty("Id");
 	});
 });
 
 describe("Use kindergarden tests", () => {
-	test("Should fail kindergarden doesn't exist", async () => {
-		const response = await resolvers.useKindergarden(14, ctx);
-		expect(response).toHaveProperty("errors");
-		expect(response.errors?.[0].field).toBe("Error");
+	const useKindergardenMutation = `
+	mutation UseKindergarden($kindergardenID: Float!) {
+		useKindergarden(kindergadenID: $kindergardenID) {
+		  data {
+			Id
+			Name
+			Address
+			City
+			Zipcode
+		  }
+		  errors {
+			field
+			message
+		  }
+		}
+	  }
+	`;
+
+	test("[gCall] -> Should fail kindergarden doesn't exist", async () => {
+		const response = await gCall({
+			source: useKindergardenMutation,
+			userId: 1,
+			variableValues: {
+				kindergardenID: 1234
+			}
+		});
+
+		expect(typeof response.data?.useKindergarden.errors).toBe("object");
+		expect(response.data?.useKindergarden.errors).toMatchObject(
+			gErrorObject("Error", "Kindergarden doesn't exist")
+		);
+		expect(response.data?.useKindergarden.data).toBeNull();
 	});
 
-	test("Should fail user is not in session", async () => {
-		const response = await resolvers.useKindergarden(1, {
-			req: { session: { userId: undefined } }
-		} as AppContext);
-		expect(response).toHaveProperty("errors");
-		expect(response.errors?.[0].field).toBe("Error");
+	test("[gCall] -> Should fail user is not in session", async () => {
+		const response = await gCall({
+			source: useKindergardenMutation,
+			variableValues: {
+				kindergardenID: 1
+			}
+		});
+
+		expect(typeof response.errors).toBe("object");
+		expect(response.errors?.[0].message).toContain("Not authenticated");
+		expect(response.data).toBeNull();
 	});
 
-	test("Should pass", async () => {
-		const response = await resolvers.useKindergarden(4, {
-			req: { session: { userId: 1 } }
-		} as AppContext);
-		expect(response).toHaveProperty("data");
-		expect(response.data?.Id).toBe(4);
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: useKindergardenMutation,
+			userId: 1,
+			variableValues: {
+				kindergardenID: 1
+			}
+		});
+
+		expect(response.data?.useKindergarden.data).not.toBeNull();
+		expect(response.data?.useKindergarden.errors).toBeNull();
+		expect(response.data?.useKindergarden.data).toHaveProperty("Id");
 	});
 });
 
 describe("Show kindergarden", () => {
-	test("Should fail user is not in session", async () => {
-		const response = await resolvers.showKindergarden(10, null, {
-			req: { session: { userId: undefined } }
-		} as AppContext);
-		expect(response).toHaveProperty("data");
-		expect(response.data).toStrictEqual([]);
+	const showKindergardenQuery = `
+	query ShowKindergarden {
+		showKindergarden(limit: 15) {
+		  data {
+			Id
+			Name
+			Address
+			City
+			Zipcode
+		  }
+		  errors {
+			field
+			message
+		  }
+		  hasMore
+		}
+	  }
+	`;
+
+	test("[gCall] -> Should fail user is not in session", async () => {
+		const response = await gCall({
+			source: showKindergardenQuery
+		});
+
+		expect(response.data).toBeNull();
+		expect(response.errors).not.toBeNull();
+		expect(response.errors?.[0].message).toContain("Not authenticated");
 	});
 
-	test("Should pass", async () => {
-		const response = await resolvers.showKindergarden(10, null, {
-			req: { session: { userId: 1 } }
-		} as AppContext);
-		expect(response).toHaveProperty("data");
-		expect(response.data).toHaveLength(4);
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: showKindergardenQuery,
+			userId: 1
+		});
+
+		expect(response.data).toHaveProperty("showKindergarden");
+		expect(response.data?.showKindergarden).toHaveProperty("data");
+		expect(response.data?.showKindergarden).toHaveProperty("errors");
+		expect(response.data?.showKindergarden.errors).toBeNull();
+		expect(response.data?.showKindergarden).toHaveProperty("hasMore");
+		expect(typeof response.data?.showKindergarden.hasMore).toBe("boolean");
 	});
 });
 
 describe("Delete kindergarden", () => {
-	test("Should fail kindergarden doesn't exist", async () => {
-		const response = await resolvers.deleteKindergarden(7654);
-		expect(response).toBeFalsy();
+	const deleteKindergardenMutation = `
+	mutation DeleteKindergarden($id: Int!) {
+		deleteKindergarden(id: $id) 
+	  }
+	`;
+
+	test("[gCall] -> Should fail user is not authenticated", async () => {
+		const response = await gCall({
+			source: deleteKindergardenMutation,
+			variableValues: {
+				id: 1
+			}
+		});
+
+		expect(response.data).toBeNull();
+		expect(typeof response.errors).toBe("object");
+		expect(response.errors?.[0].message).toContain("Not authenticated");
 	});
-	test("Should pass", async () => {
-		const response = await resolvers.deleteKindergarden(4);
-		expect(response).toBeTruthy();
+
+	test("[gCall] -> Should fail kindergarden doesn't exist", async () => {
+		const response = await gCall({
+			source: deleteKindergardenMutation,
+			variableValues: {
+				id: 1234
+			},
+			userId: 1
+		});
+
+		expect(response.data).toHaveProperty("deleteKindergarden");
+		expect(response.data?.deleteKindergarden).toBeFalsy();
+	});
+
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: deleteKindergardenMutation,
+			variableValues: {
+				id: 2
+			},
+			userId: 1
+		});
+
+		expect(response.data).toHaveProperty("deleteKindergarden");
+		expect(response.data?.deleteKindergarden).toBeTruthy();
 	});
 });

@@ -1,14 +1,13 @@
 import { testConn } from "../helpers/testConn";
 import { KinderGarden, User } from "../orm/entities";
 import { Connection } from "typeorm";
-import { StaffMembersResolver } from "../graphql/resolvers";
 import { faker } from "@faker-js/faker";
 import argon2 from "argon2";
+import { gCall } from "../helpers/gCall";
 
 let conn: Connection;
 let kindergarden: KinderGarden;
 let staff: User;
-const resolver = new StaffMembersResolver();
 
 beforeAll(async () => {
 	conn = await testConn();
@@ -34,51 +33,163 @@ afterAll(async () => {
 });
 
 describe("Add staff member test", () => {
-	test("Should fail unknown user Id", async () => {
-		const response = await resolver.addStaff(43, "Test", {
-			req: { session: { selectedKindergarden: 79 } }
-		} as AppContext);
-		expect(response).toHaveProperty("errors");
-		expect(response.errors?.[0].field).toBe("StaffMembers insert");
+	const addStaffMutation = `
+	mutation AddStaff($role: String!, $id: Int!) {
+		addStaff(role:$role, userId: $id) {
+		  staff {
+				  staffId
+			role
+		  }
+		  errors {
+			field
+			message
+		  }
+		}
+	  }
+	`;
+
+	test("[gCall] -> Should fail user is not authenticated", async () => {
+		const response = await gCall({
+			source: addStaffMutation,
+			variableValues: {
+				role: "Test",
+				id: 2
+			}
+		});
+
+		expect(response.data).toBeNull();
+		expect(typeof response.errors).toBe("object");
+		expect(response.errors?.[0].message).toContain("Not authenticated");
 	});
 
-	test("Should pass", async () => {
-		const response = await resolver.addStaff(staff.Id, "Test", {
-			req: { session: { selectedKindergarden: kindergarden.Id } }
-		} as AppContext);
-		expect(response).toHaveProperty("staff");
-		expect(response.staff).toHaveProperty("staffId");
+	test("[gCall] -> Should fail kindergarden is not selected", async () => {
+		const response = await gCall({
+			source: addStaffMutation,
+			variableValues: {
+				role: "Test",
+				id: 2
+			},
+			userId: 1
+		});
+
+		expect(response.data).toBeNull();
+		expect(typeof response.errors).toBe("object");
+		expect(response.errors?.[0].message).toContain(
+			"Kindergraden not selected"
+		);
 	});
 
-	test("Should fail user is already part of staff", async () => {
-		const response = await resolver.addStaff(staff.Id, "Test", {
-			req: { session: { selectedKindergarden: kindergarden.Id } }
-		} as AppContext);
+	test("[gCall] -> Should fail userId is not in db", async () => {
+		const response = await gCall({
+			source: addStaffMutation,
+			userId: 1,
+			selectedKindergarden: kindergarden.Id,
+			variableValues: {
+				id: 12345,
+				role: "Testr"
+			}
+		});
 
-		expect(response).toHaveProperty("errors");
-		expect(response.errors?.[0].field).toBe("user id");
+		expect(response.data?.addStaff.staff).toBeNull();
+		expect(typeof response.data?.addStaff.errors).toBe("object");
+		expect(response.data?.addStaff.errors[0].field).toContain(
+			"StaffMembers insert"
+		);
+	});
+
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: addStaffMutation,
+			variableValues: {
+				id: staff.Id,
+				role: "Test"
+			},
+			userId: 1,
+			selectedKindergarden: kindergarden.Id
+		});
+
+		expect(response.data?.addStaff.errors).toBeNull();
+		expect(response.data?.addStaff.staff).toHaveProperty("staffId");
+	});
+
+	test("[gCall] -> Should fail user is already part of staff", async () => {
+		const response = await gCall({
+			source: addStaffMutation,
+			variableValues: {
+				id: staff.Id,
+				role: "Test"
+			},
+			userId: 1,
+			selectedKindergarden: 1
+		});
+
+		expect(response.data?.addStaff.staff).toBeNull();
+		expect(typeof response.data?.addStaff.errors).toBe("object");
+		expect(response.data?.addStaff.errors[0].field).toContain("user id");
 	});
 });
 
 describe("Show staff test", () => {
-	test("Should fail no kindergarden is selected", async () => {
-		const response = await resolver.showStaff({
-			req: { session: { selectedKindergarden: undefined } }
-		} as AppContext);
-		expect(response).toStrictEqual([]);
+	const showStaffQuery = `
+	query ShowStaff {
+		showStaff {
+		  staffId
+		  kindergardenId
+		}
+	  }
+	`;
+	test("[gCall] -> Should fail user is not authenticated", async () => {
+		const response = await gCall({
+			source: showStaffQuery
+		});
+
+		expect(response.data).toBeNull();
+		expect(typeof response.errors).toBe("object");
+		expect(response.errors?.[0].message).toContain("Not authenticated");
 	});
 
-	test("Should pass", async () => {
-		const response = await resolver.showStaff({
-			req: { session: { selectedKindergarden: kindergarden.Id } }
-		} as AppContext);
-		expect(response).toHaveLength(1);
+	test("[gCall] -> Should fail kindergarden is not selected", async () => {
+		const response = await gCall({
+			source: showStaffQuery,
+			userId: 1
+		});
+
+		expect(response.data).toBeNull();
+		expect(typeof response.errors).toBe("object");
+		expect(response.errors?.[0].message).toContain(
+			"Kindergraden not selected"
+		);
+	});
+
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: showStaffQuery,
+			userId: 1,
+			selectedKindergarden: kindergarden.Id
+		});
+
+		expect(typeof response.data?.showStaff).toBe("object");
+		expect(Array.isArray(response.data?.showStaff)).toBeTruthy();
+		expect(response.data?.showStaff[0]).toHaveProperty("staffId");
 	});
 });
 
 describe("Delete staff", () => {
-	test("Should pass", async () => {
-		const response = await resolver.deleteStaff(staff.Id);
+	const deleteStaffMutation = `
+	mutation DeleteStaff($id: Int!) {
+		deleteStaff(userId: $id)
+	  }
+	`;
+
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: deleteStaffMutation,
+			selectedKindergarden: kindergarden.Id,
+			userId: 1,
+			variableValues: {
+				id: staff.Id
+			}
+		});
 		expect(response).toBeTruthy();
 	});
 });

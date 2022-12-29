@@ -1,4 +1,4 @@
-import { KinderGarden } from "../../orm/entities";
+import { KinderGarden } from "@orm/entities";
 import {
 	Arg,
 	Ctx,
@@ -9,11 +9,11 @@ import {
 	Resolver,
 	UseMiddleware
 } from "type-graphql";
-import { isKinderGardenSelected, isAuth } from "../../middleware";
+import { isKinderGardenSelected, isAuth } from "@middleware/index";
 import { getConnection } from "typeorm";
-import { KinderGardenInput } from "../inputs";
-import Response from "../../utils/repsonseObject";
-import PaginatedResponse from "../../utils/paginatedResponseObject";
+import { KinderGardenInput } from "@graphql/inputs";
+import Response from "@utils/repsonseObject";
+import PaginatedResponse from "@utils/paginatedResponseObject";
 
 @ObjectType()
 class KindergardenResponse extends Response<KinderGarden>(KinderGarden) {}
@@ -61,7 +61,7 @@ export class KindergardenResolver {
                     `,
 					[req.session.userId, kindergardenId]
 				);
-				if (kindergarden) throw new Error("Kindergarden deosn't exist");
+				if (kindergarden) throw new Error("Kindergarden doesn't exist");
 				req.session.selectedKindergarden = kindergarden!.Id;
 			} catch (err) {
 				return {

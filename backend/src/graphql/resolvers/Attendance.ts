@@ -1,4 +1,4 @@
-import Response from "../../utils/repsonseObject";
+import Response from "@utils/repsonseObject";
 import {
 	Arg,
 	Ctx,
@@ -9,13 +9,13 @@ import {
 	Resolver,
 	UseMiddleware
 } from "type-graphql";
-import { Attendance, Children } from "../../orm/entities";
+import { Attendance, Children } from "@orm/entities";
 import {
 	isAuth,
 	isGroupSelected,
 	isKinderGardenSelected
-} from "../../middleware";
-import PaginatedResponse from "../../utils/paginatedResponseObject";
+} from "@middleware/index";
+import PaginatedResponse from "@utils/paginatedResponseObject";
 import { getConnection } from "typeorm";
 
 @ObjectType()

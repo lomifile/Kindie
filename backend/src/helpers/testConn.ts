@@ -8,7 +8,7 @@ import {
 	Mother,
 	StaffMembers,
 	User
-} from "../orm/entities";
+} from "@orm/entities";
 import { createConnection } from "typeorm";
 
 export const testConn = (drop: boolean = false) => {
@@ -22,6 +22,7 @@ export const testConn = (drop: boolean = false) => {
 		database: "kindietestdb",
 		synchronize: drop,
 		dropSchema: drop,
+		migrations: ["../orm/migrations"],
 		entities: [
 			Children,
 			Contact,

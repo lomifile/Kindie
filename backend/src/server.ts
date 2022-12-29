@@ -2,20 +2,20 @@ import "reflect-metadata";
 import connectRedis from "connect-redis";
 import express, { RequestHandler } from "express";
 import session from "express-session";
-import Redis from "ioredis";
-import { COOKIE_NAME, __prod__ } from "./constants";
+
+import { COOKIE_NAME, __prod__ } from "@root/constants";
 import cors from "cors";
 import path from "path";
 import fs from "fs";
 import morgan from "morgan";
 import dotenv from "dotenv";
-import { createSchema } from "./graphql";
+import { createSchema } from "@graphql/scehma";
+import { redis } from "@libs/redis";
 
 dotenv.config({ path: ".env" });
 
 const app = express();
 const RedisStore = connectRedis(session);
-const redis = new Redis(process.env.REDIS_URL as string);
 
 app.use(
 	cors({
@@ -61,6 +61,6 @@ app.use(
 	})
 );
 
-createSchema(app, redis);
+createSchema();
 
 export default app;

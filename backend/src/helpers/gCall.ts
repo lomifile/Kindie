@@ -1,11 +1,11 @@
 import { graphql, GraphQLSchema } from "graphql";
 import { Maybe } from "graphql/jsutils/Maybe";
-import { createSchema } from "../utils/createSchema";
+import { createSchema } from "@utils/createSchema";
 
 interface Options {
 	source: string;
 	variableValues?: Maybe<{
-		[key: string]: any;
+		[key: string]: unknown;
 	}>;
 	userId?: number;
 	selectedKindergarden?: number;
@@ -34,11 +34,16 @@ export const gCall = async ({
 				session: {
 					userId,
 					selectedGroup,
-					selectedKindergarden
-				} as SessionType
+					selectedKindergarden,
+					destroy: jest.fn().mockImplementation((fn) => fn(false))
+				} as unknown as SessionType
 			},
 			res: {
 				clearCookie: jest.fn()
+			},
+			redis: {
+				get: jest.fn(),
+				set: jest.fn()
 			}
 		}
 	});
