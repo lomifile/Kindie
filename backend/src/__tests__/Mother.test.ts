@@ -157,7 +157,6 @@ describe("Update mother test", () => {
 		expect(response.data?.updateMother.errors[0].field).toContain("email");
 	});
 
-	// TODO: Refactor test after resolver refactor
 	test("[gCall] -> Should pass", async () => {
 		const options: ParentsInput = {
 			name: faker.name.firstName(),
@@ -170,21 +169,20 @@ describe("Update mother test", () => {
 			userId: 1,
 			selectedKindergarden: 1,
 			variableValues: {
-				id: 2,
+				id: 1,
 				options
 			}
 		});
 
 		expect(response.data?.updateMother.errors).toBeNull();
-		expect(response.data?.updateMother.mother).toBeNull();
-		// expect(response.data?.updateMother.mother).toHaveProperty("Id");
-		// expect(response.data?.updateMother.mother).toMatchObject({
-		// 	Id: 2,
-		// 	Name: options.name,
-		// 	Surname: options.surname,
-		// 	Email: options.email,
-		// 	Phone: 12321313
-		// });
+		expect(response.data?.updateMother.mother).toHaveProperty("Id");
+		expect(response.data?.updateMother.mother).toMatchObject({
+			Id: 1,
+			Name: options.name,
+			Surname: options.surname,
+			Email: options.email,
+			Phone: 12321313
+		});
 	});
 });
 

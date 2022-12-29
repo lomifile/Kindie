@@ -123,8 +123,8 @@ describe("Create child resolver", () => {
 					OIB: 12314124,
 					Gender: "male",
 					Remarks: "shjdhask",
-					mother: 1,
-					father: 1
+					mother: 1112,
+					father: 1122
 				}
 			}
 		});
