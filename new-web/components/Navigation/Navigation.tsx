@@ -13,13 +13,40 @@ export const Navigation: React.FC<NavigationProps> = ({}) => {
 
   const buttonProps = getButtonProps();
   const disclosureProps = getDisclosureprops();
+  const [navColor, setNavColor] = React.useState<"white" | "primary">(
+    "primary"
+  );
+
+  React.useEffect(() => {
+    const handleScroll = (event: Event) => {
+      if (window.scrollY === 0) {
+        setNavColor("primary");
+      } else if (window.scrollY > 0) {
+        setNavColor("white");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
-    <Nav className="bg-white fixed z-20 px-2 sm:px-4 py-2.5 w-full top-0 left-0 border-b border-gray-200">
+    <Nav
+      className={`bg-${navColor} fixed z-20 px-2 sm:px-4 py-2.5 w-full top-0 left-0 border-b transition-all ${
+        navColor === "primary" ? "border-primary" : "border-gray-200"
+      }`}
+    >
       <div className="container flex flex-wrap justify-between items-center mx-auto">
         <a href="#" className="flex items-center">
           {/* Dodati sliku!!! */}
-          <span className="self-center text-xl font-semibold whitespace-nowrap text-accent xs:ml-7 ">
+          <span
+            className={`self-center text-xl font-semibold whitespace-nowrap ${
+              navColor === "primary" ? "text-white" : "text-accent"
+            } xs:ml-7 `}
+          >
             Kindie
           </span>
         </a>

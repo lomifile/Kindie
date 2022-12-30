@@ -2,9 +2,11 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useDisclosure } from "../../hooks";
 
-interface AppNavProps extends React.HTMLAttributes<HTMLElement> {}
+interface AppNavProps extends React.HTMLAttributes<HTMLElement> {
+  sidebarButtonRef?: any;
+}
 
-export const AppNav: React.FC<AppNavProps> = ({}) => {
+export const AppNav = ({ sidebarButtonRef }: AppNavProps) => {
   const { getButtonProps, getDisclosureprops } = useDisclosure();
   const buttonProps = getButtonProps();
   const disclosureProps = getDisclosureprops();
@@ -15,13 +17,30 @@ export const AppNav: React.FC<AppNavProps> = ({}) => {
   };
 
   return (
-    <div className="container flex flex-row justify-between items-center mx-auto">
-      <div className="flex items-center">
+    <div className="container flex flex-row md:min-w-full min:w-full">
+      <div className="flex flex-row">
+        <button {...sidebarButtonRef}>
+          <svg
+            className="w-6 h-6"
+            aria-hidden="true"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fillRule="evenodd"
+              d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+              clipRule="evenodd"
+            ></path>
+          </svg>
+        </button>
+      </div>
+      <div className="flex items-center ml-5">
         <span className="self-center text-xl font-semibold whitespace-nowrap text-primary xs:ml-5">
           Kindie
         </span>
       </div>
-      <div className="flex items-center md:order-2">
+      <div className="flex flex-row md:order-2 rounded-full ml-auto px-6 py-1.5">
         <button
           className="flex items-center text-sm font-medium text-gray-900 rounded-full hover:text-primary md:mr-0 focus:ring-4 focus:ring-gray-100"
           {...buttonProps}
@@ -41,9 +60,9 @@ export const AppNav: React.FC<AppNavProps> = ({}) => {
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-              clip-rule="evenodd"
+              clipRule="evenodd"
             ></path>
           </svg>
         </button>

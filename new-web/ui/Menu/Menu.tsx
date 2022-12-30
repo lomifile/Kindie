@@ -35,11 +35,11 @@ export const Menu: React.FC<MenuProps> = ({
         >
           <section
             className={
-              "w-screen max-w-lg left-0 absolute bg-gray-800 h-full shadow-xl delay-400 duration-500 ease-in-out transition-all transform  " +
+              "w-screen max-w-[256px] left-0 absolute bg-gray-100 h-full shadow-xl delay-400 duration-500 ease-in-out transition-all transform  " +
               (isOpen ? " translate-x-0 " : " -translate-x-full ")
             }
           >
-            <article className="relative w-screen max-w-lg pb-5 flex flex-col space-y-6 overflow-y-scroll h-full">
+            <article className="relative w-screen max-w-[256px] pb-5 flex flex-col space-y-6 overflow-y-scroll h-full">
               <div className="flex relative w-full p-2 justify-between">
                 <header className="left-0 p-4 font-bold text-lg">
                   {title}

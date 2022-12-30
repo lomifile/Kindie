@@ -5,9 +5,20 @@ interface CardProps extends React.HTMLAttributes<HTMLElement> {
   icon?: JSX.Element | string;
 }
 
-export const Card: React.FC<CardProps> = ({ title, icon, children }) => {
+export const Card: React.FC<CardProps> = ({
+  title,
+  icon,
+  children,
+  ...props
+}) => {
   return (
-    <div className="flex flex-col justify-center items-center p-4 bg-white rounded-lg border shadow-md sm:p-8">
+    <div
+      {...props}
+      className={
+        "flex flex-col justify-center items-center p-4 bg-white rounded-lg border shadow-md sm:p-8 " +
+        props.className
+      }
+    >
       {icon ? icon : null}
       <h5 className="mb-4 mt-4 text-xl font-medium text-black">{title}</h5>
       {children}
