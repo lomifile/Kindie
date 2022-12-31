@@ -1,31 +1,33 @@
 import BeatLoader from "react-spinners/BeatLoader";
 import React from "react";
-import classNames from "classNames";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "className"> {
   isLoading?: boolean;
   active?: boolean;
+  className?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
   active,
   isLoading,
   children,
+  className,
   ...props
 }) => {
+  if (isLoading) props.disabled = true;
   return (
     <button
-      className={classNames(
-        "p-2 rounded-lg hover:cursor-pointer",
-        isLoading && " opacity-[50%]",
-        active && " opacity-[50%]"
-      )}
+      className={`p-2 rounded-lg ${
+        isLoading || active ? "hover:cursor-none" : "hover:cursor-pointer"
+      } ${isLoading ? "opacity-[50%]" : ""}
+      ${active ? " opacity-[50%]" : ""} ${className}`}
       {...props}
     >
       {isLoading ? (
-        <div className="flex">
+        <div className="flex flex-row justify-between items-center">
           Loading
-          <BeatLoader className="ml-2" color="white" />
+          <BeatLoader color="white" />
         </div>
       ) : (
         children
