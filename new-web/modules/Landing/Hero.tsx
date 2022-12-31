@@ -8,7 +8,7 @@ interface HeroProps {}
 export const Hero: React.FC<HeroProps> = ({}) => {
   return (
     <div
-      className="flex flex-row p-24 bg-primary xs:p-10 xs:justify-center xs:items-center
+      className="flex flex-row p-24 bg-primary xs:justify-center xs:items-center
            md:flex-row xs:flex-col-reverse sm:flex-col-reverse"
     >
       <motion.div

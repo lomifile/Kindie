@@ -7,6 +7,9 @@ module.exports = {
     "./ui/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    fontFamily: {
+      sans: ["Ubuntu"],
+    },
     extend: {
       screens: {
         xs: { max: "640px" },

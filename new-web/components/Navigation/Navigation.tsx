@@ -5,23 +5,25 @@ import { NavMenu } from "./NavMenu";
 import type { NavProps } from "../../ui/Nav";
 import React from "react";
 import { useDisclosure } from "../../hooks";
+import { useRouter } from "next/router";
 
 interface NavigationProps extends NavProps {}
 
 export const Navigation: React.FC<NavigationProps> = ({}) => {
   const { getButtonProps, getDisclosureprops } = useDisclosure();
 
+  const router = useRouter();
   const buttonProps = getButtonProps();
   const disclosureProps = getDisclosureprops();
   const [navColor, setNavColor] = React.useState<"white" | "primary">(
-    "primary"
+    router.pathname === "/" ? "primary" : "white"
   );
 
   React.useEffect(() => {
     const handleScroll = (event: Event) => {
-      if (window.scrollY === 0) {
+      if (window.scrollY === 0 && router.pathname === "/") {
         setNavColor("primary");
-      } else if (window.scrollY > 0) {
+      } else if (window.scrollY > 0 && router.pathname === "/") {
         setNavColor("white");
       }
     };
@@ -31,11 +33,11 @@ export const Navigation: React.FC<NavigationProps> = ({}) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [router]);
 
   return (
     <Nav
-      className={`bg-${navColor} fixed z-20 px-2 sm:px-4 py-2.5 w-full top-0 left-0 border-b transition-all ${
+      className={`bg-${navColor} fixed z-20 px-2 sm:px-4 py-3 w-full top-0 left-0 transition-all ${
         navColor === "primary" ? "border-primary" : "border-gray-200"
       }`}
     >
@@ -58,7 +60,9 @@ export const Navigation: React.FC<NavigationProps> = ({}) => {
             Get started
           </Button>
           <Button
-            className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+            className={`inline-flex items-center p-2 text-sm ${
+              navColor === "primary" ? "text-gray-100" : "text-accent"
+            } rounded-lg md:hidden hover:scale-110 focus:outline-none focus:ring-2 focus:ring-gray-20`}
             {...buttonProps}
           >
             <span className="sr-only">Open main menu</span>

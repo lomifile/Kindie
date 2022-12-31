@@ -1,17 +1,19 @@
+import { useRouter } from "next/router";
 import React from "react";
 
 interface NavMenuProps extends React.HTMLAttributes<HTMLElement> {}
 
 export const NavMenu: React.FC<NavMenuProps> = ({}) => {
+  const router = useRouter();
   const [navColor, setNavColor] = React.useState<"white" | "primary">(
-    "primary"
+    router.pathname === "/" ? "primary" : "white"
   );
 
   React.useEffect(() => {
     const handleScroll = (event: Event) => {
-      if (window.scrollY === 0) {
+      if (window.scrollY === 0 && router.pathname === "/") {
         setNavColor("primary");
-      } else if (window.scrollY > 0) {
+      } else if (window.scrollY > 0 && router.pathname === "/") {
         setNavColor("white");
       }
     };
@@ -21,7 +23,7 @@ export const NavMenu: React.FC<NavMenuProps> = ({}) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [router]);
 
   return (
     <ul
@@ -36,7 +38,11 @@ export const NavMenu: React.FC<NavMenuProps> = ({}) => {
           href="/"
           className={`block py-2 pr-4 pl-3 ${
             navColor === "primary" ? "text-white" : "text-accent"
-          } rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary md:p-0 `}
+          } rounded hover:bg-gray-100 md:hover:bg-transparent ${
+            navColor === "primary"
+              ? "md:hover:text-accent"
+              : "md:hover:text-primary"
+          } md:p-0 `}
           aria-current="page"
         >
           Home
@@ -47,7 +53,11 @@ export const NavMenu: React.FC<NavMenuProps> = ({}) => {
           href="/about-us"
           className={`block py-2 pr-4 pl-3 ${
             navColor === "primary" ? "text-white" : "text-accent"
-          } rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary md:p-0 `}
+          } rounded hover:bg-gray-100 md:hover:bg-transparent ${
+            navColor === "primary"
+              ? "md:hover:text-accent"
+              : "md:hover:text-primary"
+          } md:p-0 `}
           aria-current="page"
         >
           About us
@@ -58,7 +68,11 @@ export const NavMenu: React.FC<NavMenuProps> = ({}) => {
           href="#"
           className={`block py-2 pr-4 pl-3 ${
             navColor === "primary" ? "text-white" : "text-accent"
-          } rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary md:p-0 `}
+          } rounded hover:bg-gray-100 md:hover:bg-transparent ${
+            navColor === "primary"
+              ? "md:hover:text-accent"
+              : "md:hover:text-primary"
+          } md:p-0 `}
         >
           Services
         </a>
