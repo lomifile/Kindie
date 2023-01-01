@@ -66,10 +66,16 @@ export const Login = () => {
                     >
                       Login
                     </Button>
-                    <div className="flex flex-row px-20 py-5">
+                    <div className="flex flex-col px-20 py-5 justify-center items-center">
                       <a className="text-blue-800 underline" href="#">
                         Forgot password?
                       </a>
+                      <span className="mt-10">
+                        Don't have account?{" "}
+                        <a href="/register" className="text-blue-800 underline">
+                          Register here
+                        </a>
+                      </span>
                     </div>
                   </div>
                 </div>
