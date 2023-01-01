@@ -6,6 +6,7 @@ import type { NavProps } from "../../ui/Nav";
 import React from "react";
 import { useDisclosure } from "../../hooks";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface NavigationProps extends NavProps {}
 
@@ -53,6 +54,14 @@ export const Navigation: React.FC<NavigationProps> = ({}) => {
           </span>
         </a>
         <div className="flex md:order-2">
+          <Link href="/login">
+            <Button
+              type="button"
+              className="text-accent bg-transparent focus:ring-none focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-2"
+            >
+              Login
+            </Button>
+          </Link>
           <Button
             type="button"
             className="text-white bg-accent focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0"

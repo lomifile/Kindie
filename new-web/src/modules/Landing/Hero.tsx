@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Button from "../../ui/Button";
 import { KindieArrow } from "../../ui/Icons";
 import { motion } from "framer-motion";
@@ -70,10 +71,12 @@ export const Hero: React.FC<HeroProps> = ({}) => {
             },
           }}
         >
-          <Button className="flex flex-row items-center w-48 text-primary bg-secondary text-xl rounded-full px-5 py-4 text-center mt-10 hover:text-white hover:bg-transparent transition-all hover:scale-125">
-            <span>Get started</span>
-            <KindieArrow />
-          </Button>
+          <Link href="/register">
+            <Button className="flex flex-row items-center w-48 text-primary bg-secondary text-xl rounded-full px-5 py-4 text-center mt-10 hover:text-white hover:bg-transparent transition-all hover:scale-125">
+              <span>Get started</span>
+              <KindieArrow />
+            </Button>
+          </Link>
         </motion.div>
       </motion.div>
       <motion.div

@@ -628,6 +628,18 @@
     "auto-bind" "~4.0.0"
     "tslib" "~2.4.0"
 
+"@graphql-codegen/plugin-helpers@^2.7.2":
+  "integrity" "sha512-kln2AZ12uii6U59OQXdjLk5nOlh1pHis1R98cDZGFnfaiAbX9V3fxcZ1MMJkB7qFUymTALzyjZoXXdyVmPMfRg=="
+  "resolved" "https://nexus.tria.hr/repository/base/@graphql-codegen/plugin-helpers/-/plugin-helpers-2.7.2.tgz"
+  "version" "2.7.2"
+  dependencies:
+    "@graphql-tools/utils" "^8.8.0"
+    "change-case-all" "1.0.14"
+    "common-tags" "1.8.2"
+    "import-from" "4.0.0"
+    "lodash" "~4.17.0"
+    "tslib" "~2.4.0"
+
 "@graphql-codegen/plugin-helpers@^3.1.1", "@graphql-codegen/plugin-helpers@^3.1.2":
   "integrity" "sha512-emOQiHyIliVOIjKVKdsI5MXj312zmRDwmHpyUTZMjfpvxq/UVAHUJIVdVf+lnjjrI+LXBTgMlTWTgHQfmICxjg=="
   "resolved" "https://nexus.tria.hr/repository/base/@graphql-codegen/plugin-helpers/-/plugin-helpers-3.1.2.tgz"
@@ -671,6 +683,16 @@
     "auto-bind" "~4.0.0"
     "tslib" "~2.4.0"
 
+"@graphql-codegen/typescript-urql@^3.7.3":
+  "integrity" "sha512-ndb3C/IZeLaZXI24OEQZnJ7OgzZJvBdw1xnU/ohL6/lMcC5xQgxHBpqM10MZgfTc9l9Ip7qZVCVQk3I4cvcGrA=="
+  "resolved" "https://nexus.tria.hr/repository/base/@graphql-codegen/typescript-urql/-/typescript-urql-3.7.3.tgz"
+  "version" "3.7.3"
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^2.7.2"
+    "@graphql-codegen/visitor-plugin-common" "2.13.1"
+    "auto-bind" "~4.0.0"
+    "tslib" "~2.4.0"
+
 "@graphql-codegen/typescript@^2.8.6":
   "integrity" "sha512-zyIcwfZRBkngpaywnYQYyIHd3Cjw5sQN3IHzuE0iBgT9GOmqKP/clX3X8D0jzmGKP9LEZxsJmndZw7Nrvt1ksQ=="
   "resolved" "https://nexus.tria.hr/repository/base/@graphql-codegen/typescript/-/typescript-2.8.6.tgz"
@@ -693,6 +715,22 @@
     "@graphql-tools/utils" "^9.0.0"
     "auto-bind" "~4.0.0"
     "change-case-all" "1.0.15"
+    "dependency-graph" "^0.11.0"
+    "graphql-tag" "^2.11.0"
+    "parse-filepath" "^1.0.2"
+    "tslib" "~2.4.0"
+
+"@graphql-codegen/visitor-plugin-common@2.13.1":
+  "integrity" "sha512-mD9ufZhDGhyrSaWQGrU1Q1c5f01TeWtSWy/cDwXYjJcHIj1Y/DG2x0tOflEfCvh5WcnmHNIw4lzDsg1W7iFJEg=="
+  "resolved" "https://nexus.tria.hr/repository/base/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-2.13.1.tgz"
+  "version" "2.13.1"
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^2.7.2"
+    "@graphql-tools/optimize" "^1.3.0"
+    "@graphql-tools/relay-operation-optimizer" "^6.5.0"
+    "@graphql-tools/utils" "^8.8.0"
+    "auto-bind" "~4.0.0"
+    "change-case-all" "1.0.14"
     "dependency-graph" "^0.11.0"
     "graphql-tag" "^2.11.0"
     "parse-filepath" "^1.0.2"
@@ -963,6 +1001,13 @@
     "ws" "8.11.0"
 
 "@graphql-tools/utils@^8.6.5":
+  "integrity" "sha512-qIh9yYpdUFmctVqovwMdheVNJqFh+DQNWIhX87FJStfXYnmweBUDATok9fWPleKeFwxnW8IapKmY8m8toJEkAw=="
+  "resolved" "https://nexus.tria.hr/repository/base/@graphql-tools/utils/-/utils-8.13.1.tgz"
+  "version" "8.13.1"
+  dependencies:
+    "tslib" "^2.4.0"
+
+"@graphql-tools/utils@^8.8.0":
   "integrity" "sha512-qIh9yYpdUFmctVqovwMdheVNJqFh+DQNWIhX87FJStfXYnmweBUDATok9fWPleKeFwxnW8IapKmY8m8toJEkAw=="
   "resolved" "https://nexus.tria.hr/repository/base/@graphql-tools/utils/-/utils-8.13.1.tgz"
   "version" "8.13.1"
@@ -1340,12 +1385,20 @@
     "@typescript-eslint/types" "5.33.0"
     "eslint-visitor-keys" "^3.3.0"
 
-"@urql/core@^3.0.3":
+"@urql/core@^3.0.3", "@urql/core@>=3.1.1":
   "integrity" "sha512-Mnxtq4I4QeFJsgs7Iytw+HyhiGxISR6qtyk66c9tipozLZ6QVxrCiUPF2HY4BxNIabaxcp+rivadvm8NAnXj4Q=="
   "resolved" "https://nexus.tria.hr/repository/base/@urql/core/-/core-3.1.1.tgz"
   "version" "3.1.1"
   dependencies:
     "wonka" "^6.1.2"
+
+"@urql/exchange-graphcache@^5.0.8":
+  "integrity" "sha512-uUomVgpcvcOgFEkNWoz9eEPsZ4KNZpZ5YfopZHQ+SN6eZKtT91XqjHNP0mUdcKqIE3fmbKMiPMKbBvxBwzbOow=="
+  "resolved" "https://nexus.tria.hr/repository/base/@urql/exchange-graphcache/-/exchange-graphcache-5.0.8.tgz"
+  "version" "5.0.8"
+  dependencies:
+    "@urql/core" ">=3.1.1"
+    "wonka" "^6.0.0"
 
 "@webcomponents/webcomponentsjs@^2.0.2":
   "integrity" "sha512-Moog+Smx3ORTbWwuPqoclr+uvfLnciVd6wdCaVscHPrxbmQ/IJKm3wbB7hpzJtXWjAq2l/6QMlO85aZiOdtv5Q=="
@@ -1768,6 +1821,22 @@
   dependencies:
     "ansi-styles" "^4.1.0"
     "supports-color" "^7.1.0"
+
+"change-case-all@1.0.14":
+  "integrity" "sha512-CWVm2uT7dmSHdO/z1CXT/n47mWonyypzBbuCy5tN7uMg22BsfkhwT6oHmFCAk+gL1LOOxhdbB9SZz3J1KTY3gA=="
+  "resolved" "https://nexus.tria.hr/repository/base/change-case-all/-/change-case-all-1.0.14.tgz"
+  "version" "1.0.14"
+  dependencies:
+    "change-case" "^4.1.2"
+    "is-lower-case" "^2.0.2"
+    "is-upper-case" "^2.0.2"
+    "lower-case" "^2.0.2"
+    "lower-case-first" "^2.0.2"
+    "sponge-case" "^1.0.1"
+    "swap-case" "^2.0.2"
+    "title-case" "^3.0.3"
+    "upper-case" "^2.0.2"
+    "upper-case-first" "^2.0.2"
 
 "change-case-all@1.0.15":
   "integrity" "sha512-3+GIFhk3sNuvFAJKU46o26OdzudQlPNBCu1ZQi3cMeMHhty1bhDxu2WrEilVNYaGvqUtR1VSigFcJOiS13dRhQ=="
@@ -2852,7 +2921,7 @@
     "extract-files" "^9.0.0"
     "form-data" "^3.0.0"
 
-"graphql-tag@^2.11.0":
+"graphql-tag@^2.0.0", "graphql-tag@^2.11.0":
   "integrity" "sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg=="
   "resolved" "https://nexus.tria.hr/repository/base/graphql-tag/-/graphql-tag-2.12.6.tgz"
   "version" "2.12.6"
@@ -3571,6 +3640,13 @@
   "resolved" "https://nexus.tria.hr/repository/base/natural-compare/-/natural-compare-1.4.0.tgz"
   "version" "1.4.0"
 
+"next-urql@^4.0.2":
+  "integrity" "sha512-kxVMyk/angixsNjXSib2dabU1fGlidRgk7B9B+WOz+0yIZw9XPcrq1xwwgehfQe2n1O0gboBSQE8reP5LPGk7w=="
+  "resolved" "https://nexus.tria.hr/repository/base/next-urql/-/next-urql-4.0.2.tgz"
+  "version" "4.0.2"
+  dependencies:
+    "react-ssr-prepass" "^1.4.0"
+
 "next@12.2.4":
   "integrity" "sha512-b1xlxEozmAWokAXzXsi5vlmU/IfJcFNIJA8dpU5UdkFbyDPio8wwb8mAQ/Y7rGtfTgG/t/u49BiyEA+xAgFvow=="
   "resolved" "https://nexus.tria.hr/repository/base/next/-/next-12.2.4.tgz"
@@ -4124,6 +4200,11 @@
   "integrity" "sha512-V6IURjYOwomhdngMfuVxBp4utCF6v21sjQ6r4K2JoKl8fwXZp1UeHMBLf+2SU+cts8hAVj9rHOJ8kdT5UqqaJw=="
   "resolved" "https://nexus.tria.hr/repository/base/react-spinners/-/react-spinners-0.13.4.tgz"
   "version" "0.13.4"
+
+"react-ssr-prepass@^1.4.0":
+  "integrity" "sha512-yFNHrlVEReVYKsLI5lF05tZoHveA5pGzjFbFJY/3pOqqjGOmMmqx83N4hIjN2n6E1AOa+eQEUxs3CgRnPmT0RQ=="
+  "resolved" "https://nexus.tria.hr/repository/base/react-ssr-prepass/-/react-ssr-prepass-1.5.0.tgz"
+  "version" "1.5.0"
 
 "react@*", "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17.0.2 || ^18.0.0-0", "react@^18.0.0", "react@^18.2.0", "react@>= 16.8.0", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0", "react@>=15", "react@>=16.8.0", "react@18.2.0":
   "integrity" "sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ=="
@@ -4686,17 +4767,12 @@
   "resolved" "https://nexus.tria.hr/repository/base/tslib/-/tslib-2.4.0.tgz"
   "version" "2.4.0"
 
-"tslib@^2.4.0":
+"tslib@^2.4.0", "tslib@~2.4.0":
   "integrity" "sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA=="
   "resolved" "https://nexus.tria.hr/repository/base/tslib/-/tslib-2.4.1.tgz"
   "version" "2.4.1"
 
 "tslib@^2.4.1":
-  "integrity" "sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA=="
-  "resolved" "https://nexus.tria.hr/repository/base/tslib/-/tslib-2.4.1.tgz"
-  "version" "2.4.1"
-
-"tslib@~2.4.0":
   "integrity" "sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA=="
   "resolved" "https://nexus.tria.hr/repository/base/tslib/-/tslib-2.4.1.tgz"
   "version" "2.4.1"
@@ -4798,7 +4874,7 @@
   dependencies:
     "punycode" "^2.1.0"
 
-"urql@^3.0.3":
+"urql@^3.0.0", "urql@^3.0.3":
   "integrity" "sha512-aVUAMRLdc5AOk239DxgXt6ZxTl/fEmjr7oyU5OGo8uvpqu42FkeJErzd2qBzhAQ3DyusoZIbqbBLPlnKo/yy2A=="
   "resolved" "https://nexus.tria.hr/repository/base/urql/-/urql-3.0.3.tgz"
   "version" "3.0.3"

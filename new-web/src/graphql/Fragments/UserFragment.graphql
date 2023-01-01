@@ -1,0 +1,8 @@
+fragment UserFragment on User {
+  Id
+  Name
+  Surname
+  Email
+  createdAt
+  updatedAt
+}

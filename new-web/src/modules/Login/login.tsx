@@ -3,8 +3,12 @@ import React from "react";
 import { Input } from "../../ui/Inputs";
 import { Form, Formik } from "formik";
 import Button from "../../ui/Button";
+import { useLoginMutation } from "../../generated/graphql";
+import router from "next/router";
+import { toErrormap } from "../../utils/toErrorMap";
 
 export const Login = () => {
+  const [, login] = useLoginMutation();
   return (
     <div className="flex flex-row w-full h-screen bg-primary">
       <div className="flex flex-col w-1/2 h-screen items-center justify-center">
@@ -39,8 +43,21 @@ export const Login = () => {
               email: "",
               password: "",
             }}
-            onSubmit={async (values) => {
-              console.log(values);
+            onSubmit={async (values, { setErrors }) => {
+              const response = await login({
+                email: values.email,
+                password: values.password,
+              });
+              if (response.data?.login.errors) {
+                setErrors(toErrormap(response.data.login.errors));
+              } else if (response.data?.login.user) {
+                alert("Login success!");
+                // if (typeof router.query.next === "string") {
+                //   router.push(router.query.next);
+                // } else {
+                //   router.push("/dashboard");
+                // }
+              }
             }}
           >
             {({ isSubmitting }) => (

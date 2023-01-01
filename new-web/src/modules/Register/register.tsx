@@ -3,8 +3,12 @@ import { motion } from "framer-motion";
 import React from "react";
 import Button from "../../ui/Button";
 import { Input } from "../../ui/Inputs";
+import { useRegisterMutation } from "../../generated/graphql";
+import { toErrormap } from "../../utils/toErrorMap";
+import router from "next/router";
 
 export const Register = () => {
+  const [, register] = useRegisterMutation();
   return (
     <div className="flex flex-row w-full h-screen bg-primary">
       <div className="flex flex-col w-1/2 h-screen items-center justify-center">
@@ -36,11 +40,28 @@ export const Register = () => {
         <div className="w-full justify-center items-center">
           <Formik
             initialValues={{
+              name: "",
+              surname: "",
               email: "",
               password: "",
+              repeatPassword: "",
             }}
-            onSubmit={async (values) => {
-              console.log(values);
+            onSubmit={async (values, { setErrors }) => {
+              const response = await register({
+                options: {
+                  name: values.name,
+                  surname: values.surname,
+                  email: values.email,
+                  password: values.password,
+                  repeatPassword: values.repeatPassword,
+                },
+              });
+              if (response.data?.register.errors) {
+                setErrors(toErrormap(response.data.register.errors));
+              } else if (response.data?.register.user) {
+                alert("Registration success");
+                // router.push("/");
+              }
             }}
           >
             {({ isSubmitting }) => (
