@@ -31,7 +31,6 @@ jobs:
         run: yarn test
       - name: Install dependencies on kindie-visual
         working-directory: kindie-visual
-        run: yarn
       - name: Run tests on kindie-visual
         working-directory: kindie-visual
         run: yarn test

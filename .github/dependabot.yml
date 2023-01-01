@@ -9,5 +9,6 @@ updates:
     directory: "/web" # Location of package manifests
     directory: "/server"
     directory: "/kindie-visual"
+    directory: "/backend"
     schedule:
       interval: "daily"
