@@ -1,0 +1,92 @@
+@import "../../kindie-visual-styles/index.scss";
+@import "../../kindie-visual-styles/_animations.scss";
+
+.btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border: none;
+  font-size: medium;
+  font-weight: 500;
+  border-radius: 24px;
+
+  &:disabled {
+    opacity: 50%;
+  }
+}
+
+@each $color, $value in $colors {
+  .btn-outline-#{$color} {
+    background-color: transparent;
+    color: #{$value};
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    border: 1px solid #{$value};
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+      z-index: -2;
+    }
+
+    &:before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background-color: #{$value};
+      transition: all 0.3s ease;
+      z-index: -1;
+    }
+
+    &:hover {
+      color: #fff;
+      &:before {
+        width: 100%;
+      }
+    }
+
+    & .loading-div .loader span {
+      background-color: #{$value} !important;
+    }
+
+    &:disabled:hover {
+      opacity: 50%;
+    }
+  }
+}
+
+@each $color, $value in $colors {
+  .btn-fill-#{$color} {
+    border: none;
+    background-color: #{$value};
+    color: white;
+    transition: 0.3s ease-in all;
+
+    & .loading-div .loader span {
+      background-color: white !important;
+    }
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+.loading-div {
+  display: inline-flex;
+  justify-content: center;
+}
+
+.loading-div svg {
+  margin-left: 25px;
+}
