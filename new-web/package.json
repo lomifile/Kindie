@@ -6,19 +6,30 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "gen:graphql": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@urql/exchange-graphcache": "^5.0.8",
     "boxicons": "^2.1.2",
     "classnames": "^2.3.1",
     "formik": "^2.2.9",
     "framer-motion": "^7.2.1",
+    "graphql": "^16.6.0",
+    "next-urql": "^4.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
-    "react-spinners": "^0.13.4"
+    "react-spinners": "^0.13.4",
+    "urql": "^3.0.3",
+    "wonka": "^6.1.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.16.2",
+    "@graphql-codegen/client-preset": "1.2.4",
+    "@graphql-codegen/typescript": "^2.8.6",
+    "@graphql-codegen/typescript-operations": "^2.5.11",
+    "@graphql-codegen/typescript-urql": "^3.7.3",
     "@types/node": "18.6.5",
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",
