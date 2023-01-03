@@ -51,18 +51,17 @@ export const Login = () => {
               if (response.data?.login.errors) {
                 setErrors(toErrormap(response.data.login.errors));
               } else if (response.data?.login.user) {
-                alert("Login success!");
-                // if (typeof router.query.next === "string") {
-                //   router.push(router.query.next);
-                // } else {
-                //   router.push("/dashboard");
-                // }
+                if (typeof router.query.next === "string") {
+                  router.push(router.query.next);
+                } else {
+                  router.push("/dashboard");
+                }
               }
             }}
           >
             {({ isSubmitting }) => (
               <Form>
-                <div className="grid grid-cols-1 gap-4 px-20 py-10 items-center justify-center">
+                <div className="grid grid-cols-1 gap-4 px-44 py-10  items-center justify-center">
                   <Input
                     type="text"
                     name="email"
@@ -79,7 +78,7 @@ export const Login = () => {
                     <Button
                       type="submit"
                       isLoading={isSubmitting}
-                      className="mt-2 p-2 bg-primary text-gray-100 rounded-xl w-1/2 self-center font-bold"
+                      className="mt-2 p-2 bg-primary text-gray-100 rounded-xl w-1/4 self-center font-bold"
                     >
                       Login
                     </Button>

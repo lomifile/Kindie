@@ -1,5 +1,5 @@
-import BeatLoader from "react-spinners/BeatLoader";
 import React from "react";
+import { HashLoader } from "react-spinners";
 
 interface ButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "className"> {
@@ -27,7 +27,7 @@ export const Button: React.FC<ButtonProps> = ({
       {isLoading ? (
         <div className="flex flex-row justify-between items-center">
           Loading
-          <BeatLoader color="white" />
+          <HashLoader size={20} color="white" />
         </div>
       ) : (
         children

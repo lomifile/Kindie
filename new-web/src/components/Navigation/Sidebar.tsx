@@ -9,13 +9,13 @@ interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
 
 export const Sidebar = ({ children, isOpen, onClose }: SidebarProps) => {
   return (
-    <Menu isOpen={isOpen} onClose={onClose} variant="closable">
-      <div className="overflow-y-auto py-4 px-3 bg-gray-100 h-screen w-64">
-        <ul className="space-y-2">
-          <li>
+    <Menu isOpen={isOpen} onClose={onClose} variant="closable" title="Menu">
+      <div className="overflow-y-auto py-4 px-3 bg-gray-100 h-screen w-full border-none">
+        <ul className="space-y-2 border-none w-full">
+          <li className="text-accent hover:text-gray-900">
             <a
               href="#"
-              className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100"
+              className="flex items-center p-2 text-base font-normal text-accent rounded-lg hover:bg-gray-100 group"
             >
               <svg
                 aria-hidden="true"
@@ -31,7 +31,7 @@ export const Sidebar = ({ children, isOpen, onClose }: SidebarProps) => {
             </a>
           </li>
           <Dropdown
-            className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100"
+            className="flex items-center p-2 text-base font-normal rounded-lg hover:bg-gray-100"
             title="Kindergarden"
             as="li"
             icon={
@@ -49,7 +49,7 @@ export const Sidebar = ({ children, isOpen, onClose }: SidebarProps) => {
             <li>
               <a
                 href="#"
-                className="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100"
+                className="flex items-center group p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100"
               >
                 Kindergarden 1
               </a>
@@ -74,7 +74,7 @@ export const Sidebar = ({ children, isOpen, onClose }: SidebarProps) => {
           <li>
             <a
               href="#"
-              className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100"
+              className="flex items-center p-2 text-base group font-normal text-gray-900 rounded-lg hover:bg-gray-100"
             >
               <svg
                 aria-hidden="true"
@@ -95,7 +95,7 @@ export const Sidebar = ({ children, isOpen, onClose }: SidebarProps) => {
           <li>
             <a
               href="#"
-              className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100"
+              className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100 group"
             >
               <svg
                 aria-hidden="true"
@@ -116,7 +116,7 @@ export const Sidebar = ({ children, isOpen, onClose }: SidebarProps) => {
           <li>
             <a
               href="#"
-              className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100"
+              className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100 group"
             >
               <svg
                 aria-hidden="true"

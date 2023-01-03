@@ -13,7 +13,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
     <>
       <header>
-        <Nav className="bg-gray-100 border-gray-200 sm:px-4 py-2 rounded ">
+        <Nav className="bg-gray-100 border-gray-200 sm:px-4 py-2 rounded w-full">
           <AppNav sidebarButtonRef={buttonProps} />
         </Nav>
       </header>
@@ -22,7 +22,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         <section>
           <div
             id="main"
-            className="main-content flex-1 bg-gray-100 mt-12 md:mt-2 pb-24 md:pb-5"
+            className="main-content flex-1 mt-12 md:mt-2 pb-24 md:pb-5"
           >
             {children}
           </div>

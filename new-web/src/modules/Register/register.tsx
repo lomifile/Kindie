@@ -59,14 +59,13 @@ export const Register = () => {
               if (response.data?.register.errors) {
                 setErrors(toErrormap(response.data.register.errors));
               } else if (response.data?.register.user) {
-                alert("Registration success");
-                // router.push("/");
+                router.push("/");
               }
             }}
           >
             {({ isSubmitting }) => (
               <Form>
-                <div className="grid grid-cols-2 gap-1 px-20">
+                <div className="grid grid-cols-2 gap-4 px-44">
                   <Input
                     type="text"
                     name="name"
@@ -80,7 +79,7 @@ export const Register = () => {
                     placeholder="Last name"
                   />
                 </div>
-                <div className="grid grid-cols-1 gap-4 px-20 py-5 items-center justify-center">
+                <div className="grid grid-cols-1 gap-4 px-44 py-5 items-center justify-center">
                   <Input
                     type="text"
                     name="email"
@@ -103,7 +102,7 @@ export const Register = () => {
                     <Button
                       type="submit"
                       isLoading={isSubmitting}
-                      className="mt-2 p-2 bg-primary text-gray-100 rounded-xl w-1/2 self-center font-bold"
+                      className="mt-2 p-2 bg-primary text-gray-100 rounded-xl w-1/5 self-center font-bold"
                     >
                       Register
                     </Button>
