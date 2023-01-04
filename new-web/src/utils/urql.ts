@@ -4,7 +4,12 @@ import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
 import { pipe, tap } from "wonka";
 import { isServer } from "./utils";
 import { updateQuery } from "./updateQuery";
-import { LoginMutation, MeQuery, MeDocument } from "../generated/graphql";
+import {
+  LoginMutation,
+  MeQuery,
+  MeDocument,
+  LogoutMutation,
+} from "../generated/graphql";
 
 const errorExchange: Exchange = ({ forward }) => {
   const router: NextRouter = Router;
@@ -60,6 +65,14 @@ export const urqlClient = (ssrExchange: any, ctx: any) => {
                     me: result.login.user,
                   };
                 }
+              );
+            },
+            logout: (_result, _args, cache, _info) => {
+              updateQuery<LogoutMutation, MeQuery>(
+                cache,
+                { query: MeDocument },
+                _result,
+                () => ({ me: null })
               );
             },
           },

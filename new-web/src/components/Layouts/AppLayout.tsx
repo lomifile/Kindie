@@ -11,23 +11,14 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const buttonProps = getButtonProps();
 
   return (
-    <>
-      <header>
-        <Nav className="bg-gray-100 border-gray-200 sm:px-4 py-2 rounded w-full">
-          <AppNav sidebarButtonRef={buttonProps} />
+    <div className="flex flex-column w-full md:pl-[255px]">
+      <Sidebar isOpen={isOpen} onClose={onClose} />
+      <div id="main" className="w-full mb-[30px]">
+        <Nav className="bg-white py-2 rounded w-full">
+          <AppNav />
         </Nav>
-      </header>
-      <div className="w-full">
-        <Sidebar isOpen={isOpen} onClose={onClose} />
-        <section>
-          <div
-            id="main"
-            className="main-content flex-1 mt-12 md:mt-2 pb-24 md:pb-5"
-          >
-            {children}
-          </div>
-        </section>
+        {children}
       </div>
-    </>
+    </div>
   );
 };
