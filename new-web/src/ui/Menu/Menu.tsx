@@ -75,7 +75,11 @@ export const Menu: React.FC<MenuProps> = ({
         </div>
       );
     case "static":
-      return <div className="w-64">{children}</div>;
+      return (
+        <div className="flex flex-column mb-[30px] w-full md:h-full md:left-0 md:overflow-x-hidden md:overflow-y-auto md:fixed md:top-0 md:w-64 md:z-[1030]">
+          {children}
+        </div>
+      );
     case "nav":
       return <nav></nav>;
     default:
