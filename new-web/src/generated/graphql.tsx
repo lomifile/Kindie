@@ -566,6 +566,8 @@ export type UsernamePasswordInput = {
   surname: Scalars['String'];
 };
 
+export type ChildrenFragmentFragment = { __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: any | null, OIB: number, Remarks: string, motherId?: number | null, fatherId?: number | null, createdAt: any, updatedAt: any };
+
 export type ErrorFragmentFragment = { __typename?: 'FieldError', field: string, message: string };
 
 export type UserFragmentFragment = { __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string };
@@ -595,6 +597,30 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string } | null };
 
+export type ShowChildrenQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  cursor?: InputMaybe<Scalars['String']>;
+  inGroup?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type ShowChildrenQuery = { __typename?: 'Query', showChildren: { __typename?: 'PaginatedChildren', hasMore: boolean, data?: Array<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: any | null, OIB: number, Remarks: string, motherId?: number | null, fatherId?: number | null, createdAt: any, updatedAt: any }> | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
+export const ChildrenFragmentFragmentDoc = gql`
+    fragment ChildrenFragment on Children {
+  Id
+  Name
+  Surname
+  Gender
+  BirthDate
+  OIB
+  Remarks
+  motherId
+  fatherId
+  createdAt
+  updatedAt
+}
+    `;
 export const ErrorFragmentFragmentDoc = gql`
     fragment ErrorFragment on FieldError {
   field
@@ -664,4 +690,22 @@ export const MeDocument = gql`
 
 export function useMeQuery(options?: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'>) {
   return Urql.useQuery<MeQuery, MeQueryVariables>({ query: MeDocument, ...options });
+};
+export const ShowChildrenDocument = gql`
+    query ShowChildren($limit: Int!, $cursor: String, $inGroup: Int) {
+  showChildren(limit: $limit, cursor: $cursor, inGroup: $inGroup) {
+    data {
+      ...ChildrenFragment
+    }
+    errors {
+      ...ErrorFragment
+    }
+    hasMore
+  }
+}
+    ${ChildrenFragmentFragmentDoc}
+${ErrorFragmentFragmentDoc}`;
+
+export function useShowChildrenQuery(options: Omit<Urql.UseQueryArgs<ShowChildrenQueryVariables>, 'query'>) {
+  return Urql.useQuery<ShowChildrenQuery, ShowChildrenQueryVariables>({ query: ShowChildrenDocument, ...options });
 };
