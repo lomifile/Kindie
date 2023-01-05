@@ -1,8 +1,7 @@
-import Dropdown from "../../ui/Dropdown";
 import Menu from "../../ui/Menu";
 import React from "react";
-import { routes } from "./sideBarData";
 import { useRouter } from "next/router";
+import { routes } from "./SideBarData";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   isOpen?: boolean;
@@ -40,8 +39,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                       href={e.route}
                       className="flex items-center p-2 text-base font-normal text-gray-100 rounded-lg group bg-primary"
                     >
-                      {e.icon ? (
-                        e.icon
+                      {e.iconActive ? (
+                        e.iconActive
                       ) : (
                         <svg
                           aria-hidden="true"

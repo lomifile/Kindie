@@ -1,0 +1,11 @@
+query ShowChildren($limit: Int!, $cursor: String, $inGroup: Int) {
+  showChildren(limit: $limit, cursor: $cursor, inGroup: $inGroup) {
+    data {
+      ...ChildrenFragment
+    }
+    errors {
+      ...ErrorFragment
+    }
+    hasMore
+  }
+}
