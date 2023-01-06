@@ -1,0 +1,25 @@
+fragment ChildrenFragment on Children {
+  Id
+  Name
+  Surname
+  Gender
+  BirthDate
+  OIB
+  Remarks
+  #   createdBy {
+  #     ...UserFragment
+  #   }
+  #   updatedBy {
+  #     ...UserFragment
+  #   }
+  #   mother {
+  #     ...MotherFragment
+  #   }
+  #   father {
+  #     ...FatherFragment
+  #   }
+  motherId
+  fatherId
+  createdAt
+  updatedAt
+}

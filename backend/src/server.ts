@@ -1,13 +1,10 @@
 import "reflect-metadata";
 import connectRedis from "connect-redis";
-import express, { RequestHandler } from "express";
+import express from "express";
 import session from "express-session";
 
 import { COOKIE_NAME, __prod__ } from "@root/constants";
 import cors from "cors";
-import path from "path";
-import fs from "fs";
-import morgan from "morgan";
 import dotenv from "dotenv";
 import { createSchema } from "@graphql/scehma";
 import { redis } from "@libs/redis";
@@ -23,22 +20,6 @@ app.use(
 		credentials: true
 	})
 );
-
-try {
-	const accessLogStream = fs.createWriteStream(
-		path.join(__dirname + "/../log/logger.log"),
-		{
-			flags: "a+"
-		}
-	);
-	app.use(
-		morgan("combined", {
-			stream: accessLogStream
-		}) as unknown as RequestHandler
-	);
-} catch (err) {
-	console.error(err);
-}
 
 app.set("trust proxy", 1);
 app.use(
