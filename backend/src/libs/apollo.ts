@@ -13,6 +13,7 @@ import {
 } from "@graphql/resolvers";
 import { buildSchemaSync } from "type-graphql";
 import { redis } from "@libs/redis";
+import { LogAccess } from "@root/middleware/LogAccess";
 
 export const apolloServer = new ApolloServer({
 	schema: buildSchemaSync({
@@ -27,7 +28,8 @@ export const apolloServer = new ApolloServer({
 			ChildrenResolver,
 			AttendanceResolver
 		],
-		validate: false
+		validate: false,
+		globalMiddlewares: [LogAccess]
 	}),
 	plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
 	context: ({ req, res }) => ({ req, res, redis })
