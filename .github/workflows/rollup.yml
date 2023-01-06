@@ -1,6 +1,4 @@
 on:
-  push:
-    branches: [master, new-web]
   pull_request:
     branches: [prod]
 
