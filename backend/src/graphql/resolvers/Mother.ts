@@ -15,6 +15,7 @@ import { ParentsInput } from "@graphql/inputs";
 import { getConnection, getRepository } from "typeorm";
 import { validateMotherFather } from "@graphql/validators";
 import { FieldError } from "@utils/Errors";
+import { LogAction } from "@root/middleware/LogAction";
 
 @ObjectType()
 class MotherResponse {
@@ -37,8 +38,7 @@ class PaginatedMother {
 @Resolver(Mother)
 export class MotherResolver {
 	@Query(() => PaginatedMother)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async showMother(
 		@Arg("limit", () => Int) limit: number,
 		@Arg("cursor", () => String, { nullable: true }) cursor: string | null,
@@ -74,16 +74,14 @@ export class MotherResolver {
 	}
 
 	@Mutation(() => Boolean)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async deleteMother(@Arg("motherId", () => Int) motherId: number) {
 		await Mother.delete(motherId);
 		return true;
 	}
 
 	@Mutation(() => MotherResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async updateMother(
 		@Arg("options") options: ParentsInput,
 		@Arg("motherId", () => Int) motherId: number,
@@ -123,8 +121,7 @@ export class MotherResolver {
 	}
 
 	@Mutation(() => MotherResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async addMother(
 		@Arg("options") options: ParentsInput,
 		@Ctx() { req }: AppContext
@@ -160,8 +157,7 @@ export class MotherResolver {
 	}
 
 	@Query(() => Mother)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	findMother(
 		@Arg("id", () => Int) id: number,
 		@Ctx() { req }: AppContext
@@ -176,8 +172,7 @@ export class MotherResolver {
 
 	// TODO: Rewrite this function fully
 	@Query(() => [Mother])
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async filterMother(
 		@Arg("text", () => String) text: string,
 		@Ctx() { req }: AppContext
@@ -203,8 +198,7 @@ export class MotherResolver {
 	}
 
 	@Query(() => [Mother])
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async searchMother(
 		@Arg("text", () => String) text: string,
 		@Ctx() { req }: AppContext

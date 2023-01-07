@@ -15,6 +15,7 @@ import { getConnection } from "typeorm";
 import PaginatedResponse from "@utils/paginatedResponseObject";
 import Response from "@utils/repsonseObject";
 import { validateMotherFather } from "@graphql/validators";
+import { LogAction } from "@root/middleware/LogAction";
 
 @ObjectType()
 class PaginatedFather extends PaginatedResponse<Father>(Father) {}
@@ -25,8 +26,7 @@ class FatherResponse extends Response<Father>(Father) {}
 @Resolver(Father)
 export class FatherResolver {
 	@Query(() => PaginatedFather)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async showFather(
 		@Arg("limit", () => Int) limit: number,
 		@Arg("cursor", () => String, { nullable: true }) cursor: string | null,
@@ -72,8 +72,7 @@ export class FatherResolver {
 	}
 
 	@Mutation(() => FatherResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async updateFather(
 		@Arg("options") options: ParentsInput,
 		@Arg("fatherId", () => Int) fatherId: number,
@@ -108,8 +107,7 @@ export class FatherResolver {
 	}
 
 	@Mutation(() => FatherResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async addFather(
 		@Arg("options") options: ParentsInput,
 		@Ctx() { req }: AppContext
@@ -137,8 +135,7 @@ export class FatherResolver {
 	}
 
 	@Query(() => [Father])
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async filterFather(
 		@Arg("text", () => String) text: string,
 		@Ctx() { req }: AppContext
@@ -162,8 +159,7 @@ export class FatherResolver {
 	}
 
 	@Mutation(() => Boolean)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async deleteFather(
 		@Arg("Id", () => Int!) Id: number
 	): Promise<FatherResponse | boolean> {
