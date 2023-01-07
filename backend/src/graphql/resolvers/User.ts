@@ -39,6 +39,48 @@ class UserResponse {
 
 @Resolver(User)
 export class UserResolver {
+	@Mutation(() => UserResponse)
+	@UseMiddleware(isAuth, LogAction)
+	async addProfilePicture(
+		@Arg("picture", () => String) picture: string,
+		@Ctx() { req }: AppContext
+	): Promise<UserResponse> {
+		let user;
+		if (picture.length === 0 || !picture)
+			return {
+				errors: [
+					{
+						field: "picture",
+						message: "Picture arg cannot be empty"
+					}
+				]
+			};
+		try {
+			const response = await getConnection()
+				.createQueryBuilder()
+				.update(User)
+				.set({
+					picture
+				})
+				.where("Id = :id", { id: req.session.userId })
+				.returning("*")
+				.execute();
+			user = response.raw[0];
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
+		return {
+			user
+		};
+	}
+
 	@Query(() => [User])
 	@UseMiddleware(isAuth, LogAction)
 	async staffOf(@Ctx() { req }: AppContext): Promise<User[]> {
