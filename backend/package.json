@@ -13,7 +13,7 @@
 		"gen:migrations": "npm run typeorm:cli -- migration:generate -n kindie",
 		"run:migrations": "npm run typeorm:cli -- migration:run",
 		"setup:db": "ts-node ./src/helpers/setup.ts",
-		"test": "npm run setup:db && jest --verbose --detectOpenHandles",
+		"test": "npm run setup:db && jest --detectOpenHandles",
 		"prettier": "prettier --write ."
 	},
 	"engines": {
