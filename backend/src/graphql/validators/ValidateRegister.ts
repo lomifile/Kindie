@@ -37,12 +37,7 @@ export const ValidateRegister = (
 			message: "Passwords don't match"
 		});
 	}
-	// console.log(
-	// 	errors,
-	// 	"Name -> " +
-	// 		` ${options.name} ` +
-	// 		/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(options.name)
-	// );
+
 	if (errors.length > 0) return errors;
 	return null;
 };
