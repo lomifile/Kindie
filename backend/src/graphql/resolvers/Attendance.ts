@@ -17,6 +17,7 @@ import {
 } from "@middleware/index";
 import PaginatedResponse from "@utils/paginatedResponseObject";
 import { getConnection } from "typeorm";
+import { LogAction } from "@root/middleware/LogAction";
 
 @ObjectType()
 class AttedanceResponse extends Response<Attendance>(Attendance) {}
@@ -27,9 +28,7 @@ class PaginatedAttendacne extends PaginatedResponse<Attendance>(Attendance) {}
 @Resolver(Attendance)
 export class AttendanceResolver {
 	@Query(() => PaginatedAttendacne)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
-	@UseMiddleware(isGroupSelected)
+	@UseMiddleware(isAuth, isGroupSelected, isKinderGardenSelected, LogAction)
 	async showAllAttendance(
 		@Arg("limit", () => Int) limit: number,
 		@Arg("cursor", () => String) cursor: string | null
@@ -71,9 +70,7 @@ export class AttendanceResolver {
 	}
 
 	@Mutation(() => AttedanceResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
-	@UseMiddleware(isGroupSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, isGroupSelected, LogAction)
 	async createAttendacne(
 		@Arg("childId", () => Int) childId: number,
 		@Ctx() { req }: AppContext,
@@ -104,9 +101,7 @@ export class AttendanceResolver {
 	}
 
 	@Mutation(() => AttedanceResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
-	@UseMiddleware(isGroupSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, isGroupSelected, LogAction)
 	async markAttendance(
 		@Arg("attendanceId", () => Int) attendanceId: number
 	): Promise<AttedanceResponse> {
@@ -159,9 +154,7 @@ export class AttendanceResolver {
 	}
 
 	@Mutation(() => Boolean)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
-	@UseMiddleware(isGroupSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, isGroupSelected)
 	async delete(
 		@Arg("attendanceId", () => Int) attendanceId: number
 	): Promise<boolean> {

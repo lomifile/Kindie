@@ -9,6 +9,7 @@ import {
 	StaffMembers,
 	User
 } from "@orm/entities";
+import { ActivityLog } from "@root/orm/entities/ActivityLog";
 import { createConnection } from "typeorm";
 
 export const testConn = (drop: boolean = false) => {
@@ -32,7 +33,8 @@ export const testConn = (drop: boolean = false) => {
 			Mother,
 			StaffMembers,
 			User,
-			Attendance
+			Attendance,
+			ActivityLog
 		]
 	});
 };

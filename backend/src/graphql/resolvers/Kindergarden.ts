@@ -14,6 +14,7 @@ import { getConnection } from "typeorm";
 import { KinderGardenInput } from "@graphql/inputs";
 import Response from "@utils/repsonseObject";
 import PaginatedResponse from "@utils/paginatedResponseObject";
+import { LogAction } from "@root/middleware/LogAction";
 
 @ObjectType()
 class KindergardenResponse extends Response<KinderGarden>(KinderGarden) {}
@@ -26,14 +27,13 @@ class KindergardenPaginatedResponse extends PaginatedResponse<KinderGarden>(
 @Resolver(KinderGarden)
 export class KindergardenResolver {
 	@Query(() => KinderGarden)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	owner(@Ctx() { req }: AppContext) {
 		return KinderGarden.findOne(req.session.selectedKindergarden);
 	}
 
 	@Mutation(() => KindergardenResponse)
-	@UseMiddleware(isAuth)
+	@UseMiddleware(isAuth, LogAction)
 	async useKindergarden(
 		@Arg("kindergadenID") kindergardenId: number,
 		@Ctx() { req }: AppContext
@@ -79,7 +79,7 @@ export class KindergardenResolver {
 	}
 
 	@Query(() => KindergardenPaginatedResponse)
-	@UseMiddleware(isAuth)
+	@UseMiddleware(isAuth, LogAction)
 	async showKindergarden(
 		@Arg("limit", () => Int) limit: number,
 		@Arg("cursor", () => String, { nullable: true }) cursor: string | null,
@@ -136,7 +136,7 @@ export class KindergardenResolver {
 	}
 
 	@Mutation(() => KindergardenResponse)
-	@UseMiddleware(isAuth)
+	@UseMiddleware(isAuth, LogAction)
 	async createKindergarden(
 		@Arg("options") options: KinderGardenInput,
 		@Ctx() { req }: AppContext
@@ -171,7 +171,7 @@ export class KindergardenResolver {
 	}
 
 	@Mutation(() => Boolean)
-	@UseMiddleware(isAuth)
+	@UseMiddleware(isAuth, LogAction)
 	async deleteKindergarden(
 		@Arg("id", () => Int) id: number
 	): Promise<Boolean | KindergardenResponse> {

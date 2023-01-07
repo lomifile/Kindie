@@ -26,6 +26,7 @@ import { sendMail, VerifyEmailTemplate } from "@utils/SendEmail";
 import { v4 } from "uuid";
 import { isAuth } from "@middleware/index";
 import { FieldError } from "@utils/Errors";
+import { LogAction } from "@root/middleware/LogAction";
 
 @ObjectType()
 class UserResponse {
@@ -39,7 +40,7 @@ class UserResponse {
 @Resolver(User)
 export class UserResolver {
 	@Query(() => [User])
-	@UseMiddleware(isAuth)
+	@UseMiddleware(isAuth, LogAction)
 	async staffOf(@Ctx() { req }: AppContext): Promise<User[]> {
 		return await User.find({
 			where: { Id: req.session.userId },
@@ -48,7 +49,7 @@ export class UserResolver {
 	}
 
 	@Mutation(() => UserResponse)
-	@UseMiddleware(isAuth)
+	@UseMiddleware(isAuth, LogAction)
 	async updatePassword(
 		@Arg("options") options: UpdatePassword,
 		@Ctx() { req }: AppContext
@@ -92,7 +93,7 @@ export class UserResolver {
 	}
 
 	@Mutation(() => UserResponse)
-	@UseMiddleware(isAuth)
+	@UseMiddleware(isAuth, LogAction)
 	async updateUser(
 		@Arg("options") options: UpdateUserInput,
 		@Ctx() { req }: AppContext
@@ -202,6 +203,7 @@ export class UserResolver {
 	}
 
 	@Mutation(() => Boolean)
+	@UseMiddleware(LogAction)
 	async forgetPassword(
 		@Arg("email") email: string,
 		@Ctx() { redis }: AppContext
@@ -228,6 +230,7 @@ export class UserResolver {
 	}
 
 	@Query(() => User, { nullable: true })
+	@UseMiddleware(LogAction)
 	me(@Ctx() { req }: AppContext) {
 		if (!req.session.userId) {
 			return null;
@@ -341,6 +344,7 @@ export class UserResolver {
 	}
 
 	@Mutation(() => UserResponse)
+	@UseMiddleware(LogAction)
 	async resendEmail(
 		@Arg("email") email: string,
 		@Ctx() { redis }: AppContext
@@ -384,6 +388,7 @@ export class UserResolver {
 	}
 
 	@Mutation(() => UserResponse)
+	@UseMiddleware(LogAction)
 	async verifyAccount(
 		@Arg("token") token: string,
 		@Ctx() { req, redis }: AppContext
@@ -433,6 +438,7 @@ export class UserResolver {
 	}
 
 	@Mutation(() => Boolean)
+	@UseMiddleware(isAuth, LogAction)
 	async logout(@Ctx() { req, res }: AppContext): Promise<Boolean> {
 		return new Promise((resolve) =>
 			req.session!.destroy((err) => {
@@ -449,6 +455,7 @@ export class UserResolver {
 
 	// TODO: Rewrite user search
 	@Query(() => [User])
+	@UseMiddleware(isAuth, LogAction)
 	async searchUser(
 		@Arg("text") text: string,
 		@Ctx() { req }: AppContext

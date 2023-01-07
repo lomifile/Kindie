@@ -13,6 +13,7 @@ import {
 import { getConnection } from "typeorm";
 import { isKinderGardenSelected, isAuth } from "@middleware/index";
 import { FieldError } from "@utils/Errors";
+import { LogAction } from "@root/middleware/LogAction";
 
 @ObjectType()
 class GroupsResponse {
@@ -26,8 +27,7 @@ class GroupsResponse {
 @Resolver(Groups)
 export class GroupsResolver {
 	@Query(() => Groups, { nullable: true })
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	showSelectedGroup(@Ctx() { req }: AppContext) {
 		if (!req.session.selectedGroup) {
 			return null;
@@ -37,8 +37,7 @@ export class GroupsResolver {
 	}
 
 	@Mutation(() => GroupsResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async useGroup(
 		@Arg("groupId") groupId: number,
 		@Ctx() { req }: AppContext
@@ -67,8 +66,7 @@ export class GroupsResolver {
 	}
 
 	@Query(() => [Groups])
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async showGroups(@Ctx() { req }: AppContext): Promise<Groups[] | null> {
 		return await Groups.find({
 			where: { inKindergardenId: req.session.selectedKindergarden }
@@ -76,8 +74,7 @@ export class GroupsResolver {
 	}
 
 	@Mutation(() => GroupsResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async createGroup(@Arg("name") name: string, @Ctx() { req }: AppContext) {
 		let groups;
 		try {
@@ -106,6 +103,7 @@ export class GroupsResolver {
 	}
 
 	@Mutation(() => Boolean)
+	@UseMiddleware(LogAction)
 	clearGroup(@Ctx() { req }: AppContext) {
 		if (req.session.selectedGroup) {
 			req.session.selectedGroup = NaN;
@@ -115,8 +113,7 @@ export class GroupsResolver {
 
 	// TODO: Rewrite this function
 	@Mutation(() => Boolean)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async deleteGroup(@Arg("id", () => Int) id: number): Promise<Boolean> {
 		await Groups.delete({ Id: id });
 		return true;

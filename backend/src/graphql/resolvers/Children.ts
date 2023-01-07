@@ -18,6 +18,7 @@ import { getConnection } from "typeorm";
 import { ChildrenInput } from "@graphql/inputs";
 import Response from "@utils/repsonseObject";
 import PaginatedResponse from "@utils/paginatedResponseObject";
+import { LogAction } from "@root/middleware/LogAction";
 
 @ObjectType()
 class ChildrenResponse extends Response<Children | Children[]>(Children) {}
@@ -28,8 +29,7 @@ class PaginatedChildren extends PaginatedResponse<Children>(Children) {}
 @Resolver(Children)
 export class ChildrenResolver {
 	@Query(() => PaginatedChildren)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async showChildren(
 		@Arg("limit", () => Int) limit: number,
 		@Arg("cursor", () => String, { nullable: true }) cursor: string | null,
@@ -87,8 +87,7 @@ export class ChildrenResolver {
 	}
 
 	@Query(() => [Children])
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async filterChildren(
 		@Arg("text") text: string,
 		@Ctx() { req }: AppContext
@@ -122,9 +121,7 @@ export class ChildrenResolver {
 	}
 
 	@Mutation(() => ChildrenResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
-	@UseMiddleware(isGroupSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, isGroupSelected, LogAction)
 	async addChildToGroup(
 		@Arg("id", () => Int) id: number,
 		@Ctx() { req }: AppContext
@@ -154,8 +151,7 @@ export class ChildrenResolver {
 	}
 
 	@Mutation(() => ChildrenResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async updateChild(
 		@Arg("kidId", () => Int) kidId: number,
 		@Arg("options") options: ChildrenInput,
@@ -193,8 +189,7 @@ export class ChildrenResolver {
 	}
 
 	@Mutation(() => Boolean)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async deleteChildren(
 		@Arg("id", () => Int) id: number
 	): Promise<boolean | ChildrenResponse> {
@@ -222,8 +217,7 @@ export class ChildrenResolver {
 	}
 
 	@Mutation(() => ChildrenResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async updateChildernParents(
 		@Arg("kidId", () => Int) kidId: number,
 		@Arg("motherId", () => Int, { nullable: true }) motherId: number,

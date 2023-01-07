@@ -13,6 +13,7 @@ import {
 import { StaffMembers } from "@orm/entities";
 import { FieldError } from "@utils/Errors";
 import { getConnection } from "typeorm";
+import { LogAction } from "@root/middleware/LogAction";
 
 @ObjectType()
 class StaffResponse {
@@ -26,8 +27,7 @@ class StaffResponse {
 @Resolver(StaffMembers)
 export class StaffMembersResolver {
 	@Mutation(() => StaffResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async addStaff(
 		@Arg("userId", () => Int) userId: number,
 		@Arg("role", () => String) role: string,
@@ -84,8 +84,7 @@ export class StaffMembersResolver {
 	}
 
 	@Mutation(() => Boolean)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async deleteStaff(
 		@Arg("userId", () => Int) userId: number
 	): Promise<Boolean> {
@@ -96,8 +95,7 @@ export class StaffMembersResolver {
 	}
 
 	@Query(() => [StaffMembers])
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async showStaff(
 		@Ctx() { req }: AppContext
 	): Promise<StaffMembers[] | undefined> {
@@ -110,8 +108,7 @@ export class StaffMembersResolver {
 
 	// TODO: Unify in show staff
 	@Query(() => StaffMembers, { nullable: true })
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	filterStaff(@Ctx() { req }: AppContext): Promise<StaffMembers | undefined> {
 		return StaffMembers.findOne({
 			where: {

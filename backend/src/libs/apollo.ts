@@ -14,6 +14,7 @@ import {
 import { buildSchemaSync } from "type-graphql";
 import { redis } from "@libs/redis";
 import { LogAccess } from "@root/middleware/LogAccess";
+import { ActivityLogResolver } from "@root/graphql/resolvers/ActivityLog";
 
 export const apolloServer = new ApolloServer({
 	schema: buildSchemaSync({
@@ -26,7 +27,8 @@ export const apolloServer = new ApolloServer({
 			FatherResolver,
 			ContactResolver,
 			ChildrenResolver,
-			AttendanceResolver
+			AttendanceResolver,
+			ActivityLogResolver
 		],
 		validate: false,
 		globalMiddlewares: [LogAccess]
