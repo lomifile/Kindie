@@ -7,6 +7,15 @@ import {
 	PrimaryGeneratedColumn
 } from "typeorm";
 
+@ObjectType()
+class ActionType {
+	@Field()
+	function: string;
+
+	@Field()
+	type: string;
+}
+
 @Entity("activity_log")
 @ObjectType()
 export class ActivityLog extends BaseEntity {
@@ -27,11 +36,11 @@ export class ActivityLog extends BaseEntity {
 	groupId: number;
 
 	@Column({ type: "json" })
-	@Field(() => Object)
+	@Field(() => ActionType)
 	action: object;
 
 	@Column({ type: "json" })
-	@Field(() => Object)
+	@Field(() => String)
 	args: object;
 
 	@CreateDateColumn()
