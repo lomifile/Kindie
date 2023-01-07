@@ -46,6 +46,15 @@ export class UserResolver {
 		@Ctx() { req }: AppContext
 	): Promise<UserResponse> {
 		let user;
+		if (picture.length === 0 || !picture)
+			return {
+				errors: [
+					{
+						field: "picture",
+						message: "Picture arg cannot be empty"
+					}
+				]
+			};
 		try {
 			const response = await getConnection()
 				.createQueryBuilder()
