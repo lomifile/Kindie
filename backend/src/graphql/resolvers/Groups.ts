@@ -77,6 +77,15 @@ export class GroupsResolver {
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async createGroup(@Arg("name") name: string, @Ctx() { req }: AppContext) {
 		let groups;
+		if (name.length === 0)
+			return {
+				errors: [
+					{
+						field: "name",
+						message: "Name cannot be empty"
+					}
+				]
+			};
 		try {
 			const result = await getConnection()
 				.createQueryBuilder()

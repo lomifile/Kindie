@@ -74,20 +74,24 @@ describe("Create group test", () => {
 		);
 	});
 
-	// test("[gCall] -> Should fail name is empty", async () => {
-	// 	const response = await gCall({
-	// 		source: createGroupMutation,
-	// 		variableValues: {
-	// 			name: ""
-	// 		},
-	// 		userId: 1,
-	// 		selectedKindergarden: kindergarden.Id
-	// 	});
+	test("[gCall] -> Should fail name is empty", async () => {
+		const response = await gCall({
+			source: createGroupMutation,
+			variableValues: {
+				name: ""
+			},
+			userId: 1,
+			selectedKindergarden: kindergarden.Id
+		});
 
-	// 	console.log(response);
-	// 	expect(response.data).toBeNull();
-	// 	expect(typeof response.errors).toBe("object");
-	// });
+		console.log(response);
+		expect(response.data?.createGroup.groups).toBeNull();
+		expect(response.data?.createGroup.errors[0].field).toContain("name");
+		expect(response.data?.createGroup.errors[0].message).toContain(
+			"Name cannot be empty"
+		);
+		expect(typeof response.data?.createGroup.errors[0]).toBe("object");
+	});
 
 	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
