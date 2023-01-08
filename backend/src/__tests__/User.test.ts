@@ -37,19 +37,10 @@ const gErrorObject = (field: string, message: string) => [
 ];
 
 describe("User registration tests", () => {
-	test("[gCall] -> Should fail email is not correct", async () => {
-		const data = {
-			name: faker.name.firstName(),
-			surname: faker.name.lastName(),
-			email: "iauysgduyajsd",
-			password: password,
-			repeatPassword: password
-		} as UsernamePasswordInput;
-		const response = await gCall({
-			source: `
+	const registerMutation = `
 			mutation Register ($data: UsernamePasswordInput!) {
 				register(options: $data) {
-					user {
+					data {
 					  Id
 					  Name
 					  Surname
@@ -63,14 +54,24 @@ describe("User registration tests", () => {
 					}
 				  }
 			  }
-			`,
+			`;
+	test("[gCall] -> Should fail email is not correct", async () => {
+		const data = {
+			name: faker.name.firstName(),
+			surname: faker.name.lastName(),
+			email: "iauysgduyajsd",
+			password: password,
+			repeatPassword: password
+		} as UsernamePasswordInput;
+		const response = await gCall({
+			source: registerMutation,
 			variableValues: {
 				data
 			}
 		});
 
 		expect(typeof response.data?.register.errors).toBe("object");
-		expect(response.data?.register.user).toBeNull();
+		expect(response.data?.register.data).toBeNull();
 	});
 
 	test("[gCall] -> Should fail passwords don't match", async () => {
@@ -82,31 +83,14 @@ describe("User registration tests", () => {
 			repeatPassword: "test"
 		} as UsernamePasswordInput;
 		const response = await gCall({
-			source: `
-			mutation Register ($data: UsernamePasswordInput!) {
-				register(options: $data) {
-					user {
-					  Id
-					  Name
-					  Surname
-					  Email
-					  createdAt
-					  updatedAt
-					}
-					errors {
-					  field
-					  message
-					}
-				  }
-			  }
-			`,
+			source: registerMutation,
 			variableValues: {
 				data
 			}
 		});
 
 		expect(typeof response.data?.register.errors).toBe("object");
-		expect(response.data?.register.user).toBeNull();
+		expect(response.data?.register.data).toBeNull();
 		expect(response.data?.register.errors).toMatchObject(
 			gErrorObject("repeatPassword", "Passwords don't match")
 		);
@@ -121,31 +105,14 @@ describe("User registration tests", () => {
 			repeatPassword: "test"
 		} as UsernamePasswordInput;
 		const response = await gCall({
-			source: `
-			mutation Register ($data: UsernamePasswordInput!) {
-				register(options: $data) {
-					user {
-					  Id
-					  Name
-					  Surname
-					  Email
-					  createdAt
-					  updatedAt
-					}
-					errors {
-					  field
-					  message
-					}
-				  }
-			  }
-			`,
+			source: registerMutation,
 			variableValues: {
 				data
 			}
 		});
 
 		expect(typeof response.data?.register.errors).toBe("object");
-		expect(response.data?.register.user).toBeNull();
+		expect(response.data?.register.data).toBeNull();
 		expect(response.data?.register.errors).toMatchObject(
 			gErrorObject("password", "Length must be greater than 8")
 		);
@@ -153,92 +120,59 @@ describe("User registration tests", () => {
 
 	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
-			source: `
-			mutation Register ($data: UsernamePasswordInput!) {
-				register(options: $data) {
-					user {
-					  Id
-					  Name
-					  Surname
-					  Email
-					  createdAt
-					  updatedAt
-					}
-					errors {
-					  field
-					  message
-					}
-				  }
-			  }
-			`,
+			source: registerMutation,
 			variableValues: {
 				data: user
 			}
 		});
 
-		expect(typeof response.data?.register.user).toBe("object");
+		expect(typeof response.data?.register.data).toBe("object");
 		expect(response.data?.register.errors).toBeNull();
-		expect(response.data?.register.user).toHaveProperty("Id");
+		expect(response.data?.register.data).toHaveProperty("Id");
 	});
 });
 
 describe("Login function tests", () => {
+	const loginMutation = `
+	mutation Login($email: String!, $password: String!) {
+		login(email: $email, password: $password) {
+			data {
+				Id
+				Name
+				Surname
+				Email
+				createdAt
+				updatedAt
+			}
+			errors {
+				field
+				message
+			}
+		}
+	}
+	`;
 	test("[gCall] -> Should fail email is not correct", async () => {
 		const response = await gCall({
-			source: `
-			mutation Login($email: String!, $password: String!) {
-				login(email: $email, password: $password) {
-					user {
-						Id
-						Name
-						Surname
-						Email
-						createdAt
-						updatedAt
-					}
-					errors {
-						field
-						message
-					}
-				}
-			}
-			`,
+			source: loginMutation,
 			variableValues: {
 				email: "678687asdasd",
 				password: user.password
 			}
 		});
 
-		expect(response.data?.login.user).toBeNull();
+		expect(response.data?.login.data).toBeNull();
 		expect(typeof response.data?.login.errors).toBe("object");
 	});
 
 	test("[gCall] -> Should fail user is not confirmed", async () => {
 		const response = await gCall({
-			source: `
-			mutation Login($email: String!, $password: String!) {
-				login(email: $email, password: $password) {
-					user {
-						Id
-						Name
-						Surname
-						Email
-						createdAt
-						updatedAt
-					}
-					errors {
-						field
-						message
-					}
-				}
-			}
-			`,
+			source: loginMutation,
 			variableValues: {
 				email: user.email,
 				password: user.password
 			}
 		});
-		expect(response.data?.login.user).toBeNull();
+		expect(response.data?.login.data).toBeNull();
 		expect(typeof response.data?.login.errors).toBe("object");
 		expect(response.data?.login.errors).toMatchObject(
 			gErrorObject(
@@ -251,24 +185,7 @@ describe("Login function tests", () => {
 
 	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
-			source: `
-			mutation Login($email: String!, $password: String!) {
-				login(email: $email, password: $password) {
-					user {
-						Id
-						Name
-						Surname
-						Email
-						createdAt
-						updatedAt
-					}
-					errors {
-						field
-						message
-					}
-				}
-			}
-			`,
+			source: loginMutation,
 			variableValues: {
 				email: user.email,
 				password: user.password
@@ -276,49 +193,51 @@ describe("Login function tests", () => {
 		});
 
 		expect(response.data?.login.errors).toBeNull();
-		expect(typeof response.data?.login.user).toBe("object");
-		expect(response.data?.login.user).toHaveProperty("Id");
+		expect(typeof response.data?.login.data).toBe("object");
+		expect(response.data?.login.data).toHaveProperty("Id");
 	});
 });
 
 describe("Me query", () => {
-	test("[gCall] -> Should fail user is not in session", async () => {
-		const response = await gCall({
-			source: `
-			query Me {
-				me {
+	const meQuery = `
+		query Me {
+			me {
+				data {
 					Id
 					Name
 					Surname
 					Email
-					createdAt
-					updatedAt 
 				}
-			  }
-			`
+				errors {
+					field
+					message
+				}
+			}
+		}
+	`;
+	test("[gCall] -> Should fail user is not in session", async () => {
+		const response = await gCall({
+			source: meQuery
 		});
 
 		expect(response.data?.me).toBeNull();
+		expect(response.errors?.[0].message).toContain("Not authenticated");
 	});
 
 	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
-			source: `
-			query Me {
-				me {
-					Id
-					Name
-					Surname
-					Email
-					createdAt
-					updatedAt 
-				}
-			  }
-			`,
+			source: meQuery,
 			userId: 1
 		});
 
-		expect(response.data?.me).toHaveProperty("Id");
+		expect(response.data?.me.errors).toBeNull();
+		expect(response.data?.me.data).toHaveProperty("Id");
+		expect(response.data?.me.data).toMatchObject({
+			Id: 1,
+			Name: user.name,
+			Surname: user.surname,
+			Email: user.email
+		});
 	});
 });
 
@@ -338,27 +257,29 @@ describe("Logout query test", () => {
 });
 
 describe("Verify account mutation", () => {
-	test("[gCall] -> Should fail no token", async () => {
-		const response = await gCall({
-			source: `
-			mutation VerifyAccount($token: String!) {
-				verifyAccount(token: $token) {
-				  user {
+	const verifyAccountMutation = `
+		mutation VerifyAccount($token: String!) {
+			verifyAccount(token: $token) {
+				data {
 					Id
 					Name
 					Surname
-				  }
-				  errors {
+				}
+				errors {
 					field
 					message
-				  }
 				}
-			  }
-			`,
+			}
+		}	
+	`;
+	test("[gCall] -> Should fail no token", async () => {
+		const response = await gCall({
+			source: verifyAccountMutation,
 			variableValues: {
 				token: ""
 			}
 		});
+		expect(response.data?.verifyAccount.data).toBeNull();
 		expect(typeof response.data?.verifyAccount.errors).toBe("object");
 		expect(response.data?.verifyAccount.errors).toMatchObject(
 			gErrorObject("token", "Token expired")
@@ -367,25 +288,12 @@ describe("Verify account mutation", () => {
 
 	test("[gCall] -> Should fail wrong token", async () => {
 		const response = await gCall({
-			source: `
-			mutation VerifyAccount($token: String!) {
-				verifyAccount(token: $token) {
-				  user {
-					Id
-					Name
-					Surname
-				  }
-				  errors {
-					field
-					message
-				  }
-				}
-			  }
-			`,
+			source: verifyAccountMutation,
 			variableValues: {
 				token: "bnasyhdkua"
 			}
 		});
+		expect(response.data?.verifyAccount.data).toBeNull();
 		expect(typeof response.data?.verifyAccount.errors).toBe("object");
 		expect(response.data?.verifyAccount.errors).toMatchObject(
 			gErrorObject("token", "Token expired")
@@ -394,36 +302,44 @@ describe("Verify account mutation", () => {
 });
 
 describe("Forgot password mutation", () => {
+	const forgetPasswordMutation = `
+		mutation ForgotPassword($email: String!){
+			forgetPassword(email: $email) {
+				result
+				errors {
+					field
+					message
+				}
+			}
+		}
+	`;
 	test("[gCall] -> Should fail wrong email", async () => {
 		const response = await gCall({
-			source: `
-			mutation ForgotPassword($email: String!){
-				forgetPassword(email: $email) 
-			  }
-			`,
+			source: forgetPasswordMutation,
 			variableValues: {
 				email: "ahusdkusa"
 			}
 		});
 
-		expect(typeof response.data?.forgetPassword).toBe("boolean");
-		expect(response.data?.forgetPassword).toBeFalsy();
+		expect(typeof response.data?.forgetPassword.result).toBe("boolean");
+		expect(response.data?.forgetPassword.result).toBeFalsy();
+		expect(response.data?.forgetPassword.errors[0]).toMatchObject({
+			field: "email",
+			message: "Email is not valid"
+		});
 	});
 
 	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
-			source: `
-			mutation ForgotPassword($email: String!){
-				forgetPassword(email: $email) 
-			  }
-			`,
+			source: forgetPasswordMutation,
 			variableValues: {
 				email: user.email
 			}
 		});
 
-		expect(typeof response.data?.forgetPassword).toBe("boolean");
-		expect(response.data?.forgetPassword).toBeTruthy();
+		expect(response.data?.forgetPassword.errors).toBeNull();
+		expect(typeof response.data?.forgetPassword.result).toBe("boolean");
+		expect(response.data?.forgetPassword.result).toBeTruthy();
 	});
 });
 
@@ -476,7 +392,7 @@ describe("Update user mutation", () => {
 	const updateUserMutation = `
 	mutation UpdateUser($options: UpdateUserInput!) {
 		updateUser(options: $options) {
-		  user {
+		  data {
 			Id
 			Name
 			Surname
@@ -490,25 +406,6 @@ describe("Update user mutation", () => {
 	  }
 	`;
 
-	test("[gCall] -> Should fail because password is not provided", async () => {
-		const response = await gCall({
-			source: updateUserMutation,
-			userId: 1,
-			variableValues: {
-				options: {
-					name: user.name,
-					surname: user.surname,
-					email: user.email,
-					password: ""
-				}
-			}
-		});
-
-		expect(response.data?.updateUser).toHaveProperty("errors");
-		expect(typeof response.data?.updateUser.errors[0]).toBe("object");
-		expect(response.data?.updateUser.errors[0].field).toBe("password");
-	});
-
 	test("[gCall] -> Should fail user is not auithenticated", async () => {
 		const response = await gCall({
 			source: updateUserMutation,
@@ -516,8 +413,7 @@ describe("Update user mutation", () => {
 				options: {
 					name: user.name,
 					surname: user.surname,
-					email: user.email,
-					password: ""
+					email: user.email
 				}
 			}
 		});
@@ -534,34 +430,49 @@ describe("Update user mutation", () => {
 				options: {
 					name: user.name,
 					surname: user.surname,
-					email: user.email,
-					password: user.password
+					email: user.email
 				}
 			},
 			userId: 1
 		});
-		expect(typeof response.data?.updateUser.user).toBe("object");
-		expect(response.data?.updateUser).toHaveProperty("user");
+		expect(typeof response.data?.updateUser.data).toBe("object");
+		expect(response.data?.updateUser.data).toHaveProperty("Id");
+		expect(response.data?.updateUser.data).toMatchObject({
+			Id: 1,
+			Name: user.name,
+			Surname: user.surname,
+			Email: user.email
+		});
 	});
 });
 
 describe("Resend email", () => {
 	const resendEmailMutation = `
-	mutation ResendEmail($email: String!) {
-		resendEmail(email:$email) {
-		  user {
-			Id
-			Name
-			Surname
-			Email
-		  }
-		  errors {
-			field
-			message
-		  }
+		mutation ResendEmail($email: String!) {
+			resendEmail(email: $email) {
+				result
+				errors {
+				  field
+				  message
+				}
+			  }
 		}
-	  }
 	`;
+
+	test("[gCall] -> Should fail email is not valid", async () => {
+		const response = await gCall({
+			source: resendEmailMutation,
+			variableValues: {
+				email: "jsdladj"
+			}
+		});
+
+		expect(response.data?.resendEmail.result).toBeFalsy();
+		expect(response.data?.resendEmail.errors[0]).toMatchObject({
+			field: "email",
+			message: "Email is not valid"
+		});
+	});
 
 	test("[gCall] -> Should fail email doesn't exist in database", async () => {
 		const response = await gCall({
@@ -571,10 +482,11 @@ describe("Resend email", () => {
 			}
 		});
 
-		expect(response.data?.resendEmail).toHaveProperty("errors");
-		expect(typeof response.data?.resendEmail.errors).toBe("object");
-		expect(response.data?.resendEmail.errors[0]).toHaveProperty("field");
-		expect(response.data?.resendEmail.errors[0].field).toBe("email");
+		expect(response.data?.resendEmail.result).toBeFalsy();
+		expect(response.data?.resendEmail.errors[0]).toMatchObject({
+			field: "email",
+			message: "Email does not exist in database"
+		});
 	});
 
 	test("[gCall] -> Should pass", async () => {
@@ -585,8 +497,8 @@ describe("Resend email", () => {
 			}
 		});
 
-		expect(response.data?.resendEmail.errors).toBeNull;
-		expect(response.data?.resendEmail.user).toHaveProperty("Id");
+		expect(response.data?.resendEmail.errors).toBeNull();
+		expect(response.data?.resendEmail.result).toBeTruthy();
 	});
 });
 
@@ -594,7 +506,7 @@ describe("Update password", () => {
 	const updatePasswordMutation = `
 	mutation UpdatePassword($options: UpdatePassword!) {
 		updatePassword(options: $options) {
-		  user {
+		  data {
 			Id
 			Name
 			Surname
@@ -621,7 +533,7 @@ describe("Update password", () => {
 		});
 
 		expect(response.data?.updatePassword).toHaveProperty("errors");
-		expect(response.data?.updatePassword.user).toBeNull();
+		expect(response.data?.updatePassword.data).toBeNull();
 		expect(typeof response.data?.updatePassword.errors).toBe("object");
 	});
 
@@ -653,7 +565,7 @@ describe("Update password", () => {
 			}
 		});
 
-		expect(response.data?.updatePassword.user).toHaveProperty("Id");
+		expect(response.data?.updatePassword.data).toHaveProperty("Id");
 		expect(response.data?.updatePassword.errors).toBeNull();
 	});
 });
@@ -662,7 +574,7 @@ describe("Should update profile picture", () => {
 	const addProfilePictureMutation = `
 	mutation AddProfilePicture($picture: String!) {
 		addProfilePicture(picture: $picture) {
-		  user {
+		  data {
 			Id
 			Name
 			Surname
@@ -684,7 +596,7 @@ describe("Should update profile picture", () => {
 			userId: 1
 		});
 
-		expect(response.data?.addProfilePicture.user).toBeNull();
+		expect(response.data?.addProfilePicture.data).toBeNull();
 		expect(response.data?.addProfilePicture.errors[0].field).toContain(
 			"picture"
 		);
@@ -699,8 +611,7 @@ describe("Should update profile picture", () => {
 			},
 			userId: 1
 		});
-		console.log(response.data?.addProfilePicture.errors);
-		expect(response.data?.addProfilePicture.user).toHaveProperty("Id");
+		expect(response.data?.addProfilePicture.data).toHaveProperty("Id");
 		expect(response.data?.addProfilePicture.errors).toBeNull();
 	});
 });
