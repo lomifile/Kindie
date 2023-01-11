@@ -3,6 +3,7 @@ import {
 	BaseEntity,
 	Column,
 	CreateDateColumn,
+	DeleteDateColumn,
 	Entity,
 	ManyToOne,
 	PrimaryColumn,
@@ -42,6 +43,9 @@ export class StaffMembers extends BaseEntity {
 
 	@CreateDateColumn()
 	createdAt: Date;
+
+	@DeleteDateColumn()
+	archived?: Date;
 
 	@UpdateDateColumn()
 	updatedAt: Date;

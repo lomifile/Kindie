@@ -49,49 +49,49 @@ export class KinderGarden extends BaseEntity {
 		nullable: true,
 		lazy: true
 	})
-	owning: User;
+	owning?: User;
 
 	@Field(() => [Groups], { nullable: true })
 	@OneToMany(() => Groups, (groups) => groups.inKindergarden, {
 		nullable: true,
 		lazy: true
 	})
-	groups: Groups[];
+	groups?: Groups[];
 
 	@OneToMany(() => Children, (children) => children.inKindergarden, {
 		lazy: true
 	})
-	children: Children[];
+	children?: Children[];
 
 	@OneToMany(() => Mother, (mother) => mother.inKindergarden, {
 		lazy: true
 	})
-	Mother: Mother[];
+	Mother?: Mother[];
 
 	@OneToMany(() => Father, (father) => father.inKindergarden, {
 		lazy: true
 	})
-	Father: Father[];
+	Father?: Father[];
 
 	@Field(() => [StaffMembers], { nullable: true })
 	@OneToMany(() => StaffMembers, (staff) => staff.kindergarden, {
 		lazy: true,
 		nullable: true
 	})
-	staff: StaffMembers[];
+	staff?: StaffMembers[];
 
 	@OneToMany(() => Attendance, (attendance) => attendance.Id)
 	attendance?: Attendance[];
 
 	@Field(() => String)
 	@CreateDateColumn()
-	createdAt: Date;
+	createdAt?: Date;
 
 	@Field(() => String)
 	@DeleteDateColumn()
-	deletedAt: Date;
+	deletedAt?: Date;
 
 	@Field(() => String)
 	@UpdateDateColumn()
-	updatedAt: Date;
+	updatedAt?: Date;
 }

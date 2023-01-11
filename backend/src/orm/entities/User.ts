@@ -99,6 +99,9 @@ export class User extends BaseEntity {
 	})
 	updatedFather: Father[];
 
+	@Column("tsvector", { select: false, nullable: true })
+	document_with_weights: any;
+
 	@Field(() => String)
 	@CreateDateColumn()
 	createdAt: Date;
