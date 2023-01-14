@@ -16,8 +16,9 @@ import {
 	isKinderGardenSelected
 } from "@middleware/index";
 import PaginatedResponse from "@utils/paginatedResponseObject";
-import { getConnection } from "typeorm";
+import { UpdateResult, getConnection } from "typeorm";
 import { LogAction } from "@root/middleware/LogAction";
+import BooleanResponse from "@root/utils/booleanResponseObject";
 
 @ObjectType()
 class AttedanceResponse extends Response<Attendance>(Attendance) {}
@@ -25,13 +26,16 @@ class AttedanceResponse extends Response<Attendance>(Attendance) {}
 @ObjectType()
 class PaginatedAttendacne extends PaginatedResponse<Attendance>(Attendance) {}
 
+@ObjectType()
+class AttendanceBooleanResponse extends BooleanResponse() {}
+
 @Resolver(Attendance)
 export class AttendanceResolver {
 	@Query(() => PaginatedAttendacne)
 	@UseMiddleware(isAuth, isGroupSelected, isKinderGardenSelected, LogAction)
-	async showAllAttendance(
+	async listAttendance(
 		@Arg("limit", () => Int) limit: number,
-		@Arg("cursor", () => String) cursor: string | null
+		@Arg("cursor", () => String, { nullable: true }) cursor: string | null
 	): Promise<PaginatedAttendacne> {
 		const realLimit = Math.min(20, limit);
 		const realLimitPlusOne = realLimit + 1;
@@ -41,31 +45,43 @@ export class AttendanceResolver {
 		if (cursor) {
 			replacements.push(cursor);
 		}
-
-		const attendance = await getConnection().query(
-			`
-      select 
-        a."Id"
-        , a."childId"
-        , a."groupId"
-        , a."kindergardenId"
-        , a.attendance
-        , a."createdAt"
-        , a."updatedAt"
-        , a."groupsId" 
-      from
-        attendance a 
-      left join "kinder_garden" k on k."Id" = a."kindergardenId"
-      left join groups g on g."inKindergardenId" = k."Id"
-      ${cursor ? `where a."createdAt" < $2` : ""}
-      order by a."createdAt" limit $1
-    `,
-			replacements
-		);
-
+		let result;
+		try {
+			result = await getConnection().query(
+				`
+				select 
+					a."Id"
+					, a."childId"
+					, a."groupId"
+					, a."kindergardenId"
+					, a."groupsId" 
+					, a.attendance
+					, a."createdAt"
+					, a."updatedAt"
+					, a."deletedAt"
+				from
+					attendance a 
+				left join "kinder_garden" k on k."Id" = a."kindergardenId"
+				left join groups g on g."inKindergardenId" = k."Id"
+				where a."deletedAt" is null
+				${cursor ? ` and a."createdAt" < $2` : ""}
+				order by a."createdAt" limit $1
+				`,
+				replacements
+			);
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
 		return {
-			data: attendance.slice(0, realLimit),
-			hasMore: attendance.length === realLimitPlusOne
+			data: result.slice(0, realLimit),
+			hasMore: result.length === realLimitPlusOne
 		};
 	}
 
@@ -76,56 +92,47 @@ export class AttendanceResolver {
 		@Ctx() { req }: AppContext,
 		@Arg("complete", { nullable: true }) complete?: boolean
 	): Promise<AttedanceResponse> {
-		const child = await Children.findOne({ where: { Id: childId } });
-		if (!child) {
+		let data;
+		try {
+			const child = await Children.findOne({ where: { Id: childId } });
+			if (!child) {
+				return {
+					errors: [
+						{
+							field: "childId",
+							message: "Child doesn't exist by this id"
+						}
+					]
+				};
+			}
+
+			data = await Attendance.create({
+				childId,
+				attendance: complete ?? false,
+				kindergardenId: req.session.selectedKindergarden,
+				groupId: req.session.selectedGroup
+			}).save();
+		} catch (err) {
 			return {
 				errors: [
 					{
-						field: "childId",
-						message: "Child doesn't exist by this id"
+						field: err.field,
+						message: err.message
 					}
 				]
 			};
 		}
-
-		const attendance = await Attendance.create({
-			childId,
-			attendance: complete ?? false,
-			kindergardenId: req.session.selectedKindergarden,
-			groupId: req.session.selectedGroup
-		}).save();
-
 		return {
-			data: attendance
+			data
 		};
 	}
 
 	@Mutation(() => AttedanceResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, isGroupSelected, LogAction)
 	async markAttendance(
-		@Arg("attendanceId", () => Int) attendanceId: number
+		@Arg("id", () => Int) id: number
 	): Promise<AttedanceResponse> {
 		let data: Attendance;
-		const attendance = await Attendance.findOne({ Id: attendanceId });
-		if (!attendance) {
-			return {
-				errors: [
-					{
-						field: "attendanceId",
-						message: "There is no attendance by this Id"
-					}
-				]
-			};
-		}
-		if (attendance.createdAt !== new Date())
-			return {
-				errors: [
-					{
-						field: "Attendance",
-						message: "Attendance cannot be marked"
-					}
-				]
-			};
 		try {
 			const response = await getConnection()
 				.createQueryBuilder()
@@ -133,7 +140,7 @@ export class AttendanceResolver {
 				.set({
 					attendance: true
 				})
-				.where(`"Id"=:id`, { attendanceId })
+				.where(`"Id"=:id`, { id: id })
 				.returning("*")
 				.execute();
 			data = response.raw[0];
@@ -153,16 +160,31 @@ export class AttendanceResolver {
 		};
 	}
 
-	@Mutation(() => Boolean)
+	@Mutation(() => AttendanceBooleanResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, isGroupSelected)
 	async delete(
-		@Arg("attendanceId", () => Int) attendanceId: number
-	): Promise<boolean> {
-		const result = await Attendance.delete({ Id: attendanceId });
-
-		if (!result.raw[0]) {
-			return true;
+		@Arg("id", () => Int) id: number
+	): Promise<AttendanceBooleanResponse> {
+		let response: UpdateResult;
+		try {
+			response = await getConnection()
+				.createQueryBuilder()
+				.softDelete()
+				.from(Attendance)
+				.where("id = :id", { id: id })
+				.execute();
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
 		}
-		return false;
+		return {
+			result: response.affected! > 0
+		};
 	}
 }

@@ -5,3 +5,4 @@ export { validateUpdatePassword } from "./validateUpdatePassword";
 export { validateLogin } from "./validateLogin";
 export { validateForgotPassword } from "./validateForgotPassword";
 export { validateResendEmail } from "./validateResendEmail";
+export { validateContactInput } from "./validateContactInput";
