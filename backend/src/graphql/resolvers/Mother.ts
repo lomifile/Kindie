@@ -2,7 +2,6 @@ import { Mother } from "@orm/entities";
 import {
 	Arg,
 	Ctx,
-	Field,
 	Int,
 	Mutation,
 	ObjectType,
@@ -12,39 +11,36 @@ import {
 } from "type-graphql";
 import { isKinderGardenSelected, isAuth } from "@middleware/index";
 import { ParentsInput } from "@graphql/inputs";
-import { getConnection, getRepository } from "typeorm";
+import { getConnection } from "typeorm";
 import { validateMotherFather } from "@graphql/validators";
-import { FieldError } from "@utils/Errors";
 import { LogAction } from "@root/middleware/LogAction";
+import PaginatedResponse from "@root/utils/paginatedResponseObject";
+import Response from "@root/utils/repsonseObject";
+import BooleanResponse from "@root/utils/booleanResponseObject";
+import ManyResponse from "@root/utils/manyResponseObject";
 
 @ObjectType()
-class MotherResponse {
-	@Field(() => [FieldError], { nullable: true })
-	errors?: FieldError[];
-
-	@Field(() => Mother, { nullable: true })
-	mother?: Mother;
-}
+class PaginatedMother extends PaginatedResponse<Mother>(Mother) {}
 
 @ObjectType()
-class PaginatedMother {
-	@Field(() => [Mother])
-	mother: Mother[];
+class MotherResponse extends Response<Mother>(Mother) {}
 
-	@Field()
-	hasMore: boolean;
-}
+@ObjectType()
+class MotherBooleanResponse extends BooleanResponse() {}
+
+@ObjectType()
+class MotherArrayResponse extends ManyResponse<Mother>(Mother) {}
 
 @Resolver(Mother)
 export class MotherResolver {
 	@Query(() => PaginatedMother)
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
-	async showMother(
+	async listMother(
 		@Arg("limit", () => Int) limit: number,
 		@Arg("cursor", () => String, { nullable: true }) cursor: string | null,
 		@Ctx() { req }: AppContext
 	): Promise<PaginatedMother> {
-		const realLimit = Math.min(20, limit);
+		const realLimit = Math.min(10, limit);
 		const realLimitPlusOne = realLimit + 1;
 
 		const replacements: any[] = [realLimitPlusOne];
@@ -54,40 +50,78 @@ export class MotherResolver {
 			replacements.push(cursor);
 		}
 
-		const mom = await getConnection().query(
-			`
-      select m.*
-      from mother m
-      inner join public."kinder_garden" k on k."Id" = m."inKindergardenId"
-      where k."Id" = $2
-      ${cursor ? `and m."createdAt" < $3` : ""}
-      order by m."createdAt" DESC
-      limit $1
-    `,
-			replacements
-		);
-
+		let data: any[];
+		try {
+			const response = await getConnection().query(
+				`
+			select 
+				m."Id" ,
+				m."Name" ,
+				m."Surname" ,
+				m."Email" ,
+				m."Phone" 
+			from mother m 	
+			inner join public."kinder_garden" k on k."Id" = m."inKindergardenId"
+			where k."Id" = $2
+			${cursor ? `and m."createdAt" < $3` : ""}
+			order by m."createdAt" DESC
+			limit $1
+			`,
+				replacements
+			);
+			data = response;
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
 		return {
-			mother: mom.slice(0, realLimit),
-			hasMore: mom.length === realLimitPlusOne
+			data: data.slice(0, realLimit),
+			hasMore: data.length === realLimitPlusOne
 		};
 	}
 
-	@Mutation(() => Boolean)
+	@Mutation(() => MotherBooleanResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
-	async deleteMother(@Arg("motherId", () => Int) motherId: number) {
-		await Mother.delete(motherId);
-		return true;
+	async deleteMother(
+		@Arg("id", () => Int) id: number
+	): Promise<MotherBooleanResponse> {
+		let response;
+		try {
+			response = await getConnection()
+				.createQueryBuilder(Mother, "m")
+				.softDelete()
+				.where(`Id = :id`, { id: id })
+				.execute();
+		} catch (err) {
+			return {
+				result: false,
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
+		return {
+			result: response.affected! > 0
+		};
 	}
 
 	@Mutation(() => MotherResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async updateMother(
 		@Arg("options") options: ParentsInput,
-		@Arg("motherId", () => Int) motherId: number,
+		@Arg("id", () => Int) id: number,
 		@Ctx() { req }: AppContext
 	): Promise<MotherResponse> {
-		let mother;
+		let data;
 		try {
 			const errors = validateMotherFather(options);
 			if (errors) return { errors };
@@ -101,10 +135,10 @@ export class MotherResolver {
 					Phone: options.phone,
 					updatedById: req.session.userId
 				})
-				.where("Id = :id", { id: motherId })
+				.where("Id = :id", { id: id })
 				.returning("*")
 				.execute();
-			mother = result.raw[0];
+			data = result.raw[0];
 		} catch (err) {
 			return {
 				errors: [
@@ -116,31 +150,37 @@ export class MotherResolver {
 			};
 		}
 		return {
-			mother
+			data
 		};
 	}
 
 	@Mutation(() => MotherResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
-	async addMother(
+	async insertMother(
 		@Arg("options") options: ParentsInput,
 		@Ctx() { req }: AppContext
 	): Promise<MotherResponse> {
-		let mother;
+		let data;
 		try {
 			const errors = validateMotherFather(options);
 			if (errors) {
 				return { errors };
 			}
-
-			mother = await Mother.create({
-				Name: options.name,
-				Surname: options.surname,
-				Email: options.email,
-				Phone: options.phone,
-				inKindergardenId: req.session.selectedKindergarden,
-				createdById: req.session.userId
-			}).save();
+			const response = await getConnection()
+				.createQueryBuilder()
+				.insert()
+				.into(Mother)
+				.values({
+					Name: options.name,
+					Surname: options.surname,
+					Phone: options.phone,
+					Email: options.email,
+					createdById: req.session.userId,
+					inKindergardenId: req.session.selectedKindergarden
+				})
+				.returning("*")
+				.execute();
+			data = response.raw[0];
 		} catch (err) {
 			return {
 				errors: [
@@ -152,74 +192,74 @@ export class MotherResolver {
 			};
 		}
 		return {
-			mother
+			data
 		};
 	}
 
-	@Query(() => Mother)
+	@Query(() => MotherResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
-	findMother(
+	async getMotherById(
 		@Arg("id", () => Int) id: number,
 		@Ctx() { req }: AppContext
-	): Promise<Mother | undefined> {
-		return Mother.findOne({
-			where: {
-				Id: id,
-				inKindergardenId: req.session.selectedKindergarden
-			}
-		});
-	}
-
-	// TODO: Rewrite this function fully
-	@Query(() => [Mother])
-	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
-	async filterMother(
-		@Arg("text", () => String) text: string,
-		@Ctx() { req }: AppContext
-	): Promise<Mother[] | undefined> {
-		if (text === ".") {
-			return Mother.find({
+	): Promise<MotherResponse> {
+		let data;
+		try {
+			data = await Mother.findOneOrFail({
 				where: {
+					Id: id,
 					inKindergardenId: req.session.selectedKindergarden
 				}
 			});
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
 		}
-		return await getRepository(Mother)
-			.createQueryBuilder()
-			.where(
-				`"Name" = :name or "Surname" = :lastName and "inKindergardenId" = :id`,
-				{
-					name: text,
-					lastName: text,
-					id: req.session.selectedKindergarden
-				}
-			)
-			.getMany();
+		return {
+			data
+		};
 	}
 
-	@Query(() => [Mother])
+	@Query(() => MotherArrayResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async searchMother(
 		@Arg("text", () => String) text: string,
 		@Ctx() { req }: AppContext
-	): Promise<Mother[] | undefined> {
-		return !Mother.find({
-			where: {
-				Name: text,
-				inKindergardenId: req.session.selectedKindergarden
-			}
-		})
-			? Mother.find({
-					where: {
-						Surname: text,
-						inKindergardenId: req.session.selectedKindergarden
+	): Promise<MotherArrayResponse> {
+		let data: Mother[];
+		try {
+			data = await getConnection()
+				.createQueryBuilder(Mother, "m")
+				.select()
+				.where(
+					`document_with_weights @@ to_tsquery(concat(:query::text,':*')) and m."inKindergardenId" = :id`,
+					{
+						query: text,
+						id: req.session.selectedKindergarden
 					}
-			  })
-			: Mother.find({
-					where: {
-						Name: text,
-						inKindergardenId: req.session.selectedKindergarden
+				)
+				.orderBy(
+					"ts_rank(document_with_weights, to_tsquery(concat(:query::text,':*')))",
+					"DESC"
+				)
+				.getMany();
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
 					}
-			  });
+				]
+			};
+		}
+		return {
+			data
+		};
 	}
 }

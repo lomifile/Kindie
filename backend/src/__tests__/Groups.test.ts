@@ -33,7 +33,7 @@ describe("Create group test", () => {
 	const createGroupMutation = `
 	mutation CreateGroup($name: String!){
 		createGroup(name:$name) {
-		  groups {
+		  data {
 			Id
 			Name
 		  }
@@ -84,8 +84,7 @@ describe("Create group test", () => {
 			selectedKindergarden: kindergarden.Id
 		});
 
-		console.log(response);
-		expect(response.data?.createGroup.groups).toBeNull();
+		expect(response.data?.createGroup.data).toBeNull();
 		expect(response.data?.createGroup.errors[0].field).toContain("name");
 		expect(response.data?.createGroup.errors[0].message).toContain(
 			"Name cannot be empty"
@@ -104,24 +103,30 @@ describe("Create group test", () => {
 		});
 
 		expect(response.data?.createGroup.errors).toBeNull();
-		expect(typeof response.data?.createGroup.groups).toBe("object");
-		expect(response.data?.createGroup.groups).toHaveProperty("Id");
+		expect(typeof response.data?.createGroup.data).toBe("object");
+		expect(response.data?.createGroup.data).toHaveProperty("Id");
 	});
 });
 
 describe("Show groups test", () => {
-	const showGroupsQuery = `
-	query ShowGroups {
-		showGroups {
-		  Id
-		  Name
+	const listGroupsQuery = `
+	query ListGroups {
+		listGroups {
+			data {
+				Id
+				Name
+			}
+			errors {
+				field
+				message
+			}
 		}
-	  }
+	}
 	`;
 
 	test("[gCall] -> Should fail user is not in session", async () => {
 		const response = await gCall({
-			source: showGroupsQuery
+			source: listGroupsQuery
 		});
 
 		expect(typeof response.errors).toBe("object");
@@ -131,7 +136,7 @@ describe("Show groups test", () => {
 
 	test("[gCall] -> Should fail selected kindergarden is undefined", async () => {
 		const response = await gCall({
-			source: showGroupsQuery,
+			source: listGroupsQuery,
 			userId: 1
 		});
 
@@ -144,14 +149,14 @@ describe("Show groups test", () => {
 
 	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
-			source: showGroupsQuery,
+			source: listGroupsQuery,
 			userId: 1,
 			selectedKindergarden: kindergarden.Id
 		});
 
-		expect(typeof response.data?.showGroups).toBe("object");
-		expect(Array.isArray(response.data?.showGroups)).toBeTruthy();
-		expect(response.data?.showGroups[0]).toHaveProperty("Id");
+		expect(typeof response.data?.listGroups.data).toBe("object");
+		expect(Array.isArray(response.data?.listGroups.data)).toBeTruthy();
+		expect(response.data?.listGroups.data[0]).toHaveProperty("Id");
 	});
 });
 
@@ -159,8 +164,14 @@ describe("Show selected group", () => {
 	const showSelectedGroupQuery = `
 	query ShowSelectedGroup {
 		showSelectedGroup {
-		  Id
-		  Name
+		  data {
+			Id
+			Name
+		  }
+		  errors {
+			field
+			message
+		  }
 		}
 	  }
 	`;
@@ -172,7 +183,8 @@ describe("Show selected group", () => {
 			selectedKindergarden: kindergarden.Id
 		});
 
-		expect(response.data?.showSelectedGroup).toBeNull();
+		expect(response.data).toBeNull();
+		expect(response.errors?.[0].message).toContain("Group not selected");
 	});
 
 	test("[gCall] -> Should pass", async () => {
@@ -183,16 +195,16 @@ describe("Show selected group", () => {
 			selectedGroup: 1
 		});
 
-		expect(typeof response.data?.showSelectedGroup).toBe("object");
-		expect(response.data?.showSelectedGroup).toHaveProperty("Id");
+		expect(typeof response.data?.showSelectedGroup.data).toBe("object");
+		expect(response.data?.showSelectedGroup.data).toHaveProperty("Id");
 	});
 });
 
 describe("Use group tests", () => {
 	const useGroupMutation = `
 	mutation UseGroup($id: Float!) {
-		useGroup(groupId: $id) {
-		  groups {
+		useGroup(id: $id) {
+		  data {
 			Id
 			Name
 		  }
@@ -214,7 +226,7 @@ describe("Use group tests", () => {
 			}
 		});
 
-		expect(response.data?.useGroup.groups).toBeNull();
+		expect(response.data?.useGroup.data).toBeNull();
 		expect(typeof response.data?.useGroup.errors).toBe("object");
 		expect(response.data?.useGroup.errors).toMatchObject(
 			gErrorObject("Id", "There is no group by this ID")
@@ -231,7 +243,7 @@ describe("Use group tests", () => {
 			selectedKindergarden: 1
 		});
 
-		expect(response.data?.useGroup.groups).toBeNull();
+		expect(response.data?.useGroup.data).toBeNull();
 		expect(typeof response.data?.useGroup.errors).toBe("object");
 		expect(response.data?.useGroup.errors).toMatchObject(
 			gErrorObject("Id", "There is no group by this ID")
@@ -248,7 +260,7 @@ describe("Use group tests", () => {
 			selectedKindergarden: kindergarden.Id
 		});
 		expect(response.data?.useGroup.errors).toBeNull();
-		expect(response.data?.useGroup.groups).toHaveProperty("Id");
+		expect(response.data?.useGroup.data).toHaveProperty("Id");
 	});
 });
 
@@ -270,13 +282,34 @@ describe("Clear group", () => {
 });
 
 describe("Delete group", () => {
+	const deleteGroupMutation = `
+		mutation DeleteGroup($id: Int!) {
+			deleteGroup(id: $id) {
+				result
+				errors {
+					field
+					message
+				}
+			}
+		}
+	`;
+
+	test("[gCall] -> Should fail group id doesn't exist", async () => {
+		const response = await gCall({
+			source: deleteGroupMutation,
+			userId: 1,
+			selectedKindergarden: kindergarden.Id,
+			variableValues: {
+				id: 21312
+			}
+		});
+
+		expect(response.data?.deleteGroup.result).toBeFalsy();
+	});
+
 	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
-			source: `
-			mutation DeleteGroup($id: Int!) {
-				deleteGroup(id: $id)
-			  }
-			`,
+			source: deleteGroupMutation,
 			userId: 1,
 			selectedKindergarden: kindergarden.Id,
 			variableValues: {
@@ -284,6 +317,6 @@ describe("Delete group", () => {
 			}
 		});
 
-		expect(response.data?.deleteGroup).toBeTruthy();
+		expect(response.data?.deleteGroup.result).toBeTruthy();
 	});
 });

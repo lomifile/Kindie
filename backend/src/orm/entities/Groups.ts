@@ -3,6 +3,7 @@ import {
 	BaseEntity,
 	Column,
 	CreateDateColumn,
+	DeleteDateColumn,
 	Entity,
 	ManyToOne,
 	OneToMany,
@@ -23,6 +24,10 @@ export class Groups extends BaseEntity {
 	@Field(() => String)
 	@Column()
 	Name!: string;
+
+	@Field(() => String)
+	@DeleteDateColumn()
+	archived: Date;
 
 	@Field(() => String)
 	@CreateDateColumn()

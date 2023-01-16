@@ -2,7 +2,6 @@ import { Groups } from "@orm/entities";
 import {
 	Arg,
 	Ctx,
-	Field,
 	Int,
 	Mutation,
 	ObjectType,
@@ -10,46 +9,67 @@ import {
 	Resolver,
 	UseMiddleware
 } from "type-graphql";
-import { getConnection } from "typeorm";
-import { isKinderGardenSelected, isAuth } from "@middleware/index";
-import { FieldError } from "@utils/Errors";
+import { UpdateResult, getConnection } from "typeorm";
+import {
+	isKinderGardenSelected,
+	isAuth,
+	isGroupSelected
+} from "@middleware/index";
 import { LogAction } from "@root/middleware/LogAction";
+import Response from "@root/utils/repsonseObject";
+import ManyResponse from "@root/utils/manyResponseObject";
+import BooleanResponse from "@root/utils/booleanResponseObject";
 
 @ObjectType()
-class GroupsResponse {
-	@Field(() => [FieldError], { nullable: true })
-	errors?: FieldError[];
+class GroupsResponse extends Response<Groups>(Groups) {}
 
-	@Field(() => Groups, { nullable: true })
-	groups?: Groups;
-}
+@ObjectType()
+class ArrayGroupResponse extends ManyResponse<Groups>(Groups) {}
+
+@ObjectType()
+class GroupsBooleanResponse extends BooleanResponse() {}
 
 @Resolver(Groups)
 export class GroupsResolver {
-	@Query(() => Groups, { nullable: true })
-	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
-	showSelectedGroup(@Ctx() { req }: AppContext) {
-		if (!req.session.selectedGroup) {
-			return null;
+	@Query(() => GroupsResponse)
+	@UseMiddleware(isAuth, isKinderGardenSelected, isGroupSelected, LogAction)
+	async showSelectedGroup(
+		@Ctx() { req }: AppContext
+	): Promise<GroupsResponse> {
+		let data: Groups;
+		try {
+			data = await Groups.findOneOrFail(req.session.selectedGroup);
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
 		}
-
-		return Groups.findOne({ where: { Id: req.session.selectedGroup } });
+		return {
+			data
+		};
 	}
 
 	@Mutation(() => GroupsResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async useGroup(
-		@Arg("groupId") groupId: number,
+		@Arg("id") id: number,
 		@Ctx() { req }: AppContext
 	): Promise<GroupsResponse> {
-		const groups = await Groups.findOne({
-			where: {
-				Id: groupId,
-				inKindergardenId: req.session.selectedKindergarden
-			}
-		});
-
-		if (!groups) {
+		let data: Groups;
+		try {
+			data = await Groups.findOneOrFail({
+				where: {
+					Id: id,
+					inKindergardenId: req.session.selectedKindergarden
+				}
+			});
+			req.session.selectedGroup = data.Id;
+		} catch (err) {
 			return {
 				errors: [
 					{
@@ -59,24 +79,42 @@ export class GroupsResolver {
 				]
 			};
 		}
-
-		req.session.selectedGroup = groups.Id;
-
-		return { groups };
+		return { data };
 	}
 
-	@Query(() => [Groups])
+	@Query(() => ArrayGroupResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
-	async showGroups(@Ctx() { req }: AppContext): Promise<Groups[] | null> {
-		return await Groups.find({
-			where: { inKindergardenId: req.session.selectedKindergarden }
-		});
+	async listGroups(@Ctx() { req }: AppContext): Promise<ArrayGroupResponse> {
+		let data: Groups[];
+		try {
+			data = await getConnection()
+				.createQueryBuilder(Groups, "g")
+				.where("g.inKindergardenId = :id", {
+					id: req.session.selectedKindergarden
+				})
+				.getMany();
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
+		return {
+			data
+		};
 	}
 
 	@Mutation(() => GroupsResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
-	async createGroup(@Arg("name") name: string, @Ctx() { req }: AppContext) {
-		let groups;
+	async createGroup(
+		@Arg("name") name: string,
+		@Ctx() { req }: AppContext
+	): Promise<GroupsResponse> {
+		let data;
 		if (name.length === 0)
 			return {
 				errors: [
@@ -97,7 +135,7 @@ export class GroupsResolver {
 				})
 				.returning("*")
 				.execute();
-			groups = result.raw[0];
+			data = result.raw[0];
 		} catch (err) {
 			return {
 				errors: [
@@ -108,23 +146,45 @@ export class GroupsResolver {
 				]
 			};
 		}
-		return { groups };
+		return { data };
 	}
 
 	@Mutation(() => Boolean)
 	@UseMiddleware(LogAction)
-	clearGroup(@Ctx() { req }: AppContext) {
+	clearGroup(@Ctx() { req }: AppContext): boolean {
 		if (req.session.selectedGroup) {
 			req.session.selectedGroup = NaN;
 		}
 		return true;
 	}
 
-	// TODO: Rewrite this function
-	@Mutation(() => Boolean)
+	@Mutation(() => GroupsBooleanResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
-	async deleteGroup(@Arg("id", () => Int) id: number): Promise<Boolean> {
-		await Groups.delete({ Id: id });
-		return true;
+	async deleteGroup(
+		@Arg("id", () => Int) id: number
+	): Promise<GroupsBooleanResponse> {
+		let response: UpdateResult;
+		try {
+			response = await getConnection()
+				.createQueryBuilder()
+				.softDelete()
+				.from(Groups, "g")
+				.where({
+					Id: id
+				})
+				.execute();
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
+		return {
+			result: response.affected! > 0
+		};
 	}
 }

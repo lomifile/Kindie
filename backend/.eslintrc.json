@@ -17,6 +17,7 @@
 		"quotes": "off",
 		"semi": ["error", "always"],
 		"@typescript-eslint/no-non-null-assertion": "off",
-		"no-useless-escape": "off"
+		"no-useless-escape": "off",
+		"@typescript-eslint/no-explicit-any": "off"
 	}
 }

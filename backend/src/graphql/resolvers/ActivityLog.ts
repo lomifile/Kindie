@@ -85,7 +85,7 @@ export class ActivityLogResolver {
 		}
 		return {
 			data,
-			hasMore: false
+			hasMore: data.length === realLimitPlusOne
 		};
 	}
 }

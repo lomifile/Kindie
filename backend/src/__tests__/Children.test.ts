@@ -7,13 +7,6 @@ import { Groups } from "../orm/entities";
 let conn: Connection;
 let group: Groups;
 
-// const gErrorObject = (field: string, message: string) => [
-// 	{
-// 		field,
-// 		message
-// 	}
-// ];
-
 beforeAll(async () => {
 	conn = await testConn();
 	group = await Groups.create({
@@ -158,6 +151,24 @@ describe("Create child resolver", () => {
 		expect(response.data?.createChild.errors).toBeNull();
 		expect(response.data?.createChild.data).not.toBeNull();
 		expect(response.data?.createChild.data).toHaveProperty("Id");
+
+		await gCall({
+			source: createChildMutation,
+			userId: 1,
+			selectedKindergarden: group.inKindergardenId,
+			variableValues: {
+				options: {
+					Name: faker.name.firstName(),
+					Surname: faker.name.lastName(),
+					BirthDate: faker.date.birthdate().toISOString(),
+					OIB: 12314124,
+					Gender: "male",
+					Remarks: "shjdhask",
+					mother: null,
+					father: null
+				}
+			}
+		});
 	});
 });
 
@@ -344,7 +355,13 @@ describe("Add child to group", () => {
 describe("Delete child", () => {
 	const deleteChildrenMutation = `
     mutation DeleteChild($id: Int!) {
-        deleteChildren(id: $id)
+        deleteChildren(id: $id) {
+			result
+			errors {
+				field
+				message
+			}
+		}
       }
     `;
 
@@ -358,7 +375,7 @@ describe("Delete child", () => {
 			}
 		});
 
-		expect(response.data?.deleteChildren).toBeFalsy();
+		expect(response.data?.deleteChildren.result).toBeFalsy();
 	});
 
 	test("[gCall] -> Should pass", async () => {
@@ -371,7 +388,7 @@ describe("Delete child", () => {
 			}
 		});
 
-		expect(response.data?.deleteChildren).toBeTruthy();
+		expect(response.data?.deleteChildren.result).toBeTruthy();
 	});
 });
 
@@ -431,14 +448,20 @@ describe("Remove child from group", () => {
 describe("Find child by Id", () => {
 	const findChildQuery = `
     query FindChild($id: Int!) {
-        findChild(id: $id) {
-          Id
-          Name
-          Surname
-          Gender
-          BirthDate
-          OIB
-          Remarks
+        findChildById(id: $id) {
+			data {
+				Id
+				Name
+				Surname
+				Gender
+				BirthDate
+				OIB
+				Remarks
+			}
+			errors {
+				field
+				message
+			}
         }
       }
     `;
@@ -453,20 +476,23 @@ describe("Find child by Id", () => {
 			}
 		});
 
-		expect(response.data?.findChild).toBeNull();
+		expect(response.data?.findChildById.data).toBeNull();
+		expect(typeof response.data?.findChildById.errors).toBe("object");
+		expect(response.data?.findChildById.errors[0].field).toContain(
+			"EntityNotFoundError"
+		);
 	});
 
-	// TODO: Fix this test/or resolver
 	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
 			source: findChildQuery,
 			userId: 1,
 			selectedKindergarden: group.inKindergardenId,
 			variableValues: {
-				id: 2
+				id: 1
 			}
 		});
-
-		expect(response.data?.findChild).toBeNull();
+		console.log(response);
+		expect(response.data?.findChildById.data).toBeNull();
 	});
 });

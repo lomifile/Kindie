@@ -36,8 +36,8 @@ describe("Add staff member test", () => {
 	const addStaffMutation = `
 	mutation AddStaff($role: String!, $id: Int!) {
 		addStaff(role:$role, userId: $id) {
-		  staff {
-				  staffId
+		  data {
+			staffId
 			role
 		  }
 		  errors {
@@ -90,11 +90,9 @@ describe("Add staff member test", () => {
 			}
 		});
 
-		expect(response.data?.addStaff.staff).toBeNull();
+		expect(response.data?.addStaff.data).toBeNull();
 		expect(typeof response.data?.addStaff.errors).toBe("object");
-		expect(response.data?.addStaff.errors[0].field).toContain(
-			"StaffMembers insert"
-		);
+		expect(response.data?.addStaff.errors[0].field).toContain("userId");
 	});
 
 	test("[gCall] -> Should pass", async () => {
@@ -109,7 +107,7 @@ describe("Add staff member test", () => {
 		});
 
 		expect(response.data?.addStaff.errors).toBeNull();
-		expect(response.data?.addStaff.staff).toHaveProperty("staffId");
+		expect(response.data?.addStaff.data).toHaveProperty("staffId");
 	});
 
 	test("[gCall] -> Should fail user is already part of staff", async () => {
@@ -123,24 +121,34 @@ describe("Add staff member test", () => {
 			selectedKindergarden: 1
 		});
 
-		expect(response.data?.addStaff.staff).toBeNull();
+		expect(response.data?.addStaff.data).toBeNull();
 		expect(typeof response.data?.addStaff.errors).toBe("object");
-		expect(response.data?.addStaff.errors[0].field).toContain("user id");
+		expect(response.data?.addStaff.errors[0].field).toContain("userId");
 	});
 });
 
 describe("Show staff test", () => {
-	const showStaffQuery = `
-	query ShowStaff {
-		showStaff {
-		  staffId
-		  kindergardenId
+	const listStaffQuery = `
+	query ListStaff($limit: Int!, $cursor: String) {
+		listStaff(limit: $limit, cursor: $cursor) {
+			data {
+				staffId
+				kindergardenId
+			}
+			errors {
+				field
+				message
+			}
+			hasMore
 		}
 	  }
 	`;
 	test("[gCall] -> Should fail user is not authenticated", async () => {
 		const response = await gCall({
-			source: showStaffQuery
+			source: listStaffQuery,
+			variableValues: {
+				limit: 10
+			}
 		});
 
 		expect(response.data).toBeNull();
@@ -150,7 +158,10 @@ describe("Show staff test", () => {
 
 	test("[gCall] -> Should fail kindergarden is not selected", async () => {
 		const response = await gCall({
-			source: showStaffQuery,
+			source: listStaffQuery,
+			variableValues: {
+				limit: 10
+			},
 			userId: 1
 		});
 
@@ -163,14 +174,17 @@ describe("Show staff test", () => {
 
 	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
-			source: showStaffQuery,
+			source: listStaffQuery,
+			variableValues: {
+				limit: 10
+			},
 			userId: 1,
 			selectedKindergarden: kindergarden.Id
 		});
 
-		expect(typeof response.data?.showStaff).toBe("object");
-		expect(Array.isArray(response.data?.showStaff)).toBeTruthy();
-		expect(response.data?.showStaff[0]).toHaveProperty("staffId");
+		expect(typeof response.data?.listStaff.data).toBe("object");
+		expect(Array.isArray(response.data?.listStaff.data)).toBeTruthy();
+		expect(response.data?.listStaff.data[0]).toHaveProperty("staffId");
 	});
 });
 

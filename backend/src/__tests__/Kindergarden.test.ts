@@ -88,8 +88,8 @@ describe("Create kindergarden test", () => {
 
 describe("Use kindergarden tests", () => {
 	const useKindergardenMutation = `
-	mutation UseKindergarden($kindergardenID: Float!) {
-		useKindergarden(kindergadenID: $kindergardenID) {
+	mutation UseKindergarden($id: Float!) {
+		useKindergarden(id: $id) {
 		  data {
 			Id
 			Name
@@ -110,7 +110,7 @@ describe("Use kindergarden tests", () => {
 			source: useKindergardenMutation,
 			userId: 1,
 			variableValues: {
-				kindergardenID: 1234
+				id: 1234
 			}
 		});
 
@@ -125,7 +125,7 @@ describe("Use kindergarden tests", () => {
 		const response = await gCall({
 			source: useKindergardenMutation,
 			variableValues: {
-				kindergardenID: 1
+				id: 1
 			}
 		});
 
@@ -139,7 +139,7 @@ describe("Use kindergarden tests", () => {
 			source: useKindergardenMutation,
 			userId: 1,
 			variableValues: {
-				kindergardenID: 1
+				id: 1
 			}
 		});
 
@@ -150,9 +150,9 @@ describe("Use kindergarden tests", () => {
 });
 
 describe("Show kindergarden", () => {
-	const showKindergardenQuery = `
-	query ShowKindergarden {
-		showKindergarden(limit: 15) {
+	const listKindergardenQuery = `
+	query ListKindergarden {
+		listKindergarden(limit: 15) {
 		  data {
 			Id
 			Name
@@ -171,7 +171,7 @@ describe("Show kindergarden", () => {
 
 	test("[gCall] -> Should fail user is not in session", async () => {
 		const response = await gCall({
-			source: showKindergardenQuery
+			source: listKindergardenQuery
 		});
 
 		expect(response.data).toBeNull();
@@ -181,23 +181,29 @@ describe("Show kindergarden", () => {
 
 	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
-			source: showKindergardenQuery,
+			source: listKindergardenQuery,
 			userId: 1
 		});
 
-		expect(response.data).toHaveProperty("showKindergarden");
-		expect(response.data?.showKindergarden).toHaveProperty("data");
-		expect(response.data?.showKindergarden).toHaveProperty("errors");
-		expect(response.data?.showKindergarden.errors).toBeNull();
-		expect(response.data?.showKindergarden).toHaveProperty("hasMore");
-		expect(typeof response.data?.showKindergarden.hasMore).toBe("boolean");
+		expect(response.data).toHaveProperty("listKindergarden");
+		expect(response.data?.listKindergarden).toHaveProperty("data");
+		expect(response.data?.listKindergarden).toHaveProperty("errors");
+		expect(response.data?.listKindergarden.errors).toBeNull();
+		expect(response.data?.listKindergarden).toHaveProperty("hasMore");
+		expect(typeof response.data?.listKindergarden.hasMore).toBe("boolean");
 	});
 });
 
 describe("Delete kindergarden", () => {
 	const deleteKindergardenMutation = `
 	mutation DeleteKindergarden($id: Int!) {
-		deleteKindergarden(id: $id) 
+		deleteKindergarden(id: $id) {
+			result
+			errors {
+				field
+				message
+			}
+		}
 	  }
 	`;
 
@@ -224,7 +230,7 @@ describe("Delete kindergarden", () => {
 		});
 
 		expect(response.data).toHaveProperty("deleteKindergarden");
-		expect(response.data?.deleteKindergarden).toBeFalsy();
+		expect(response.data?.deleteKindergarden.result).toBeFalsy();
 	});
 
 	test("[gCall] -> Should pass", async () => {
@@ -237,6 +243,6 @@ describe("Delete kindergarden", () => {
 		});
 
 		expect(response.data).toHaveProperty("deleteKindergarden");
-		expect(response.data?.deleteKindergarden).toBeTruthy();
+		expect(response.data?.deleteKindergarden.result).toBeTruthy();
 	});
 });

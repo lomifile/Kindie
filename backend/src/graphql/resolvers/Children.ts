@@ -14,23 +14,31 @@ import {
 	isAuth,
 	isGroupSelected
 } from "@middleware/index";
-import { getConnection } from "typeorm";
+import { UpdateResult, getConnection } from "typeorm";
 import { ChildrenInput } from "@graphql/inputs";
 import Response from "@utils/repsonseObject";
 import PaginatedResponse from "@utils/paginatedResponseObject";
 import { LogAction } from "@root/middleware/LogAction";
+import ManyResponse from "@root/utils/manyResponseObject";
+import BooleanResponse from "@root/utils/booleanResponseObject";
 
 @ObjectType()
-class ChildrenResponse extends Response<Children | Children[]>(Children) {}
+class ChildrenResponse extends Response<Children>(Children) {}
+
+@ObjectType()
+class ArrayChildrenResponse extends ManyResponse<Children>(Children) {}
 
 @ObjectType()
 class PaginatedChildren extends PaginatedResponse<Children>(Children) {}
+
+@ObjectType()
+class ChildrenBooleanResponse extends BooleanResponse() {}
 
 @Resolver(Children)
 export class ChildrenResolver {
 	@Query(() => PaginatedChildren)
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
-	async showChildren(
+	async listChildren(
 		@Arg("limit", () => Int) limit: number,
 		@Arg("cursor", () => String, { nullable: true }) cursor: string | null,
 		@Arg("inGroup", () => Int, { nullable: true }) inGroup: number,
@@ -49,9 +57,10 @@ export class ChildrenResolver {
 		if (cursor) {
 			replacements.push(new Date(parseInt(cursor)));
 		}
-
-		const child = await getConnection().query(
-			`
+		let result;
+		try {
+			result = await getConnection().query(
+				`
 				select 
 				c."Id"
 				, c."Name"
@@ -77,23 +86,33 @@ export class ChildrenResolver {
 				order by c."createdAt" DESC
 				limit $1
 			`,
-			replacements
-		);
-
+				replacements
+			);
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
 		return {
-			data: child.slice(0, realLimit),
-			hasMore: child.length === realLimitPlusOne
+			data: result.slice(0, realLimit),
+			hasMore: result.length === realLimitPlusOne
 		};
 	}
 
-	@Query(() => [Children])
+	@Query(() => ArrayChildrenResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async filterChildren(
 		@Arg("text") text: string,
 		@Ctx() { req }: AppContext
-	): Promise<ChildrenResponse> {
+	): Promise<ArrayChildrenResponse> {
+		let data: Children[];
 		try {
-			const query = await getConnection()
+			data = await getConnection()
 				.createQueryBuilder(Children, "c")
 				.select()
 				.where(
@@ -105,9 +124,6 @@ export class ChildrenResolver {
 					"DESC"
 				)
 				.getMany();
-			return {
-				data: query
-			};
 		} catch (err) {
 			return {
 				errors: [
@@ -118,6 +134,9 @@ export class ChildrenResolver {
 				]
 			};
 		}
+		return {
+			data
+		};
 	}
 
 	@Mutation(() => ChildrenResponse)
@@ -188,21 +207,18 @@ export class ChildrenResolver {
 		}
 	}
 
-	@Mutation(() => Boolean)
+	@Mutation(() => ChildrenBooleanResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async deleteChildren(
 		@Arg("id", () => Int) id: number
-	): Promise<boolean | ChildrenResponse> {
+	): Promise<ChildrenBooleanResponse> {
+		let response: UpdateResult;
 		try {
-			const response = await getConnection()
+			response = await getConnection()
 				.createQueryBuilder(Children, "c")
 				.softDelete()
 				.where(`Id = :id`, { id: id })
 				.execute();
-
-			if ((response.affected as number) > 0) {
-				return true;
-			}
 		} catch (err) {
 			return {
 				errors: [
@@ -213,7 +229,9 @@ export class ChildrenResolver {
 				]
 			};
 		}
-		return false;
+		return {
+			result: response.affected! > 0
+		};
 	}
 
 	@Mutation(() => ChildrenResponse)
@@ -249,13 +267,28 @@ export class ChildrenResolver {
 		}
 	}
 
-	@Query(() => Children, { nullable: true })
+	@Query(() => ChildrenResponse)
 	@UseMiddleware(isAuth)
 	@UseMiddleware(isKinderGardenSelected)
-	async findChild(
+	async findChildById(
 		@Arg("id", () => Int) id: number
-	): Promise<Children | undefined> {
-		return await Children.findOne({ Id: id });
+	): Promise<ChildrenResponse> {
+		let data: Children;
+		try {
+			data = await Children.findOneOrFail(id);
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
+		return {
+			data
+		};
 	}
 
 	@Mutation(() => ChildrenResponse)
@@ -301,7 +334,7 @@ export class ChildrenResolver {
 		};
 	}
 
-	@Mutation(() => ChildrenResponse, { nullable: true })
+	@Mutation(() => ChildrenResponse)
 	@UseMiddleware(isAuth)
 	@UseMiddleware(isKinderGardenSelected)
 	async removeChildFromGroup(
