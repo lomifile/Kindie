@@ -35,7 +35,8 @@ export class AttendanceResolver {
 	@UseMiddleware(isAuth, isGroupSelected, isKinderGardenSelected, LogAction)
 	async listAttendance(
 		@Arg("limit", () => Int) limit: number,
-		@Arg("cursor", () => String, { nullable: true }) cursor: string | null
+		@Arg("cursor", () => String, { nullable: true }) cursor: string | null,
+		@Arg("marked", () => Boolean, { nullable: true }) marked: boolean | null
 	): Promise<PaginatedAttendacne> {
 		const realLimit = Math.min(20, limit);
 		const realLimitPlusOne = realLimit + 1;
@@ -45,6 +46,7 @@ export class AttendanceResolver {
 		if (cursor) {
 			replacements.push(cursor);
 		}
+
 		let result;
 		try {
 			result = await getConnection().query(
@@ -65,6 +67,7 @@ export class AttendanceResolver {
 				left join groups g on g."inKindergardenId" = k."Id"
 				where a."deletedAt" is null
 				${cursor ? ` and a."createdAt" < $2` : ""}
+				${marked === true ? ` and a.attendance is true` : " and a.attendance is false"}
 				order by a."createdAt" limit $1
 				`,
 				replacements
@@ -87,7 +90,7 @@ export class AttendanceResolver {
 
 	@Mutation(() => AttedanceResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, isGroupSelected, LogAction)
-	async createAttendacne(
+	async createAttendance(
 		@Arg("childId", () => Int) childId: number,
 		@Ctx() { req }: AppContext,
 		@Arg("complete", { nullable: true }) complete?: boolean
@@ -140,9 +143,10 @@ export class AttendanceResolver {
 				.set({
 					attendance: true
 				})
-				.where(`"Id"=:id`, { id: id })
+				.where(`Id = :id`, { id: id })
 				.returning("*")
 				.execute();
+
 			data = response.raw[0];
 		} catch (err) {
 			return {
@@ -162,7 +166,7 @@ export class AttendanceResolver {
 
 	@Mutation(() => AttendanceBooleanResponse)
 	@UseMiddleware(isAuth, isKinderGardenSelected, isGroupSelected)
-	async delete(
+	async deleteAttendance(
 		@Arg("id", () => Int) id: number
 	): Promise<AttendanceBooleanResponse> {
 		let response: UpdateResult;
@@ -171,7 +175,7 @@ export class AttendanceResolver {
 				.createQueryBuilder()
 				.softDelete()
 				.from(Attendance)
-				.where("id = :id", { id: id })
+				.where("Id = :id", { id: id })
 				.execute();
 		} catch (err) {
 			return {

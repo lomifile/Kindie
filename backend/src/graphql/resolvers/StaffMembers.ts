@@ -205,8 +205,10 @@ export class StaffMembersResolver {
 		if (cursor) {
 			replacements.push(new Date(parseInt(cursor)));
 		}
+
 		try {
-			const response = await getConnection().query(`
+			const response = await getConnection().query(
+				`
 				select
 					sm."staffId" ,
 					sm."kindergardenId",
@@ -224,7 +226,7 @@ export class StaffMembersResolver {
 					u."Name" as user_name,
 					u."Surname" as user_surname,
 					u."Email" as user_email
-				from public.staff_members
+				from public.staff_members sm
 				left join public."user" u 
 				on u."Id" = sm."staffId" 
 				left join public.kinder_garden kg 
@@ -232,7 +234,9 @@ export class StaffMembersResolver {
 				where sm.archived is null and sm."kindergardenId" = $2
 				${cursor ? ` and sm.createdAt = $3` : ""}
 				limit $1
-			`);
+			`,
+				replacements
+			);
 			for (const el of response) {
 				data.push({
 					staffId: el.staffId,

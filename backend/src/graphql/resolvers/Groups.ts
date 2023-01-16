@@ -89,7 +89,7 @@ export class GroupsResolver {
 		try {
 			data = await getConnection()
 				.createQueryBuilder(Groups, "g")
-				.where("inKindergardenId = :id", {
+				.where("g.inKindergardenId = :id", {
 					id: req.session.selectedKindergarden
 				})
 				.getMany();

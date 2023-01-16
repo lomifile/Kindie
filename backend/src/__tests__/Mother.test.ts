@@ -22,10 +22,10 @@ afterAll(async () => {
 });
 
 describe("Create Mother test", () => {
-	const addMotherMutation = `
-	mutation CreateMother($options: ParentsInput!) {
-		addMother(options: $options) {
-		  mother {
+	const insertMotherMutation = `
+	mutation InsertMother($options: ParentsInput!) {
+		insertMother(options: $options) {
+		  data {
 			Id
 			Name
 			Surname
@@ -41,7 +41,7 @@ describe("Create Mother test", () => {
     `;
 	test("[gCall] -> Should fail kindergarden is not selected", async () => {
 		const response = await gCall({
-			source: addMotherMutation,
+			source: insertMotherMutation,
 			userId: 1,
 			variableValues: {
 				options: {
@@ -61,7 +61,7 @@ describe("Create Mother test", () => {
 
 	test("[gCall] -> Should fail email is not correct", async () => {
 		const response = await gCall({
-			source: addMotherMutation,
+			source: insertMotherMutation,
 			userId: 1,
 			selectedKindergarden: 1,
 			variableValues: {
@@ -74,13 +74,13 @@ describe("Create Mother test", () => {
 			}
 		});
 
-		expect(response.data?.addMother.mother).toBeNull();
-		expect(response.data?.addMother.errors[0].field).toContain("email");
+		expect(response.data?.insertMother.data).toBeNull();
+		expect(response.data?.insertMother.errors[0].field).toContain("email");
 	});
 
 	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
-			source: addMotherMutation,
+			source: insertMotherMutation,
 			userId: 1,
 			selectedKindergarden: 1,
 			variableValues: {
@@ -93,16 +93,16 @@ describe("Create Mother test", () => {
 			}
 		});
 
-		expect(response.data?.addMother.errors).toBeNull();
-		expect(response.data?.addMother.mother).toHaveProperty("Id");
+		expect(response.data?.insertMother.errors).toBeNull();
+		expect(response.data?.insertMother.data).toHaveProperty("Id");
 	});
 });
 
 describe("Update mother test", () => {
 	const updateMotherMutation = `
     mutation UpdateMother($id: Int!, $options: ParentsInput!) {
-        updateMother(motherId:$id, options:$options) {
-			mother {
+        updateMother(id:$id, options:$options) {
+			data {
 				Id
 				Name
 				Surname
@@ -153,7 +153,7 @@ describe("Update mother test", () => {
 			}
 		});
 
-		expect(response.data?.updateMother.mother).toBeNull();
+		expect(response.data?.updateMother.data).toBeNull();
 		expect(response.data?.updateMother.errors[0].field).toContain("email");
 	});
 
@@ -175,8 +175,8 @@ describe("Update mother test", () => {
 		});
 
 		expect(response.data?.updateMother.errors).toBeNull();
-		expect(response.data?.updateMother.mother).toHaveProperty("Id");
-		expect(response.data?.updateMother.mother).toMatchObject({
+		expect(response.data?.updateMother.data).toHaveProperty("Id");
+		expect(response.data?.updateMother.data).toMatchObject({
 			Id: 1,
 			Name: options.name,
 			Surname: options.surname,
@@ -187,16 +187,20 @@ describe("Update mother test", () => {
 });
 
 describe("Show mother query", () => {
-	const showMotherQuery = `
-    query ShowMother($limit: Int!, $cursor:String) {
-        showMother(limit: $limit, cursor: $cursor) {
-          mother {
+	const listMotherQuery = `
+    query ListMother($limit: Int!, $cursor:String) {
+        listMother(limit: $limit, cursor: $cursor) {
+          data {
             Id
             Name
             Surname
             Email
             Phone
           }
+		  errors {
+			field
+			message
+		  }
           hasMore
         }
       }
@@ -204,7 +208,7 @@ describe("Show mother query", () => {
 
 	test("[gCall] -> Should fail limit is not sent", async () => {
 		const response = await gCall({
-			source: showMotherQuery,
+			source: listMotherQuery,
 			userId: 1,
 			selectedKindergarden: 1,
 			variableValues: {
@@ -219,7 +223,7 @@ describe("Show mother query", () => {
 
 	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
-			source: showMotherQuery,
+			source: listMotherQuery,
 			userId: 1,
 			selectedKindergarden: 1,
 			variableValues: {
@@ -227,27 +231,46 @@ describe("Show mother query", () => {
 			}
 		});
 
-		expect(response.data?.showMother.mother[0]).toHaveProperty("Id");
-		expect(typeof response.data?.showMother.hasMore).toBe("boolean");
+		expect(response.data?.listMother.data[0]).toHaveProperty("Id");
+		expect(typeof response.data?.listMother.hasMore).toBe("boolean");
 	});
 });
 
 describe("Delete mother test", () => {
 	const deleteMotherMutation = `
     mutation DeleteMother($id: Int!) {
-        deleteMother(motherId: $id)
+		deleteMother(id: $id) {
+			result
+			errors {
+				field
+				message
+			}
+		}
       }
     `;
+	test("[gCall] -> Should fail id is not correct", async () => {
+		const response = await gCall({
+			source: deleteMotherMutation,
+			userId: 1,
+			selectedKindergarden: 1,
+			variableValues: {
+				id: 12321
+			}
+		});
+
+		expect(response.data?.deleteMother.result).toBeFalsy();
+	});
+
 	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
 			source: deleteMotherMutation,
 			userId: 1,
 			selectedKindergarden: 1,
 			variableValues: {
-				id: 2
+				id: 1
 			}
 		});
 
-		expect(response.data?.deleteMother).toBeTruthy();
+		expect(response.data?.deleteMother.result).toBeTruthy();
 	});
 });
