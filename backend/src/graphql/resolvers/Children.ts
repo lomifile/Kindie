@@ -77,11 +77,10 @@ export class ChildrenResolver {
 				, c."inKindergardenId"
 				, c."createdById"
 				, c."updatedById"
-				from children c
+				from v_children c
 				inner join public."kinder_garden" k 
-				on k."Id" = c."inKindergardenId" where k."Id" = $2 and c."inGroupId" ${
-					inGroup ? " = $3" : "is null"
-				}
+				on k."Id" = c."inKindergardenId" 
+				where k."Id" = $2 and c."inGroupId" ${inGroup ? " = $3" : "is null"}
 				${cursor ? `and c."createdAt" < $4` : ""}
 				order by c."createdAt" DESC
 				limit $1
