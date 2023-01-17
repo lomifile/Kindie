@@ -1,10 +1,8 @@
 import { testConn } from "../helpers/testConn";
 import { Connection } from "typeorm";
-import { AttendanceResolver } from "../graphql/resolvers";
 import { gCall } from "../helpers/gCall";
 
 let conn: Connection;
-const resolver = new AttendanceResolver();
 
 beforeAll(async () => {
 	conn = await testConn();
@@ -14,17 +12,17 @@ afterAll(async () => {
 	await conn.close();
 });
 
-const gErrorObject = (field: string, message: string) => [
-	{
-		field,
-		message
-	}
-];
+// const gErrorObject = (field: string, message: string) => [
+// 	{
+// 		field,
+// 		message
+// 	}
+// ];
 
 describe("Create test", () => {
-	const createAttendacneMutation = `
+	const createAttendanceMutation = `
 	mutation CreateAttendance($childId: Int!, $complete: Boolean!) {
-		createAttendacne(childId:$childId, complete:$complete) {
+		createAttendance(childId:$childId, complete:$complete) {
 		  data {
 			Id
 			childId
@@ -39,25 +37,30 @@ describe("Create test", () => {
 	  }
 	`;
 
-	test("Should fail child doesn't exist by this id", async () => {
-		const ctx = {
-			req: {
-				session: {
-					userId: 1,
-					selectedKindergarden: 1,
-					selectedGroup: 1
-				}
+	test("[gCall] -> Should fail child doesn't exist by this id", async () => {
+		const response = await gCall({
+			source: createAttendanceMutation,
+			userId: 1,
+			selectedKindergarden: 1,
+			selectedGroup: 1,
+			variableValues: {
+				childId: 1242131,
+				complete: false
 			}
-		} as AppContext;
-		const response = await resolver.createAttendacne(1, ctx);
-		expect(response).toHaveProperty("errors");
+		});
+
+		expect(response.data?.createAttendance.data).toBeNull();
+		expect(response.data?.createAttendance.errors.length).toBe(1);
+		expect(response.data?.createAttendance.errors[0].field).toContain(
+			"childId"
+		);
 	});
 
-	test("[gCall] -> Should fail childId doesn't exist", async () => {
+	test("[gCall] -> Should pass", async () => {
 		const response = await gCall({
-			source: createAttendacneMutation,
+			source: createAttendanceMutation,
 			variableValues: {
-				childId: 1,
+				childId: 3,
 				complete: true
 			},
 			userId: 1,
@@ -65,36 +68,154 @@ describe("Create test", () => {
 			selectedGroup: 1
 		});
 
-		expect(response.data?.createAttendacne).toHaveProperty("errors");
-		expect(typeof response.data?.createAttendacne.errors[0]).toBe("object");
-		expect(response.data?.createAttendacne.errors).toMatchObject(
-			gErrorObject("childId", "Child doesn't exist by this id")
-		);
-		expect(response.data?.createAttendacne.errors[0].field).toBe("childId");
+		expect(response.data?.createAttendance.errors).toBeNull();
+		expect(response.data?.createAttendance.data).toHaveProperty("Id");
 	});
 });
 
 describe("Mark attendance test", () => {
-	test("Mark attendance test", async () => {
-		const response = await resolver.markAttendance(174);
-		expect(response).toHaveProperty("errors");
-		expect(response.errors?.[0].message).toBe(
-			"There is no attendance by this Id"
-		);
+	const markAttendanceMutation = `
+		mutation MarkAttendance($id: Int!) {
+			markAttendance(id: $id) {
+				data {
+					Id
+					childId
+					groupId
+					kindergardenId
+				}
+				errors {
+					field
+					message
+				}
+			}
+		}
+	`;
+
+	test("[gCall] -> Should fail id is not correct", async () => {
+		const response = await gCall({
+			source: markAttendanceMutation,
+			userId: 1,
+			selectedGroup: 1,
+			selectedKindergarden: 1,
+			variableValues: {
+				id: 127381923
+			}
+		});
+
+		expect(response.data?.markAttendance.data).toBeNull();
+		expect(response.data?.markAttendance.errors).toBeNull();
+	});
+
+	test("[gCall] -> Should pass", async () => {
+		const response = await gCall({
+			source: markAttendanceMutation,
+			userId: 1,
+			selectedGroup: 1,
+			selectedKindergarden: 1,
+			variableValues: {
+				id: 1
+			}
+		});
+
+		expect(response.data?.markAttendance.data).toHaveProperty("Id");
+		expect(response.data?.markAttendance.errors).toBeNull();
 	});
 });
 
-describe("Select test", () => {
-	test("Should return array with 0 length and hasMore to be false", async () => {
-		const response = await resolver.showAllAttendance(10, null);
-		expect(response.data).toHaveLength(0);
-		expect(response.hasMore).toBeFalsy();
+describe("List attendance test", () => {
+	const listAttendanceQuery = `
+	query ListAttedance($limit: Int!, $cursor: String, $marked: Boolean) {
+		listAttendance(limit: $limit, cursor: $cursor, marked: $marked) {
+		  data {
+			Id
+			childId
+			groupId
+			kindergardenId
+			attendance
+			deletedAt
+		  }
+		  errors {
+			field
+			message
+		  }
+		}
+	  }
+	  
+	`;
+
+	test("[gCall] -> Should pass with empty array and hasMore false", async () => {
+		const response = await gCall({
+			source: listAttendanceQuery,
+			userId: 1,
+			selectedGroup: 1,
+			selectedKindergarden: 1,
+			variableValues: {
+				limit: 10
+			}
+		});
+
+		expect(response.data?.listAttendance.data).toMatchObject([]);
+		expect(response.data?.listAttendance.hasMore).toBeFalsy();
+		expect(response.data?.listAttendance.errors).toBeNull();
+	});
+
+	test("[gCall] -> Should pass with array length 1 and hasMore false", async () => {
+		const response = await gCall({
+			source: listAttendanceQuery,
+			userId: 1,
+			selectedGroup: 1,
+			selectedKindergarden: 1,
+			variableValues: {
+				limit: 10,
+				marked: true
+			}
+		});
+
+		expect(response.data?.listAttendance.data).toHaveLength(1);
+		expect(response.data?.listAttendance.hasMore).toBeFalsy();
+		expect(response.data?.listAttendance.errors).toBeNull();
 	});
 });
 
 describe("Delete test", () => {
-	test("Delete test", async () => {
-		const response = await resolver.delete(1);
-		expect(response).toBeTruthy();
+	const deleteAttendanceMutation = `
+		mutation DeleteAttendance($id: Int!) {
+			deleteAttendance(id: $id) {
+				result
+				errors {
+					field
+					message
+				}
+			}
+		}
+	`;
+	test("[gCall] -> Should fail id doesn't exist", async () => {
+		const response = await gCall({
+			source: deleteAttendanceMutation,
+			userId: 1,
+			selectedGroup: 1,
+			selectedKindergarden: 1,
+			variableValues: {
+				id: 12345123
+			}
+		});
+
+		expect(response.data?.deleteAttendance.result).toBeFalsy();
+		expect(response.data?.deleteAttendance.errors).toBeNull();
+	});
+
+	test("[gCall] -> Should fail pass", async () => {
+		const response = await gCall({
+			source: deleteAttendanceMutation,
+			userId: 1,
+			selectedGroup: 1,
+			selectedKindergarden: 1,
+			variableValues: {
+				id: 1
+			}
+		});
+
+		expect(response.data?.deleteAttendance.result).toBeTruthy();
+		expect(response.data?.deleteAttendance.errors).toBeNull();
 	});
 });

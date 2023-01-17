@@ -22,8 +22,6 @@ export class UpdateUserInput {
 	surname: string;
 	@Field()
 	email: string;
-	@Field()
-	password: string;
 }
 
 @InputType()

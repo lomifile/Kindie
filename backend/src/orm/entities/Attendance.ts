@@ -2,6 +2,7 @@ import {
 	BaseEntity,
 	Column,
 	CreateDateColumn,
+	DeleteDateColumn,
 	Entity,
 	ManyToOne,
 	PrimaryGeneratedColumn,
@@ -48,6 +49,10 @@ export class Attendance extends BaseEntity {
 	@Field(() => Date)
 	@CreateDateColumn()
 	createdAt: Date;
+
+	@Field(() => Date, { nullable: true })
+	@DeleteDateColumn()
+	deletedAt: Date;
 
 	@Field(() => Date)
 	@UpdateDateColumn()

@@ -7,3 +7,4 @@ export * from "./Mother";
 export * from "./StaffMembers";
 export * from "./User";
 export * from "./Attendance";
+export * from "./ActivityLog";

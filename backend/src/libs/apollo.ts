@@ -1,5 +1,6 @@
-import { ApolloServer } from "apollo-server-express";
-import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+import { ApolloServer } from "@apollo/server";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "@apollo/server-plugin-landing-page-graphql-playground";
 import {
 	UserResolver,
 	StaffMembersResolver,
@@ -12,10 +13,11 @@ import {
 	AttendanceResolver
 } from "@graphql/resolvers";
 import { buildSchemaSync } from "type-graphql";
-import { redis } from "@libs/redis";
 import { LogAccess } from "@root/middleware/LogAccess";
+import { ActivityLogResolver } from "@root/graphql/resolvers/ActivityLog";
+import { httpServer } from "@root/server";
 
-export const apolloServer = new ApolloServer({
+export const apolloServer = new ApolloServer<AppContext>({
 	schema: buildSchemaSync({
 		resolvers: [
 			UserResolver,
@@ -26,11 +28,14 @@ export const apolloServer = new ApolloServer({
 			FatherResolver,
 			ContactResolver,
 			ChildrenResolver,
-			AttendanceResolver
+			AttendanceResolver,
+			ActivityLogResolver
 		],
 		validate: false,
 		globalMiddlewares: [LogAccess]
 	}),
-	plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
-	context: ({ req, res }) => ({ req, res, redis })
+	plugins: [
+		ApolloServerPluginDrainHttpServer({ httpServer }),
+		ApolloServerPluginLandingPageGraphQLPlayground({})
+	]
 });

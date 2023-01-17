@@ -10,10 +10,12 @@ import {
 	UseMiddleware
 } from "type-graphql";
 import { isKinderGardenSelected, isAuth } from "@middleware/index";
-import { getConnection } from "typeorm";
+import { UpdateResult, getConnection } from "typeorm";
 import { KinderGardenInput } from "@graphql/inputs";
 import Response from "@utils/repsonseObject";
 import PaginatedResponse from "@utils/paginatedResponseObject";
+import { LogAction } from "@root/middleware/LogAction";
+import BooleanResponse from "@root/utils/booleanResponseObject";
 
 @ObjectType()
 class KindergardenResponse extends Response<KinderGarden>(KinderGarden) {}
@@ -23,30 +25,68 @@ class KindergardenPaginatedResponse extends PaginatedResponse<KinderGarden>(
 	KinderGarden
 ) {}
 
+@ObjectType()
+class KindergardenBooleanResponse extends BooleanResponse() {}
+
 @Resolver(KinderGarden)
 export class KindergardenResolver {
-	@Query(() => KinderGarden)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
-	owner(@Ctx() { req }: AppContext) {
-		return KinderGarden.findOne(req.session.selectedKindergarden);
+	@Query(() => KindergardenResponse)
+	@UseMiddleware(isAuth, LogAction)
+	async getKindergardenById(
+		@Arg("id", () => Int) id: number
+	): Promise<KindergardenResponse> {
+		let data: KinderGarden;
+		try {
+			data = await KinderGarden.findOneOrFail(id);
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
+		return {
+			data
+		};
+	}
+
+	@Query(() => KindergardenResponse)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
+	async getOwner(@Ctx() { req }: AppContext): Promise<KindergardenResponse> {
+		let data: KinderGarden;
+		try {
+			data = await KinderGarden.findOneOrFail(
+				req.session.selectedKindergarden
+			);
+		} catch (err) {
+			return {
+				errors: [{ field: err.name, message: err.message }]
+			};
+		}
+		return {
+			data
+		};
 	}
 
 	@Mutation(() => KindergardenResponse)
-	@UseMiddleware(isAuth)
+	@UseMiddleware(isAuth, LogAction)
 	async useKindergarden(
-		@Arg("kindergadenID") kindergardenId: number,
+		@Arg("id") id: number,
 		@Ctx() { req }: AppContext
 	): Promise<KindergardenResponse> {
-		let kindergarden = await KinderGarden.findOne({
-			where: { Id: kindergardenId, owningId: req.session.userId }
-		});
+		let data: KinderGarden | undefined;
+		try {
+			data = await KinderGarden.findOne({
+				where: { Id: id, owningId: req.session.userId }
+			});
 
-		if (kindergarden) {
-			req.session.selectedKindergarden = kindergarden.Id;
-		} else {
-			try {
-				kindergarden = await getConnection().query(
+			if (data) {
+				req.session.selectedKindergarden = data.Id;
+			} else {
+				data = await getConnection().query(
 					`
                         select 
                         from kinder_garden k
@@ -59,35 +99,29 @@ export class KindergardenResolver {
                         where sm."kindergardenId" = $2
                         limit 1
                     `,
-					[req.session.userId, kindergardenId]
+					[req.session.userId, id]
 				);
-				if (kindergarden) throw new Error("Kindergarden doesn't exist");
-				req.session.selectedKindergarden = kindergarden!.Id;
-			} catch (err) {
-				return {
-					errors: [
-						{
-							field: err.name,
-							message: err.message
-						}
-					]
-				};
+				if (data) throw new Error("Kindergarden doesn't exist");
+				req.session.selectedKindergarden = data!.Id;
 			}
+		} catch (err) {
+			return {
+				errors: [{ field: err.name, message: err.message }]
+			};
 		}
-
-		return { data: kindergarden };
+		return { data };
 	}
 
 	@Query(() => KindergardenPaginatedResponse)
-	@UseMiddleware(isAuth)
-	async showKindergarden(
+	@UseMiddleware(isAuth, LogAction)
+	async listKindergarden(
 		@Arg("limit", () => Int) limit: number,
 		@Arg("cursor", () => String, { nullable: true }) cursor: string | null,
 		@Ctx() { req }: AppContext
 	): Promise<KindergardenPaginatedResponse> {
 		let data;
-		let realLimit = Math.min(10, limit);
-		let reallimitPlusOne = realLimit + 1;
+		const realLimit = Math.min(10, limit);
+		const reallimitPlusOne = realLimit + 1;
 
 		try {
 			const replacements: any[] = [reallimitPlusOne];
@@ -136,7 +170,7 @@ export class KindergardenResolver {
 	}
 
 	@Mutation(() => KindergardenResponse)
-	@UseMiddleware(isAuth)
+	@UseMiddleware(isAuth, LogAction)
 	async createKindergarden(
 		@Arg("options") options: KinderGardenInput,
 		@Ctx() { req }: AppContext
@@ -170,13 +204,14 @@ export class KindergardenResolver {
 		return { data: kindergarden };
 	}
 
-	@Mutation(() => Boolean)
-	@UseMiddleware(isAuth)
+	@Mutation(() => KindergardenBooleanResponse)
+	@UseMiddleware(isAuth, LogAction)
 	async deleteKindergarden(
 		@Arg("id", () => Int) id: number
-	): Promise<Boolean | KindergardenResponse> {
+	): Promise<KindergardenBooleanResponse> {
+		let response: UpdateResult;
 		try {
-			const result = await getConnection()
+			response = await getConnection()
 				.createQueryBuilder()
 				.softDelete()
 				.from(KinderGarden, "k")
@@ -184,11 +219,9 @@ export class KindergardenResolver {
 					Id: id
 				})
 				.execute();
-			if (result.affected! > 0) {
-				return true;
-			}
 		} catch (err) {
 			return {
+				result: false,
 				errors: [
 					{
 						field: err.name,
@@ -197,6 +230,8 @@ export class KindergardenResolver {
 				]
 			};
 		}
-		return false;
+		return {
+			result: response.affected! > 0
+		};
 	}
 }

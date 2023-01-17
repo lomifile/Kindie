@@ -7,7 +7,7 @@ export default function PaginatedResponse<TPaginated>(
 	@ObjectType({ isAbstract: true })
 	abstract class PaginatedResponseObject {
 		@Field(() => [TPaginatedObject], { nullable: true })
-		data?: TPaginated;
+		data?: TPaginated[];
 
 		@Field(() => [FieldError], { nullable: true })
 		errors?: FieldError[];

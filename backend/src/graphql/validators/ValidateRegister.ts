@@ -1,75 +1,43 @@
 import { UsernamePasswordInput } from "@graphql/inputs/UserInput";
+import { FieldError } from "@utils/Errors";
 
-// TODO: Rewrite this validation middleware
-export const ValidateRegister = (options: UsernamePasswordInput) => {
-	if (!options.email.includes("@")) {
-		return [
-			{
-				field: "email",
-				message: "Invalid email"
-			}
-		];
+export const ValidateRegister = (
+	options: UsernamePasswordInput
+): FieldError[] | null => {
+	const errors: FieldError[] = [];
+	if (!options.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+		errors.push({
+			field: "email",
+			message: "Invalid email"
+		});
 	}
 
-	// Possible name errors
+	if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(options.name))
+		errors.push({
+			field: "name",
+			message: "Name cannot contaion special characters"
+		});
 
-	if (options.name.includes("@")) {
-		return [
-			{
-				field: "name",
-				message: "Cannot include @"
-			}
-		];
-	}
-
-	if (options.name.length === 0) {
-		return [
-			{
-				field: "name",
-				message: "Name is empty"
-			}
-		];
-	}
-
-	// Possible surname errors
-
-	if (options.surname.includes("@")) {
-		return [
-			{
-				field: "surname",
-				message: "Cannot include @"
-			}
-		];
-	}
-
-	if (options.surname.length === 0) {
-		return [
-			{
-				field: "surname",
-				message: "Last name is empty"
-			}
-		];
-	}
-
-	// Password
+	if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(options.surname))
+		errors.push({
+			field: "surname",
+			message: "Surname cannot contaion special characters"
+		});
 
 	if (options.password.length <= 8) {
-		return [
-			{
-				field: "password",
-				message: "Length must be greater than 8"
-			}
-		];
+		errors.push({
+			field: "password",
+			message: "Length must be greater than 8"
+		});
 	}
 
 	if (options.password !== options.repeatPassword) {
-		return [
-			{
-				field: "repeatPassword",
-				message: "Passwords don't match"
-			}
-		];
+		errors.push({
+			field: "repeatPassword",
+			message: "Passwords don't match"
+		});
 	}
 
+	if (errors.length > 0) return errors;
 	return null;
 };

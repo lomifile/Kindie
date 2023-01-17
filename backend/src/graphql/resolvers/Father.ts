@@ -11,10 +11,13 @@ import {
 	Resolver,
 	UseMiddleware
 } from "type-graphql";
-import { getConnection } from "typeorm";
+import { UpdateResult, getConnection } from "typeorm";
 import PaginatedResponse from "@utils/paginatedResponseObject";
 import Response from "@utils/repsonseObject";
 import { validateMotherFather } from "@graphql/validators";
+import { LogAction } from "@root/middleware/LogAction";
+import ManyResponse from "@root/utils/manyResponseObject";
+import BooleanResponse from "@root/utils/booleanResponseObject";
 
 @ObjectType()
 class PaginatedFather extends PaginatedResponse<Father>(Father) {}
@@ -22,17 +25,22 @@ class PaginatedFather extends PaginatedResponse<Father>(Father) {}
 @ObjectType()
 class FatherResponse extends Response<Father>(Father) {}
 
+@ObjectType()
+class FatherArrayResponse extends ManyResponse<Father>(Father) {}
+
+@ObjectType()
+class FatherBooleanResponse extends BooleanResponse() {}
+
 @Resolver(Father)
 export class FatherResolver {
 	@Query(() => PaginatedFather)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
-	async showFather(
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
+	async listFather(
 		@Arg("limit", () => Int) limit: number,
 		@Arg("cursor", () => String, { nullable: true }) cursor: string | null,
 		@Ctx() { req }: AppContext
 	): Promise<PaginatedFather> {
-		const realLimit = Math.min(20, limit);
+		const realLimit = Math.min(10, limit);
 		const realLimitPlusOne = realLimit + 1;
 
 		const replacements: any[] = [realLimitPlusOne];
@@ -41,39 +49,72 @@ export class FatherResolver {
 		if (cursor) {
 			replacements.push(cursor);
 		}
-
-		const father = await getConnection().query(
-			`
-      select 
-        f."Id",
-        f."Name",
-        f."Surname",
-        f."Email", 
-        f."Phone", 
-        f."createdById", 
-        f."updatedById", 
-        f."createdAt", 
-        f."updatedAt", 
-        f."inKindergardenId"
-      from father f
-      inner join public."kinder_garden" k on k."Id" = f."inKindergardenId"
-      where k."Id" = $2
-      ${cursor ? `and f."createdAt" < $3` : ""}
-      order by f."createdAt" DESC
-      limit $1
-    `,
-			replacements
-		);
-
+		let response: Father[];
+		try {
+			response = await getConnection().query(
+				`
+				select 
+					f."Id",
+					f."Name",
+					f."Surname",
+					f."Email", 
+					f."Phone"
+				from father f
+				inner join public."kinder_garden" k on k."Id" = f."inKindergardenId"
+				where k."Id" = $2
+				${cursor ? `and f."createdAt" < $3` : ""}
+				order by f."createdAt" DESC
+				limit $1
+				`,
+				replacements
+			);
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
 		return {
-			data: father.slice(0, realLimit),
-			hasMore: father.length === realLimitPlusOne
+			data: response.slice(0, realLimit),
+			hasMore: response.length === realLimitPlusOne
+		};
+	}
+
+	@Query(() => FatherResponse)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
+	async getFatherById(
+		@Arg("id", () => Int) id: number,
+		@Ctx() { req }: AppContext
+	): Promise<FatherResponse> {
+		let data: Father;
+		try {
+			data = await Father.findOneOrFail({
+				where: {
+					Id: id,
+					inKindergardenId: req.session.selectedKindergarden
+				}
+			});
+		} catch (err) {
+			return {
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
+		return {
+			data
 		};
 	}
 
 	@Mutation(() => FatherResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
 	async updateFather(
 		@Arg("options") options: ParentsInput,
 		@Arg("fatherId", () => Int) fatherId: number,
@@ -108,9 +149,8 @@ export class FatherResolver {
 	}
 
 	@Mutation(() => FatherResponse)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
-	async addFather(
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
+	async insertFather(
 		@Arg("options") options: ParentsInput,
 		@Ctx() { req }: AppContext
 	): Promise<FatherResponse> {
@@ -136,47 +176,29 @@ export class FatherResolver {
 		};
 	}
 
-	@Query(() => [Father])
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
-	async filterFather(
+	@Query(() => FatherArrayResponse)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
+	async searchFather(
 		@Arg("text", () => String) text: string,
 		@Ctx() { req }: AppContext
-	): Promise<Father[]> {
-		const query = await getConnection()
-			.createQueryBuilder(Father, "f")
-			.select()
-			.where(
-				`document_with_weights @@ to_tsquery(concat(:query::text,':*')) and f."inKindergardenId" = :id`,
-				{
-					query: text,
-					id: req.session.selectedKindergarden
-				}
-			)
-			.orderBy(
-				"ts_rank(document_with_weights, to_tsquery(concat(:query::text,':*')))",
-				"DESC"
-			)
-			.getMany();
-		return query;
-	}
-
-	@Mutation(() => Boolean)
-	@UseMiddleware(isAuth)
-	@UseMiddleware(isKinderGardenSelected)
-	async deleteFather(
-		@Arg("Id", () => Int!) Id: number
-	): Promise<FatherResponse | boolean> {
+	): Promise<FatherArrayResponse> {
+		let data: Father[];
 		try {
-			const response = await getConnection()
+			data = await getConnection()
 				.createQueryBuilder(Father, "f")
-				.softDelete()
-				.where(`Id = :id`, { id: Id })
-				.execute();
-
-			if ((response.affected as number) > 0) {
-				return true;
-			}
+				.select()
+				.where(
+					`document_with_weights @@ to_tsquery(concat(:query::text,':*')) and f."inKindergardenId" = :id`,
+					{
+						query: text,
+						id: req.session.selectedKindergarden
+					}
+				)
+				.orderBy(
+					"ts_rank(document_with_weights, to_tsquery(concat(:query::text,':*')))",
+					"DESC"
+				)
+				.getMany();
 		} catch (err) {
 			return {
 				errors: [
@@ -187,6 +209,36 @@ export class FatherResolver {
 				]
 			};
 		}
-		return false;
+		return {
+			data
+		};
+	}
+
+	@Mutation(() => FatherBooleanResponse)
+	@UseMiddleware(isAuth, isKinderGardenSelected, LogAction)
+	async deleteFather(
+		@Arg("Id", () => Int!) Id: number
+	): Promise<FatherBooleanResponse> {
+		let response: UpdateResult;
+		try {
+			response = await getConnection()
+				.createQueryBuilder(Father, "f")
+				.softDelete()
+				.where(`Id = :id`, { id: Id })
+				.execute();
+		} catch (err) {
+			return {
+				result: false,
+				errors: [
+					{
+						field: err.name,
+						message: err.message
+					}
+				]
+			};
+		}
+		return {
+			result: response.affected! > 0
+		};
 	}
 }

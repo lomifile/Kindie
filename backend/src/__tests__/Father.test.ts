@@ -24,7 +24,7 @@ afterAll(async () => {
 describe("Create Father test", () => {
 	const addFatherMutation = `
     mutation CreateFather($options: ParentsInput!) {
-        addFather(options: $options) {
+        insertFather(options: $options) {
 			data {
           		Id
           		Name
@@ -75,12 +75,12 @@ describe("Create Father test", () => {
 			}
 		});
 
-		expect(response.data?.addFather.data).toBeNull();
-		expect(response.data?.addFather.errors[0].message).toContain(
+		expect(response.data?.insertFather.data).toBeNull();
+		expect(response.data?.insertFather.errors[0].message).toContain(
 			"Email is not correct"
 		);
-		expect(response.data?.addFather.errors[0].field).toContain("email");
-		expect(typeof response.data?.addFather.errors).toBe("object");
+		expect(response.data?.insertFather.errors[0].field).toContain("email");
+		expect(typeof response.data?.insertFather.errors).toBe("object");
 	});
 
 	test("[gCall] -> Should pass", async () => {
@@ -99,9 +99,9 @@ describe("Create Father test", () => {
 			}
 		});
 
-		expect(response.data?.addFather.errors).toBeNull();
-		expect(response.data?.addFather.data).toHaveProperty("Id");
-		expect(response.data?.addFather.data).toMatchObject({
+		expect(response.data?.insertFather.errors).toBeNull();
+		expect(response.data?.insertFather.data).toHaveProperty("Id");
+		expect(response.data?.insertFather.data).toMatchObject({
 			Name: options.name,
 			Surname: options.surname,
 			Email: options.email,
@@ -204,7 +204,7 @@ describe("Update Father test", () => {
 describe("Show Father query", () => {
 	const showFatherQuery = `
     query ShowFather($limit: Int!, $cursor:String) {
-        showFather(limit: $limit, cursor: $cursor) {
+        listFather(limit: $limit, cursor: $cursor) {
           data{
             Id
             Name
@@ -246,16 +246,22 @@ describe("Show Father query", () => {
 			}
 		});
 
-		expect(response.data?.showFather.data[0]).toHaveProperty("Id");
-		expect(response.data?.showFather.errors).toBeNull();
-		expect(typeof response.data?.showFather.hasMore).toBe("boolean");
+		expect(response.data?.listFather.data[0]).toHaveProperty("Id");
+		expect(response.data?.listFather.errors).toBeNull();
+		expect(typeof response.data?.listFather.hasMore).toBe("boolean");
 	});
 });
 
 describe("Delete Father test", () => {
 	const deleteFatherMutation = `
     mutation DeleteFather($id: Int!) {
-        deleteFather(Id: $id)
+        deleteFather(Id: $id) {
+			result
+			errors {
+				field
+				message
+			}
+		}
       }
     `;
 	test("[gCall] -> Should fail id doesn't exist", async () => {
@@ -268,7 +274,7 @@ describe("Delete Father test", () => {
 			}
 		});
 
-		expect(response.data?.deleteFather).toBeFalsy();
+		expect(response.data?.deleteFather.result).toBeFalsy();
 	});
 
 	test("[gCall] -> Should pass", async () => {
@@ -281,6 +287,6 @@ describe("Delete Father test", () => {
 			}
 		});
 
-		expect(response.data?.deleteFather).toBeTruthy();
+		expect(response.data?.deleteFather.result).toBeTruthy();
 	});
 });
