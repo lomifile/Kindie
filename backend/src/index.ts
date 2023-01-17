@@ -1,17 +1,18 @@
 import "tsconfig-paths/register";
 import { createDbConnection } from "@orm/createConnection";
-import app from "@root/server";
+import { httpServer } from "@root/server";
+import { createSchema } from "./graphql";
 
 (async () => {
 	try {
 		await createDbConnection();
-		app.listen(parseInt(process.env.PORT as string), () => {
-			console.log(
-				`Server started on localhost:${parseInt(
-					process.env.PORT as string
-				)}`
-			);
-		});
+		await new Promise<void>((resolve) =>
+			httpServer.listen(
+				{ port: parseInt(process.env.PORT as string) },
+				resolve
+			)
+		);
+		await createSchema();
 	} catch (err) {
 		console.error(err);
 	}
