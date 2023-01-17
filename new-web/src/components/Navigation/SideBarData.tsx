@@ -1,8 +1,14 @@
+type Subroutes = {
+  name: string;
+  route: string;
+};
+
 type RoutesType = {
   name: string;
   route: string;
   icon?: JSX.Element;
   iconActive?: JSX.Element;
+  subRoute?: Subroutes[];
 };
 
 export const routes: RoutesType[] = [

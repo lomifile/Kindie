@@ -16,6 +16,35 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type ActionType = {
+  __typename?: 'ActionType';
+  function: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type ActivityLog = {
+  __typename?: 'ActivityLog';
+  action: ActionType;
+  args: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  groupId?: Maybe<Scalars['Float']>;
+  id: Scalars['Float'];
+  kindergardenId?: Maybe<Scalars['Float']>;
+  userId?: Maybe<Scalars['Float']>;
+};
+
+export type ArrayChildrenResponse = {
+  __typename?: 'ArrayChildrenResponse';
+  data?: Maybe<Array<Children>>;
+  errors?: Maybe<Array<FieldError>>;
+};
+
+export type ArrayGroupResponse = {
+  __typename?: 'ArrayGroupResponse';
+  data?: Maybe<Array<Groups>>;
+  errors?: Maybe<Array<FieldError>>;
+};
+
 export type AttedanceResponse = {
   __typename?: 'AttedanceResponse';
   data?: Maybe<Attendance>;
@@ -28,9 +57,16 @@ export type Attendance = {
   attendance?: Maybe<Scalars['Boolean']>;
   childId?: Maybe<Scalars['Float']>;
   createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   groupId?: Maybe<Scalars['Float']>;
   kindergardenId?: Maybe<Scalars['Float']>;
   updatedAt: Scalars['DateTime'];
+};
+
+export type AttendanceBooleanResponse = {
+  __typename?: 'AttendanceBooleanResponse';
+  errors?: Maybe<Array<FieldError>>;
+  result?: Maybe<Scalars['Boolean']>;
 };
 
 export type Children = {
@@ -56,6 +92,12 @@ export type Children = {
   updatedById?: Maybe<Scalars['Float']>;
 };
 
+export type ChildrenBooleanResponse = {
+  __typename?: 'ChildrenBooleanResponse';
+  errors?: Maybe<Array<FieldError>>;
+  result?: Maybe<Scalars['Boolean']>;
+};
+
 export type ChildrenInput = {
   BirthDate: Scalars['DateTime'];
   Gender: Scalars['String'];
@@ -71,6 +113,12 @@ export type ChildrenResponse = {
   __typename?: 'ChildrenResponse';
   data?: Maybe<Children>;
   errors?: Maybe<Array<FieldError>>;
+};
+
+export type ContactBooleanResponse = {
+  __typename?: 'ContactBooleanResponse';
+  errors?: Maybe<Array<FieldError>>;
+  result?: Maybe<Scalars['Boolean']>;
 };
 
 export type ContactInput = {
@@ -93,6 +141,18 @@ export type Father = {
   updatedBy?: Maybe<User>;
 };
 
+export type FatherArrayResponse = {
+  __typename?: 'FatherArrayResponse';
+  data?: Maybe<Array<Father>>;
+  errors?: Maybe<Array<FieldError>>;
+};
+
+export type FatherBooleanResponse = {
+  __typename?: 'FatherBooleanResponse';
+  errors?: Maybe<Array<FieldError>>;
+  result?: Maybe<Scalars['Boolean']>;
+};
+
 export type FatherResponse = {
   __typename?: 'FatherResponse';
   data?: Maybe<Father>;
@@ -109,16 +169,23 @@ export type Groups = {
   __typename?: 'Groups';
   Id: Scalars['Float'];
   Name: Scalars['String'];
+  archived: Scalars['String'];
   children?: Maybe<Array<Children>>;
   createdAt: Scalars['String'];
   inKindergarden?: Maybe<KinderGarden>;
   updatedAt: Scalars['String'];
 };
 
+export type GroupsBooleanResponse = {
+  __typename?: 'GroupsBooleanResponse';
+  errors?: Maybe<Array<FieldError>>;
+  result?: Maybe<Scalars['Boolean']>;
+};
+
 export type GroupsResponse = {
   __typename?: 'GroupsResponse';
+  data?: Maybe<Groups>;
   errors?: Maybe<Array<FieldError>>;
-  groups?: Maybe<Groups>;
 };
 
 export type KinderGarden = {
@@ -141,6 +208,12 @@ export type KinderGardenInput = {
   address: Scalars['String'];
   city: Scalars['String'];
   name: Scalars['String'];
+};
+
+export type KindergardenBooleanResponse = {
+  __typename?: 'KindergardenBooleanResponse';
+  errors?: Maybe<Array<FieldError>>;
+  result?: Maybe<Scalars['Boolean']>;
 };
 
 export type KindergardenPaginatedResponse = {
@@ -170,39 +243,52 @@ export type Mother = {
   updatedBy?: Maybe<User>;
 };
 
+export type MotherArrayResponse = {
+  __typename?: 'MotherArrayResponse';
+  data?: Maybe<Array<Mother>>;
+  errors?: Maybe<Array<FieldError>>;
+};
+
+export type MotherBooleanResponse = {
+  __typename?: 'MotherBooleanResponse';
+  errors?: Maybe<Array<FieldError>>;
+  result?: Maybe<Scalars['Boolean']>;
+};
+
 export type MotherResponse = {
   __typename?: 'MotherResponse';
+  data?: Maybe<Mother>;
   errors?: Maybe<Array<FieldError>>;
-  mother?: Maybe<Mother>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   addChildToGroup: ChildrenResponse;
-  addFather: FatherResponse;
-  addMother: MotherResponse;
+  addProfilePicture: UserResponse;
   addStaff: StaffResponse;
   changePassword: UserResponse;
   clearGroup: Scalars['Boolean'];
-  createAttendacne: AttedanceResponse;
+  createAttendance: AttedanceResponse;
   createChild: ChildrenResponse;
   createGroup: GroupsResponse;
   createKindergarden: KindergardenResponse;
-  delete: Scalars['Boolean'];
-  deleteChildren: Scalars['Boolean'];
-  deleteFather: Scalars['Boolean'];
-  deleteGroup: Scalars['Boolean'];
-  deleteKindergarden: Scalars['Boolean'];
-  deleteMother: Scalars['Boolean'];
-  deleteStaff: Scalars['Boolean'];
-  forgetPassword: Scalars['Boolean'];
+  deleteAttendance: AttendanceBooleanResponse;
+  deleteChildren: ChildrenBooleanResponse;
+  deleteFather: FatherBooleanResponse;
+  deleteGroup: GroupsBooleanResponse;
+  deleteKindergarden: KindergardenBooleanResponse;
+  deleteMother: MotherBooleanResponse;
+  deleteStaff: StaffBooleanResponse;
+  forgetPassword: UserBooleanResponse;
+  insertFather: FatherResponse;
+  insertMother: MotherResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
   markAttendance: AttedanceResponse;
   register: UserResponse;
-  removeChildFromGroup?: Maybe<ChildrenResponse>;
-  resendEmail: UserResponse;
-  sendEmail: Scalars['Boolean'];
+  removeChildFromGroup: ChildrenResponse;
+  resendEmail: UserBooleanResponse;
+  sendEmail: ContactBooleanResponse;
   updateChild: ChildrenResponse;
   updateChildernParents: ChildrenResponse;
   updateFather: FatherResponse;
@@ -220,13 +306,8 @@ export type MutationAddChildToGroupArgs = {
 };
 
 
-export type MutationAddFatherArgs = {
-  options: ParentsInput;
-};
-
-
-export type MutationAddMotherArgs = {
-  options: ParentsInput;
+export type MutationAddProfilePictureArgs = {
+  picture: Scalars['String'];
 };
 
 
@@ -243,7 +324,7 @@ export type MutationChangePasswordArgs = {
 };
 
 
-export type MutationCreateAttendacneArgs = {
+export type MutationCreateAttendanceArgs = {
   childId: Scalars['Int'];
   complete?: InputMaybe<Scalars['Boolean']>;
 };
@@ -264,8 +345,8 @@ export type MutationCreateKindergardenArgs = {
 };
 
 
-export type MutationDeleteArgs = {
-  attendanceId: Scalars['Int'];
+export type MutationDeleteAttendanceArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -290,7 +371,7 @@ export type MutationDeleteKindergardenArgs = {
 
 
 export type MutationDeleteMotherArgs = {
-  motherId: Scalars['Int'];
+  id: Scalars['Int'];
 };
 
 
@@ -304,6 +385,16 @@ export type MutationForgetPasswordArgs = {
 };
 
 
+export type MutationInsertFatherArgs = {
+  options: ParentsInput;
+};
+
+
+export type MutationInsertMotherArgs = {
+  options: ParentsInput;
+};
+
+
 export type MutationLoginArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -311,7 +402,7 @@ export type MutationLoginArgs = {
 
 
 export type MutationMarkAttendanceArgs = {
-  attendanceId: Scalars['Int'];
+  id: Scalars['Int'];
 };
 
 
@@ -355,7 +446,7 @@ export type MutationUpdateFatherArgs = {
 
 
 export type MutationUpdateMotherArgs = {
-  motherId: Scalars['Int'];
+  id: Scalars['Int'];
   options: ParentsInput;
 };
 
@@ -371,17 +462,24 @@ export type MutationUpdateUserArgs = {
 
 
 export type MutationUseGroupArgs = {
-  groupId: Scalars['Float'];
+  id: Scalars['Float'];
 };
 
 
 export type MutationUseKindergardenArgs = {
-  kindergadenID: Scalars['Float'];
+  id: Scalars['Float'];
 };
 
 
 export type MutationVerifyAccountArgs = {
   token: Scalars['String'];
+};
+
+export type PaginatedActivityLogResponse = {
+  __typename?: 'PaginatedActivityLogResponse';
+  data?: Maybe<Array<ActivityLog>>;
+  errors?: Maybe<Array<FieldError>>;
+  hasMore: Scalars['Boolean'];
 };
 
 export type PaginatedAttendacne = {
@@ -407,8 +505,16 @@ export type PaginatedFather = {
 
 export type PaginatedMother = {
   __typename?: 'PaginatedMother';
+  data?: Maybe<Array<Mother>>;
+  errors?: Maybe<Array<FieldError>>;
   hasMore: Scalars['Boolean'];
-  mother: Array<Mother>;
+};
+
+export type PaginatedStaffResponse = {
+  __typename?: 'PaginatedStaffResponse';
+  data?: Maybe<Array<StaffMembers>>;
+  errors?: Maybe<Array<FieldError>>;
+  hasMore: Scalars['Boolean'];
 };
 
 export type ParentsInput = {
@@ -420,24 +526,25 @@ export type ParentsInput = {
 
 export type Query = {
   __typename?: 'Query';
-  filterChildren: Array<Children>;
-  filterFather: Array<Father>;
-  filterMother: Array<Mother>;
-  filterStaff?: Maybe<StaffMembers>;
-  findChild?: Maybe<Children>;
-  findMother: Mother;
-  me?: Maybe<User>;
-  owner: KinderGarden;
-  searchMother: Array<Mother>;
-  searchUser: Array<User>;
-  showAllAttendance: PaginatedAttendacne;
-  showChildren: PaginatedChildren;
-  showFather: PaginatedFather;
-  showGroups: Array<Groups>;
-  showKindergarden: KindergardenPaginatedResponse;
-  showMother: PaginatedMother;
-  showSelectedGroup?: Maybe<Groups>;
-  showStaff: Array<StaffMembers>;
+  filterChildren: ArrayChildrenResponse;
+  findChildById: ChildrenResponse;
+  getFatherById: FatherResponse;
+  getKindergardenById: KindergardenResponse;
+  getMotherById: MotherResponse;
+  getOwner: KindergardenResponse;
+  listArchivedStaff: PaginatedStaffResponse;
+  listAttendance: PaginatedAttendacne;
+  listChildren: PaginatedChildren;
+  listFather: PaginatedFather;
+  listGroups: ArrayGroupResponse;
+  listKindergarden: KindergardenPaginatedResponse;
+  listMother: PaginatedMother;
+  listStaff: PaginatedStaffResponse;
+  me?: Maybe<UserResponse>;
+  searchFather: FatherArrayResponse;
+  searchMother: MotherArrayResponse;
+  showActivity: PaginatedActivityLogResponse;
+  showSelectedGroup: GroupsResponse;
   staffOf: Array<User>;
 };
 
@@ -447,23 +554,72 @@ export type QueryFilterChildrenArgs = {
 };
 
 
-export type QueryFilterFatherArgs = {
-  text: Scalars['String'];
-};
-
-
-export type QueryFilterMotherArgs = {
-  text: Scalars['String'];
-};
-
-
-export type QueryFindChildArgs = {
+export type QueryFindChildByIdArgs = {
   id: Scalars['Int'];
 };
 
 
-export type QueryFindMotherArgs = {
+export type QueryGetFatherByIdArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryGetKindergardenByIdArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryGetMotherByIdArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryListArchivedStaffArgs = {
+  cursor?: InputMaybe<Scalars['String']>;
+  limit: Scalars['Int'];
+};
+
+
+export type QueryListAttendanceArgs = {
+  cursor?: InputMaybe<Scalars['String']>;
+  limit: Scalars['Int'];
+  marked?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type QueryListChildrenArgs = {
+  cursor?: InputMaybe<Scalars['String']>;
+  inGroup?: InputMaybe<Scalars['Int']>;
+  limit: Scalars['Int'];
+};
+
+
+export type QueryListFatherArgs = {
+  cursor?: InputMaybe<Scalars['String']>;
+  limit: Scalars['Int'];
+};
+
+
+export type QueryListKindergardenArgs = {
+  cursor?: InputMaybe<Scalars['String']>;
+  limit: Scalars['Int'];
+};
+
+
+export type QueryListMotherArgs = {
+  cursor?: InputMaybe<Scalars['String']>;
+  limit: Scalars['Int'];
+};
+
+
+export type QueryListStaffArgs = {
+  cursor?: InputMaybe<Scalars['String']>;
+  limit: Scalars['Int'];
+};
+
+
+export type QuerySearchFatherArgs = {
+  text: Scalars['String'];
 };
 
 
@@ -472,39 +628,18 @@ export type QuerySearchMotherArgs = {
 };
 
 
-export type QuerySearchUserArgs = {
-  text: Scalars['String'];
+export type QueryShowActivityArgs = {
+  createdAt?: InputMaybe<Scalars['String']>;
+  groupId?: InputMaybe<Scalars['Int']>;
+  kindergardenId?: InputMaybe<Scalars['Int']>;
+  limit: Scalars['Int'];
+  userId?: InputMaybe<Scalars['Int']>;
 };
 
-
-export type QueryShowAllAttendanceArgs = {
-  cursor: Scalars['String'];
-  limit: Scalars['Int'];
-};
-
-
-export type QueryShowChildrenArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  inGroup?: InputMaybe<Scalars['Int']>;
-  limit: Scalars['Int'];
-};
-
-
-export type QueryShowFatherArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  limit: Scalars['Int'];
-};
-
-
-export type QueryShowKindergardenArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  limit: Scalars['Int'];
-};
-
-
-export type QueryShowMotherArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  limit: Scalars['Int'];
+export type StaffBooleanResponse = {
+  __typename?: 'StaffBooleanResponse';
+  errors?: Maybe<Array<FieldError>>;
+  result?: Maybe<Scalars['Boolean']>;
 };
 
 export type StaffMembers = {
@@ -518,8 +653,8 @@ export type StaffMembers = {
 
 export type StaffResponse = {
   __typename?: 'StaffResponse';
+  data?: Maybe<StaffMembers>;
   errors?: Maybe<Array<FieldError>>;
-  staff?: Maybe<StaffMembers>;
 };
 
 export type UpdatePassword = {
@@ -530,7 +665,6 @@ export type UpdatePassword = {
 export type UpdateUserInput = {
   email: Scalars['String'];
   name: Scalars['String'];
-  password: Scalars['String'];
   surname: Scalars['String'];
 };
 
@@ -545,6 +679,7 @@ export type User = {
   createdFather?: Maybe<Array<Father>>;
   createdMother?: Maybe<Array<Mother>>;
   ownerOf: Array<KinderGarden>;
+  picture: Scalars['String'];
   staffOf?: Maybe<Array<StaffMembers>>;
   updatedAt: Scalars['String'];
   updatedChildren?: Maybe<Array<Children>>;
@@ -552,10 +687,16 @@ export type User = {
   updatedMother?: Maybe<Array<Mother>>;
 };
 
+export type UserBooleanResponse = {
+  __typename?: 'UserBooleanResponse';
+  errors?: Maybe<Array<FieldError>>;
+  result?: Maybe<Scalars['Boolean']>;
+};
+
 export type UserResponse = {
   __typename?: 'UserResponse';
+  data?: Maybe<User>;
   errors?: Maybe<Array<FieldError>>;
-  user?: Maybe<User>;
 };
 
 export type UsernamePasswordInput = {
@@ -578,7 +719,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', user?: { __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', data?: { __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -590,21 +731,21 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: { __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', data?: { __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'UserResponse', data?: { __typename?: 'User', Id: number, Name: string, Surname: string, Email: string, createdAt: string, updatedAt: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } | null };
 
-export type ShowChildrenQueryVariables = Exact<{
+export type ListChildrenQueryVariables = Exact<{
   limit: Scalars['Int'];
   cursor?: InputMaybe<Scalars['String']>;
   inGroup?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type ShowChildrenQuery = { __typename?: 'Query', showChildren: { __typename?: 'PaginatedChildren', hasMore: boolean, data?: Array<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: any | null, OIB: number, Remarks: string, motherId?: number | null, fatherId?: number | null, createdAt: any, updatedAt: any }> | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type ListChildrenQuery = { __typename?: 'Query', listChildren: { __typename?: 'PaginatedChildren', hasMore: boolean, data?: Array<{ __typename?: 'Children', Id: number, Name: string, Surname: string, Gender: string, BirthDate?: any | null, OIB: number, Remarks: string, motherId?: number | null, fatherId?: number | null, createdAt: any, updatedAt: any }> | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export const ChildrenFragmentFragmentDoc = gql`
     fragment ChildrenFragment on Children {
@@ -640,7 +781,7 @@ export const UserFragmentFragmentDoc = gql`
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
-    user {
+    data {
       ...UserFragment
     }
     errors {
@@ -666,7 +807,7 @@ export function useLogoutMutation() {
 export const RegisterDocument = gql`
     mutation Register($options: UsernamePasswordInput!) {
   register(options: $options) {
-    user {
+    data {
       ...UserFragment
     }
     errors {
@@ -683,17 +824,23 @@ export function useRegisterMutation() {
 export const MeDocument = gql`
     query Me {
   me {
-    ...UserFragment
+    data {
+      ...UserFragment
+    }
+    errors {
+      ...ErrorFragment
+    }
   }
 }
-    ${UserFragmentFragmentDoc}`;
+    ${UserFragmentFragmentDoc}
+${ErrorFragmentFragmentDoc}`;
 
 export function useMeQuery(options?: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'>) {
   return Urql.useQuery<MeQuery, MeQueryVariables>({ query: MeDocument, ...options });
 };
-export const ShowChildrenDocument = gql`
-    query ShowChildren($limit: Int!, $cursor: String, $inGroup: Int) {
-  showChildren(limit: $limit, cursor: $cursor, inGroup: $inGroup) {
+export const ListChildrenDocument = gql`
+    query ListChildren($limit: Int!, $cursor: String, $inGroup: Int) {
+  listChildren(limit: $limit, cursor: $cursor, inGroup: $inGroup) {
     data {
       ...ChildrenFragment
     }
@@ -706,6 +853,6 @@ export const ShowChildrenDocument = gql`
     ${ChildrenFragmentFragmentDoc}
 ${ErrorFragmentFragmentDoc}`;
 
-export function useShowChildrenQuery(options: Omit<Urql.UseQueryArgs<ShowChildrenQueryVariables>, 'query'>) {
-  return Urql.useQuery<ShowChildrenQuery, ShowChildrenQueryVariables>({ query: ShowChildrenDocument, ...options });
+export function useListChildrenQuery(options: Omit<Urql.UseQueryArgs<ListChildrenQueryVariables>, 'query'>) {
+  return Urql.useQuery<ListChildrenQuery, ListChildrenQueryVariables>({ query: ListChildrenDocument, ...options });
 };

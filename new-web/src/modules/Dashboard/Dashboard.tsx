@@ -1,7 +1,7 @@
 import { AppLayout } from "../../components/Layouts";
 import React from "react";
 import { useIsAuth } from "../../hooks/useIsAuth";
-import { useMeQuery, useShowChildrenQuery } from "../../generated/graphql";
+import { useMeQuery, useListChildrenQuery } from "../../generated/graphql";
 import { Table, TableData } from "../../ui/Table";
 
 interface DashboardProps {}
@@ -10,7 +10,7 @@ export const Dashboard: React.FC<DashboardProps> = ({}) => {
   useIsAuth();
   const [{ data, fetching }] = useMeQuery();
   const [{ data: children, fetching: isFetchingChildren }] =
-    useShowChildrenQuery({
+    useListChildrenQuery({
       variables: {
         limit: 10,
       },
@@ -20,7 +20,7 @@ export const Dashboard: React.FC<DashboardProps> = ({}) => {
       <div className="w-full p-7">
         <h1 className="text-4xl font-bold text-accent">Dashboard</h1>
         <span className="text-md py-4 text-gray-400">
-          Hello, {!fetching && data ? data.me?.Name : ""}
+          Hello, {!fetching && data ? data.me?.data?.Name : ""}
         </span>
       </div>
       <div className="w-full p-7">
@@ -47,7 +47,7 @@ export const Dashboard: React.FC<DashboardProps> = ({}) => {
         ) : (
           <Table>
             <TableData
-              data={children?.showChildren.data}
+              data={children?.listChildren.data}
               header={[
                 { name: "Id", property: "Id" },
                 { name: "Name", property: "Name", sortable: true },
