@@ -31,6 +31,7 @@ export const AppNav = () => {
       className="container flex flex-row md:min-w-full justify-between"
       ref={appUserMenuRef}
     >
+      <title>Dashboard</title>
       <div className="flex flex-row items-center pl-5 w-full">
         <Formik
           initialValues={{
@@ -101,7 +102,7 @@ export const AppNav = () => {
               {fetching ? (
                 <HashLoader size={20} />
               ) : (
-                data?.me?.Name[0] + "" + data?.me?.Surname[0]
+                data?.me?.data?.Name[0] + "" + data?.me?.data?.Surname[0]
               )}
             </span>
             <span className="bottom-0 z-10 left-7 absolute  w-3.5 h-3.5 bg-green-400 border-2 border-white  rounded-full"></span>
@@ -109,7 +110,7 @@ export const AppNav = () => {
           {fetching ? (
             <HashLoader size={20} />
           ) : (
-            data?.me?.Name + " " + data?.me?.Surname
+            data?.me?.data?.Name + " " + data?.me?.data?.Surname
           )}
           <motion.svg
             className="w-4 h-4 mx-1.5"
@@ -144,7 +145,7 @@ export const AppNav = () => {
         >
           <div className="py-3 px-4 text-sm text-gray-900">
             <div className="font-medium ">Pro User</div>
-            <div className="truncate">{data?.me?.Email}</div>
+            <div className="truncate">{data?.me?.data?.Email}</div>
           </div>
           <ul className="py-1 text-sm text-gray-700">
             <li>

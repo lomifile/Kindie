@@ -1,5 +1,5 @@
-query ShowChildren($limit: Int!, $cursor: String, $inGroup: Int) {
-  showChildren(limit: $limit, cursor: $cursor, inGroup: $inGroup) {
+query ListChildren($limit: Int!, $cursor: String, $inGroup: Int) {
+  listChildren(limit: $limit, cursor: $cursor, inGroup: $inGroup) {
     data {
       ...ChildrenFragment
     }
