@@ -1,6 +1,6 @@
 {
 	"name": "backend",
-	"version": "1.0.0",
+	"version": "v0.0.2-pre1",
 	"description": "",
 	"main": "index.ts",
 	"scripts": {
@@ -14,6 +14,7 @@
 		"run:migrations": "npm run typeorm:cli -- migration:run",
 		"setup:db": "ts-node ./src/helpers/setup.ts",
 		"test": "npm run setup:db && jest --detectOpenHandles",
+		"start": "ts-node-esm --transpile-only src/index.ts",
 		"prettier": "prettier --write ."
 	},
 	"engines": {
@@ -23,14 +24,14 @@
 	"author": "Filip Ivanusec",
 	"license": "MIT",
 	"_moduleAliases": {
-		"@root": "src/",
+		"@root/*": "src/",
 		"@graphql/*": "src/graphql",
-		"@helpers": "src/helpers",
-		"@libs": "src/libs",
-		"@middleware": "src/middleware",
-		"@orm": "src/orm",
-		"@types": "src/types",
-		"@utils": "src/utils"
+		"@helpers/*": "src/helpers",
+		"@libs/*": "src/libs",
+		"@middleware/*": "src/middleware",
+		"@orm/*": "src/orm",
+		"@types/*": "src/types",
+		"@utils/*": "src/utils"
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^7.6.0",

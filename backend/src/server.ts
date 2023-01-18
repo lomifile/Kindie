@@ -6,10 +6,7 @@ import session from "express-session";
 import { COOKIE_NAME, __prod__ } from "@root/constants";
 import cors from "cors";
 import http from "http";
-import dotenv from "dotenv";
 import { redis } from "@libs/redis";
-
-dotenv.config({ path: ".env" });
 
 const app = express();
 const RedisStore = connectRedis(session);
