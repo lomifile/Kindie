@@ -3,7 +3,8 @@ import config from "./config/ormconfig";
 
 export const createDbConnection = async (): Promise<Connection | null> => {
 	try {
-		await createConnection(config);
+		const conn = await createConnection(config);
+		if (process.env.NODE_ENV === "production") await conn.runMigrations();
 	} catch (err) {
 		if (err.name === "AlreadyHasActiveConnectionError") {
 			const activeConnection = getConnectionManager().get(config.name);
