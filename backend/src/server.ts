@@ -33,7 +33,7 @@ app.use(
 			httpOnly: true,
 			sameSite: "lax",
 			secure: __prod__,
-			domain: __prod__ ? ".kindieapi.xyz" : undefined
+			domain: __prod__ ? ".test-kindie.store" : undefined
 		},
 		saveUninitialized: false,
 		secret: process.env.SESSION_SECRET as string,
