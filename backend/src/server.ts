@@ -1,12 +1,13 @@
 import "reflect-metadata";
 import connectRedis from "connect-redis";
-import express from "express";
+import express, { Response } from "express";
 import session from "express-session";
 
 import { COOKIE_NAME, __prod__ } from "@root/constants";
 import cors from "cors";
 import http from "http";
 import { redis } from "@libs/redis";
+import * as pjs from "../package.json";
 
 const app = express();
 const RedisStore = connectRedis(session);
@@ -39,5 +40,13 @@ app.use(
 		resave: false
 	})
 );
+
+app.get("/test", async (_, res: Response) => {
+	res.json({
+		APP_NAME: "Kindie",
+		API_VERSION: pjs.version,
+		GRAPHQL_VERSION: pjs.dependencies.graphql
+	});
+});
 
 export default app;
