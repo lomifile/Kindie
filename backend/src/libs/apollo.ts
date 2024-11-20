@@ -1,6 +1,5 @@
 import { ApolloServer } from "@apollo/server";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import { ApolloServerPluginLandingPageGraphQLPlayground } from "@apollo/server-plugin-landing-page-graphql-playground";
 import {
 	UserResolver,
 	StaffMembersResolver,
@@ -34,8 +33,5 @@ export const apolloServer = new ApolloServer<AppContext>({
 		validate: false,
 		globalMiddlewares: [LogAccess]
 	}),
-	plugins: [
-		ApolloServerPluginDrainHttpServer({ httpServer }),
-		ApolloServerPluginLandingPageGraphQLPlayground({})
-	]
+	plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
 });

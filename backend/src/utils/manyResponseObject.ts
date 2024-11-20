@@ -1,8 +1,10 @@
 import { ClassType, Field, ObjectType } from "type-graphql";
 import { FieldError } from "./Errors";
 
-export default function ManyResponse<TEntity>(TEntity: ClassType<TEntity>) {
-	@ObjectType({ isAbstract: true })
+export default function ManyResponse<TEntity extends Object>(
+	TEntity: ClassType<TEntity>
+) {
+	@ObjectType()
 	abstract class ManyResponseObject {
 		@Field(() => [TEntity], { nullable: true })
 		data?: TEntity[];

@@ -97,6 +97,7 @@ export class ChildrenResolver {
 				]
 			};
 		}
+
 		return {
 			data: result.slice(0, realLimit),
 			hasMore: result.length === realLimitPlusOne
